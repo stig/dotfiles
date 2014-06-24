@@ -1,0 +1,5 @@
+.mc-lists.el
+backups/
+elpa/
+places
+request/
