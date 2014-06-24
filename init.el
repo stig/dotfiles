@@ -6,24 +6,13 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
-;; Set path to dependencies
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
-
-;; Set up load path
-(add-to-list 'load-path user-emacs-directory)
-(add-to-list 'load-path site-lisp-dir)
-
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
+;; I don't want my computer beeping at me, thank you very much.
+(setq visible-bell 1)
 
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
-
-;; I don't want my computer beeping at me, thank you very much.
-(setq visible-bell 1)
 
 ; setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
 (setq mac-command-modifier 'meta) ; sets the Command key to Meta
@@ -38,14 +27,7 @@
 (yas-global-mode 1)
 
 ;; Jump to end of snippet definition on hitting return
-; (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
-
-;; Turn on Clojure refactoring minor mode
-(add-hook 'clojure-mode-hook (lambda ()                             
-                               (clj-refactor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-c C-m")
-                               ))
-
+(define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
 
 ;; Multiple cursors...
 (require 'multiple-cursors)
@@ -61,6 +43,17 @@
   (when (file-regular-p file)
     (load file)))
 
+
+;; Turn on Clojure refactoring minor mode
+(add-hook 'clojure-mode-hook (lambda ()                             
+                               (clj-refactor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c C-m")
+
+                               ;; 
+                               (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
+                               (define-key clojure-mode-map (kbd "s-j") 'clj-jump-to-other-file)
+
+                               ))
 
 
 
