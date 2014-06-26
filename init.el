@@ -84,7 +84,8 @@
 (savehist-mode 1)
 (setq history-length 1000)
 
-
+(setq ispell-program-name "aspell")
+(setq ispell-dictionary "british")
 
 (when (>= emacs-major-version 24)
   (require 'package)
