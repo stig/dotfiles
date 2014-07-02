@@ -92,6 +92,20 @@
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
 
+(defvar my-packages '(better-defaults
+                      clojure-mode
+                      clojure-cheatsheet
+                      cider
+                      clj-refactor
+                      magit
+                      markdown-mode
+                      leuven-theme))
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+
 ; setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
 (setq mac-command-modifier 'meta) ; sets the Command key to Meta
 (setq mac-option-modifier 'super) ; sets the Option key to Super
