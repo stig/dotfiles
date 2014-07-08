@@ -6,6 +6,9 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
+(setq init-home-dir "~/.emacs.d/")
+(add-to-list 'load-path init-home-dir)
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -13,6 +16,23 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
+(require 'ensure-packages)
+
+(setq ensure-packages
+      '(better-defaults 
+        dash
+        cider
+        clj-refactor
+        clojure-cheatsheet
+        clojure-mode
+        clojure-snippets
+        magit
+        graphviz-dot-mode
+        leuven-theme
+        markdown-mode
+        multiple-cursors))
+
+(ensure-packages-install-missing)
 
 ;; I don't want my computer beeping at me, thank you very much.
 (setq visible-bell 1)
