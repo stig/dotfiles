@@ -52,14 +52,6 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
-
-;; Functions (load all files in defuns-dir)
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
-
-
 ;; Load a nice theme...
 (load-theme 'leuven t)
 
