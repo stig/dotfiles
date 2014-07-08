@@ -6,8 +6,6 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
-(setq init-home-dir "~/.emacs.d/")
-(add-to-list 'load-path init-home-dir)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -16,6 +14,7 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
+(add-to-list 'load-path "~/.emacs.d/local")
 (require 'ensure-packages)
 
 (setq ensure-packages
