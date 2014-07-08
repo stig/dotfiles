@@ -4,3 +4,6 @@ elpa/
 places
 request/
 auto-save-list/
+/history
+/ido.last
+/recentf
