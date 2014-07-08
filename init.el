@@ -37,6 +37,7 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 (add-hook 'after-init-hook '(lambda () (require 'setup-magit)))
+(eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
 ;; Turn on yasnippets
 (yas-global-mode 1)
@@ -57,19 +58,6 @@
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-
-
-;; Turn on Clojure refactoring minor mode
-(add-hook 'clojure-mode-hook (lambda ()                             
-                               (clj-refactor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-c C-m")
-
-                               ;; 
-                               (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
-                               (define-key clojure-mode-map (kbd "s-j") 'clj-jump-to-other-file)
-
-                               ))
-
 
 
 ;; Load a nice theme...
