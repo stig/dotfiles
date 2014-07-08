@@ -33,6 +33,10 @@
 
 (ensure-packages-install-missing)
 
+(add-to-list 'load-path "~/.emacs.d/setup")
+(require 'setup-defaults)
+
+
 ;; I don't want my computer beeping at me, thank you very much.
 (setq visible-bell 1)
 
