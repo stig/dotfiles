@@ -23,8 +23,5 @@
   (package-refresh-contents)
   (message "%s" " done.")
   ;; install the missing packages
-  (dolist (p ensure-packages)
-    (when (not (package-installed-p p))
-      (package-install p)))))
 
 (provide 'ensure-packages)

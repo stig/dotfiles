@@ -6,38 +6,37 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
-
-(require 'package)
-(setq package-enable-at-startup nil)
-(package-initialize)
-
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-
-(add-to-list 'load-path "~/.emacs.d/local")
-(require 'ensure-packages)
-
-(setq ensure-packages
-      '(better-defaults 
-        dash
-        cider
-        clj-refactor
-        clojure-cheatsheet
-        clojure-mode
-        clojure-snippets
-        magit
-        graphviz-dot-mode
-        leuven-theme
-        markdown-mode
-        multiple-cursors))
-
-(ensure-packages-install-missing)
-
 (add-to-list 'load-path "~/.emacs.d/setup")
+(require 'setup-package)
+
+;; Install extensions if they're missing
+(defun init--install-packages ()
+  (packages-install
+   '(better-defaults 
+     dash
+     cider
+     clj-refactor
+     clojure-cheatsheet
+     clojure-mode
+     clojure-snippets
+     magit
+     graphviz-dot-mode
+     leuven-theme
+     markdown-mode
+     multiple-cursors)))
+
+(condition-case nil
+    (init--install-packages)
+  (error
+   (package-refresh-contents)
+   (init--install-packages)))
+
 (require 'setup-defaults)
 
 ;; Where to find Leiningen (and others)
 (add-to-list 'exec-path "/usr/local/bin")
+
+(add-hook 'after-init-hook '(lambda () (require 'setup-magit)))
 
 ;; Turn on yasnippets
 (yas-global-mode 1)
@@ -72,24 +71,6 @@
                                ))
 
 
-
-;; full screen magit-status
-;; http://whattheemacsd.com/setup-magit.el-01.html
-(require 'magit)
-(global-set-key (kbd "C-c C-m") 'magit-status)
-
-(defadvice magit-status (around magit-fullscreen activate)
-  (window-configuration-to-register :magit-fullscreen)
-  ad-do-it
-  (delete-other-windows))
-
-(defun magit-quit-session ()
-  "Restores the previous window configuration and kills the magit buffer"
-  (interactive)
-  (kill-buffer)
-  (jump-to-register :magit-fullscreen))
-
-(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 ;; Load a nice theme...
 (load-theme 'leuven t)
