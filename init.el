@@ -134,8 +134,7 @@
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
+(global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
 
 ;; Functions (load all files in defuns-dir)
@@ -160,6 +159,8 @@
 
 ;; full screen magit-status
 ;; http://whattheemacsd.com/setup-magit.el-01.html
+(require 'magit)
+(global-set-key (kbd "C-c C-m") 'magit-status)
 
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
@@ -172,6 +173,7 @@
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
 
+(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 ;; Load a nice theme...
 (load-theme 'leuven t)
