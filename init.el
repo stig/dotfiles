@@ -12,18 +12,19 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(better-defaults 
-     dash
-     cider
+   '(cider
      clj-refactor
      clojure-cheatsheet
      clojure-mode
      clojure-snippets
-     magit
+     dash
      graphviz-dot-mode
      leuven-theme
+     magit
      markdown-mode
-     multiple-cursors)))
+     maxframe
+     multiple-cursors
+     better-defaults)))
 
 (condition-case nil
     (init--install-packages)
@@ -38,6 +39,10 @@
 
 (add-hook 'after-init-hook '(lambda () (require 'setup-magit)))
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
+
+(require 'maxframe)
+(setq mf-max-width 650)
+(add-hook 'window-setup-hook 'maximize-frame t)
 
 ;; Turn on yasnippets
 (yas-global-mode 1)
