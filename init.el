@@ -60,7 +60,3 @@
 ;; Load a nice theme...
 (load-theme 'leuven t)
 
-;; Emacs server
-(require 'server)
-(unless (server-running-p)
-  (server-start))
