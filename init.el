@@ -60,3 +60,5 @@
 ;; Load a nice theme...
 (load-theme 'leuven t)
 
+(require 'markdown-mode)
+(setq markdown-command "kramdown")
