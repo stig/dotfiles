@@ -62,3 +62,8 @@
 
 (require 'markdown-mode)
 (setq markdown-command "kramdown")
+
+;; Emacs server
+(require 'server)
+(unless (server-running-p)
+  (server-start))
