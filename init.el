@@ -38,6 +38,7 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 (add-hook 'after-init-hook '(lambda () (require 'setup-magit)))
+(add-hook 'after-init-hook '(lambda () (require 'setup-helm)))
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
 (require 'maxframe)
@@ -46,8 +47,6 @@
 
 ;; Turn on yasnippets
 (yas-global-mode 1)
-
-;; Jump to end of snippet definition on hitting return
 (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
 
 ;; Multiple cursors...
