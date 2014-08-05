@@ -3,7 +3,7 @@
 
 (require 'magit)
 
-(global-set-key (kbd "C-c C-m") 'magit-status)
+(global-set-key (kbd "M-m") 'magit-status)
 
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
