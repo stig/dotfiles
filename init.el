@@ -34,6 +34,9 @@
 
 (require 'setup-defaults)
 
+;; Load a nice theme...
+(load-theme 'leuven t)
+
 ;; Where to find Leiningen (and others)
 (add-to-list 'exec-path "/usr/local/bin")
 
@@ -41,13 +44,16 @@
 (add-hook 'after-init-hook '(lambda () (require 'setup-helm)))
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
+
 (require 'maxframe)
 (setq mf-max-width 650)
 (add-hook 'window-setup-hook 'maximize-frame t)
 
+
 ;; Turn on yasnippets
 (yas-global-mode 1)
 (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
+
 
 ;; Multiple cursors...
 (require 'multiple-cursors)
@@ -56,13 +62,13 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
-;; Load a nice theme...
-(load-theme 'leuven t)
 
 (require 'markdown-mode)
 (setq markdown-command "kramdown")
+
 
 ;; Emacs server
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
