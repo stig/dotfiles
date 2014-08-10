@@ -17,7 +17,6 @@
      clojure-cheatsheet
      clojure-mode
      clojure-snippets
-     dash
      graphviz-dot-mode
      leuven-theme
      magit
