@@ -41,7 +41,19 @@
 
 (add-hook 'after-init-hook '(lambda () (require 'setup-magit)))
 (add-hook 'after-init-hook '(lambda () (require 'setup-helm)))
+
+;; Turn on Clojure refactoring minor mode
+(add-hook 'clojure-mode-hook (lambda ()                             
+                               (clj-refactor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c C-c")
+                               (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
+                               (define-key clojure-mode-map (kbd "s-j") 'clj-jump-to-other-file)))
+
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
+
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(setq nrepl-hide-special-buffers t)
+
 
 
 (require 'maxframe)
