@@ -12,7 +12,8 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(cider
+   '(better-defaults
+     cider
      clj-refactor
      clojure-cheatsheet
      clojure-mode
@@ -23,7 +24,7 @@
      markdown-mode
      maxframe
      multiple-cursors
-     better-defaults)))
+     windsize)))
 
 (condition-case nil
     (init--install-packages)
@@ -73,6 +74,12 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
 
+;; Windsize
+(require 'windsize)
+(global-set-key (kbd "C-s-<up>") 'windsize-up)
+(global-set-key (kbd "C-s-<down>") 'windsize-down)
+(global-set-key (kbd "C-s-<right>") 'windsize-right)
+(global-set-key (kbd "C-s-<left>") 'windsize-left)
 
 (require 'markdown-mode)
 (setq markdown-command "kramdown")
