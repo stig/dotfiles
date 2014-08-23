@@ -45,16 +45,16 @@
 ;; Turn on Clojure refactoring minor mode
 (add-hook 'clojure-mode-hook (lambda ()                             
                                (clj-refactor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-S-c C-S-m")
-                               (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
+                               (cljr-add-keybindings-with-prefix "C-s-c C-s-r")
                                (define-key clojure-mode-map (kbd "s-j") 'clj-jump-to-other-file)))
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
+;; require or autoload paredit-mode
+(add-hook 'clojure-mode-hook 'paredit-mode)
+
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (setq nrepl-hide-special-buffers t)
-
-
 
 (require 'maxframe)
 (setq mf-max-width 650)
