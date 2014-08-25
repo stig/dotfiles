@@ -51,6 +51,10 @@
 
 ;; require or autoload paredit-mode
 (add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+
+;; I like seeing matching parens
+(show-paren-mode 1)
 
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (setq nrepl-hide-special-buffers t)
