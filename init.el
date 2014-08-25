@@ -14,7 +14,6 @@
   (packages-install
    '(cider
      clj-refactor
-     clojure-cheatsheet
      clojure-mode
      clojure-snippets
      graphviz-dot-mode
