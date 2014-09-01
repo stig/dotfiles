@@ -1,9 +1,10 @@
-
 ;; I don't want my computer beeping at me, thank you very much.
-(setq visible-bell 1)
+(setq visible-bell t)
 
-;; Allow pasting selection outside of Emacs
-(setq x-select-enable-clipboard t)
+;; Improve pasting behaviour with programs outside Emacs
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t)
 
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
@@ -54,7 +55,7 @@
 (set-default 'indicate-empty-lines t)
 
 ;; Don't break lines for me, please
-(setq-default truncate-lines t)
+;(setq-default truncate-lines t)
 
 ;; Show active region
 (transient-mark-mode 1)
@@ -76,10 +77,28 @@
 (setq ispell-program-name "aspell")
 (setq ispell-dictionary "british")
 
-; setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
+;; Setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
 (setq mac-command-modifier 'meta) ; sets the Command key to Meta
 (setq mac-option-modifier 'super) ; sets the Option key to Super
 (setq mac-control-modifier 'control) ; sets the Control key to Control
 (setq ns-function-modifier 'hyper)  ; set Mac's Fn key to Hyper
+
+;; I like seeing matching parens
+(show-paren-mode 1)
+
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (concat user-emacs-directory "places"))
+
+;; Don't litter my file tree with backup files
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+
+(setq apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      ediff-window-setup-function 'ediff-setup-windows-plain)
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward)
 
 (provide 'setup-defaults)

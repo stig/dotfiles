@@ -15,7 +15,6 @@
    '(cider
      clj-refactor
      clojure-mode
-     clojure-snippets
      graphviz-dot-mode
      leuven-theme
      magit
@@ -31,6 +30,7 @@
    (init--install-packages)))
 
 (require 'setup-defaults)
+(require 'setup-mail)
 
 ;; Load a nice theme...
 (load-theme 'leuven t)
@@ -42,7 +42,7 @@
 (add-hook 'after-init-hook '(lambda () (require 'setup-helm)))
 
 ;; Turn on Clojure refactoring minor mode
-(add-hook 'clojure-mode-hook (lambda ()                             
+(add-hook 'clojure-mode-hook (lambda ()
                                (clj-refactor-mode 1)
                                (cljr-add-keybindings-with-prefix "s-r")
                                (define-key clojure-mode-map (kbd "s-o") 'clj-jump-to-other-file)))
@@ -53,10 +53,7 @@
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 
-;; I like seeing matching parens
-(show-paren-mode 1)
-
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (setq nrepl-hide-special-buffers t)
 
 (require 'maxframe)
@@ -86,9 +83,10 @@
 (require 'markdown-mode)
 (setq markdown-command "kramdown")
 
+;; Clean up whitespace atrocities in files on save
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; Emacs server
 (require 'server)
 (unless (server-running-p)
   (server-start))
-
