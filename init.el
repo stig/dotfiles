@@ -86,6 +86,15 @@
 ;; Clean up whitespace atrocities in files on save
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
+
 ;; Emacs server
 (require 'server)
 (unless (server-running-p)
