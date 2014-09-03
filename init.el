@@ -56,10 +56,7 @@
 ;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (setq nrepl-hide-special-buffers t)
 
-(require 'maxframe)
-(setq mf-max-width 650)
-(add-hook 'window-setup-hook 'maximize-frame t)
-
+(toggle-frame-fullscreen)
 
 ;; Turn on yasnippets
 (yas-global-mode 1)
