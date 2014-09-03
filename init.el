@@ -94,6 +94,13 @@
                             ("\x2019" . "'"))
                           nil beg end))
 
+
+;; Fix to allow editing remote files over ssh
+(put 'temporary-file-directory 'standard-value '((file-name-as-directory "/tmp")))
+
+;; Allow ssh+sudo with tramp
+(set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+
 ;; Emacs server
 (require 'server)
 (unless (server-running-p)
