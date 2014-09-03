@@ -18,6 +18,7 @@
      graphviz-dot-mode
      leuven-theme
      magit
+     helm-projectile
      markdown-mode
      maxframe
      multiple-cursors
@@ -62,6 +63,7 @@
 (yas-global-mode 1)
 (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
 
+(projectile-global-mode)
 
 ;; Multiple cursors...
 (require 'multiple-cursors)
