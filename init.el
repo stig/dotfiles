@@ -45,8 +45,8 @@
 ;; Turn on Clojure refactoring minor mode
 (add-hook 'clojure-mode-hook (lambda ()
                                (clj-refactor-mode 1)
-                               (cljr-add-keybindings-with-prefix "s-r")
-                               (define-key clojure-mode-map (kbd "s-o") 'clj-jump-to-other-file)))
+                               (cljr-add-keybindings-with-prefix "C-c r")
+                               (define-key clojure-mode-map (kbd "C-c o") 'clj-jump-to-other-file)))
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
