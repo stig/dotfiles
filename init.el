@@ -31,8 +31,6 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-(require 'setup-mail)
-
 ;; Load a nice theme...
 (load-theme 'leuven t)
 
