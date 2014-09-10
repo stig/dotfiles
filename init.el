@@ -1,12 +1,13 @@
 ; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
 (add-to-list 'load-path "~/.emacs.d/setup")
+(require 'setup-defaults)
 (require 'setup-package)
 
 ;; Install extensions if they're missing
@@ -30,7 +31,6 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-(require 'setup-defaults)
 (require 'setup-mail)
 
 ;; Load a nice theme...
