@@ -1,26 +1,9 @@
-;; I don't want my computer beeping at me, thank you very much.
-(setq visible-bell t)
-
-;; Improve pasting behaviour with programs outside Emacs
-(setq x-select-enable-clipboard t
-      x-select-enable-primary t
-      save-interprogram-paste-before-kill t)
-
 ;; Auto refresh buffers
 (global-auto-revert-mode 1)
 
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-
-;; Show keystrokes in progress
-(setq echo-keystrokes 0.1)
-
-;; Move files to trash when deleting
-(setq delete-by-moving-to-trash t)
-
-;; Real emacs knights don't use shift to mark things
-(setq shift-select-mode nil)
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
 
 ;; Transparently open compressed files
 (auto-compression-mode t)
@@ -41,10 +24,6 @@
 ;; Sentences do not need double spaces to end. Period.
 (set-default 'sentence-end-double-space nil)
 
-;; Always display line and column numbers
-(setq line-number-mode t)
-(setq column-number-mode t)
-
 ;; Undo/redo window configuration with C-c <left>/<right>
 (winner-mode 1)
 
@@ -64,7 +43,7 @@
 (setq-default transient-mark-mode t)
 
 ;; Remove text in active region if inserting text
-(delete-selection-mode 1)
+;;;; (delete-selection-mode 1)
 
 ;; Save a list of recent files visited. (open recent file with C-x f)
 (recentf-mode 1)
@@ -74,31 +53,57 @@
 (savehist-mode 1)
 (setq history-length 1000)
 
-(setq ispell-program-name "aspell")
-(setq ispell-dictionary "british")
-
-;; Setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
-(setq mac-command-modifier 'meta) ; sets the Command key to Meta
-(setq mac-option-modifier 'super) ; sets the Option key to Super
-(setq mac-control-modifier 'control) ; sets the Control key to Control
-(setq ns-function-modifier 'hyper)  ; set Mac's Fn key to Hyper
-
-;; I like seeing matching parens
-(show-paren-mode 1)
-
 (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file (concat user-emacs-directory "places"))
 
-;; Don't litter my file tree with backup files
-(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-
-(setq apropos-do-all t
-      mouse-yank-at-point t
-      require-final-newline t
-      ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward)
+
+;; I like seeing matching parens
+(show-paren-mode 1)
+
+(setq
+ ;; Improve pasting behaviour with programs outside Emacs
+ x-select-enable-clipboard t
+ x-select-enable-primary t
+ save-interprogram-paste-before-kill t
+ mouse-yank-at-point t
+
+ require-final-newline t
+
+ ;; Also auto refresh dired, but be quiet about it
+ global-auto-revert-non-file-buffers t
+ auto-revert-verbose nil
+
+ ;; Show keystrokes in progress
+ echo-keystrokes 0.1
+
+ ;; Move files to trash when deleting
+ delete-by-moving-to-trash t
+
+ ;; Always display line and column numbers
+ line-number-mode t
+ column-number-mode t
+
+ ;; Don't litter my file tree with backup files
+ backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+
+ ;; Setting Super ＆ Hyper keys for Apple keyboard, for emacs running in OS X
+ mac-command-modifier 'meta ; sets the Command key to Meta
+ mac-option-modifier 'super ; sets the Option key to Super
+ mac-control-modifier 'control ; sets the Control key to Control
+ ns-function-modifier 'hyper  ; set Mac's Fn key to Hyper
+
+ ispell-program-name "aspell"
+ ispell-dictionary "british"
+
+ ;; I don't want my computer beeping at me, thank you very much.
+ visible-bell t
+
+
+ ;; Real emacs knights don't use shift to mark things
+ shift-select-mode nil)
 
 (provide 'setup-defaults)
