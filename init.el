@@ -8,8 +8,6 @@
 (toggle-frame-fullscreen)
 
 (require 'package)
-
-;; Add melpa to package repos
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 (add-to-list 'package-archives
@@ -249,8 +247,8 @@
         ("C-M-k" sp-kill-sexp)
         ("C-M-w" sp-copy-sexp)
 
-        ("M-<delete>" sp-unwrap-sexp)
-        ("M-<backspace>" sp-backward-unwrap-sexp)
+        ("C-M-<delete>" sp-unwrap-sexp)
+        ("C-M-<backspace>" sp-backward-unwrap-sexp)
 
         ("C-<right>" sp-forward-slurp-sexp)
         ("C-<left>" sp-forward-barf-sexp)
