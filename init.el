@@ -149,7 +149,7 @@
   (jump-to-register :magit-fullscreen))
 
 (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
-
+(setq ediff-autostore-merges t)
 
 (package-install? 'helm)
 ;; must set before helm-config,  otherwise helm use default
