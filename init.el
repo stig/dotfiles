@@ -344,6 +344,4 @@
 
 (global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
 
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
