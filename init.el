@@ -13,7 +13,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
-(package-refresh-contents)
+; (package-refresh-contents)
 
 (defun package-install? (package-name)
   (when (not (package-installed-p package-name))
