@@ -5,7 +5,6 @@
 
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
-(toggle-frame-fullscreen)
 
 (require 'package)
 (add-to-list 'package-archives
