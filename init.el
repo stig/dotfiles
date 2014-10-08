@@ -345,3 +345,11 @@
 (global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
 
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
+
+
+;; Function for inserting the current date
+(defun insert-current-date (arg)
+    (interactive "P")
+    (insert (format-time-string "%Y-%m-%d")))
+
+(global-set-key (kbd "C-x M-d") 'insert-current-date)
