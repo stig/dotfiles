@@ -353,3 +353,9 @@
     (insert (format-time-string "%Y-%m-%d")))
 
 (global-set-key (kbd "C-x M-d") 'insert-current-date)
+
+(package-install? 'sane-term)
+(require 'sane-term)
+(global-set-key (kbd "C-x t") 'sane-term)
+(global-set-key (kbd "C-x T") 'sane-term-create)
+(set-default 'sane-term-shell-command "/bin/zsh")
