@@ -164,6 +164,9 @@
 
 (package-install? 'clojure-mode)
 
+(package-install? 'align-cljlet)
+(require 'align-cljlet)
+
 (package-install? 'paredit) ;; required by clj-refactor
 (package-install? 'clj-refactor)
 
