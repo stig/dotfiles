@@ -210,7 +210,14 @@
         (find-file-other-window file)
       (error "%s not found." file))))
 
+
 (package-install? 'cider)
+
+(package-install? 'company)
+(global-company-mode)
+
+;; (add-hook 'cider-repl-mode-hook 'company-mode)
+;; (add-hook 'cider-mode-hook 'company-mode)
 
 (package-install? 'smartparens)
 (require 'smartparens-config)
