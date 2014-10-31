@@ -304,6 +304,14 @@
       projectile-switch-project-action 'projectile-dired
       projectile-use-git-grep t)
 
+(package-install? 'helm-git-grep)
+(global-set-key (kbd "C-c g") 'helm-git-grep)
+;; Invoke `helm-git-grep' from isearch.
+(define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
+;; Invoke `helm-git-grep' from other helm.
+(eval-after-load 'helm
+  '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
+
 (package-install? 'multiple-cursors)
 (require 'multiple-cursors)
 (global-set-key (kbd "C-c a") 'mc/edit-lines)
