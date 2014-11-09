@@ -43,6 +43,14 @@
 (set-selection-coding-system 'utf-8) ; please
 (prefer-coding-system 'utf-8) ; with sugar on top
 
+;; Norwegian characters
+(global-set-key (kbd "s-'") (kbd "æ"))
+(global-set-key (kbd "s-\"") (kbd "Æ"))
+(global-set-key (kbd "s-O") (kbd "Ø"))
+(global-set-key (kbd "s-o") (kbd "ø"))
+(global-set-key (kbd "s-A") (kbd "Å"))
+(global-set-key (kbd "s-a") (kbd "å"))
+
 ;; Sentences do not need double spaces to end. Period.
 (set-default 'sentence-end-double-space nil)
 
@@ -317,7 +325,6 @@
 (global-set-key (kbd "C-c a") 'mc/edit-lines)
 (global-set-key (kbd "s-n") 'mc/mark-next-like-this)
 (global-set-key (kbd "s-p") 'mc/mark-previous-like-this)
-(global-set-key (kbd "s-a") 'mc/mark-all-like-this)
 
 ;; Windsize
 (package-install? 'windsize)
