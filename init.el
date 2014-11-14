@@ -82,8 +82,9 @@
 (setq save-place-file (concat user-emacs-directory "places"))
 
 
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward)
+;; Removed as default in Emacs 24.4
+;;(require 'uniquify)
+;;(setq uniquify-buffer-name-style 'post-forward)
 
 ;; I like seeing matching parens
 (show-paren-mode 1)
