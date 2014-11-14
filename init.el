@@ -6,6 +6,9 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
+;; Resize screen by pixels rather than by line/row
+(setq frame-resize-pixelwise t)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
