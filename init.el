@@ -388,7 +388,7 @@
 (fset 'join-line-below [down ?\M-^])
 (global-set-key (kbd "M-s-^") 'join-line-below)
 
-(package-install? 'aggressive-indent)
-(global-aggressive-indent-mode 1)
+;;(package-install? 'aggressive-indent)
+;;(global-aggressive-indent-mode 1)
 ;;(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 ;;(add-hook 'css-mode-hook #'aggressive-indent-mode)
