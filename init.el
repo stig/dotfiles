@@ -9,6 +9,10 @@
 ;; Resize screen by pixels rather than by line/row
 (setq frame-resize-pixelwise t)
 
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
