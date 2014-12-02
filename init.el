@@ -140,6 +140,7 @@
 
 (package-install? 'helm-projectile)
 (package-install? 'graphviz-dot-mode)
+(setq graphviz-dot-view-command "open -a Graphviz %s")
 
 ;; Load a nice theme...
 (package-install? 'leuven-theme)
