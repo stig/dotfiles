@@ -347,6 +347,10 @@
 (require 'markdown-mode)
 (setq markdown-command "kramdown")
 
+(package-install? 'jekyll-modes)
+(add-to-list 'auto-mode-alist '("\\.md$" . jekyll-markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.html" . jekyll-html-mode))
+
 ;; Clean up whitespace atrocities in files on save
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
