@@ -1,21 +1,21 @@
 (require 'package)
 
 (add-to-list 'package-archives
-             '("marmalade" . "https://marmalade-repo.org/packages/") t)
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
 
 (add-to-list 'package-archives
-             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
 
 ;; Specific packages we want to load from specific repos - otherwise
 ;; the latest version is used, regardless of which repo it comes from.
 
-(add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
-(add-to-list 'package-pinned-packages '(clj-refactor . "melpa-stable") t)
-(add-to-list 'package-pinned-packages '(clojure-mode . "melpa-stable") t)
-(add-to-list 'package-pinned-packages '(helm . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(cider . "melpa-stable"))
+(add-to-list 'package-pinned-packages '(clj-refactor . "melpa-stable"))
+(add-to-list 'package-pinned-packages '(clojure-mode . "melpa-stable"))
+(add-to-list 'package-pinned-packages '(helm . "melpa-stable"))
 
 (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
   (package-refresh-contents))
