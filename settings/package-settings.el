@@ -13,6 +13,9 @@
 ;; the latest version is used, regardless of which repo it comes from.
 
 (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(clj-refactor . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(clojure-mode . "melpa-stable") t)
+(add-to-list 'package-pinned-packages '(helm . "melpa-stable") t)
 
 (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
   (package-refresh-contents))
@@ -30,7 +33,7 @@
 (package-install? 'graphviz-dot-mode)
 (package-install? 'helm)
 (package-install? 'helm-git-grep)
-;; (package-install? 'helm-projectile)
+(package-install? 'wsd-mode)
 (package-install? 'jekyll-modes)
 (package-install? 'markdown-mode)
 (package-install? 'multiple-cursors)
@@ -38,12 +41,5 @@
 (package-install? 'sane-term)
 (package-install? 'smartparens)
 (package-install? 'windsize)
-
-(defun packages-install (packages)
-  (--each packages
-    (when (not (package-installed-p it))
-      (package-install it)))
-  (delete-other-windows))
-
 
 (provide 'package-settings)
