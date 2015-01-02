@@ -89,9 +89,6 @@
             (eval-after-load 'helm
               '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
 
-            (add-to-list 'auto-mode-alist '("\\.md$" . jekyll-markdown-mode))
-            (add-to-list 'auto-mode-alist '("\\.html" . jekyll-html-mode))
-
             (global-set-key (kbd "C-s-<up>") 'windsize-up)
             (global-set-key (kbd "C-s-<down>") 'windsize-down)
             (global-set-key (kbd "C-s-<right>") 'windsize-right)
