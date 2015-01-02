@@ -45,6 +45,26 @@
 (unless (server-running-p)
   (server-start))
 
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+        ("melpa" . "http://melpa.milkbox.net/packages/")
+        ("marmalade" . "https://marmalade-repo.org/packages/")))
+
+
+;; Specific packages we want to load from specific repos - otherwise
+;; the latest version is used, regardless of which repo it comes from.
+
+(setq package-pinned-packages
+      '((cider . "melpa-stable")
+        (clj-refactor . "melpa-stable")
+        (clojure-mode . "melpa-stable")
+        (company . "melpa-stable")
+        (helm . "melpa-stable")
+        (helm-git-grep . "melpa-stable")
+        (magit . "melpa-stable")
+        (multiple-cursors . "melpa-stable")
+        (smartparens . "melpa-stable")))
 
 ;; These settings must be loaded after packages have been initialised
 (add-hook 'after-init-hook
@@ -81,11 +101,4 @@
             (global-set-key (kbd "C-x T") 'sane-term-create)
             (set-default 'sane-term-shell-command "/bin/zsh")
 
-            (global-aggressive-indent-mode 1)
-
-;;            (projectile-global-mode)
-;;            (setq projectile-enable-caching t
-;;                  projectile-switch-project-action 'projectile-dired
-;;                  projectile-use-git-grep t)
-
-            ))
+            (global-aggressive-indent-mode 1)))
