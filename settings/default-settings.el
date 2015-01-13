@@ -130,6 +130,4 @@
 
 (setq ediff-autostore-merges t)
 
-(setq markdown-command "kramdown")
-
 (provide 'default-settings)

@@ -66,6 +66,9 @@
         (multiple-cursors . "melpa-stable")
         (smartparens . "melpa-stable")))
 
+;; For markdown-mode
+(setq markdown-command "multimarkdown")
+
 ;; These settings must be loaded after packages have been initialised
 (add-hook 'after-init-hook
           (lambda ()
@@ -98,4 +101,5 @@
             (global-set-key (kbd "C-x T") 'sane-term-create)
             (set-default 'sane-term-shell-command "/bin/zsh")
 
-            (global-aggressive-indent-mode 1)))
+            (global-aggressive-indent-mode 1)
+            (add-to-list 'aggressive-indent-excluded-modes 'scala-mode)))
