@@ -105,20 +105,11 @@
  ;; Real emacs knights don't use shift to mark things
  shift-select-mode nil)
 
-
 ;; Where to find Leiningen (and others)
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;; Clean up whitespace atrocities in files on save
 (add-hook 'before-save-hook 'whitespace-cleanup)
-
-
-;; Fix to allow editing remote files over ssh
-(put 'temporary-file-directory 'standard-value '((file-name-as-directory "/tmp")))
-
-;; Allow ssh+sudo with tramp
-(set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
-
 
 (global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
 

@@ -30,6 +30,7 @@
 (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
 
 (require 'default-settings)
+(require 'tramp-settings)
 (require 'modeline-settings)
 
 (eval-after-load 'clojure-mode '(require 'clojure-settings))
