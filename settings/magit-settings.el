@@ -1,4 +1,7 @@
 (require 'magit)
+
+(setq magit-git-executable "/usr/bin/git")
+
 (global-set-key (kbd "M-m") 'magit-status)
 
 (defadvice magit-status (around magit-fullscreen activate)
