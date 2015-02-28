@@ -33,8 +33,7 @@
 (require 'tramp-settings)
 (require 'modeline-settings)
 
-(eval-after-load 'clojure-mode '(require 'clojure-settings))
-(eval-after-load 'scala-mode2 '(require 'scala-settings))
+(with-eval-after-load 'scala-mode2 (require 'scala-settings))
 
 ;; Join line below
 (global-set-key (kbd "M-j")
@@ -80,6 +79,14 @@
             (require 'mc-settings)
 
             (global-company-mode)
+
+            (add-hook 'clojure-mode-hook
+                      (lambda ()
+                        (clj-refactor-mode 1)
+                        (cljr-add-keybindings-with-prefix "C-c r")
+                        (define-key clojure-mode-map (kbd "C-c o") 'clj-jump-to-other-file)))
+
+            (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
             ;; Turn on yasnippets
             (yas-global-mode 1)
