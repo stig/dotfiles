@@ -64,6 +64,7 @@
         (helm-git-grep . "melpa-stable")
         (magit . "melpa-stable")
         (multiple-cursors . "melpa-stable")
+        (names . "melpa-stable")
         (smartparens . "melpa-stable")))
 
 ;; For markdown-mode
