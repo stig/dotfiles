@@ -1,0 +1,25 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: minutes
+# key: minutes
+# binding: direct-keybinding
+# --
+* $0 Minutes
+
+** Present
+
+- Stig B.
+- ...
+
+** Agenda
+
+*** Some funky agenda item
+
+You can also have some explanatory text here.
+
+** Discussion
+
+Lorem ipsum lorelei.
+
+** Actions
+
+*** TODO Explain frobniz [Stig]
