@@ -47,25 +47,8 @@
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")
-        ("marmalade" . "https://marmalade-repo.org/packages/")))
+        ("melpa" . "http://melpa.milkbox.net/packages/")))
 
-
-;; Specific packages we want to load from specific repos - otherwise
-;; the latest version is used, regardless of which repo it comes from.
-
-(setq package-pinned-packages
-      '((cider . "melpa-stable")
-        (clj-refactor . "melpa-stable")
-        (clojure-mode . "melpa-stable")
-        (company . "melpa-stable")
-        (helm . "melpa-stable")
-        (helm-git-grep . "melpa-stable")
-        (magit . "melpa-stable")
-        (multiple-cursors . "melpa-stable")
-        (names . "melpa-stable")
-        (smartparens . "melpa-stable")))
 
 ;; For markdown-mode
 (setq markdown-command "multimarkdown")
