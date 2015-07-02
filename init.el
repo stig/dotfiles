@@ -21,6 +21,10 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+;; Keep secret settings (passwords etc) in a separate file also.
+(setq secret-file (expand-file-name "secret.el" user-emacs-directory))
+(load secret-file)
+
 ;; Functions (load all files in defuns-dir)
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
