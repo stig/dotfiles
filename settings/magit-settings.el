@@ -1,20 +1,13 @@
 (require 'magit)
 
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+
+;; (require 'magit-gh-pulls)
+;; (add-hook 'magit-mode-hook 'magit-gh-pulls-mode)
+
 (setq magit-git-executable "/usr/bin/git")
 
 (global-set-key (kbd "M-m") 'magit-status)
-
-(defadvice magit-status (around magit-fullscreen activate)
-  (window-configuration-to-register :magit-fullscreen)
-  ad-do-it
-  (delete-other-windows))
-
-(defun magit-quit-session ()
-  "Restores the previous window configuration and kills the magit buffer"
-  (interactive)
-  (kill-buffer)
-  (jump-to-register :magit-fullscreen))
-
-(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 (provide 'magit-settings)
