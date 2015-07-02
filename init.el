@@ -61,6 +61,7 @@
             (require 'helm-settings)
             (require 'cljr-helm)
             (require 'mc-settings)
+            (require 'sphinx-frontend)
 
             (global-company-mode)
 
