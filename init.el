@@ -63,21 +63,11 @@
             (require 'smartparens-settings)
             (require 'magit-settings)
             (require 'helm-settings)
-            (require 'cljr-helm)
             (require 'mc-settings)
+            (require 'clojure-settings)
             (require 'sphinx-frontend)
 
             (global-company-mode)
-
-            (add-hook 'clojure-mode-hook
-                      (lambda ()
-                        (clj-refactor-mode 1)
-;                        (cljr-add-keybindings-with-prefix "C-c r")
-                        (define-key clojure-mode-map (kbd "C-c o") 'clj-jump-to-other-file)
-                        (define-key clojure-mode-map (kbd "C-c r") 'cljr-helm)))
-
-            (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-            (setq cider-repl-result-prefix ";; => ")
 
             ;; Turn on yasnippets
             (yas-global-mode 1)
