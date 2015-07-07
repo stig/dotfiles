@@ -109,7 +109,9 @@
 (add-to-list 'exec-path "/usr/local/bin")
 
 ;; Clean up whitespace atrocities in files on save
-(add-hook 'before-save-hook 'whitespace-cleanup)
+; (add-hook 'before-save-hook 'whitespace-cleanup)
+
+(global-set-key (kbd "C-c w") 'whitespace-cleanup)
 
 (global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
 
