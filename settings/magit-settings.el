@@ -1,6 +1,8 @@
 (require 'magit)
 (require 'magit-gitflow)
 
+(setq git-commit-summary-max-length 65)
+
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 
 (require 'magit-gh-pulls)
