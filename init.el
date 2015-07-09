@@ -66,14 +66,11 @@
             (require 'mc-settings)
             (require 'clojure-settings)
             (require 'sphinx-frontend)
-            (require 'auto-complete-rst)
-            (require 'table)
 
             ;; Always recognise tables in text modes
+            (require 'table)
             (add-hook 'text-mode-hook 'table-recognize)
-            
-            (auto-complete-rst-init)
-            
+
             (global-company-mode)
 
             ;; Turn on yasnippets
