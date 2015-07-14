@@ -110,7 +110,7 @@
 
 ;; Display whitespace annoyances
 (require 'whitespace)
-(setq whitespace-style '(face empty tabs lines-tail trailing))
+(setq whitespace-style '(face empty tabs trailing))
 (global-whitespace-mode t)
 
 (global-set-key (kbd "s-w") 'whitespace-cleanup)
