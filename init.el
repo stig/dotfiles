@@ -31,6 +31,17 @@
   (when (file-regular-p file)
     (load file)))
 
+
+;; 70 characters is too little
+(setq-default fill-column 78)
+
+;; wrap by default
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+;; s-q is too close to M-q which I use for reflowing text _all the
+;; damn time_.
+(global-set-key (kbd "s-q") nil)
+
 (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
 
 (require 'default-settings)
