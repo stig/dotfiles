@@ -1,5 +1,6 @@
 (require 'clj-refactor)
 (require 'cljr-helm)
+(require 'clojure-mode-extra-font-locking)
 
 (dolist (mapping '(("route" . "compojure.route")
                    ("timbre" . "taoensso.timbre")
