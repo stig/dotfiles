@@ -68,6 +68,8 @@
 ;; For markdown-mode
 (setq markdown-command "multimarkdown")
 
+(add-hook 'after-init-hook 'global-company-mode)
+
 ;; These settings must be loaded after packages have been initialised
 (add-hook 'after-init-hook
           (lambda ()
@@ -81,9 +83,7 @@
             ;; Always recognise tables in text modes
             (require 'table)
             (add-hook 'text-mode-hook 'table-recognize)
-
-            (global-company-mode)
-
+            
             ;; Turn on yasnippets
             (yas-global-mode 1)
             (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
