@@ -79,11 +79,12 @@
             (require 'mc-settings)
             (require 'clojure-settings)
             (require 'sphinx-frontend)
+            (require 'aggressive-indent-settings)
 
             ;; Always recognise tables in text modes
             (require 'table)
             (add-hook 'text-mode-hook 'table-recognize)
-            
+
             ;; Turn on yasnippets
             (yas-global-mode 1)
             (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
@@ -103,7 +104,4 @@
 
             (global-set-key (kbd "C-x t") 'sane-term)
             (global-set-key (kbd "C-x T") 'sane-term-create)
-            (set-default 'sane-term-shell-command "/bin/zsh")
-
-            (global-aggressive-indent-mode 1)
-            (add-to-list 'aggressive-indent-excluded-modes 'scala-mode)))
+            (set-default 'sane-term-shell-command "/bin/zsh")))
