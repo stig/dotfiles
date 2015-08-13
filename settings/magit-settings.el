@@ -2,6 +2,7 @@
 (require 'magit-gitflow)
 
 (setq git-commit-summary-max-length 65)
+(setq magit-push-always-verify nil)
 
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 
