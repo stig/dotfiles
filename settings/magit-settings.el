@@ -13,4 +13,6 @@
 
 (global-set-key (kbd "M-m") 'magit-status)
 
+(setq magit-diff-refine-hunk 'all)
+
 (provide 'magit-settings)
