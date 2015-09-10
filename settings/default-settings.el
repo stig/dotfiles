@@ -125,4 +125,8 @@
 
 (setq ediff-autostore-merges t)
 
+;(when (eq system-type 'darwin)
+;  (osx-trash-setup))
+(setq delete-by-moving-to-trash t)
+
 (provide 'default-settings)
