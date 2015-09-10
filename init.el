@@ -96,6 +96,8 @@
             ;; Invoke `helm-git-grep' from other helm.
             (eval-after-load 'helm
               '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
+            (eval-after-load 'helm
+              (global-set-key (kbd "C-c f") 'helm-git-files))
 
             (global-set-key (kbd "C-s-<up>") 'windsize-up)
             (global-set-key (kbd "C-s-<down>") 'windsize-down)
