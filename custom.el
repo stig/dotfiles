@@ -5,6 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(magit-branch-arguments nil)
  '(magit-fetch-arguments (quote ("--prune")))
+ '(magit-gh-pulls-arguments (quote ("--open-new-in-browser")))
+ '(magit-rebase-arguments nil)
  '(paradox-automatically-star t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
