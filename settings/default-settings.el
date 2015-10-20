@@ -100,7 +100,7 @@
  ispell-dictionary "british"
 
  ;; I don't want my computer beeping at me, thank you very much.
- visible-bell t
+ visible-bell nil
 
  ;; Real emacs knights don't use shift to mark things
  shift-select-mode nil)
