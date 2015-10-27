@@ -105,8 +105,7 @@
  ;; Real emacs knights don't use shift to mark things
  shift-select-mode nil)
 
-;; Where to find Leiningen (and others)
-(add-to-list 'exec-path "/usr/local/bin")
+(exec-path-from-shell-initialize)
 
 ;; Display whitespace annoyances
 (require 'whitespace)
