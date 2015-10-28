@@ -408,6 +408,12 @@
            (add-to-list 'ac-modes 'cider-mode)
            (add-to-list 'ac-modes 'cider-repl-mode))))))
 
+(use-package puppet-mode
+  :ensure t)
+
+(use-package editorconfig
+  :ensure t)
+
 (use-package table
   :ensure t
   :init
