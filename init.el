@@ -400,9 +400,7 @@
 
   (bind-key "C-c o" 'clj-jump-to-other-file clojure-mode-map)
   (bind-key "C-c C-o" 'clj-jump-to-other-file-other-window clojure-mode-map)
-
-  ;;  (define-key clojure-mode-map (kbd "C-c o") 'clj-jump-to-other-file)
-
+  
   (use-package clj-refactor
     :ensure t
     :config
