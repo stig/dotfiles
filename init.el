@@ -5,6 +5,10 @@
 ;; Turn off splash screen
 (setq inhibit-startup-message t)
 
+;; change to use visible bell once http://debbugs.gnu.org/cgi/bugreport.cgi?bug=21662 is fixed
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
+
 ;; Keep emacs Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
