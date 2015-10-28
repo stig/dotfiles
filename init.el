@@ -276,13 +276,13 @@
 (use-package helm
   :ensure t
 
+  ;;  :init
+  ;;  (setq helm-command-prefix-key "C-c h")
+
   :bind (("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
          ("C-x b" . helm-mini)
-         ("C-x C-f" . helm-find-files))
-
-  :init
-  (setq helm-command-prefix-key "C-c h"))
+         ("C-x C-f" . helm-find-files)))
 
 (use-package helm-git-grep
   :ensure t
