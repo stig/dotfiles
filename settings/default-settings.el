@@ -105,8 +105,6 @@
  ;; Real emacs knights don't use shift to mark things
  shift-select-mode nil)
 
-(exec-path-from-shell-initialize)
-
 ;; Display whitespace annoyances
 (require 'whitespace)
 (setq whitespace-style '(face empty tabs trailing))
