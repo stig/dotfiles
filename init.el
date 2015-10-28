@@ -361,7 +361,7 @@
 
 
 (use-package clojure-mode
-  ;; :mode "\\.clj\\'"
+  :mode "\\.clj\\'"
   :ensure t
   :config
 
@@ -411,7 +411,8 @@
            (add-to-list 'ac-modes 'cider-repl-mode))))))
 
 (use-package puppet-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.pp'")
 
 (use-package editorconfig
   :ensure t)
