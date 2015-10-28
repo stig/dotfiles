@@ -14,8 +14,14 @@
 (setq settings-dir  (expand-file-name "settings"  user-emacs-directory))
 
 ;; Set up load path
-(add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
+(add-to-list 'load-path settings-dir)
+
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
+
+;; Add custom load path for packages we are hacking on
+(add-to-list 'load-path (expand-file-name  "magit-gh-pulls" site-lisp-dir))
 
 ;; Keep emacs Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
