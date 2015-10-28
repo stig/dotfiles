@@ -305,6 +305,11 @@
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
   (add-hook 'css-mode-hook #'aggressive-indent-mode))
 
+(use-package auto-complete
+  :ensure t
+  :config
+  (ac-config-default))
+
 (use-package helm
   :ensure t
 
@@ -315,6 +320,10 @@
          ("M-y" . helm-show-kill-ring)
          ("C-x b" . helm-mini)
          ("C-x C-f" . helm-find-files)))
+
+(use-package ac-helm
+  :ensure t
+  :bind ("C-." . ac-complete-with-helm))
 
 (use-package helm-git-grep
   :ensure t
@@ -338,11 +347,6 @@
          ("s-n" . mc/mark-next-like-this)
          ("s-p" . mc/mark-previous-like-this)))
 
-(use-package auto-complete
-  :ensure t
-  :config
-  (ac-config-default))
-
 (use-package auto-complete-rst
   :mode "\\.rst\'"
   :config
@@ -352,13 +356,6 @@
           ac-source-abbrev
           ac-source-dictionary
           ac-source-yasnippet)))
-
-(use-package ac-helm
-  :ensure t
-  :bind ("C-." . ac-complete-with-helm))
-
-
-
 
 (use-package clojure-mode
   :mode "\\.clj\\'"
