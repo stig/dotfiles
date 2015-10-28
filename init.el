@@ -458,6 +458,3 @@
   :ensure t
   :init
   (add-hook 'text-mode-hook 'table-recognize))
-
-;;;; cider
-;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
