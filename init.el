@@ -306,5 +306,23 @@
          ("s-n" . mc/mark-next-like-this)
          ("s-p" . mc/mark-previous-like-this)))
 
+(use-package auto-complete
+  :ensure t
+  :config
+  (ac-config-default))
+
+(use-package auto-complete-rst
+  :config
+  (auto-complete-rst-init)
+  (setq auto-complete-rst-other-sources
+        '(ac-source-filename
+          ac-source-abbrev
+          ac-source-dictionary
+          ac-source-yasnippet)))
+
+(use-package ac-helm
+  :ensure t
+  :bind ("C-." . ac-complete-with-helm))
+
 ;;;; cider
 ;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
