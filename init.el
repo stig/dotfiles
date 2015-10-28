@@ -155,11 +155,16 @@
 ;; Packages installed with package.el
 ;;
 
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (package-initialize)
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
+
+(unless (package-installed-p 'use-package)
+  (message "%s" "Refreshing package database...")
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
