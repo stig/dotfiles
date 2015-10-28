@@ -354,6 +354,59 @@
   :ensure t
   :bind ("C-." . ac-complete-with-helm))
 
+
+
+
+(use-package clojure-mode
+  ;; :mode "\\.clj\\'"
+  :ensure t
+  :config
+
+  ;;  (define-key clojure-mode-map (kbd "C-c o") 'clj-jump-to-other-file)
+
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (dolist (mapping '(("route" . "compojure.route")
+                       ("timbre" . "taoensso.timbre")
+                       ("component" . "com.stuartsierra.component")
+                       ("d" . "datomic.api")))
+      (add-to-list 'cljr-magic-require-namespaces mapping t))
+
+    :config
+    (defun my-clojure-mode-hook ()
+      (clj-refactor-mode 1)
+      (yas-minor-mode 1) ; for adding require/use/import
+      ;;(cljr-add-keybindings-with-prefix "C-c C-m")
+      )
+
+    (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+
+    (use-package cljr-helm
+      :ensure t
+      :init
+      (bind-key "C-c r" 'cljr-helm clojure-mode-map)))
+
+  (use-package clojure-mode-extra-font-locking
+    :ensure t)
+
+  (use-package cider
+    :ensure t
+    :init
+    (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+    (setq cider-repl-result-prefix ";; => ")
+
+    :config
+    (use-package ac-cider
+      :init
+      (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+      (add-hook 'cider-mode-hook 'ac-cider-setup)
+      (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+      (eval-after-load "auto-complete"
+        '(progn
+           (add-to-list 'ac-modes 'cider-mode)
+           (add-to-list 'ac-modes 'cider-repl-mode))))))
+
 (use-package table
   :ensure t
   :init
