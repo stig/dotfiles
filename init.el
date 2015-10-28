@@ -1,27 +1,9 @@
 ;; Turn off mouse interface early in startup to avoid momentary display
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; No splash screen please ... jeez
+;; Turn off splash screen
 (setq inhibit-startup-message t)
-
-;; Resize screen by pixels rather than by line/row
-(setq frame-resize-pixelwise t)
-
-;; Paths to dependencies
-(setq site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory))
-(setq settings-dir  (expand-file-name "settings"  user-emacs-directory))
-
-;; Set up load path
-(add-to-list 'load-path site-lisp-dir)
-(add-to-list 'load-path settings-dir)
-
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
-;; Add custom load path for packages we are hacking on
-(add-to-list 'load-path (expand-file-name  "magit-gh-pulls" site-lisp-dir))
 
 ;; Keep emacs Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -31,30 +13,110 @@
 (setq secret-file (expand-file-name "secret.el" user-emacs-directory))
 (load secret-file)
 
-;; Functions (load all files in defuns-dir)
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
-
-
-;; 70 characters is too little
+;; Fill at 78 columns rather than the default of 70
 (setq-default fill-column 78)
 
 ;; wrap by default
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-;; s-q is too close to M-q which I use for reflowing text _all the
-;; damn time_.
+;; Disable `s-q' (kill-emacs) as it is too close to M-q which I use for
+;; reflowing text.
 (global-set-key (kbd "s-q") nil)
+
+(defun delete-current-buffer-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
 
 (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
 
-(require 'default-settings)
-(require 'tramp-settings)
-(require 'modeline-settings)
+;; Auto refresh buffers
+(global-auto-revert-mode 1)
 
-(with-eval-after-load 'scala-mode2 (require 'scala-settings))
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+
+;; Transparently open compressed files
+(auto-compression-mode t)
+
+;; Answering just 'y' or 'n' will do
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; UTF-8 please
+(setq locale-coding-system 'utf-8) ; pretty
+(set-terminal-coding-system 'utf-8) ; pretty
+(set-keyboard-coding-system 'utf-8) ; pretty
+(set-selection-coding-system 'utf-8) ; please
+(prefer-coding-system 'utf-8) ; with sugar on top
+
+;; Norwegian characters
+(global-set-key (kbd "s-'") (kbd "æ"))
+(global-set-key (kbd "s-\"") (kbd "Æ"))
+(global-set-key (kbd "s-O") (kbd "Ø"))
+(global-set-key (kbd "s-o") (kbd "ø"))
+(global-set-key (kbd "s-A") (kbd "Å"))
+(global-set-key (kbd "s-a") (kbd "å"))
+
+;; Sentences do not need double spaces to end. Period.
+(set-default 'sentence-end-double-space nil)
+
+;; Never insert tabs
+(set-default 'indent-tabs-mode nil)
+
+;; Show active region
+(transient-mark-mode 1)
+(make-variable-buffer-local 'transient-mark-mode)
+(put 'transient-mark-mode 'permanent-local t)
+(setq-default transient-mark-mode t)
+
+;; Save a list of recent files visited. (open recent file with C-x f)
+(recentf-mode 1)
+(setq recentf-max-saved-items 100) ;; just 20 is too recent
+
+;; Save minibuffer history
+(savehist-mode 1)
+(setq history-length 1000)
+
+(setq-default save-place t)
+(setq save-place-file (concat user-emacs-directory "places"))
+
+(show-paren-mode 1)
+
+;; Improve pasting behaviour with programs outside Emacs
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      mouse-yank-at-point t)
+
+(setq require-final-newline t)
+
+;; Auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil)
+
+(setq delete-by-moving-to-trash t)
+
+;; Don't litter my file tree with backup files
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+
+(setq mac-command-modifier 'meta
+      mac-option-modifier 'super
+      mac-control-modifier 'control
+      ns-function-modifier 'hyper)
+
+
+(setq ispell-program-name "aspell"
+      ispell-dictionary "british")
+
 
 ;; Join line below
 (global-set-key (kbd "M-j")
@@ -62,54 +124,57 @@
                   (interactive)
                   (join-line -1)))
 
+
+;; Display whitespace annoyances
+(require 'whitespace)
+(setq whitespace-style '(face empty tabs trailing))
+(global-whitespace-mode t)
+
+(global-set-key (kbd "s-w") 'whitespace-cleanup)
+
+
+
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+;; Fix to allow editing remote files over ssh
+(put 'temporary-file-directory
+     'standard-value
+     '((file-name-as-directory "/tmp")))
+
+;; Allow ssh+sudo with tramp
+(set-default 'tramp-default-proxies-alist
+             (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+
+;; SSH is faster than the default scp mode (apparently)
+(setq tramp-default-method "ssh")
+
+
+;;
+;; Packages installed with package.el
+;;
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.milkbox.net/packages/")))
 
+(package-initialize)
 
-;; For markdown-mode
-(setq markdown-command "multimarkdown")
+(eval-when-compile
+  (require 'use-package))
 
-(add-hook 'after-init-hook 'global-company-mode)
+(use-package magit-gh-pulls
+  :ensure t)
 
-;; These settings must be loaded after packages have been initialised
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'smartparens-settings)
-            (require 'magit-settings)
-            (require 'helm-settings)
-            (require 'mc-settings)
-            (require 'clojure-settings)
-            (require 'sphinx-frontend)
-            (require 'aggressive-indent-settings)
+(use-package magit
+  :ensure t
+  :bind ("M-m" . magit-status)
+  :init
+  (setq magit-git-executable "/usr/bin/git"
+        git-commit-summary-max-length 65
+        magit-diff-refine-hunk 'all
+        magit-push-always-verify nil)
 
-            ;; Always recognise tables in text modes
-            (require 'table)
-            (add-hook 'text-mode-hook 'table-recognize)
-
-            ;; Turn on yasnippets
-            (yas-global-mode 1)
-            (define-key yas-keymap (kbd "<return>") 'yas/exit-all-snippets)
-
-            ;; Invoke `helm-git-grep' from isearch.
-            (global-set-key (kbd "C-c g") 'helm-git-grep)
-            (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
-
-            ;; Invoke `helm-git-grep' from other helm.
-            (eval-after-load 'helm
-              '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
-            (eval-after-load 'helm
-              (global-set-key (kbd "C-c f") 'helm-git-files))
-
-            (global-set-key (kbd "C-s-<up>") 'windsize-up)
-            (global-set-key (kbd "C-s-<down>") 'windsize-down)
-            (global-set-key (kbd "C-s-<right>") 'windsize-right)
-            (global-set-key (kbd "C-s-<left>") 'windsize-left)
-
-            (global-set-key (kbd "C-x t") 'sane-term)
-            (global-set-key (kbd "C-x T") 'sane-term-create)
-            (set-default 'sane-term-shell-command "/bin/zsh")))
+  :config
+  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
