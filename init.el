@@ -294,5 +294,13 @@
 
   :bind ("C-c f" . helm-git-files))
 
+(use-package multiple-cursors
+  :ensure t
+
+  :bind (("C-c a" . mc/edit-lines)
+         ("C-c C-a" . mc/mark-all-dwim)
+         ("s-n" . mc/mark-next-like-this)
+         ("s-p" . mc/mark-previous-like-this)))
+
 ;;;; cider
 ;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
