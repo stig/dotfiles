@@ -219,6 +219,7 @@
 
 (use-package markdown-mode
   :ensure t
+  :mode "\\.md'"
 
   :init
   (setq markdown-command "multimarkdown"))
@@ -343,6 +344,7 @@
   (ac-config-default))
 
 (use-package auto-complete-rst
+  :mode "\\.rst\'"
   :config
   (auto-complete-rst-init)
   (setq auto-complete-rst-other-sources
