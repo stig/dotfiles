@@ -15,3 +15,5 @@ projectile-bookmarks.eld
 /.stackmode/
 /secret.el
 var/
+xkcd/
+games/
