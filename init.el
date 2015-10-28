@@ -169,7 +169,9 @@
 
 (use-package magit
   :ensure t
+
   :bind ("M-m" . magit-status)
+
   :init
   (setq magit-git-executable "/usr/bin/git"
         git-commit-summary-max-length 65
@@ -178,3 +180,114 @@
 
   :config
   (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+
+(use-package markdown-mode
+  :ensure t
+
+  :init
+  (setq markdown-command "multimarkdown"))
+
+(use-package smartparens
+  :ensure t
+
+  :config
+  (smartparens-global-mode t)
+  (show-smartparens-global-mode t)
+
+  ;; Add smartparens-strict-mode to all sp--lisp-modes hooks. C-h v sp--lisp-modes
+  ;; to customize/view this list.
+  (mapc (lambda (mode)
+          (add-hook (intern (format "%s-hook" (symbol-name mode))) 'smartparens-strict-mode))
+        sp--lisp-modes)
+
+  ;; Conveniently set keys into the sp-keymap, limiting the keybinding to buffers
+  ;; with SP mode activated
+  (mapc (lambda (info)
+          (let ((key (kbd (car info)))
+                (function (car (cdr info))))
+            (define-key sp-keymap key function)))
+        '(("C-M-f" sp-forward-sexp)
+          ("C-M-b" sp-backward-sexp)
+
+          ("C-M-d" sp-down-sexp)
+          ("C-M-a" sp-backward-down-sexp)
+          ("C-S-a" sp-beginning-of-sexp)
+          ("C-S-d" sp-end-of-sexp)
+
+          ("C-M-e" sp-up-sexp)
+
+          ("C-M-u" sp-backward-up-sexp)
+          ("C-M-t" sp-transpose-sexp)
+
+          ("C-M-n" sp-next-sexp)
+          ("C-M-p" sp-previous-sexp)
+
+          ("C-M-k" sp-kill-sexp)
+          ("C-M-w" sp-copy-sexp)
+
+          ("C-M-<delete>" sp-unwrap-sexp)
+          ("C-M-<backspace>" sp-backward-unwrap-sexp)
+
+          ("C-<right>" sp-forward-slurp-sexp)
+          ("C-<left>" sp-forward-barf-sexp)
+          ("C-M-<left>" sp-backward-slurp-sexp)
+          ("C-M-<right>" sp-backward-barf-sexp)
+
+          ("M-D" sp-splice-sexp)
+          ("C-M-<delete>" sp-splice-sexp-killing-forward)
+          ("C-M-<backspace>" sp-splice-sexp-killing-backward)
+          ("C-S-<backspace>" sp-splice-sexp-killing-around)
+
+          ("C-]" sp-select-next-thing-exchange)
+          ("C-<left_bracket>" sp-select-previous-thing)
+          ("C-M-]" sp-select-next-thing)
+
+          ("M-F" sp-forward-symbol)
+          ("M-B" sp-backward-symbol)
+
+          ("H-t" sp-prefix-tag-object)
+          ("H-p" sp-prefix-pair-object)
+          ("H-s c" sp-convolute-sexp)
+          ("H-s a" sp-absorb-sexp)
+          ("H-s e" sp-emit-sexp)
+          ("H-s p" sp-add-to-previous-sexp)
+          ("H-s n" sp-add-to-next-sexp)
+          ("H-s j" sp-join-sexp)
+          ("H-s s" sp-split-sexp)))
+
+  ;; This is from authors config, seems to let you jump to the end of the current
+  ;; sexp with paren?
+  (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp))
+
+(use-package aggressive-indent
+  :ensure t
+
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (add-hook 'puppet-mode-hook #'aggressive-indent-mode)
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+  (add-hook 'css-mode-hook #'aggressive-indent-mode))
+
+(use-package helm
+  :ensure t
+
+  :init
+  (setq helm-command-prefix-key "C-c h")
+
+  :config
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  (global-set-key (kbd "C-x b") 'helm-mini))
+
+(use-package helm-git-grep
+  :ensure t
+
+  :bind ("C-c g" . helm-git-grep))
+
+(use-package helm-git-files
+  :ensure t
+
+  :bind ("C-c f" . helm-git-files))
+
+;;;; cider
+;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
