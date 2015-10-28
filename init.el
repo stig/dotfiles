@@ -398,6 +398,7 @@
 
     :config
     (use-package ac-cider
+      :ensure t
       :init
       (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
       (add-hook 'cider-mode-hook 'ac-cider-setup)
