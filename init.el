@@ -198,9 +198,7 @@
 
 (eval-when-compile
   (require 'use-package))
-
-(use-package magit-gh-pulls
-  :ensure t)
+(require 'bind-key)
 
 (use-package magit
   :ensure t
@@ -214,7 +212,10 @@
         magit-push-always-verify nil)
 
   :config
-  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+  (use-package magit-gh-pulls
+    :ensure t
+    :config
+    (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)))
 
 (use-package markdown-mode
   :ensure t
