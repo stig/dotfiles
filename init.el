@@ -39,6 +39,15 @@
 
 (global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
 
+(defun replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer or region with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
+
 (setq graphviz-dot-view-command "open -a Graphviz %s")
 
 ;; Disable `s-q' (kill-emacs) as it is too close to M-q which I use for
