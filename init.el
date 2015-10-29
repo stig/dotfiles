@@ -26,6 +26,21 @@
 ;; wrap by default
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
+
+(defun comment-or-uncomment-region-or-line ()
+  "Comments or uncomments the region or the current line if there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)
+    (next-line)))
+
+(global-set-key (kbd "s-c") 'comment-or-uncomment-region-or-line)
+
+(setq graphviz-dot-view-command "open -a Graphviz %s")
+
 ;; Disable `s-q' (kill-emacs) as it is too close to M-q which I use for
 ;; reflowing text.
 (global-set-key (kbd "s-q") nil)
