@@ -403,7 +403,7 @@
 
   (bind-key "C-c o" 'clj-jump-to-other-file clojure-mode-map)
   (bind-key "C-c C-o" 'clj-jump-to-other-file-other-window clojure-mode-map)
-  
+
   (use-package clj-refactor
     :ensure t
     :config
@@ -459,3 +459,31 @@
   :ensure t
   :init
   (add-hook 'text-mode-hook 'table-recognize))
+
+(use-package sbt-mode
+  :ensure t
+  :mode "\\.sbt\\'"
+  :init
+  ;; compilation-skip-threshold tells the compilation minor-mode
+  ;; which type of compiler output can be skipped. 1 = skip info
+  ;; 2 = skip info and warnings.
+  (setq compilation-skip-threshold 1)
+  :config
+  ;; Bind C-a to 'comint-bol when in sbt-mode. This will move the
+  ;; cursor to just after prompt.
+  (bind-key "C-a" 'comint-bol)
+
+  ;; Bind M-RET to 'comint-accumulate. This will allow you to add
+  ;; more than one line to scala console prompt before sending it
+  ;; for interpretation. It will keep your command history cleaner.
+  (bind-key "M-RET" 'comint-accumulate))
+
+(use-package scala-mode2
+  :ensure t
+  :mode ("\\.scala\\'" . scala-mode)
+  :config
+  ;; sbt-find-definitions is a command that tries to find (with grep)
+  ;; the definition of the thing at point.
+  (bind-key "M-." 'sbt-find-definitions)
+  ;; use sbt-run-previous-command to re-compile your code after changes
+  (bind-key "C-x '" 'sbt-run-previous-command))
