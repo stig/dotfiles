@@ -10,4 +10,6 @@ starting from the "better defaults" package and adding things
 one-by-one as I find them, rather than stealing someone else's mammoth
 .emacs file that I don't understand any of.
 
-A lot of inspiration is from https://github.com/magnars/.emacs.d/
+Initially i drew a lot of inspiration from https://github.com/magnars/.emacs.d
+-- though after rewriting it to use https://github.com/jwiegley/use-package
+(which is excellent) it is starting to feel like my own work.
