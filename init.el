@@ -30,6 +30,9 @@
 ;; reflowing text.
 (global-set-key (kbd "s-q") nil)
 
+;; Let's just close window, rather than kill emacs
+(global-set-key (kbd "C-x C-c") nil)
+
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
