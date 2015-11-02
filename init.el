@@ -345,13 +345,10 @@
 (use-package helm
   :ensure t
 
-  ;;  :init
-  ;;  (setq helm-command-prefix-key "C-c h")
-
   :bind (("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
          ("C-x b" . helm-mini)
-         ("C-c C-f" . helm-find-files)))
+         ("C-x C-f" . helm-find-files)))
 
 (use-package ac-helm
   :ensure t
