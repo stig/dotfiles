@@ -516,3 +516,11 @@
 
 (use-package sphinx-frontend
   :ensure t)
+
+(use-package gist
+  :ensure t
+  :bind ("C-x g l" . gist-list))
+
+(use-package yagist
+  :ensure t
+  :bind ("C-x g c" . yagist-region-or-buffer))
