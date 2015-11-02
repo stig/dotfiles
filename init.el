@@ -516,3 +516,6 @@
   (bind-key "M-." 'sbt-find-definitions)
   ;; use sbt-run-previous-command to re-compile your code after changes
   (bind-key "C-x '" 'sbt-run-previous-command))
+
+(use-package sphinx-frontend
+  :ensure t)
