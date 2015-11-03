@@ -223,6 +223,9 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/"))
 
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://stable.milkbox.net/packages/"))
+
 (unless (package-installed-p 'use-package)
   (message "%s" "Refreshing package database...")
   (package-refresh-contents)
@@ -387,6 +390,7 @@
           ac-source-yasnippet)))
 
 (use-package clojure-mode
+  :pin melpa-stable
   :mode "\\.clj\\'"
   :ensure t
 
@@ -427,6 +431,7 @@
   (bind-key "C-c C-o" 'clj-jump-to-other-file-other-window clojure-mode-map)
 
   (use-package clj-refactor
+    :pin melpa-stable
     :ensure t
     :config
     (dolist (mapping '(("route" . "compojure.route")
@@ -457,6 +462,7 @@
     :ensure t)
 
   (use-package cider
+    :pin melpa-stable
     :ensure t
     :init
     (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
