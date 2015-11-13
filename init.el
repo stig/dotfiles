@@ -438,10 +438,11 @@
                        ("timbre" . "taoensso.timbre")
                        ("component" . "com.stuartsierra.component")
                        ("d" . "datomic.api")
+                       ("io" . "clojure.java.io")
                        ("tc" . "clojure.test.check")
                        ("gen" . "clojure.test.check.generators")
                        ("prop" . "clojure.test.check.properties")
-                       ("defspec" . "clojure.test.check.clojure-test")))
+                       ("prop'" . "com.gfredericks.test.chuck.properties")))
       (add-to-list 'cljr-magic-require-namespaces mapping t))
 
     :config
