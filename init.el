@@ -330,7 +330,9 @@
 
   ;; This is from authors config, seems to let you jump to the end of the current
   ;; sexp with paren?
-  (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp))
+  (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+  (bind-key ")" 'sp-up-sexp clojure-mode-map)
+  (bind-key ")" 'sp-up-sexp cider-repl-mode-map))
 
 (use-package aggressive-indent
   :ensure t
