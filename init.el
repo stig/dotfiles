@@ -265,6 +265,7 @@
   :config
   (smartparens-global-mode t)
   (show-smartparens-global-mode t)
+  (sp-pair "'" nil :actions :rem)
 
   ;; Add smartparens-strict-mode to all sp--lisp-modes hooks. C-h v sp--lisp-modes
   ;; to customize/view this list.
