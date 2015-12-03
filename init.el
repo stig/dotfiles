@@ -464,27 +464,30 @@
 
   (use-package clojure-mode-extra-font-locking
     :ensure t)
+  )
 
-  (use-package cider
-    :pin melpa-stable
+
+(use-package cider
+  :pin melpa-stable
+  :ensure t
+  :init
+  (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+  (setq cider-repl-result-prefix ";; => ")
+  (setq org-babel-clojure-backend 'cider)
+
+  :config
+  (bind-key ")" 'sp-up-sexp cider-repl-mode-map)
+
+  (use-package ac-cider
     :ensure t
     :init
-    (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-    (setq cider-repl-result-prefix ";; => ")
-
-    :config
-    (bind-key ")" 'sp-up-sexp cider-repl-mode-map)
-
-    (use-package ac-cider
-      :ensure t
-      :init
-      (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-      (add-hook 'cider-mode-hook 'ac-cider-setup)
-      (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-      (eval-after-load "auto-complete"
-        '(progn
-           (add-to-list 'ac-modes 'cider-mode)
-           (add-to-list 'ac-modes 'cider-repl-mode))))))
+    (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+    (add-hook 'cider-mode-hook 'ac-cider-setup)
+    (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+    (eval-after-load "auto-complete"
+      '(progn
+         (add-to-list 'ac-modes 'cider-mode)
+         (add-to-list 'ac-modes 'cider-repl-mode)))))
 
 (use-package puppet-mode
   :ensure t
