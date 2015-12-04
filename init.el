@@ -499,7 +499,7 @@
   :ensure t
   :bind ("C-x g c" . yagist-region-or-buffer))
 
-(use-package
+(use-package projectile
   :ensure t
   :config
   (projectile-global-mode))
