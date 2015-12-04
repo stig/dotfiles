@@ -358,14 +358,8 @@
   :ensure t
   :bind ("C-." . ac-complete-with-helm))
 
-(use-package helm-git-grep
-  :ensure t
-
-  :bind ("C-c g" . helm-git-grep)
-
-  :config
-  (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
-  (define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
+(use-package wgrep-ag
+  :ensure t)
 
 (use-package helm-git-files
   :ensure t
