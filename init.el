@@ -503,3 +503,13 @@
   :ensure t
   :config
   (projectile-global-mode))
+
+(use-package org
+  :ensure t
+  :init
+  (setq org-babel-clojure-backend 'cider)
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (clojure . t))))
