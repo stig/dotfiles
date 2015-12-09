@@ -352,6 +352,7 @@
   :bind (("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
          ("C-x b" . helm-mini)
+         ("C-x 4 b" . helm-mini)
          ("C-x C-f" . helm-find-files)))
 
 (use-package ac-helm
