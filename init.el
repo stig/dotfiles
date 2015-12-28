@@ -433,7 +433,6 @@
   :init
   (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
   (setq cider-repl-result-prefix ";; => ")
-  (setq org-babel-clojure-backend 'cider)
 
   :config
   (bind-key ")" 'sp-up-sexp cider-repl-mode-map)
