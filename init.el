@@ -450,7 +450,6 @@
          (add-to-list 'ac-modes 'cider-repl-mode)))))
 
 (use-package puppet-mode
-  :ensure t
   :mode "\\.pp'")
 
 (use-package editorconfig
@@ -462,7 +461,6 @@
   (add-hook 'text-mode-hook 'table-recognize))
 
 (use-package sbt-mode
-  :ensure t
   :mode "\\.sbt\\'"
   :init
   ;; compilation-skip-threshold tells the compilation minor-mode
@@ -480,7 +478,6 @@
   (bind-key "M-RET" 'comint-accumulate))
 
 (use-package scala-mode2
-  :ensure t
   :mode ("\\.scala\\'" . scala-mode)
   :config
   ;; sbt-find-definitions is a command that tries to find (with grep)
@@ -488,9 +485,6 @@
   (bind-key "M-." 'sbt-find-definitions)
   ;; use sbt-run-previous-command to re-compile your code after changes
   (bind-key "C-x '" 'sbt-run-previous-command))
-
-(use-package sphinx-frontend
-  :ensure t)
 
 (use-package gist
   :ensure t
