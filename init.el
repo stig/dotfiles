@@ -346,6 +346,20 @@
   :config
   (ac-config-default))
 
+(use-package ac-ispell
+  :ensure t
+  :init
+  ;; Completion words longer than 4 characters
+  (custom-set-variables
+   '(ac-ispell-requires 4)
+   '(ac-ispell-fuzzy-limit 4))
+
+  :config
+  (ac-ispell-setup)
+
+  (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup)
+  (add-hook 'mail-mode-hook 'ac-ispell-ac-setup))
+
 (use-package helm
   :ensure t
 
