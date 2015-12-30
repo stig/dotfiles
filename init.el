@@ -58,6 +58,10 @@
 ;; Let's just close window, rather than kill emacs
 (global-set-key (kbd "C-x C-c") nil)
 
+(global-set-key (kbd "C-c e") (lambda ()
+                                (interactive)
+                                (find-file "~/.emacs.d/init.el")))
+
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
