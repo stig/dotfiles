@@ -380,11 +380,6 @@
 (use-package wgrep-ag
   :ensure t)
 
-(use-package helm-git-files
-  :ensure t
-
-  :bind ("C-c f" . helm-git-files))
-
 (use-package multiple-cursors
   :ensure t
 
