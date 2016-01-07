@@ -398,6 +398,10 @@
           ac-source-dictionary
           ac-source-yasnippet)))
 
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
 (use-package clojure-mode
   :pin melpa-stable
   :mode "\\.clj\\'"
@@ -424,7 +428,6 @@
     :config
     (defun my-clojure-mode-hook ()
       (clj-refactor-mode 1)
-      (yas-minor-mode 1) ; for adding require/use/import
       ;;(cljr-add-keybindings-with-prefix "C-c C-m")
       )
 
