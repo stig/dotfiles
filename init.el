@@ -523,7 +523,8 @@
    'org-babel-load-languages
    '((emacs-lisp . t)
      (clojure . t)
-     (dot . t))))
+     (dot . t)
+     (sh . t))))
 
 (use-package sane-term
   :bind (("C-x t" . sane-term)
