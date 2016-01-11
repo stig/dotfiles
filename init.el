@@ -19,7 +19,8 @@
 
 
 (let ((default-directory (expand-file-name "~/.homebrew/share/emacs/site-lisp")))
-  (normal-top-level-add-subdirs-to-load-path))
+  (if (file-exists-p default-directory)
+      (normal-top-level-add-subdirs-to-load-path)))
 
 ;; Fill at 78 columns rather than the default of 70
 (setq-default fill-column 78)
