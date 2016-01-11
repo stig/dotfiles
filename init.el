@@ -231,6 +231,11 @@
   (require 'use-package))
 (require 'bind-key)
 
+(use-package leuven-theme
+  :ensure t
+  :config
+  (load-theme 'leuven t))
+
 (use-package magit
   :ensure t
 
