@@ -467,10 +467,6 @@
 (use-package editorconfig
   :ensure t)
 
-(use-package table
-  :init
-  (add-hook 'text-mode-hook 'table-recognize))
-
 (use-package sbt-mode
   :mode "\\.sbt\\'"
   :init
