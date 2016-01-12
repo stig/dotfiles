@@ -468,7 +468,6 @@
   :ensure t)
 
 (use-package table
-  :ensure t
   :init
   (add-hook 'text-mode-hook 'table-recognize))
 
