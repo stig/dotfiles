@@ -11,12 +11,13 @@
 
 ;; Keep emacs Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
+(if (file-exists-p custom-file)
+    (load custom-file))
 
 ;; Keep secret settings (passwords etc) in a separate file also.
 (setq secret-file (expand-file-name "secret.el" user-emacs-directory))
-(load secret-file)
-
+(if (file-exists-p secret-file)
+    (load secret-file))
 
 (let ((default-directory (expand-file-name "~/.homebrew/share/emacs/site-lisp")))
   (if (file-exists-p default-directory)
