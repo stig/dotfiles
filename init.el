@@ -522,3 +522,6 @@
 (use-package sane-term
   :bind (("C-x t" . sane-term)
          ("C-x T" . sane-term-create)))
+
+(use-package tramp-term
+  :bind ("C-x C-t" . tramp-term))
