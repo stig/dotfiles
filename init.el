@@ -509,6 +509,7 @@
 
 (use-package org
   :ensure t
+  :bind ("C-x a" . org-agenda)
   :init
   (setq org-babel-clojure-backend 'cider)
   :config
