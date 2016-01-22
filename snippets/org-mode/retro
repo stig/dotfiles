@@ -1,20 +1,20 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: Template for Retrospective notes
 # key: retro
-# binding: C-c C-r
 # --
+#+OPTIONS: f:t
 * ${1:Incident Name (Tweet-length)}
   :PROPERTIES:
   :header-args:sh: :results output code :exports both
   :END:
 
-${2:Incident summary, of one or two sentences at most}
+**** TODO Incident summary, of one or two sentences at most
 
 ** Description
 
 ${0:What actually happened.}
 
-** TODO Takeaways
+** Takeaways
 
-   - Write me
-   - Write me too
+**** TODO Write me
+**** TODO Write me too
