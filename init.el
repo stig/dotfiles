@@ -9,6 +9,12 @@
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 
+
+;; Keep local settings in a separate file
+(setq local-file (expand-file-name "local.el" user-emacs-directory))
+(if (file-exists-p local-file)
+    (load local-file))
+
 ;; Keep emacs Custom-settings in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file)
