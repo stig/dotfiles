@@ -398,7 +398,9 @@
 
 (use-package yasnippet
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (add-hook 'term-mode-hook
+            (lambda() (yas-minor-mode -1))))
 
 (use-package clojure-mode
   :pin melpa-stable
