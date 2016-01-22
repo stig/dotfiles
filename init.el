@@ -353,8 +353,8 @@
   :init
   ;; Completion words longer than 4 characters
   (custom-set-variables
-   '(ac-ispell-requires 4)
-   '(ac-ispell-fuzzy-limit 4))
+   '(ac-ispell-requires 8)
+   '(ac-ispell-fuzzy-limit 8))
 
   :config
   (ac-ispell-setup)
