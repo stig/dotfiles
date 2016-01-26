@@ -57,8 +57,6 @@
                             ("\x2019" . "'"))
                           nil beg end))
 
-(setq graphviz-dot-view-command "open -a Graphviz %s")
-
 ;; Disable `s-q' (kill-emacs) as it is too close to M-q which I use for
 ;; reflowing text.
 (global-set-key (kbd "s-q") nil)
@@ -537,3 +535,7 @@
 
 (use-package tramp-term
   :bind ("C-x C-t" . tramp-term))
+
+(use-package graphviz-dot-mode
+  :init
+  (setq graphviz-dot-view-command "open -a Graphviz %s"))
