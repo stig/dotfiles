@@ -336,9 +336,12 @@
           ("H-s j" sp-join-sexp)
           ("H-s s" sp-split-sexp)))
 
-  ;; This is from authors config, seems to let you jump to the end of the current
-  ;; sexp with paren?
-  (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp))
+  ;; In Lisp modes, let ')' go to end of sexp
+  (bind-key ")" 'sp-up-sexp emacs-lisp-mode-map)
+  (bind-key ")" 'sp-up-sexp lisp-mode-map)
+  (bind-key ")" 'sp-up-sexp clojure-mode-map)
+  (bind-key ")" 'sp-up-sexp cider-mode-map)
+  (bind-key ")" 'sp-up-sexp cider-repl-mode-map))
 
 (use-package aggressive-indent
   :ensure t
