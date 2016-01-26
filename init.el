@@ -401,10 +401,10 @@
           ac-source-yasnippet)))
 
 (use-package yasnippet
-  :config
-  (yas-global-mode 1)
-  (add-hook 'term-mode-hook
-            (lambda() (yas-minor-mode -1))))
+  :init
+  (add-hook 'org-mode-hook 'yas-minor-mode-on)
+  (add-hook 'clojure-mode-hook 'yas-minor-mode-on)
+  (add-hook 'markdown-mode-hook 'yas-minor-mode-on))
 
 (use-package clojure-mode
   :pin melpa-stable
