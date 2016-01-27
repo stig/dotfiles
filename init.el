@@ -336,10 +336,7 @@
 
   ;; In Lisp modes, let ')' go to end of sexp
   (bind-key ")" 'sp-up-sexp emacs-lisp-mode-map)
-  (bind-key ")" 'sp-up-sexp lisp-mode-map)
-  (bind-key ")" 'sp-up-sexp clojure-mode-map)
-  (bind-key ")" 'sp-up-sexp cider-mode-map)
-  (bind-key ")" 'sp-up-sexp cider-repl-mode-map))
+  (bind-key ")" 'sp-up-sexp lisp-mode-map))
 
 (use-package aggressive-indent
   :ensure t
