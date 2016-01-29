@@ -526,7 +526,10 @@
    '((emacs-lisp . t)
      (clojure . t)
      (dot . t)
-     (sh . t))))
+     (sh . t)))
+
+  (use-package ox-gfm
+    :ensure t))
 
 (use-package sane-term
   :bind (("C-x t" . sane-term)
