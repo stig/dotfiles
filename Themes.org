@@ -1,0 +1,81 @@
+#+title: Themes
+#+author: Stig Brautaset
+#+OPTIONS: f:t h:4
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:sh         :tangle yes
+#+PROPERTY: header-args            :results silent
+#+STARTUP: content
+* Load one theme at a time
+
+  For years I thought that theme switching in Emacs was broken---until
+  I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
+  supports /multiple themes being active at the same time/, which I'm
+  sure is convenient sometimes but becomes a right nuisance when
+  attempting to switch themes IMO. Add a utility function to disable
+  all currently enabled themes first.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun sb/disable-all-themes ()
+      (interactive)
+      (mapc #'disable-theme custom-enabled-themes))
+
+    (defun sb/load-theme (theme)
+      "Enhance `load-theme' by first disabling enabled themes."
+      (sb/disable-all-themes)
+      (load-theme theme))
+  #+END_SRC
+
+* Hydra Theme Switching
+
+  Switch themes with Hydra! This loads all available themes and
+  presents a menu to let you switch between them. The theme switcher
+  is bound to =C-c w t=.
+
+  The switcher is, regretfully, not automatically updated when
+  installing new themes from the package selector menu, so you need to
+  evaluate this block again manually.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq sb/hydra-selectors
+          "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+    (defun sb/sort-themes (themes)
+      (sort themes (lambda (a b) (string< (symbol-name a) (symbol-name b)))))
+
+    (defun sb/hydra-load-theme-heads (themes)
+      (mapcar* (lambda (a b)
+                 (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
+               sb/hydra-selectors themes))
+
+    (bind-keys ("C-c w t" .
+                (lambda ()
+                  (interactive)
+                  (call-interactively
+                   (eval `(defhydra sb/hydra-select-themes (:hint nil :color pink)
+                            "Select Theme"
+                            ,@(sb/hydra-load-theme-heads (sb/sort-themes (custom-available-themes)))
+                            ("DEL" (sb/disable-all-themes))
+                            ("RET" nil "done" :color blue)))))))
+  #+END_SRC
+
+* Leuven Theme
+
+  Install & activate a nice-looking theme.  This used to be my
+  default for a looong time.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package leuven-theme
+      :defer t
+      :ensure t)
+  #+END_SRC
+
+* Material Theme
+
+  I'm experimenting with this theme at the moment.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package material-theme
+      :ensure t
+      :config
+      (load-theme 'material-light))
+  #+END_SRC

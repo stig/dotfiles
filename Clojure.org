@@ -1,0 +1,119 @@
+#+TITLE: Clojure Programming Support
+#+AUTHOR: Stig Brautaset
+#+OPTIONS: f:t h:4
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:sh         :tangle yes
+#+PROPERTY: header-args            :results silent
+#+STARTUP: content
+* Introduction
+
+  I use [[https://github.com/clojure-emacs/clojure-mode/][Clojure Mode]] for my Clojure editing.
+
+  To avoid having one gigantic section, this file uses NOWEB syntax to weave
+  together config snippets.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package clojure-mode
+      :pin melpa-stable
+      :ensure t
+      :mode "\\.clj\\'"
+
+      :config
+      (bind-key ")" 'sp-up-sexp clojure-mode-map))
+  #+END_SRC
+
+* Refactoring
+
+  The Clojure Refactor package is also ace. The `magic-require-namespaces'
+  thing is so that if I type ~(io/~ then the ~clojure.java.io~ package is
+  automatically added to my namespace's requires.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package clj-refactor
+      :pin melpa-stable
+      :ensure t
+      :init
+
+      ;; Don't prompt me to eval on symbol rename.
+      (setq cljr-warn-on-eval nil)
+
+      :config
+      (dolist (mapping '(("route" . "compojure.route")
+                         ("timbre" . "taoensso.timbre")
+                         ("component" . "com.stuartsierra.component")
+                         ("d" . "datomic.api")
+                         ("io" . "clojure.java.io")
+                         ("tc" . "clojure.test.check")
+                         ("gen" . "clojure.test.check.generators")
+                         ("prop" . "clojure.test.check.properties")
+                         ("prop'" . "com.gfredericks.test.chuck.properties")))
+        (add-to-list 'cljr-magic-require-namespaces mapping t))
+
+      (defun my-clojure-mode-hook ()
+        (clj-refactor-mode 1))
+
+      (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+  #+END_SRC
+
+** Helm Cljr
+
+   The cljr-helm package allows us to interactively narrow down the (ever
+   growing) list of clj-refactoring choices using helm.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package cljr-helm
+       :pin melpa-stable
+       :ensure t
+       :bind (:map clojure-mode-map
+                   ("C-c r" . cljr-helm)))
+  #+END_SRC
+
+** Helm ClojureDocs
+
+   Lets me look up Clojure documentation with Helm.
+
+   #+BEGIN_SRC emacs-lisp
+    (use-package helm-clojuredocs
+      :pin melpa-stable
+      :ensure t)
+   #+END_SRC
+
+* REPL
+
+  For REPL work I use [[https://github.com/clojure-emacs/cider][CIDER]].
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package cider
+      :pin melpa-stable
+      :ensure t
+      :init
+      (setq cider-repl-result-prefix ";; => ")
+      (setq org-babel-clojure-backend 'cider)
+
+      :config
+      (add-hook 'cider-mode-hook 'eldoc-mode)
+      (bind-key ")" 'sp-up-sexp cider-repl-mode-map))
+  #+END_SRC
+
+  CIDER requires the Leiningen external tool. It is installed with brew, of
+  course.
+
+  #+BEGIN_SRC sh
+    brew install leiningen
+  #+END_SRC
+
+  BTW, I like auto-complete to work in CIDER too:
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ac-cider
+      :pin melpa-stable
+      :ensure t
+      :config
+      (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+      (add-hook 'cider-mode-hook 'ac-cider-setup)
+      (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+      (eval-after-load "auto-complete"
+        '(progn
+           (add-to-list 'ac-modes 'cider-mode)
+           (add-to-list 'ac-modes 'cider-repl-mode))))
+  #+END_SRC

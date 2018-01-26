@@ -1,0 +1,35 @@
+#+TITLE: Writing Support
+#+AUTHOR: Stig Brautaset
+#+OPTIONS: f:t h:4
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:sh         :tangle yes
+#+PROPERTY: header-args            :results silent
+#+STARTUP: showall
+* Introduction
+
+  I'm not a great writer. I need all the crutches I can get. Lucklily,
+  Emacs has them.
+
+* Writegood Mode
+
+  This helps highlight passive voice, weasel words, etc in writing.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package writegood-mode
+      :ensure t
+      :init
+      (add-hook 'text-mode-hook 'writegood-mode))
+  #+END_SRC
+
+
+* String Inflection
+
+Sometimes I need to swap between CamelCase and snake_case, or even
+SNAKE_CASE.
+
+#+begin_src emacs-lisp
+  (use-package string-inflection
+    :bind (("C-c C-s C-v" . string-inflection-all-cycle)
+	   ("C-c C-s C-c" . string-inflection-camelcase)
+	   ("C-c C-s C-u" . string-inflection-upcase)))
+#+end_src

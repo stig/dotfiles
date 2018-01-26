@@ -1,0 +1,533 @@
+#+TITLE: Org Mode
+#+AUTHOR: Stig Brautaset
+#+OPTIONS: f:t h:4
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:sh         :tangle yes
+#+PROPERTY: header-args            :results silent
+* Introduction
+
+  I now use Org mode for all writing I initiate. The Emacs org mode's support
+  for tables, TOC, footnotes, TODO and agenda items makes it an easy choice.
+  Gists and GitHub READMEs support Org mode too, and I can export to other
+  formats including if I want.
+
+  To avoid having one gigantic section, this file uses NOWEB syntax to weave
+  together config snippets.
+
+  The particular version of package I use is annoying to install because the
+  installed package has a different name from what you would use in your
+  config. However, =use-package= supports this by passing the name of the
+  package to install as the value to =:ensure=.
+
+  #+BEGIN_SRC emacs-lisp :noweb yes
+    (use-package org
+      :load-path (lambda ()
+		   (expand-file-name "~/play/org-mode/lisp"))
+
+      <<key-bindings>>
+
+      :init
+      <<capturing>>
+      <<refiling>>
+
+      ;; I don't rely on many properties, so this should speed up my Agenda
+      ;; view, according to http://orgmode.org/worg/agenda-optimization.html
+      (setq org-agenda-ignore-properties '(effort appt stats))
+
+      ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
+      (setq org-log-into-drawer t)
+
+      ;; Sometimes I accidentally edit non-visible parts of org document. This
+      ;; helps, apparently.
+      (setq org-catch-invisible-edits 'show-and-error)
+
+      ;; If running interactively, I want export to copy to the kill-ring
+      (setq org-export-copy-to-kill-ring 'if-interactive)
+
+      (setq org-hide-emphasis-markers t)
+
+      (setq org-element-use-cache t)
+
+      <<org-babel-init>>
+
+      <<org-agenda-init>>
+      :config
+
+      <<org-habit-config>>
+
+      <<org-babel-config>>)
+  #+END_SRC
+
+  Ditaa requires a package installed by brew.
+
+  #+BEGIN_SRC sh
+    brew install ditaa
+  #+END_SRC
+
+* Key bindings
+
+  The Org manual expects the top four of these to be available in any mode, so
+  define them globally. I prefer to follow conventions. It makes reading the
+  manual and tutorials a lot easier!
+
+  #+name: key-bindings
+  #+BEGIN_SRC emacs-lisp :tangle no
+    :bind (("C-c l" . org-store-link)
+           ("C-c a" . org-agenda)
+           ("C-c c" . org-capture)
+           ("C-c b" . org-iswitchb)
+	   ("C-s-<return>" . org-insert-subheading)
+	   ("C-s-S-<return>" . org-insert-todo-subheading)
+           :map org-mode-map
+           ("C-c x" . mu4e-compose-mode)
+           ("C-n" . org-next-link)
+           ("C-p" . org-previous-link))
+  #+END_SRC
+
+* Agenda
+
+  #+name: org-agenda-init
+  #+BEGIN_SRC emacs-lisp :tangle no
+  (setq org-agenda-todo-ignore-scheduled nil
+	  org-agenda-todo-ignore-deadlines nil
+	  org-agenda-todo-ignore-with-date nil
+	  org-agenda-todo-ignore-with-timestamp nil)
+
+    (setq org-log-done 'time)
+
+    (setq org-agenda-todo-list-sublevels t)
+
+    (setq org-agenda-tags-todo-honor-ignore-options t)
+
+    (setq org-agenda-custom-commands
+	  '(("u" "Current Stuff" tags-todo "-SOMEDAY")
+	    ("p" "Projects" todo "PROJ")
+	    ("s" "Someday" tags-todo "+SOMEDAY")
+	    ("w" todo "WAITING")
+	    ("i" todo "IN-PROGRESS")))
+  #+END_SRC
+
+* Refiling
+
+  I got all of this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+
+  #+name: refiling
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 3)
+                               (org-agenda-files :tag . "PROJ")))
+
+    ;; Allow refiling to sub-paths
+    (setq org-refile-use-outline-path 'file)
+
+    (setq org-refile-allow-creating-parent-nodes 'confirm)
+  #+END_SRC
+
+* Capturing
+
+  Set up capture templates. This is mainly from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]. No doubt
+  this will grow...
+
+  #+name: capturing
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (defun capture-blog-post-file ()
+      (let* ((title (read-string "Slug: "))
+             (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
+        (expand-file-name
+         (format "~/blog/articles/%s/%s.org"
+                 (format-time-string "%Y" (current-time))
+                 slug))))
+
+    (setq org-default-notes-file "~/org/captured.org")
+
+    (setq org-capture-templates
+          '(("t" "TODOs")
+	    ("tt" "Plain TODO entry (with initial content if marked)" entry "* TODO %?\n\n  %i")
+            ("tl" "TODO entry with link" entry "* TODO %?\n\n  %a")
+	    ("tr" "Reply to email" entry "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+
+            ("T" "Trip" entry (file "")
+             (file "templates/trip.org") :empty-lines 1)
+
+            ("n" "Note" entry (file+datetree "Notes.org")
+             "* %^{Subject}\n\n  %?"
+             :empty-lines 1
+             :clock-in t)
+
+            ("a" "Absence")
+            ("ah" "Holiday" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
+            ("as" "Sick Leave" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
+            ("ai" "In Lieu Leave" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
+
+            ("P" "password" entry (file "~/Org/passwords.org.gpg")
+             "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
+
+            ("p" "Project" entry (file "") (file "templates/proj.org") :empty-lines 1)
+
+	    ("l" "Learning Log" entry (file+datetree "Learning.org")
+	    "* %^{Title} %^g\n  %?")
+
+            ("b" "Blog Post" plain
+             (file capture-blog-post-file)
+             (file "templates/blog-post.org"))
+
+            ("r" "GTD Review" entry (file+datetree "GTDReview.org")
+             (file "templates/gtd-review.org")
+             :empty-lines 1
+             :clock-in t
+	     :jump-to-captured t)
+
+            ("i" "New Invoice" plain (file "invoices/Invoices.org")
+             (file "templates/invoice.org")
+             :empty-lines 1 :immediate-finish t :jump-to-captured t)))
+  #+END_SRC
+
+* Babel
+
+  I wrote a module for executing AppleScript from Babel. Let's install it, so
+  we can make sure it works.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ob-applescript
+      :ensure t)
+  #+END_SRC
+
+  Some initialisation settings for Org Babel is in order.
+
+  I don't want export to execute babel stuff: I like to execute them manually
+  before exporting. This is a security feature, as sometimes I have documents
+  that log in to servers and does things.
+
+  Ditaa requires a path to the installed Jar; this recently stopped working
+  because I had upgraded Ditaa, and the Jar has a version number in its name.
+  Now we look at the file system and grab the highest-versioned Jar available.
+
+  When executing shell commands, I want to see the stderr output. We can
+  achieve that by redirecting stderr to stdout. I got this from a post on the
+  orgmode mailing list, I believe.
+
+  #+name: org-babel-init
+  #+BEGIN_SRC emacs-lisp
+    ;; Tell Org where to find ditaa jar
+    (setq org-ditaa-jar-path
+          (-last-item (directory-files "/usr/local/opt/ditaa/libexec" t)))
+
+    (setq org-plantuml-jar-path
+          (-last-item (directory-files "/usr/local/opt/plantuml/libexec" t)))
+
+    ;; Always include stderr output for shell
+    (setq org-babel-default-header-args:sh
+          '((:prologue . "exec 2>&1")
+            (:epilogue . ":")))
+  #+END_SRC
+
+  We have to specify the list of languages we want to support so Orgmode knows
+  to look out for them:
+
+  #+name: org-babel-config
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (clojure . t)
+       (python . t)
+       (gnuplot . t)
+       (lilypond . t)
+       (ditaa . t)
+       (plantuml . t)
+       (applescript . t)
+       (dot . t)
+       (sql . t)
+       (shell . t)))
+  #+END_SRC
+
+* Org Export
+
+  I hate writing JIRA markup, so I wrote a JIRA export backend for Org mode.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ox-jira
+      :ensure t)
+  #+END_SRC
+
+  I'm not that fond of writing Markdown either. I don't feel the need to
+  install these by default, but I load them if they are present.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ox-md)
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+  (require 'ox-beamer)
+  (use-package ox-rst)
+  #+END_SRC
+
+* Presenting
+
+  Let's try presenting with Emacs.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package org-tree-slide
+      :bind (("<f8>" . org-tree-slide-mode)
+             ("S-<f8>" . org-tree-slide-skip-done-toggle)
+
+             :map org-tree-slide-mode-map
+             ("<f7>" . org-tree-slide-move-previous-tree)
+             ("<f8>" . org-tree-slide-mode)
+             ("<f9>" . org-tree-slide-move-next-tree)
+             ("<f12>" . org-tree-slide-content)))
+  #+END_SRC
+
+* Passwords
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package org-passwords
+      :init
+
+      (setq org-passwords-time-opened "30 min")
+
+      ;; Where's my passwords file?
+      (setq org-passwords-file "~/Org/passwords.org.gpg")
+
+      ;; Use completion for org elements
+      (setq org-completion-use-ido t)
+
+      :bind (("C-c P P" . org-passwords)
+             ("C-c P g" . org-passwords-generate-password)
+             :map org-passwords-mode-map
+             ("C-c C-c u" . org-passwords-copy-username)
+             ("C-c C-c p" . org-passwords-copy-password)
+             ("C-c C-c o" . org-passwords-open-url)))
+  #+END_SRC
+
+* Invoicing
+
+  I have a capture template that generate invoices. In it I use the following
+  functions to generate the next invoice id.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun all-invoice-ids ()
+      (-non-nil
+       (org-map-entries (lambda ()
+                          (org-entry-get nil "InvoiceId"))
+                        nil
+                        '("~/Org/invoices/Invoices.org"))))
+
+    (defun max-invoice-id ()
+      (apply #'max
+             (mapcar #'string-to-number
+                     (all-invoice-ids))))
+
+    (defun next-invoice-id ()
+      (number-to-string
+       (+ 1
+          (max-invoice-id))))
+  #+END_SRC
+
+  All my invoices go into the same file. In the template, it's used like this:
+
+  #+BEGIN_SRC org
+  * DRAFT Invoice #%(next-invoice-id)
+  :PROPERTIES:
+  :InvoiceId: %(next-invoice-id)
+  :EXPORT_DATE: %(format-time-string "%-d %B, %Y" (org-read-date nil t "1"))
+  :EXPORT_FILE_NAME: Invoice-%(next-invoice-id)
+  :END:
+  #+END_SRC
+
+  I generally export each section separately, which is why I've got that
+  =EXPORT_FILE_NAME= property in there.
+
+* Calendar
+
+  I use calendar with org, so configure it here.
+
+  #+BEGIN_SRC emacs-lisp
+  ;; Prefer YMD to the crazy american MDY
+  (setq calendar-date-style 'iso)
+
+  ;; Include Calendar/Diary information in Agenda
+  (setq org-agenda-include-diary t)
+  #+END_SRC
+
+  I prepare my invoice on the last weekday of the month. Here's a
+  function to determine if that is today.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun last-weekday-of-month-p (date)
+      (let* ((day-of-week (calendar-day-of-week date))
+             (month (calendar-extract-month date))
+             (year (calendar-extract-year date))
+             (last-month-day (calendar-last-day-of-month month year))
+             (month-day (cadr date)))
+
+        (or
+         ;; it's the last day of the month & it is a weekday
+         (and (eq month-day last-month-day)
+              (memq day-of-week '(1 2 3 4 5)))
+
+         ;; it's a friday, and it's the last-but-one or last-but-two days
+         ;; of the month
+         (and (eq day-of-week 5)
+              (or (eq month-day (1- last-month-day))
+                  (eq month-day (1- (1- last-month-day))))))))
+  #+END_SRC
+
+* Publishing
+
+  Publishing projects.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-publish-project-alist
+	'(("superloopy_static"
+	   :base-directory "~/blog"
+	   :publishing-directory "~/public_html"
+	   :base-extension "css\\|jpg\\|png\\|pdf\\|html"
+	   :recursive t
+	   :publishing-function org-publish-attachment)
+	  ("superloopy_html"
+	   :base-directory "~/blog"
+	   :publishing-directory "~/public_html"
+	   :publishing-function org-html-publish-to-html
+	   :recursive t
+	   :makeindex t
+	   :section-numbers nil
+	   :time-stamp-file nil
+	   :with-toc nil
+
+	   ;; :auto-sitemap t
+	   ;; :sitemap-sort-files anti-chronologically
+	   ;; :sitemap-style list
+	   ;; :sitemap-title "Superloopy Sitemap"
+
+	   :html-doctype "html5"
+	   :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
+	   :html-link-up "/"
+	   :html-link-home "/"
+	   :html-home/up-format "
+  <div id=\"org-div-home-and-up\">
+    <a href=\"/\"><img src=\"/images/logo.png\" alt=\"Superloopy Logo\"/></a>
+    <nav>
+      <ul>
+	<li><a accesskey=\"H\" href=\"%s\"> Home </a></li>
+	<li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
+	<li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
+	<li><a accesskey=\"c\" href=\"/contact.html\"> Contact </a></li>
+	<li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
+      </ul>
+    </nav>
+  </div>"
+	   :html-head "
+  <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/main.css\" />
+  <link rel=\"icon\" type=\"image/png\" href=\"/images/icon.png\" />"
+
+	   :html-head-extra "
+  <script type=\"text/javascript\">
+  if(/superloopy/.test(window.location.hostname)) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-4113456-6', 'auto');
+    ga('send', 'pageview');
+  }
+  </script>"
+	   :html-head-include-default-style nil
+	   :html-head-include-scripts nil
+
+	   :html-preamble nil
+	   :html-postamble-format auto
+	   :html-metadata-timestamp-format "%e %B %Y")
+
+	  ("superloopy_rss"
+	   :base-directory "~/blog"
+	   :base-extension "org"
+	   :rss-image-url "https://www.superloopy.io/images/logo.png"
+	   :html-link-home "https://www.superloopy.io/"
+	   :html-link-use-abs-url t
+	   :rss-extension "xml"
+	   :publishing-directory "~/public_html"
+	   :publishing-function (org-rss-publish-to-rss)
+	   :section-numbers nil
+	   :exclude ".*"            ;; To exclude all files...
+	   :include ("index.org")   ;; ... except index.org.
+	   :table-of-contents nil)))
+#+END_SRC
+
+* Drilling
+
+Org drill is used for learning things by repetition.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-drill)
+#+END_SRC
+
+* Experiments
+
+#+BEGIN_SRC emacs-lisp
+  (defun sb/org-time-max (a b)
+    (if (org-time>= a b)
+        a
+      b))
+
+  (defun sb/org-time-min (a b)
+    (if (org-time>= a b)
+        b
+      a))
+
+  (defun sb/org-columns--summary-max-time (values fmt)
+    (reduce #'sb/org-time-max values))
+
+  (defun sb/org-columns--summary-min-time (values fmt)
+    (reduce #'sb/org-time-min values))
+
+  (defun sb/org-collect-confirmed (property)
+    "Return `PROPERTY' for `CONFIRMED' entries"
+    (if (equal "[X]" (org-entry-get nil "CONFIRMED"))
+        (org-entry-get nil property)
+      "0"))
+
+  (defun sb/org-collect-confirmed-alt (compound-property)
+    "Return `PROPERTY' for `CONFIRMED' entries"
+    (let ((props (s-split-words compound-property)))
+      (if (equal "[X]" (org-entry-get nil (car props)))
+          (org-entry-get nil (cadr props))
+        "0")))
+
+  (setq org-columns-summary-types
+        '(("X+" org-columns--summary-sum sb/org-collect-confirmed)
+          ("XX+" org-columns--summary-sum sb/org-collect-confirmed-alt)
+          ("max-time" . sb/org-columns--summary-max-time)
+          ("min-time" . sb/org-columns--summary-min-time)))
+#+END_SRC
+* Helm org
+
+  Use helm to narrow to headings in Org agenda buffers.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-org
+      :bind (:map org-mode-map
+                  ("C-c h" . helm-org-in-buffer-headings)
+                  ("C-c f" . helm-org-agenda-files-headings)))
+  #+END_SRC
+
+* Diffing Org files
+
+  Sometimes I diff Org files. (Particularly for runbooks.) This
+  snippet makes sure that Org buffers don't start folded, as ediff is
+  rather useless in that case. (Credit: [[mu4e:msgid:CAA01p3rSzUYvH4EmwOjw0xG=3q049fujbfC5Qi6vGZCV03EPfg@mail.gmail.com][Oleh Krehel]] on emacs-orgmode
+  mailing list.)
+
+  #+BEGIN_SRC emacs-lisp
+    (defun sb/ediff-prepare-buffer ()
+      (when (memq major-mode '(org-mode emacs-lisp-mode))
+	(outline-show-all)))
+
+    (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+  #+END_SRC
+* Tempo
+
+This was previously called "easy templates" but is now its own package.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-tempo)
+#+END_SRC

@@ -1,0 +1,65 @@
+#+TITLE: Python Programming Support
+#+AUTHOR: Stig Brautaset
+#+OPTIONS: f:t h:4
+#+PROPERTY: header-args:emacs-lisp :tangle yes
+#+PROPERTY: header-args:sh         :tangle yes
+#+PROPERTY: header-args            :results silent
+#+STARTUP: content
+* Introduction
+
+  Work projects are all in Python. This is me exploring Emacs' Python support.
+  I'll try Elpy first because of its touted refactoring support.
+
+  #+BEGIN_SRC emacs-lisp :noweb yes
+    (use-package elpy
+      :pin melpa-stable
+      :ensure t
+      :config
+      (elpy-enable)
+
+      <<flycheck>>)
+  #+END_SRC
+
+* Python prerequisites
+
+  Some [[https://github.com/jorgenschaefer/elpy#quick-installation][python modules are required]]:
+
+  #+BEGIN_SRC sh
+    pip install jedi flake8 importmagic autopep8
+  #+END_SRC
+
+* Create a UTF-8 alias
+
+  Our Python code tends to have the following lines:
+
+  : # -*- coding: UTF-8 -*-
+
+  These cause Emacs to have a sad and say: 
+
+  : Warning (mule): Invalid coding system 'UTF-8' is specified
+
+  I don't want to change all of them, so let's just define an alias. (Thanks
+  to Lucas Sampaio for this tip!)
+
+  #+BEGIN_SRC emacs-lisp
+    (define-coding-system-alias 'UTF-8 'utf-8)
+  #+END_SRC
+* Use flycheck instead of flymake
+
+  This produces on-the-fly checking rather than on-save checking, which I
+  like.
+
+  #+name: flycheck
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (when (require 'flycheck nil t)
+      (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+      (add-hook 'elpy-mode-hook 'flycheck-mode))
+  #+END_SRC
+
+* Convert between string types
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package python-switch-quotes
+      :ensure t
+      :bind ("C-c '" . python-switch-quotes))
+  #+END_SRC
