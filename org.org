@@ -154,9 +154,9 @@
              :clock-in t)
 
             ("a" "Absence")
-            ("ah" "Holiday" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
-            ("as" "Sick Leave" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
-            ("ai" "In Lieu Leave" entry (file "") "* %^{Reason}\n %^{Days}p %^t" :empty-lines 1)
+            ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^t--%^t\n\n  %?%^{Holidays}p")
+            ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^t--%^t\n\n  %?%^{Sickdays}p")
+            ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^t--%^t\n\n  %?%^{Days}p")
 
             ("P" "password" entry (file "~/Org/passwords.org.gpg")
              "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
