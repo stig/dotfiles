@@ -484,18 +484,22 @@
     # "gmail-inbox", "gmail-sent", and "gmail-trash"
     #
 
-    Group Periodic
-    Channel icloud-inbox
+    Group all
+    Channel gmail-archive
+    Channel gmail-inbox
+    Channel gmail-sent
+    Channel gmail-spam
+    Channel gmail-trash
     Channel icloud-archive
     Channel icloud-folders
+    Channel icloud-inbox
     Channel icloud-sent
-    Channel icloud-trash
     Channel icloud-spam
+    Channel icloud-trash
+
+    Group inboxes
     Channel gmail-inbox
-    Channel gmail-archive
-    Channel gmail-sent
-    Channel gmail-trash
-    Channel gmail-spam
+    Channel icloud-inbox
   #+END_SRC
 
 * Avoid "Duplicate UID" messages during mbsync runs
