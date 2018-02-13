@@ -219,54 +219,54 @@
   #+BEGIN_SRC emacs-lisp
     (defun sb/maildir-match (needle)
       `(lambda (msg)
-         (when msg
-           (s-contains-p ,needle
-                         (mu4e-message-field msg :maildir)))))
+	 (when msg
+	   (s-contains-p ,needle
+			 (mu4e-message-field msg :maildir)))))
 
     (defun sb/to-match (needle)
       `(lambda (msg)
-         (when msg
-           (-some (lambda (entry)
-                    (s-contains-p ,needle (cdr entry)))
-                  (mu4e-message-field msg :to)))))
+	 (when msg
+	   (-some (lambda (entry)
+		    (s-contains-p ,needle (cdr entry)))
+		  (mu4e-message-field msg :to)))))
 
     (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            :name "Org"
-            :match-func (sb/to-match "emacs-orgmode")
-            :vars '((user-mail-address . "stig@brautaset.org")
-                    (mu4e-compose-signature . (my-emacs-org-sig))))
+	  (list
+	   (make-mu4e-context
+	    :name "Org"
+	    :match-func (sb/to-match "emacs-orgmode")
+	    :vars '((user-mail-address . "stig@brautaset.org")
+		    (mu4e-compose-signature . (my-emacs-org-sig))))
 
-           (make-mu4e-context
-            :name "Mu"
-            :match-func (sb/to-match "mu-discuss")
-            :vars '((user-mail-address . "stig@brautaset.org")
-                    (mu4e-compose-signature . (my-emacs-mu4e-sig))))
+	   (make-mu4e-context
+	    :name "Mu"
+	    :match-func (sb/to-match "mu-discuss")
+	    :vars '((user-mail-address . "stig@brautaset.org")
+		    (mu4e-compose-signature . (my-emacs-mu4e-sig))))
 
-           (make-mu4e-context
-            :name "Private"
-            :match-func (sb/maildir-match "/Private/")
-            :vars '((user-mail-address . "stig@brautaset.org")
-                    (mu4e-compose-signature . nil)))
+	   (make-mu4e-context
+	    :name "Private"
+	    :match-func (sb/maildir-match "/Private/")
+	    :vars '((user-mail-address . "stig@brautaset.org")
+		    (mu4e-compose-signature . nil)))
 
-           (make-mu4e-context
-            :name "JIRA"
-            :match-func (sb/to-match "@laterpay.atlassian.net")
-            :vars '((user-mail-address . "sbrautaset@laterpay.net")
-                    (mu4e-compose-signature . nil)))
+	   (make-mu4e-context
+	    :name "GitHub"
+	    :match-func (sb/to-match "@reply.github.com")
+	    :vars '((user-mail-address . "sbrautaset@laterpay.net")
+		    (mu4e-compose-signature . nil)))
 
-           (make-mu4e-context
-            :name "GitHub"
-            :match-func (sb/to-match "@reply.github.com")
-            :vars '((user-mail-address . "sbrautaset@laterpay.net")
-                    (mu4e-compose-signature . nil)))
+	   (make-mu4e-context
+	    :name "JIRA"
+	    :match-func (sb/to-match "@laterpay.atlassian.net")
+	    :vars '((user-mail-address . "sbrautaset@laterpay.net")
+		    (mu4e-compose-signature . nil)))
 
-           (make-mu4e-context
-            :name "Work"
-            :match-func (sb/maildir-match "/Work/")
-            :vars '((user-mail-address . "sbrautaset@laterpay.net")
-                    (mu4e-compose-signature . (get-string-from-file "~/Dropbox/Config/LaterPay.signature"))))))
+	   (make-mu4e-context
+	    :name "Work"
+	    :match-func (sb/maildir-match "/Work/")
+	    :vars '((user-mail-address . "sbrautaset@laterpay.net")
+		    (mu4e-compose-signature . (get-string-from-file "~/Dropbox/Config/LaterPay.signature"))))))
   #+END_SRC
 
 * Context defaults
