@@ -90,10 +90,10 @@
 
   #+name: org-agenda-init
   #+BEGIN_SRC emacs-lisp :tangle no
-  (setq org-agenda-todo-ignore-scheduled nil
-	  org-agenda-todo-ignore-deadlines nil
-	  org-agenda-todo-ignore-with-date nil
-	  org-agenda-todo-ignore-with-timestamp nil)
+    ;; I don't want to show these in the TODO list,
+    ;; because they'll show in the Agenda anyway.
+    (setq org-agenda-todo-ignore-scheduled 'all
+	  org-agenda-todo-ignore-deadlines 'all)
 
     (setq org-log-done 'time)
 
