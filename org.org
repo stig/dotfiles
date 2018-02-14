@@ -97,8 +97,6 @@
 
     (setq org-log-done 'time)
 
-    (setq org-agenda-todo-list-sublevels t)
-
     (setq org-agenda-tags-todo-honor-ignore-options t)
 
     (setq org-agenda-custom-commands
