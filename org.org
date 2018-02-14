@@ -95,9 +95,10 @@
     (setq org-agenda-todo-ignore-scheduled 'all
 	  org-agenda-todo-ignore-deadlines 'all)
 
-    (setq org-log-done 'time)
-
+    ;; Make tags-todo search ignore scheduled items too
     (setq org-agenda-tags-todo-honor-ignore-options t)
+
+    (setq org-log-done 'time)
 
     (setq org-agenda-custom-commands
 	  '(("u" "Current Stuff" tags-todo "-SOMEDAY")
