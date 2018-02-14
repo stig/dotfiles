@@ -143,9 +143,9 @@
 
     (setq org-capture-templates
           '(("t" "TODOs")
-	    ("tt" "Plain TODO entry (with initial content if marked)" entry "* TODO %?\n\n  %i")
-            ("tl" "TODO entry with link" entry "* TODO %?\n\n  %a")
-	    ("tr" "Reply to email" entry "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+	    ("tt" "Plain TODO entry (with initial content if marked)" entry (file "") "* TODO %?\n\n  %i")
+            ("tl" "TODO entry with link" entry (file "") "* TODO %?\n\n  %a\n\n  %i")
+	    ("tr" "Reply to email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
 
             ("T" "Trip" entry (file "")
              (file "templates/trip.org") :empty-lines 1)
