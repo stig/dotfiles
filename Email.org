@@ -653,7 +653,7 @@
   (setq message-kill-buffer-on-exit t)
   #+END_SRC
 
-* Experimental lookup by lists
+* Lookup by lists
 
   #+BEGIN_SRC emacs-lisp
     (defun my4e~query-lists-command ()
