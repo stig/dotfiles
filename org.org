@@ -101,11 +101,10 @@
     (setq org-log-done 'time)
 
     (setq org-agenda-custom-commands
-	  '(("u" "Current Stuff" tags-todo "-SOMEDAY")
-	    ("p" "Projects" todo "PROJ")
-	    ("s" "Someday" tags-todo "+SOMEDAY")
-	    ("w" todo "WAITING")
-	    ("i" todo "IN-PROGRESS")))
+	  '(("u" "Current Tasks" tags-todo "-SOMEDAY/TODO")
+	    ("p" "Current Projects" tags-todo "-SOMEDAY/!PROJ")
+	    ("S" "Someday" tags-todo "SOMEDAY")
+	    ("w" todo "WAITING")))
   #+END_SRC
 
 * Refiling
