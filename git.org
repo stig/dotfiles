@@ -37,7 +37,7 @@
       :init
       (setq magit-gh-pulls-mode-lighter "")
       :config
-      (load-file "~/.emacs.d/elpa/marshal-0.8.2/marshal.el")
+      (require 'ht) ;; This is a missing dependency in newer version of marshal.el
       (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
   #+END_SRC
 
