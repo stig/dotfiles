@@ -29,11 +29,19 @@ Ivy suits those better.
       (setq helm-buffer-max-length 35)
 
       :bind (("M-x" . helm-M-x)
-             ("M-y" . helm-show-kill-ring)
-             ("C-x b" . helm-mini)
+	     ("M-y" . helm-show-kill-ring)
+	     ("C-x b" . helm-mini)
 	     ("C-x C-b" . helm-buffers-list)
-             ("C-x 4 b" . helm-mini)
-             ("C-x C-f" . helm-find-files)))
+	     ("C-x 4 b" . helm-mini)
+	     ("C-x C-f" . helm-find-files))
+
+      :config
+      (require 'helm-buffers)
+      ;; Magit creates many buffers, most of which are not interesting.
+      (add-to-list 'helm-boring-buffer-regexp-list "\\*magit")
+
+      ;; TAGS files are rarely interesting.
+      (add-to-list 'helm-boring-buffer-regexp-list "TAGS"))
   #+END_SRC
 
 ** Ivy
