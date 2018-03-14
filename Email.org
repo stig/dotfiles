@@ -76,7 +76,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (setq mu4e-compose-complete-ignore-address-regexp
-          "no-?reply\\|@laterpay.ag")
+          "no-?reply\\")
   #+END_SRC
 
 * For threads, only show the subject once (like mutt)
@@ -405,7 +405,7 @@
     # ACCOUNT INFORMATION
     IMAPAccount gmail
     Host imap.gmail.com
-    User sbrautaset@laterpay.ag
+    User sbrautaset@laterpay.net
     PassCmd "security find-generic-password -s mbsync-gmail-password -w"
     # UseIMAPS yes
     # AuthMechs LOGIN
@@ -634,7 +634,7 @@
 
     from sbrautaset@laterpay.net
     host smtp.gmail.com
-    user sbrautaset@laterpay.ag
+    user sbrautaset@laterpay.net
 
     #########################
     account default : private
