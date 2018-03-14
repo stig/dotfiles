@@ -1,8 +1,8 @@
 (require 'package)
 
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-;;    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (package-initialize)
 (setq package-enable-at-startup nil)
@@ -20,10 +20,10 @@
 (require 'bind-key)
 (require 'dash)
 
-(add-to-list 'load-path (expand-file-name "~/play/org-mode/lisp"))
+;;    (add-to-list 'load-path (expand-file-name "~/play/org-mode/lisp"))
 
-(let ((dotfiles-dir (file-name-directory (or (buffer-file-name)
-					     load-file-name))))
-  (mapc #'org-babel-load-file
-	(remove (concat dotfiles-dir "init.org")
-		(directory-files dotfiles-dir t "\\w+\\.org$"))))
+    (let ((dotfiles-dir (file-name-directory (or (buffer-file-name)
+						 load-file-name))))
+      (mapc #'org-babel-load-file
+	    (remove (concat dotfiles-dir "init.org")
+		    (directory-files dotfiles-dir t "\\w+\\.org$"))))

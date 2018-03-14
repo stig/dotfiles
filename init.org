@@ -26,7 +26,7 @@
   #+BEGIN_SRC emacs-lisp
     (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
     (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-;;    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
   #+END_SRC
 
 * Initialize packages
@@ -75,7 +75,7 @@
   the result.
 
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'load-path (expand-file-name "~/play/org-mode/lisp"))
+;;    (add-to-list 'load-path (expand-file-name "~/play/org-mode/lisp"))
 
     (let ((dotfiles-dir (file-name-directory (or (buffer-file-name)
 						 load-file-name))))

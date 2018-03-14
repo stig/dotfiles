@@ -21,8 +21,8 @@
 
   #+BEGIN_SRC emacs-lisp :noweb yes
     (use-package org
-      :load-path (lambda ()
-		   (expand-file-name "~/play/org-mode/lisp"))
+      :ensure org-plus-contrib
+;;      :load-path (lambda () (expand-file-name "~/play/org-mode/lisp"))
 
       <<key-bindings>>
 
@@ -528,6 +528,6 @@ Org drill is used for learning things by repetition.
 
 This was previously called "easy templates" but is now its own package.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp-not-yet
 (use-package org-tempo)
 #+END_SRC
