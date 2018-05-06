@@ -12,7 +12,6 @@
 
   #+BEGIN_SRC emacs-lisp :noweb yes
     (use-package elpy
-      :pin melpa-stable
       :ensure t
       :config
       (elpy-enable)
