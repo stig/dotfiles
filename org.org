@@ -145,7 +145,7 @@
           '(("t" "TODOs")
 	    ("tt" "Plain TODO entry (with initial content if marked)" entry (file "") "* TODO %?\n\n  %i")
             ("tl" "TODO entry with link" entry (file "") "* TODO %?\n\n  %a\n\n  %i")
-	    ("tr" "Reply to email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+	    ("tr" "Process email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
 	    ("te" "To Expense" entry (file "") "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
 
             ("T" "Trip" entry (file "")
@@ -157,9 +157,9 @@
              :clock-in t)
 
             ("a" "Absence")
-            ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^t--%^t\n\n  %?%^{Holidays}p")
-            ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^t--%^t\n\n  %?%^{Sickdays}p")
-            ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^t--%^t\n\n  %?%^{Days}p")
+            ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
+            ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
+            ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
 
             ("P" "password" entry (file "~/Org/passwords.org.gpg")
              "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
