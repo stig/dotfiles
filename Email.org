@@ -42,7 +42,7 @@
 * Use single-pane layout
 
   #+BEGIN_SRC emacs-lisp
-  (setq mu4e-split-view 'single-window)
+  (setq mu4e-split-view 'horizontal)
   #+END_SRC
 * Where mu4e should save attachments
 

@@ -146,6 +146,7 @@
 	    ("tt" "Plain TODO entry (with initial content if marked)" entry (file "") "* TODO %?\n\n  %i")
             ("tl" "TODO entry with link" entry (file "") "* TODO %?\n\n  %a\n\n  %i")
 	    ("tr" "Reply to email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+	    ("te" "To Expense" entry (file "") "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
 
             ("T" "Trip" entry (file "")
              (file "templates/trip.org") :empty-lines 1)
