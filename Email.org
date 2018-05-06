@@ -370,16 +370,6 @@
     Expunge Both
     SyncState *
 
-    Channel icloud-folders
-    Master :icloud-remote:
-    Slave :icloud-local:
-    Patterns "trip-*" "list-*"
-    Create Slave
-    Expunge Both
-    MaxMessages 1000
-    ExpireUnread yes
-    SyncState *
-
     Channel icloud-trash
     Master :icloud-remote:"Deleted Messages"
     Slave :icloud-local:trash
@@ -491,7 +481,6 @@
     Channel gmail-spam
     Channel gmail-trash
     Channel icloud-archive
-    Channel icloud-folders
     Channel icloud-inbox
     Channel icloud-sent
     Channel icloud-spam
