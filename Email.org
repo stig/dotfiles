@@ -76,7 +76,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (setq mu4e-compose-complete-ignore-address-regexp
-          "no-?reply\\")
+          "no-?reply")
   #+END_SRC
 
 * For threads, only show the subject once (like mutt)
