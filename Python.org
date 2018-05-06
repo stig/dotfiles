@@ -19,6 +19,17 @@
       <<flycheck>>)
   #+END_SRC
 
+
+** Virtualenv
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package auto-virtualenv
+       :ensure t
+       :config
+       (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+       (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv)))
+   #+END_SRC
+
 * Python prerequisites
 
   Some [[https://github.com/jorgenschaefer/elpy#quick-installation][python modules are required]]:
@@ -62,3 +73,13 @@
       :ensure t
       :bind ("C-c '" . python-switch-quotes))
   #+END_SRC
+* Pipenv
+
+#+BEGIN_SRC emacs-lisp
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq
+   pipenv-projectile-after-switch-function
+   #'pipenv-projectile-after-switch-extended))
+#+END_SRC
