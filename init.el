@@ -4,8 +4,8 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
-(package-initialize)
-(setq package-enable-at-startup nil)
+;;    (setq package-enable-at-startup nil)
+;;    (package-initialize)
 
 ;; Bootstrap `use-package' and `dash'
 (unless (and (package-installed-p 'use-package)

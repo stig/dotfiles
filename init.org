@@ -38,8 +38,8 @@
   prevents packages being activated again.
 
   #+BEGIN_SRC emacs-lisp
-    (package-initialize)
-    (setq package-enable-at-startup nil)
+;;    (setq package-enable-at-startup nil)
+;;    (package-initialize)
   #+END_SRC
 
 * Install =use-package=
