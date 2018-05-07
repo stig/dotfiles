@@ -5,17 +5,6 @@
 #+PROPERTY: header-args:sh         :tangle yes
 #+PROPERTY: header-args            :results silent
 
-* Load =package.el=
-
-  I install more than 60 packages using =package.el=.  Many are newer
-  versions of packages that ship with Emacs.  We need to load
-  =package.el= early so we use the versions from ELPA rather than the
-  older versions.
-
-  #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  #+END_SRC
-
 * Add Package Archives & priorities
 
   Before we can install packages, we need to add the URLs of the
