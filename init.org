@@ -29,19 +29,6 @@
     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
   #+END_SRC
 
-* Initialize packages
-
-  Initialize packages early, so we load the latest org from ELPA
-  (rather than the one that is bundled with Emacs) later in this file.
-  Normally packages are initialised after reading the init file, but
-  as we are doing it manually there's no reason to do so. This
-  prevents packages being activated again.
-
-  #+BEGIN_SRC emacs-lisp
-;;    (setq package-enable-at-startup nil)
-;;    (package-initialize)
-  #+END_SRC
-
 * Install =use-package=
 
   Most of my config use the excellent [[https://github.com/jwiegley/use-package][use-package]] for installing & configuring
