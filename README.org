@@ -31,38 +31,16 @@
   recent Emacs distributions ships with the required Org mode support for
   most of this, so it's not really a problem.)
 
-* Install Emacs
-
-  I'm currently running a [[https://emacsformacosx.com/emacs-builds/Emacs-2016-06-28_01-41-49-cfb3c61f1ffec9a6322407fdd228d5cc31c31ed0-universal.dmg][Emacs 25 nightly build]].
-
-  #+BEGIN_SRC sh
-      cat <<EOF > /tmp/emacs
-    cask 'emacs' do
-      version '25.1'
-      sha256 '5bd04c82d2a091a48d7b9b80a26fa31f64767f2e553440a556d12be5815e29ef'
-
-      app 'Emacs.app'
-      binary "#{appdir}/Emacs.app/Contents/MacOS/bin/emacsclient"
-      binary "#{appdir}/Emacs.app/Contents/MacOS/bin/ctags"
-      binary "#{appdir}/Emacs.app/Contents/MacOS/bin/ebrowse"
-      binary "#{appdir}/Emacs.app/Contents/MacOS/bin/etags"
-    end
-EOF
-
-  brew cask install --force file:///tmp/emacs
-  #+END_SRC
-
-* Symlink =~/.emacs.d= to this directory
+* Check out this repo into =~/.emacs.d/=
 
   I create a symlink from =~/.emacs.d= to the directory containing this file.
-  (Checking out this repo is the topic [[file:~/Dotfiles/README.org][covered here]].) If =~/.emacs.d= is
-  already a symbolic link, this will delete it first. If it is a directory,
-  move that out of the way.
 
-  #+BEGIN_SRC sh
-    test -L ~/.emacs.d && rm ~/.emacs.d
-    test -d ~/.emacs.d && mv ~/.emacs.d ~/.emacs.d.$(date +%s)
-    ln -s ~/Dotfiles/emacs.d ~/.emacs.d
+* Install Emacs
+
+  I currently get my thrills from using the development version of Emacs.
+
+  #+BEGIN_SRC emacs-lisp
+  brew install emacs --with-cocoa --with-gnutls --with-dbus --with-mailutils --with-librsvg --HEAD
   #+END_SRC
 
 * Configuration
