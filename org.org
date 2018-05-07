@@ -148,6 +148,10 @@
 	    ("tr" "Process email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
 	    ("te" "To Expense" entry (file "") "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
 
+	    ("g" "Gas Meter Reading" table-line (file "notes/gas-consumption.org")
+	    "|%^{Reading Time}T|%^{Reading Value}|%^{Price Per Litre|0.65}"
+	    :table-line-pos "II-1")
+
             ("T" "Trip" entry (file "")
              (file "templates/trip.org") :empty-lines 1)
 
