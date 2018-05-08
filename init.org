@@ -1127,7 +1127,7 @@
 *** I like big fonts and I cannot lie
 
  #+BEGIN_SRC emacs-lisp
- (set-face-attribute 'default nil :height 140)
+ (set-face-attribute 'default nil :height 150)
  #+END_SRC
 *** Add =/usr/local/bin= to our path
 
@@ -1912,7 +1912,7 @@
     #+BEGIN_SRC sh
      brew install trash
     #+END_SRC
-
+    
 *** Plant UML Mode
 
     I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
@@ -1951,18 +1951,18 @@
     (add-hook 'text-mode-hook 'visual-line-mode)
     #+END_SRC
 
-**** Markdown
+*** Markdown
 
-     I'm a sucker for lists, and I want to be able to reorder list items
-     easily and have them renumbered automatically.
+    I'm a sucker for lists, and I want to be able to reorder list items
+    easily and have them renumbered automatically.
 
-     #+BEGIN_SRC emacs-lisp
-       (use-package markdown-mode
-	 :pin melpa-stable
-	 :ensure t
-	 :bind (("M-<up>" . markdown-move-list-item-up)
-		("M-<down>" . markdown-move-list-item-down)))
-     #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+	:pin melpa-stable
+	:ensure t
+	:bind (("M-<up>" . markdown-move-list-item-up)
+	       ("M-<down>" . markdown-move-list-item-down)))
+    #+END_SRC
 ** Org mode
 
    I now use Org mode for all writing I initiate. The Emacs org mode's support

@@ -431,7 +431,7 @@
   :init
   (setq gac-shell-and "; and "))
 
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 150)
 
 (use-package exec-path-from-shell
   :ensure t
