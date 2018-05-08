@@ -1143,6 +1143,8 @@ if(/superloopy/.test(window.location.hostname)) {
         ("max-time" . sb/org-columns--summary-max-time)
         ("min-time" . sb/org-columns--summary-min-time)))
 
+(setq org-attach-store-link-p t)
+
 (use-package helm-org
   :bind (:map org-mode-map
               ("C-c h" . helm-org-in-buffer-headings)

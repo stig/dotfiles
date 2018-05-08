@@ -2465,6 +2465,16 @@
             ("max-time" . sb/org-columns--summary-max-time)
             ("min-time" . sb/org-columns--summary-min-time)))
   #+END_SRC
+
+*** Attachments
+
+    One annoying thing is not being able to find attachments once
+    you've attached files. Luckily, it turns out you can ask Org to
+    create links to attachments.
+
+    #+BEGIN_SRC emacs-lisp
+    (setq org-attach-store-link-p t)
+    #+END_SRC
 *** Helm org
 
     Use helm to narrow to headings in Org agenda buffers.
@@ -2671,7 +2681,6 @@
 	:init
 	(add-hook 'text-mode-hook 'writegood-mode))
     #+END_SRC
-
 
 *** String Inflection
 
