@@ -811,59 +811,63 @@
       :init
       (defun capture-blog-post-file ()
         (let* ((title (read-string "Slug: "))
-               (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
+      	 (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
           (expand-file-name
            (format "~/blog/articles/%s/%s.org"
-                   (format-time-string "%Y" (current-time))
-                   slug))))
+      	     (format-time-string "%Y" (current-time))
+      	     slug))))
       
       (setq org-default-notes-file "~/org/captured.org")
       
       (setq org-capture-templates
             '(("t" "TODOs")
-      	("tt" "Plain TODO entry (with initial content if marked)" entry (file "") "* TODO %?\n\n  %i")
-              ("tl" "TODO entry with link" entry (file "") "* TODO %?\n\n  %a\n\n  %i")
-      	("tr" "Process email" entry (file "") "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
-      	("te" "To Expense" entry (file "") "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
+      	("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
+      	 "* TODO %?\n\n  %i")
+      	("tl" "TODO entry with link" entry (file "")
+      	 "* TODO %?\n\n  %a\n\n  %i")
+      	("tr" "Process email" entry (file "")
+      	 "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+      	("te" "To Expense" entry (file "")
+      	 "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
+      	("tp" "New Project" entry (file "")
+      	 "* PROJ %^{Project Name} :PROJ:\n  :LOGBOOK:\n  - Added: %U\n  :END:")
       
       	("g" "Gas Meter Reading" table-line (file "notes/gas-consumption.org")
-      	"|%^{Reading Time}T|%^{Reading Value}|%^{Price Per Litre|0.65}"
-      	:table-line-pos "II-1")
+      	 "|%^{Reading Time}T|%^{Reading Value}|%^{Price Per Litre|0.65}"
+      	 :table-line-pos "II-1")
       
-              ("T" "Trip" entry (file "")
-               (file "templates/trip.org") :empty-lines 1)
+      	("T" "Trip" entry (file "")
+      	 (file "templates/trip.org") :empty-lines 1)
       
-              ("n" "Note" entry (file+datetree "Notes.org")
-               "* %^{Subject}\n\n  %?"
-               :empty-lines 1
-               :clock-in t)
+      	("n" "Note" entry (file+datetree "Notes.org")
+      	 "* %^{Subject}\n\n  %?"
+      	 :empty-lines 1
+      	 :clock-in t)
       
-              ("a" "Absence")
-              ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
-              ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
-              ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
+      	("a" "Absence")
+      	("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
+      	("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
+      	("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
       
-              ("P" "password" entry (file "~/Org/passwords.org.gpg")
-               "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
-      
-              ("p" "Project" entry (file "") (file "templates/proj.org") :empty-lines 1)
+      	("P" "password" entry (file "~/Org/passwords.org.gpg")
+      	 "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
       
       	("l" "Learning Log" entry (file+datetree "Learning.org")
-      	"* %^{Title} %^g\n  %?")
+      	 "* %^{Title} %^g\n  %?")
       
-              ("b" "Blog Post" plain
-               (file capture-blog-post-file)
-               (file "templates/blog-post.org"))
+      	("b" "Blog Post" plain
+      	 (file capture-blog-post-file)
+      	 (file "templates/blog-post.org"))
       
-              ("r" "GTD Review" entry (file+datetree "GTDReview.org")
-               (file "templates/gtd-review.org")
-               :empty-lines 1
-               :clock-in t
+      	("r" "GTD Review" entry (file+datetree "GTDReview.org")
+      	 (file "templates/gtd-review.org")
+      	 :empty-lines 1
+      	 :clock-in t
       	 :jump-to-captured t)
       
-              ("i" "New Invoice" plain (file "invoices/Invoices.org")
-               (file "templates/invoice.org")
-               :empty-lines 1 :immediate-finish t :jump-to-captured t)))
+      	("i" "New Invoice" plain (file "invoices/Invoices.org")
+      	 (file "templates/invoice.org")
+      	 :empty-lines 1 :immediate-finish t :jump-to-captured t)))
       (setq org-refile-targets '((org-agenda-files :maxlevel . 3)
       			   (org-agenda-files :tag . "PROJ")))
       
