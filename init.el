@@ -892,7 +892,7 @@
 
       (setq org-hide-emphasis-markers t)
 
-      (setq org-element-use-cache t)
+      (setq org-element-use-cache nil)
 
       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
