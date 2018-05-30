@@ -3,10 +3,6 @@ brew install emacs --with-cocoa --with-gnutls --with-dbus --with-mailutils --wit
 :
 
 exec 2>&1
-brew install leiningen
-:
-
-exec 2>&1
 brew install mu --with-emacs
 brew install msmtp
 brew install isync
