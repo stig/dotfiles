@@ -365,6 +365,11 @@
 
 (setq mu4e-get-mail-command "mbsync inboxes")
 
+(use-package flymake
+  :bind (:map flymake-mode-map
+	 ("M-n" . flymake-goto-next-error)
+	 ("M-p" . flymake-goto-prev-error)))
+
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -714,11 +719,6 @@
   :ensure t
   :config
   (helm-projectile-on))
-
-(use-package flycheck
-  :ensure t
-  :config
-  (flycheck-mode))
 
 (use-package multiple-cursors
   :ensure t
@@ -1168,16 +1168,7 @@ if(/superloopy/.test(window.location.hostname)) {
   :ensure t
   :config
   (elpy-enable)
-
-  (when (require 'flycheck nil t)
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    (add-hook 'elpy-mode-hook 'flycheck-mode)))
-
-(use-package auto-virtualenv
-  :ensure t
-  :config
-  (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
-  (add-hook 'projectile-after-switch-project-hook 'auto-virtualenv-set-virtualenv))
+  (add-hook 'elpy-mode-hook 'flymake-mode))
 
 (define-coding-system-alias 'UTF-8 'utf-8)
 
@@ -1241,3 +1232,7 @@ if(/superloopy/.test(window.location.hostname)) {
 	 ("C-c C-s C-c" . string-inflection-camelcase)
 	 ("C-c C-s C-k" . string-inflection-kebab-case)
 	 ("C-c C-s C-u" . string-inflection-upcase)))
+
+(use-package yaml-mode
+  :config
+  (add-hook 'yaml-mode-hook 'flymake-mode))

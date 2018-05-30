@@ -55,5 +55,5 @@ brew install ditaa
 :
 
 exec 2>&1
-pip install jedi flake8 importmagic autopep8
+pip install jedi flake8 autopep8
 :
