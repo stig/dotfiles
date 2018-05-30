@@ -2604,25 +2604,24 @@
 
     #+BEGIN_SRC emacs-lisp
       (setq sb/hydra-selectors
-            "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	    "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
       (defun sb/sort-themes (themes)
 	(sort themes (lambda (a b) (string< (symbol-name a) (symbol-name b)))))
 
       (defun sb/hydra-load-theme-heads (themes)
 	(mapcar* (lambda (a b)
-                   (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
+		   (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
 		 sb/hydra-selectors themes))
 
-      (bind-keys ("C-c w t" .
-                  (lambda ()
-                    (interactive)
-                    (call-interactively
-                     (eval `(defhydra sb/hydra-select-themes (:hint nil :color pink)
-                              "Select Theme"
-                              ,@(sb/hydra-load-theme-heads (sb/sort-themes (custom-available-themes)))
-                              ("DEL" (sb/disable-all-themes))
-                              ("RET" nil "done" :color blue)))))))
+      (defun sb/hydra-theme-switcher ()
+	(interactive)
+	(call-interactively
+	 (eval `(defhydra sb/hydra-select-themes (:hint nil :color pink)
+		  "Select Theme"
+		  ,@(sb/hydra-load-theme-heads (sb/sort-themes (custom-available-themes)))
+		  ("DEL" (sb/disable-all-themes))
+		  ("RET" nil "done" :color blue)))))
     #+END_SRC
 
 *** Leuven Theme

@@ -1200,18 +1200,17 @@ if(/superloopy/.test(window.location.hostname)) {
 
 (defun sb/hydra-load-theme-heads (themes)
   (mapcar* (lambda (a b)
-             (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
+	     (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
 	   sb/hydra-selectors themes))
 
-(bind-keys ("C-c w t" .
-            (lambda ()
-              (interactive)
-              (call-interactively
-               (eval `(defhydra sb/hydra-select-themes (:hint nil :color pink)
-                        "Select Theme"
-                        ,@(sb/hydra-load-theme-heads (sb/sort-themes (custom-available-themes)))
-                        ("DEL" (sb/disable-all-themes))
-                        ("RET" nil "done" :color blue)))))))
+(defun sb/hydra-theme-switcher ()
+  (interactive)
+  (call-interactively
+   (eval `(defhydra sb/hydra-select-themes (:hint nil :color pink)
+	    "Select Theme"
+	    ,@(sb/hydra-load-theme-heads (sb/sort-themes (custom-available-themes)))
+	    ("DEL" (sb/disable-all-themes))
+	    ("RET" nil "done" :color blue)))))
 
 (use-package leuven-theme
   :defer t
