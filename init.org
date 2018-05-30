@@ -1097,6 +1097,24 @@
 	:bind ("C-c g l" . git-link))
     #+END_SRC
 
+*** Gists
+
+    Viewing & editing gists in Emacs? Sure! I want that!
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package gist
+	:ensure t
+	:bind (("C-x g l" . gist-list)
+               ("C-x g c" . gist-region-or-buffer-private))
+	:init
+
+	;; The defaults for these are too small for gists
+	(setq max-specpdl-size 3000)
+	(setq max-lisp-eval-depth 2000)
+
+	(setq gist-ask-for-description t))
+    #+END_SRC
+
 *** Resolving Conflicts
 
     Sometimes I have to resolve conflicts. I then use Ediff, which I
@@ -1801,24 +1819,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package apples-mode
 	:ensure t)
-    #+END_SRC
-
-*** Gists
-
-    Viewing & editing gists in Emacs? Sure! I want that!
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package gist
-	:ensure t
-	:bind (("C-x g l" . gist-list)
-               ("C-x g c" . gist-region-or-buffer-private))
-	:init
-
-	;; The defaults for these are too small for gists
-	(setq max-specpdl-size 3000)
-	(setq max-lisp-eval-depth 2000)
-
-	(setq gist-ask-for-description t))
     #+END_SRC
 
 *** Sphinx & reStructuredText

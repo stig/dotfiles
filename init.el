@@ -422,6 +422,18 @@
   :ensure t
   :bind ("C-c g l" . git-link))
 
+(use-package gist
+  :ensure t
+  :bind (("C-x g l" . gist-list)
+         ("C-x g c" . gist-region-or-buffer-private))
+  :init
+
+  ;; The defaults for these are too small for gists
+  (setq max-specpdl-size 3000)
+  (setq max-lisp-eval-depth 2000)
+
+  (setq gist-ask-for-description t))
+
 (defun ediff-copy-both-to-C ()
   (interactive)
   (ediff-copy-diff ediff-current-difference nil 'C nil
@@ -730,18 +742,6 @@
 
 (use-package apples-mode
   :ensure t)
-
-(use-package gist
-  :ensure t
-  :bind (("C-x g l" . gist-list)
-         ("C-x g c" . gist-region-or-buffer-private))
-  :init
-
-  ;; The defaults for these are too small for gists
-  (setq max-specpdl-size 3000)
-  (setq max-lisp-eval-depth 2000)
-
-  (setq gist-ask-for-description t))
 
 (use-package sphinx-frontend
   :ensure t)
