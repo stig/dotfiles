@@ -409,13 +409,12 @@
         magit-diff-refine-hunk 'all
         magit-push-always-verify nil))
 
-(use-package magit-gh-pulls
-  :ensure t
+(use-package magithub
+  :after magit
   :init
-  (setq magit-gh-pulls-mode-lighter "")
+  (setq magithub-clone-default-directory "~/work")
   :config
-  (require 'ht) ;; This is a missing dependency in newer version of marshal.el
-  (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+  (magithub-feature-autoinject t))
 
 (use-package git-link
   :pin melpa-stable

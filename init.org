@@ -1078,7 +1078,7 @@
     I also use a Magit plugin that interacts with GitHub, allowing me to create
     pull-requests without leaving Magit.
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp-disabled
       (use-package magit-gh-pulls
 	:ensure t
 	:init
@@ -1086,6 +1086,17 @@
 	:config
 	(require 'ht) ;; This is a missing dependency in newer version of marshal.el
 	(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
+    #+END_SRC
+
+    There's a new GitHub integration tool... Let's try that instead of magit-gh-pulls for a bit.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package magithub
+	:after magit
+	:init
+	(setq magithub-clone-default-directory "~/work")
+	:config
+	(magithub-feature-autoinject t))
     #+END_SRC
 
     Link to file location on github.
