@@ -252,23 +252,6 @@
 	(add-to-list 'helm-boring-buffer-regexp-list "TAGS"))
     #+END_SRC
 
-*** Ivy
-
- Let's ease into Ivy by just making sure it's installed and enabling it
- everywhere for completion. I'm starting by cherry-picking from [[https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/][Sam
- Barreto's blog post]] on switching from Helm to Ivy.
-
- #+BEGIN_SRC emacs-lisp-disabled
-   (use-package ivy
-     :ensure t
-     :bind (:map ivy-mode-map ("C-'" . ivy-avy))
-     :config
-     (ivy-mode 1)
-
-     ;; Add recent files and bookmarks to ivy-switch-buffer
-     (setq ivy-use-virtual-buffers t))
- #+END_SRC
-
 *** Swiper
 
     Invoke swiper (find in current buffer).
