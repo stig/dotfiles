@@ -1020,7 +1020,7 @@
  #+BEGIN_SRC emacs-lisp
  (set-face-attribute 'default nil :height 150)
  #+END_SRC
-*** Add =/usr/local/bin= to our path
+*** Add =/usr/local/bin= to our path                                 :noexport:
 
     The GUI Emacs gets exec path from the system, rather than the login shell.
     This requires us to add "/usr/local/bin" to exec-path lest it can't find
@@ -1029,7 +1029,7 @@
     packages or Fish itself it broke and I wasn't able to fix it. So
     for now, just configure it manually.
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp-disabled
       (use-package exec-path-from-shell
 	:ensure t
 	:config

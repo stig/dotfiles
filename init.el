@@ -383,11 +383,6 @@
 
 (set-face-attribute 'default nil :height 150)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
-
 (setq mac-pass-command-to-system nil)
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
