@@ -826,7 +826,7 @@
 *** Get New Mail                                               :EXPERIMENTAL:
 
     #+begin_src emacs-lisp
-    (setq mu4e-get-mail-command "mbsync inboxes")
+    (setq mu4e-get-mail-command "mbsync -a")
     #+end_src
 ** Flymake
 

@@ -297,7 +297,7 @@
     (flyspell-mode 1))
   (add-hook 'mu4e-compose-mode-hook 'my-message-setup-routine))
 
-(setq mu4e-get-mail-command "mbsync inboxes")
+(setq mu4e-get-mail-command "mbsync -a")
 
 (use-package flymake
   :bind (:map flymake-mode-map
