@@ -377,6 +377,8 @@
 
 (set-face-attribute 'default nil :height 150)
 
+(add-to-list 'exec-path "/usr/local/bin")
+
 (setq mac-pass-command-to-system nil)
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))

@@ -1005,20 +1005,14 @@
  #+BEGIN_SRC emacs-lisp
  (set-face-attribute 'default nil :height 150)
  #+END_SRC
-*** Add =/usr/local/bin= to our path                                 :noexport:
+*** Add =/usr/local/bin= to our path
 
     The GUI Emacs gets exec path from the system, rather than the login shell.
     This requires us to add "/usr/local/bin" to exec-path lest it can't find
-    any programs installed by =brew=. I used to use
-    =exec-path-from-shell=, but after upgrading either some Emacs
-    packages or Fish itself it broke and I wasn't able to fix it. So
-    for now, just configure it manually.
+    any programs installed by =brew=.
 
-    #+BEGIN_SRC emacs-lisp-disabled
-      (use-package exec-path-from-shell
-	:ensure t
-	:config
-	(exec-path-from-shell-initialize))
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'exec-path "/usr/local/bin")
     #+END_SRC
 
 *** Don't hide Emacs when  ⌘-h is pressed
