@@ -84,6 +84,12 @@
    #+END_SRC
 
 * Configuration
+** Who Am I
+
+   #+BEGIN_SRC emacs-lisp
+   (setq user-full-name "Stig Brautaset")
+   (setq user-mail-address "stig@brautaset.org")
+   #+END_SRC
 ** Completion
 
    In the past I've been using Helm, but I did a recent experiment with

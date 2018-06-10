@@ -15,6 +15,9 @@
 (require 'bind-key)
 (require 'dash)
 
+(setq user-full-name "Stig Brautaset")
+(setq user-mail-address "stig@brautaset.org")
+
 (use-package helm
   :ensure t
   :init
