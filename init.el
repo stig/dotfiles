@@ -963,13 +963,28 @@
               (eq month-day (1- (1- last-month-day))))))))
 
 (setq org-publish-project-alist
-      '(("superloopy_static"
+      '(("blog_rss"
+	 :base-directory "~/blog"
+	 :base-extension "org"
+	 :rss-image-url "https://www.brautaset.org/images/logo.png"
+	 :html-link-home "https://www.brautaset.org/"
+	 :html-link-use-abs-url t
+	 :rss-extension "xml"
+	 :publishing-directory "~/public_html"
+	 :publishing-function (org-rss-publish-to-rss)
+	 :section-numbers nil
+	 :exclude ".*"            ;; To exclude all files...
+	 :include ("rss.org")     ;; ... except rss.org.
+	 :table-of-contents nil)
+
+	("blog_static"
 	 :base-directory "~/blog"
 	 :publishing-directory "~/public_html"
 	 :base-extension "css\\|jpg\\|png\\|pdf\\|html"
 	 :recursive t
 	 :publishing-function org-publish-attachment)
-	("superloopy_html"
+
+	("blog_html"
 	 :base-directory "~/blog"
 	 :publishing-directory "~/public_html"
 	 :publishing-function org-html-publish-to-html
@@ -979,18 +994,12 @@
 	 :time-stamp-file nil
 	 :with-toc nil
 
-	 ;; :auto-sitemap t
-	 ;; :sitemap-sort-files anti-chronologically
-	 ;; :sitemap-style list
-	 ;; :sitemap-title "Superloopy Sitemap"
-
 	 :html-doctype "html5"
 	 :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
 	 :html-link-up "/"
 	 :html-link-home "/"
 	 :html-home/up-format "
 <div id=\"org-div-home-and-up\">
-  <a href=\"/\"><img src=\"/images/logo.png\" alt=\"Superloopy Logo\"/></a>
   <nav>
     <ul>
       <li><a accesskey=\"H\" href=\"%s\"> Home </a></li>
@@ -1007,7 +1016,7 @@
 
 	 :html-head-extra "
 <script type=\"text/javascript\">
-if(/superloopy/.test(window.location.hostname)) {
+if(/brautaset/.test(window.location.hostname)) {
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -1021,21 +1030,7 @@ if(/superloopy/.test(window.location.hostname)) {
 
 	 :html-preamble nil
 	 :html-postamble-format auto
-	 :html-metadata-timestamp-format "%e %B %Y")
-
-	("superloopy_rss"
-	 :base-directory "~/blog"
-	 :base-extension "org"
-	 :rss-image-url "https://www.superloopy.io/images/logo.png"
-	 :html-link-home "https://www.superloopy.io/"
-	 :html-link-use-abs-url t
-	 :rss-extension "xml"
-	 :publishing-directory "~/public_html"
-	 :publishing-function (org-rss-publish-to-rss)
-	 :section-numbers nil
-	 :exclude ".*"            ;; To exclude all files...
-	 :include ("index.org")   ;; ... except index.org.
-	 :table-of-contents nil)))
+	 :html-metadata-timestamp-format "%e %B %Y")))
 
 (use-package org-drill)
 
