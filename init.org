@@ -52,7 +52,6 @@
    to overlap with Melpa.
 
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
      (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
    #+END_SRC
@@ -920,38 +919,19 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package magit
-	:pin melpa-stable
 	:ensure t
-
 	:bind (("M-m" . magit-status)
-               ("s-b" . magit-blame))
-
-	:init
-	(setq magit-completing-read-function #'ivy-completing-read)
-	(setq magit-git-executable "/usr/bin/git"
-              magit-diff-refine-hunk 'all
-              magit-push-always-verify nil))
+	       ("s-b" . magit-blame)))
     #+END_SRC
 
 *** GitHub
 
-    I also use a Magit plugin that interacts with GitHub, allowing me to create
-    pull-requests without leaving Magit.
-
-    #+BEGIN_SRC emacs-lisp-disabled
-      (use-package magit-gh-pulls
-	:ensure t
-	:init
-	(setq magit-gh-pulls-mode-lighter "")
-	:config
-	(require 'ht) ;; This is a missing dependency in newer version of marshal.el
-	(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls))
-    #+END_SRC
-
-    There's a new GitHub integration tool... Let's try that instead of magit-gh-pulls for a bit.
+    There's a new GitHub integration tool... Let's try that instead of
+    magit-gh-pulls for a bit.
 
     #+BEGIN_SRC emacs-lisp
       (use-package magithub
+	:ensure t
 	:after magit
 	:init
 	(setq magithub-clone-default-directory "~/work")
@@ -963,7 +943,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package git-link
-	:pin melpa-stable
 	:ensure t
 	:bind ("C-c g l" . git-link))
     #+END_SRC

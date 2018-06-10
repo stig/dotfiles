@@ -1,4 +1,3 @@
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
@@ -334,19 +333,12 @@
   (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
 
 (use-package magit
-  :pin melpa-stable
   :ensure t
-
   :bind (("M-m" . magit-status)
-         ("s-b" . magit-blame))
-
-  :init
-  (setq magit-completing-read-function #'ivy-completing-read)
-  (setq magit-git-executable "/usr/bin/git"
-        magit-diff-refine-hunk 'all
-        magit-push-always-verify nil))
+	 ("s-b" . magit-blame)))
 
 (use-package magithub
+  :ensure t
   :after magit
   :init
   (setq magithub-clone-default-directory "~/work")
@@ -354,7 +346,6 @@
   (magithub-feature-autoinject t))
 
 (use-package git-link
-  :pin melpa-stable
   :ensure t
   :bind ("C-c g l" . git-link))
 
@@ -719,7 +710,6 @@
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 (use-package markdown-mode
-  :pin melpa-stable
   :ensure t
   :bind (("M-<up>" . markdown-move-list-item-up)
 	 ("M-<down>" . markdown-move-list-item-down)))
