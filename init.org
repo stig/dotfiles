@@ -1499,6 +1499,14 @@
       (bind-key ")" 'sp-up-sexp lisp-mode-map))
     #+END_SRC
 
+*** CSS
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package flymake-css
+      :ensure t
+      :config
+      (add-hook 'css-mode-hook 'flymake-css-load))
+    #+END_SRC
 *** Aggressive Indent
 
     I like to keep my code indented properly at all times. Aggressive-indent
@@ -2243,7 +2251,21 @@
 
 	     :html-preamble nil
 	     :html-postamble-format auto
-	     :html-metadata-timestamp-format "%e %B %Y")))
+	     :html-metadata-timestamp-format "%e %B %Y")
+
+	    ("blog_rss"
+	     :base-directory "~/blog"
+	     :base-extension "org"
+	     :html-link-home "https://www.brautaset.org"
+	     :html-link-use-abs-url t
+	     :rss-extension "xml"
+	     :rss-feed-url "https://www.brautaset.org/rss.xml"
+	     :publishing-directory "~/public_html"
+	     :publishing-function (org-rss-publish-to-rss)
+	     :section-numbers nil
+	     :exclude ".*"                 ;; To exclude all files...
+	     :include ("index.org")     ;; ... except index.org.
+	     :table-of-contents nil)))
   #+END_SRC
 
 *** Drilling
@@ -2394,6 +2416,16 @@
      pipenv-projectile-after-switch-function
      #'pipenv-projectile-after-switch-extended))
   #+END_SRC
+*** Flymake
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package flymake-python-pyflakes
+      :ensure t
+      :init
+      (setq flymake-python-pyflakes-executable "flake8")
+      :config
+      (add-hook 'python-mode-hook 'flymake-python-pyflakes-load))
+    #+END_SRC
 
 ** Themes
 *** Load one theme at a time
@@ -2502,9 +2534,12 @@
 ** YAML
 
    #+BEGIN_SRC emacs-lisp
-   (use-package yaml-mode
+   (use-package yaml-mode :ensure t)
+
+   (use-package flymake-yaml
+     :ensure t
      :config
-     (add-hook 'yaml-mode-hook 'flymake-mode))
+     (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
 * Footnotes
 

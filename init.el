@@ -609,6 +609,11 @@
   (bind-key ")" 'sp-up-sexp emacs-lisp-mode-map)
   (bind-key ")" 'sp-up-sexp lisp-mode-map))
 
+(use-package flymake-css
+  :ensure t
+  :config
+  (add-hook 'css-mode-hook 'flymake-css-load))
+
 (use-package aggressive-indent
   :ensure t
 
@@ -1093,6 +1098,13 @@ if(/brautaset/.test(window.location.hostname)) {
    pipenv-projectile-after-switch-function
    #'pipenv-projectile-after-switch-extended))
 
+(use-package flymake-python-pyflakes
+  :ensure t
+  :init
+  (setq flymake-python-pyflakes-executable "flake8")
+  :config
+  (add-hook 'python-mode-hook 'flymake-python-pyflakes-load))
+
 (defun sb/disable-all-themes ()
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
@@ -1142,6 +1154,9 @@ if(/brautaset/.test(window.location.hostname)) {
 	 ("C-c C-s C-k" . string-inflection-kebab-case)
 	 ("C-c C-s C-u" . string-inflection-upcase)))
 
-(use-package yaml-mode
+(use-package yaml-mode :ensure t)
+
+(use-package flymake-yaml
+  :ensure t
   :config
-  (add-hook 'yaml-mode-hook 'flymake-mode))
+  (add-hook 'yaml-mode-hook 'flymake-yaml-load))
