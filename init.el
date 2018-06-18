@@ -363,6 +363,14 @@
   :init
   (setq gac-shell-and "; and "))
 
+(use-package company
+  :ensure t
+  :init
+  ;; https://emacs.stackexchange.com/a/10838
+  (setq company-dabbrev-downcase nil)
+  :config
+  (global-company-mode))
+
 (set-face-attribute 'default nil :height 150)
 
 (add-to-list 'exec-path "/usr/local/bin")
@@ -608,12 +616,6 @@
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
   (add-hook 'css-mode-hook #'aggressive-indent-mode))
-
-(use-package auto-complete
-  :ensure t
-  :config
-  (ac-config-default)
-  (global-auto-complete-mode))
 
 (use-package editorconfig
   :ensure t

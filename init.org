@@ -965,6 +965,18 @@
 ** Miscellaneous
    Now on to the actual configuration of packages & Emacs behaviour.
 
+*** Auto-complete
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package company
+      :ensure t
+      :init
+      ;; https://emacs.stackexchange.com/a/10838
+      (setq company-dabbrev-downcase nil)
+      :config
+      (global-company-mode))
+    #+END_SRC
+
 *** I like big fonts and I cannot lie
 
  #+BEGIN_SRC emacs-lisp
@@ -1500,19 +1512,6 @@
 	(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 	(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
 	(add-hook 'css-mode-hook #'aggressive-indent-mode))
-    #+END_SRC
-
-*** Autocomplete
-
-    I use auto-complete. I am not entirely sure to what extent, but this is my
-    config for it.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package auto-complete
-	:ensure t
-	:config
-	(ac-config-default)
-	(global-auto-complete-mode))
     #+END_SRC
 
 *** Editorconfig
