@@ -990,6 +990,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'exec-path "/usr/local/bin")
+
+      ;; This is for Eshell
+      (require 's)
+      (setenv "PATH" (s-join ":" (-butlast exec-path)))
     #+END_SRC
 
 *** Don't hide Emacs when  ⌘-h is pressed

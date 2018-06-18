@@ -375,6 +375,10 @@
 
 (add-to-list 'exec-path "/usr/local/bin")
 
+;; This is for Eshell
+(require 's)
+(setenv "PATH" (s-join ":" (-butlast exec-path)))
+
 (setq mac-pass-command-to-system nil)
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
