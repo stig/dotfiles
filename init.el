@@ -49,8 +49,6 @@
       :init
       (setq mu4e-mu-binary "/usr/local/bin/mu"))
 
-(setq mu4e-split-view 'horizontal)
-
 (setq mu4e-attachment-dir "~/Downloads")
 
 (setq mu4e-view-show-images t)

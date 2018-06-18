@@ -171,11 +171,6 @@
 	(setq mu4e-mu-binary "/usr/local/bin/mu"))
     #+END_SRC
 
-*** Use single-pane layout
-
-    #+BEGIN_SRC emacs-lisp
-    (setq mu4e-split-view 'horizontal)
-    #+END_SRC
 *** Where mu4e should save attachments
 
     When saving attachments, do so to my ~/Downloads folder. Apparently
