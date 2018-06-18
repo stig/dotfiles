@@ -280,14 +280,6 @@
 
 (setq mu4e-compose-format-flowed t)
 
-(defun my-mu4e-fringe-setup ()
-  (set-window-fringes nil 4 (- (frame-pixel-width) (* 80 (frame-char-width)))))
-
-(add-hook 'mu4e-compose-mode-hook 'my-mu4e-fringe-setup)
-(add-hook 'mu4e-view-mode-hook 'my-mu4e-fringe-setup)
-
-(add-hook 'eww-buffers-mode-hook 'my-mu4e-fring-setup)
-
 (use-package flyspell-lazy
   :ensure t
   :config
