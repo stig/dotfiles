@@ -243,8 +243,6 @@
 	  (lambda ()
             (define-key message-mode-map "\C-c\C-f\C-f" 'message-loop-from)))
 
-(use-package boxquote :ensure t)
-
 (use-package org-mu4e)
 
 (use-package mu4e :bind (:map mu4e-compose-mode-map
@@ -715,6 +713,8 @@
   :ensure t
   :bind (("M-<up>" . markdown-move-list-item-up)
 	 ("M-<down>" . markdown-move-list-item-down)))
+
+(use-package boxquote :ensure t)
 
 (use-package org
       :ensure org-plus-contrib

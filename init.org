@@ -672,28 +672,6 @@
                   (define-key message-mode-map "\C-c\C-f\C-f" 'message-loop-from)))
     #+END_SRC
 
-*** Box quotes are so cute!
-
-    Install boxquote to make fancy text boxes like this:
-
-    #+BEGIN_EXAMPLE
-      ,----
-      | This is a box quote!
-      `----
-    #+END_EXAMPLE
-
-    You can even set a title!
-
-    #+BEGIN_EXAMPLE
-      ,----[ with a title! ]
-      | This is another box quote
-      `----
-    #+END_EXAMPLE
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package boxquote :ensure t)
-    #+END_SRC
-
 *** Compose Emails with Org mode
 
     I want to be able to create links to messages from Org mode capture
@@ -1801,6 +1779,28 @@
 	:bind (("M-<up>" . markdown-move-list-item-up)
 	       ("M-<down>" . markdown-move-list-item-down)))
     #+END_SRC
+*** Box quotes are so cute!
+
+    Install boxquote to make fancy text boxes like this:
+
+    #+BEGIN_EXAMPLE
+      ,----
+      | This is a box quote!
+      `----
+    #+END_EXAMPLE
+
+    You can even set a title!
+
+    #+BEGIN_EXAMPLE
+      ,----[ with a title! ]
+      | This is another box quote
+      `----
+    #+END_EXAMPLE
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package boxquote :ensure t)
+    #+END_SRC
+
 ** Org mode
 
    I now use Org mode for all writing I initiate. The Emacs org mode's support
