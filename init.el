@@ -963,64 +963,75 @@
 	  (or (eq month-day (1- last-month-day))
               (eq month-day (1- (1- last-month-day))))))))
 
-(setq org-publish-project-alist
-      '(("blog_rss"
-	 :base-directory "~/blog"
-	 :base-extension "org"
-	 :rss-image-url "https://www.brautaset.org/images/logo.png"
-	 :html-link-home "https://www.brautaset.org/"
-	 :html-link-use-abs-url t
-	 :rss-extension "xml"
-	 :publishing-directory "~/public_html"
-	 :publishing-function (org-rss-publish-to-rss)
-	 :section-numbers nil
-	 :exclude ".*"            ;; To exclude all files...
-	 :include ("rss.org")     ;; ... except rss.org.
-	 :table-of-contents nil)
+(defun sb/org-html-format-drawer (name content)
+  (concat "<div class=\"drawer " (downcase name) "\">\n"
+	  "<h6>" (capitalize name) "</h6>\n"
+	  content
+	  "\n</div>"))
 
-	("blog_static"
+(setq org-publish-project-alist
+      '(("www"
+	 :components ("www-pages" "www-static" "www-rss"))
+
+	("www-static"
 	 :base-directory "~/blog"
 	 :publishing-directory "~/public_html"
 	 :base-extension "css\\|jpg\\|png\\|pdf\\|html"
 	 :recursive t
 	 :publishing-function org-publish-attachment)
 
-	("blog_html"
+	("www-pages"
 	 :base-directory "~/blog"
 	 :publishing-directory "~/public_html"
 	 :publishing-function org-html-publish-to-html
 	 :recursive t
-	 :makeindex t
 	 :section-numbers nil
 	 :time-stamp-file nil
 	 :with-toc nil
+	 :with-drawers t
+	 :html-format-drawer-function sb/org-html-format-drawer
 
 	 :html-doctype "html5"
 	 :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
 	 :html-link-up "/"
 	 :html-link-home "/"
 	 :html-home/up-format "
-<div id=\"org-div-home-and-up\">
-  <nav>
-    <ul>
-      <li><a accesskey=\"H\" href=\"%s\"> Home </a></li>
-      <li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
-      <li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
-      <li><a accesskey=\"c\" href=\"/contact.html\"> Contact </a></li>
-      <li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
-    </ul>
-  </nav>
-</div>"
+  <div id=\"org-div-home-and-up\">
+    <nav>
+      <ul>
+	<li><a accesskey=\"H\" href=\"%s\"> Home </a></li>
+	<li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
+	<li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
+	<li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
+      </ul>
+    </nav>
+  </div>"
 	 :html-head "
-<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/main.css\" />
-<link rel=\"icon\" type=\"image/png\" href=\"/images/icon.png\" />"
+  <link rel=\"stylesheet\" type=\"text/css\" href=\"/etc/main.css\" />
+  <link rel=\"icon\" type=\"image/png\" href=\"/images/icon.png\" />
+  <link rel=\"alternative\" type=\"application/rss+xml\" 
+        href=\"https://www.brautaset.org/index.xml\"
+	title=\"Stig's Soapbox RSS Feed\" />"
 
 	 :html-head-include-default-style nil
 	 :html-head-include-scripts nil
 
 	 :html-preamble nil
 	 :html-postamble-format auto
-	 :html-metadata-timestamp-format "%e %B %Y")))
+	 :html-metadata-timestamp-format "%e %B %Y")
+
+	("www-rss"
+	 :base-directory "~/blog"
+	 :base-extension "org"
+	 :html-link-home "https://www.brautaset.org"
+	 :html-link-use-abs-url t
+	 :rss-extension "xml"
+	 :publishing-directory "~/public_html"
+	 :publishing-function (org-rss-publish-to-rss)
+	 :section-numbers nil
+	 :exclude ".*"                 ;; To exclude all files...
+	 :include ("index.org")     ;; ... except index.org.
+	 :table-of-contents nil)))
 
 (use-package org-drill)
 
