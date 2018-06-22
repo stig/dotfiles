@@ -2228,7 +2228,7 @@
       <div id=\"org-div-home-and-up\">
 	<nav>
 	  <ul>
-	    <li><a accesskey=\"H\" href=\"%s\"> Home </a></li>
+	    <li><a accesskey=\"H\" href=\"%s\"> Home </a> (<a href=\"/index.xml\">RSS</a>)</li>
 	    <li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
 	    <li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
 	    <li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
@@ -2238,7 +2238,7 @@
 	     :html-head "
       <link rel=\"stylesheet\" type=\"text/css\" href=\"/etc/main.css\" />
       <link rel=\"icon\" type=\"image/png\" href=\"/etc/icon.png\" />
-      <link rel=\"alternative\" type=\"application/rss+xml\" 
+      <link rel=\"alternative\" type=\"application/rss+xml\"
             href=\"https://www.brautaset.org/index.xml\"
 	    title=\"Stig's Soapbox RSS Feed\" />"
 
