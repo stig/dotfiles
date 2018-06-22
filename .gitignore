@@ -1,7 +1,6 @@
 *.cache
 *.dat
 *.el
-!init.el
 *.elc
 *.eld
 *.html
