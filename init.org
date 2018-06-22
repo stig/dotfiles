@@ -994,6 +994,10 @@
       ;; This is for Eshell
       (require 's)
       (setenv "PATH" (s-join ":" (-butlast exec-path)))
+
+      ;; Avoid "WARNING: terminal is not fully functional" prompt every time
+      ;; I invoke `aws $subcommand help`.
+      (setenv "PAGER" "cat")
     #+END_SRC
 
 *** Don't hide Emacs when  ⌘-h is pressed
