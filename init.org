@@ -2263,6 +2263,60 @@
 	     :table-of-contents nil)))
   #+END_SRC
 
+*** Blogging Support
+
+    I create blog entries in a directory under =~/blog= and link to them
+    from the main index page. It has so far been a manual job, but I
+    have finally managed to create a function to automate it a bit.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun sb/org-kw-get (key)
+	"Return a lambda that takes an Org keyword element and returns
+      its :value property if its :key property matches `key'."
+	`(lambda (kw)
+	   (if (equal ,key (org-element-property :key kw))
+	       (org-element-property :value kw))))
+
+      (defun sb/parse-metadata ()
+	"Call in a blog post to get an entry suitable for linking to this
+      post from the index page."
+	(let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+	       (tree (org-element-parse-buffer))
+
+	       (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+	       (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
+	       (abstract (s-join ""
+				 (org-element-map tree 'special-block
+				   (lambda (sb)
+				     (if (equal "abstract" (org-element-property :type sb))
+					 (org-element-interpret-data
+					  (org-element-contents sb))))))))
+
+	  (with-temp-buffer
+	    (org-mode)
+	    (org-insert-heading)
+
+	    ;; Would have loved to use `org-insert-link' here but
+	    ;; I can't stop it from presenting a prompt :-(
+	    (insert "[[file:" path "][" title "]]")
+
+	    (insert "\n\n")
+	    (insert abstract)
+
+	    (org-set-property "RSS_PERMALINK"
+			      (format "%s.html"
+				      (s-chop-suffix ".org" path)))
+
+	    ;; Need to go back to the first line to set tags
+	    (goto-char (point-min))
+	    (org-set-tags-to categories)
+	    (org-set-tags nil t) ;; adjust tags in the source
+
+	    ;; Return the contents temporary buffer as a string *without properties*
+	    (copy-region-as-kill
+	     (point-min) (point-max)))))
+    #+END_SRC
+
 *** Drilling
 
   Org drill is used for learning things by repetition.
