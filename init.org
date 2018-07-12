@@ -1891,8 +1891,12 @@
     #+BEGIN_SRC emacs-lisp :tangle no
       ;; I don't want to show these in the TODO list,
       ;; because they'll show in the Agenda anyway.
-      (setq org-agenda-todo-ignore-scheduled 'all
-	    org-agenda-todo-ignore-deadlines 'all)
+      (setq org-agenda-todo-ignore-scheduled 'future
+	    org-agenda-todo-ignore-deadlines 'far
+	    org-agenda-todo-ignore-timestamp 'future)
+
+      (setq org-agenda-skip-deadline-prewarning-if-scheduled t
+	    org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
       ;; Make tags-todo search ignore scheduled items too
       (setq org-agenda-tags-todo-honor-ignore-options t)
