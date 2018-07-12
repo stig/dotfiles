@@ -1903,11 +1903,12 @@
 
       (setq org-log-done 'time)
 
-      (setq org-stuck-projects '("-SOMEDAY/PROJ" ("TODO" "WAITING") nil ""))
+      (setq org-stuck-projects '("PROJECT-SOMEDAY" ("TODO" "WAITING") nil ""))
 
       (setq org-agenda-custom-commands
 	    '(("u" "Current Tasks" tags-todo "-SOMEDAY/TODO")
-	      ("p" "Current Projects" tags-todo "-SOMEDAY/!PROJ")
+	      ("p" "Current Projects" tags "PROJECT-SOMEDAY"
+	        ((org-use-tag-inheritance . nil)))
 	      ("S" "Someday" tags-todo "SOMEDAY")
 	      ("w" todo "WAITING")))
     #+END_SRC
@@ -1919,7 +1920,7 @@
     #+name: refiling
     #+BEGIN_SRC emacs-lisp :tangle no
       (setq org-refile-targets '((org-agenda-files :maxlevel . 3)
-				 (org-agenda-files :tag . "PROJ")))
+				 (org-agenda-files :tag . "PROJECT")))
 
       ;; Allow refiling to sub-paths
       (setq org-refile-use-outline-path 'file)
