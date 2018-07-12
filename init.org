@@ -2307,12 +2307,12 @@
 
 	       (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
 	       (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
-	       (abstract (s-join ""
-				 (org-element-map tree 'special-block
-				   (lambda (sb)
-				     (if (equal "abstract" (org-element-property :type sb))
-					 (org-element-interpret-data
-					  (org-element-contents sb))))))))
+	       (abstract
+		(org-element-interpret-data
+		 (org-element-map tree 'special-block
+		   (lambda (sb)
+		     (if (equal "abstract" (org-element-property :type sb))
+			 (org-element-contents sb)))))))
 
 	  (with-temp-buffer
 	    (org-mode)
