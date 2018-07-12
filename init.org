@@ -1956,34 +1956,50 @@
 	      ("te" "To Expense" entry (file "")
 	       "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
 	      ("tp" "New Project" entry (file "")
-	       "* PROJ %^{Project Name} :PROJ:\n  :LOGBOOK:\n  - Added: %U\n  :END:")
+	       "* %^{Project Name} :PROJECT:\n  :LOGBOOK:\n  - Added: %U\n  :END:")
+
+	      ("l" "Log stuff")
+	      ("ll" "Learning" entry (file+datetree "Learning.org")
+	       "* %^{Title} %^g\n  %?")
+
+	      ("ld" "Log Daily Activity" entry (file+datetree "DailyLog.org")
+	       "* %^{Activity} %^g%^{Hours}p\n\n%?" :empty-lines 1)
+	      ("ln" "Note" entry (file+datetree "Notes.org")
+	       "* %^{Subject} %^{g}\n\n  %?"
+	       :empty-lines 1
+	       :clock-in t)
+	      ("lr" "Infra Report" entry (file+datetree "Notes.org")
+	       "* Infra Weekly Report %^g                        :REPORT:
+
+      ,** What did we complete since last report?
+
+      %?
+
+      ,** What do we plan to complete next?
+
+
+      ,** Any obstacles?
+      "
+	       :empty-lines 1)
 
 	      ("m" "Meter Readings")
 	      ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
-	       "|%^{Reading Time}T|%^{Reading Value}|%^{Price Per Litre|0.65}"
+	       "|%^{Reading Time}t|%^{Reading Value}|%^{Price Per Litre|0.65}"
 	       :table-line-pos "II-1")
 	      ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
-	       "|%^{Reading Time}T|%^{Reading Value}|%^{Price Per Unit|0.1333}"
+	       "|%^{Reading Time}t|%^{Reading Value}|%^{Price Per Unit|0.1333}"
 	       :table-line-pos "II-1")
 
 	      ("T" "Trip" entry (file "")
 	       (file "templates/trip.org") :empty-lines 1)
 
-	      ("n" "Note" entry (file+datetree "Notes.org")
-	       "* %^{Subject}\n\n  %?"
-	       :empty-lines 1
-	       :clock-in t)
-
 	      ("a" "Absence")
-	      ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
-	      ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
-	      ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
+	      ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* TODO %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
+	      ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* DONE %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
+	      ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* TODO %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
 
 	      ("P" "password" entry (file "~/Org/passwords.org.gpg")
 	       "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
-
-	      ("l" "Learning Log" entry (file+datetree "Learning.org")
-	       "* %^{Title} %^g\n  %?")
 
 	      ("b" "Blog Post" plain
 	       (file capture-blog-post-file)
