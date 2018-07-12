@@ -2327,7 +2327,7 @@
 
 	    (org-set-property "RSS_PERMALINK"
 			      (format "%s.html"
-				      (s-chop-suffix ".org" path)))
+				      (file-name-sans-extension path)))
 
 	    ;; Need to go back to the first line to set tags
 	    (goto-char (point-min))
