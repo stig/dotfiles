@@ -1943,7 +1943,7 @@
 		   (format-time-string "%Y" (current-time))
 		   slug))))
 
-      (setq org-default-notes-file "~/org/captured.org")
+      (setq org-default-notes-file "~/org/inbox.org")
 
       (setq org-capture-templates
 	    '(("t" "TODOs")
