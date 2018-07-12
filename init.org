@@ -2337,6 +2337,40 @@
 	    ;; Return the contents temporary buffer as a string *without properties*
 	    (copy-region-as-kill
 	     (point-min) (point-max)))))
+
+
+      (defun sb/find-drafts ()
+	"Find org files in `~/blog/articles' not already linked from
+		    `~/blog/index.org'."
+	(interactive)
+	(let* ((prefix (expand-file-name "~/blog/"))
+	       (posts
+		(directory-files-recursively
+		 (concat prefix "articles") ".org"))
+	       (index-contents (get-string-from-file (concat prefix "index.org")))
+	       (drafts (cl-remove-if (lambda (needle)
+				       (string-match
+					(string-remove-prefix prefix needle)
+					index-contents))
+				     posts))
+	       (buffer-name "*blog drafts*"))
+	  (if drafts
+	      (progn
+		(with-current-buffer (get-buffer-create buffer-name)
+		  (erase-buffer)
+		  (org-mode)
+		  (insert
+		   (mapconcat
+		    (lambda (entry)
+		      (format "- file:%s" entry))
+		    drafts
+		    "\n"))
+		  (buffer-string))
+		(unless (get-buffer-window buffer-name t)
+		  (pop-to-buffer buffer-name nil t))
+		(shrink-window-if-larger-than-buffer
+		 (get-buffer-window buffer-name)))
+	    (message "No drafts could be found!"))))
     #+END_SRC
 
 *** Drilling
