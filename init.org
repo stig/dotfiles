@@ -1907,7 +1907,7 @@
 
       (setq org-log-done 'time)
 
-      (setq org-stuck-projects '("PROJECT-SOMEDAY" ("TODO" "WAITING") nil ""))
+      (setq org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
 
       (setq org-agenda-custom-commands
 	    '(("u" "Current Tasks" tags-todo "-SOMEDAY/TODO")
