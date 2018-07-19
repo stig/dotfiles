@@ -1962,13 +1962,20 @@
 	      ("tp" "New Project" entry (file "")
 	       "* %^{Project Name} :PROJECT:\n  :LOGBOOK:\n  - Added: %U\n  :END:")
 
-	      ("l" "Log stuff")
-	      ("ll" "Learning" entry (file+datetree "Learning.org")
+	      ("L" "Learning" entry (file+datetree "Learning.org")
 	       "* %^{Title} %^g\n  %?")
 
-	      ("ld" "Log Daily Activity" entry (file+datetree "DailyLog.org")
-	       "* %^{Activity} %^g%^{Hours}p\n\n%?" :empty-lines 1)
-	      ("ln" "Note" entry (file+datetree "Notes.org")
+	      ("d" "Log Daily Activity")
+	      ("dr" "Log Reactive Activity" entry (file+datetree "DailyLog.org")
+	       "* %^{Activity} %^g%^{Reactive}p\n\n%?"
+	       :empty-lines 1
+	       :tree-type week)
+	      ("dp" "Log Planned Activity" entry (file+datetree "DailyLog.org")
+	       "* %^{Activity} %^g%^{Planned}p\n\n%?"
+	       :empty-lines 1
+	       :tree-type week)
+
+	      ("n" "Note" entry (file+datetree "Notes.org")
 	       "* %^{Subject} %^{g}\n\n  %?"
 	       :empty-lines 1
 	       :clock-in t)
