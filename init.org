@@ -1972,19 +1972,6 @@
 	       "* %^{Subject} %^{g}\n\n  %?"
 	       :empty-lines 1
 	       :clock-in t)
-	      ("lr" "Infra Report" entry (file+datetree "Notes.org")
-	       "* Infra Weekly Report %^g                        :REPORT:
-
-      ,** What did we complete since last report?
-
-      %?
-
-      ,** What do we plan to complete next?
-
-
-      ,** Any obstacles?
-      "
-	       :empty-lines 1)
 
 	      ("m" "Meter Readings")
 	      ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
