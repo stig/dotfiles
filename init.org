@@ -257,27 +257,31 @@
 
     #+BEGIN_SRC emacs-lisp
       (setq mu4e-bookmarks
-            (list
-             (make-mu4e-bookmark
-              :name "Flagged Messages"
-              :query "flag:flagged"
-              :key ?f)
-             (make-mu4e-bookmark
-              :name "Unread Messages (Private)"
-              :query "flag:unread AND maildir:/Private/* AND NOT maildir:/Private/spam"
-              :key ?u)
-             (make-mu4e-bookmark
-              :name "Unread Messages (Work)"
-              :query "flag:unread AND maildir:/Work/INBOX"
-              :key ?w)
-             (make-mu4e-bookmark
-              :name "Today's messages"
-              :query "date:today..now"
-              :key ?t)
-             (make-mu4e-bookmark
-              :name "Last 7 days"
-              :query "date:7d..now"
-              :key ?7)))
+	    (list
+	     (make-mu4e-bookmark
+	      :name "Inbox Messages"
+	      :query "maildir:/Private/INBOX OR maildir:/Work/INBOX"
+	      :key ?i)
+	     (make-mu4e-bookmark
+	      :name "Flagged Messages"
+	      :query "flag:flagged"
+	      :key ?f)
+	     (make-mu4e-bookmark
+	      :name "Unread Messages (Private)"
+	      :query "flag:unread AND maildir:/Private/* AND NOT maildir:/Private/spam"
+	      :key ?u)
+	     (make-mu4e-bookmark
+	      :name "Unread Messages (Work)"
+	      :query "flag:unread AND maildir:/Work/INBOX"
+	      :key ?w)
+	     (make-mu4e-bookmark
+	      :name "Today's messages"
+	      :query "date:today..now"
+	      :key ?t)
+	     (make-mu4e-bookmark
+	      :name "Last 7 days"
+	      :query "date:7d..now"
+	      :key ?7)))
     #+END_SRC
 
 *** Signatures
