@@ -2239,6 +2239,7 @@
 	     :with-drawers t
 	     :html-format-drawer-function sb/org-html-format-drawer
 
+	     :html-html5-fancy t
 	     :html-doctype "html5"
 	     :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
 	     :html-link-up "/"
