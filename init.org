@@ -1910,10 +1910,8 @@
       (setq org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
 
       (setq org-agenda-custom-commands
-	    '(("u" "Current Tasks" tags-todo "-SOMEDAY/TODO")
-	      ("p" "Current Projects" tags "PROJECT-SOMEDAY"
-	        ((org-use-tag-inheritance . nil)))
-	      ("S" "Someday" tags-todo "SOMEDAY")
+	    '(("p" "Current Projects" tags "/PROJ")
+	      ("S" "Someday" tags-todo "/SOMEDAY")
 	      ("w" todo "WAITING")))
     #+END_SRC
 
