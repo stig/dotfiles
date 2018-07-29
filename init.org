@@ -1807,6 +1807,23 @@
       (use-package boxquote :ensure t)
     #+END_SRC
 
+*** Elfeed
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package elfeed
+	:ensure t
+	:bind ("C-x w" . elfeed)
+	:init
+
+	(setq elfeed-feeds
+	      '(("https://xkcd.com/rss.xml" comic)
+		("http://dresdencodak.com/feed/" comic)
+		("http://www.girlgeniusonline.com/ggmain.rss" comic)
+		("https://megatokyo.com/rss/megatokyo.xml" comic)
+		("https://www.gunnerkrigg.com/rss.xml" comic)
+		("https://lobste.rs/t/emacs.rss" emacs lobsters)
+		("https://lobste.rs/t/clojure.rss" clojure lobsters))))
+    #+END_SRC
 ** Org mode
 
    I now use Org mode for all writing I initiate. The Emacs org mode's support
