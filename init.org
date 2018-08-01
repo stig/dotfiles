@@ -1997,10 +1997,10 @@
 
 	      ("m" "Meter Readings")
 	      ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
-	       "|%^{Reading Time}t|%^{Reading Value}|%^{Price Per Litre|0.65}"
+	       "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.65}"
 	       :table-line-pos "II-1")
 	      ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
-	       "|%^{Reading Time}t|%^{Reading Value}|%^{Price Per Unit|0.1333}"
+	       "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1333}"
 	       :table-line-pos "II-1")
 
 	      ("T" "Trip" entry (file "")
