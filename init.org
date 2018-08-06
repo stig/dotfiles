@@ -2396,45 +2396,6 @@
     (use-package org-drill)
   #+END_SRC
 
-*** Experiments
-
-  #+BEGIN_SRC emacs-lisp
-    (defun sb/org-time-max (a b)
-      (if (org-time>= a b)
-          a
-	b))
-
-    (defun sb/org-time-min (a b)
-      (if (org-time>= a b)
-          b
-	a))
-
-    (defun sb/org-columns--summary-max-time (values fmt)
-      (reduce #'sb/org-time-max values))
-
-    (defun sb/org-columns--summary-min-time (values fmt)
-      (reduce #'sb/org-time-min values))
-
-    (defun sb/org-collect-confirmed (property)
-      "Return `PROPERTY' for `CONFIRMED' entries"
-      (if (equal "[X]" (org-entry-get nil "CONFIRMED"))
-          (org-entry-get nil property)
-	"0"))
-
-    (defun sb/org-collect-confirmed-alt (compound-property)
-      "Return `PROPERTY' for `CONFIRMED' entries"
-      (let ((props (s-split-words compound-property)))
-	(if (equal "[X]" (org-entry-get nil (car props)))
-            (org-entry-get nil (cadr props))
-          "0")))
-
-    (setq org-columns-summary-types
-          '(("X+" org-columns--summary-sum sb/org-collect-confirmed)
-            ("XX+" org-columns--summary-sum sb/org-collect-confirmed-alt)
-            ("max-time" . sb/org-columns--summary-max-time)
-            ("min-time" . sb/org-columns--summary-min-time)))
-  #+END_SRC
-
 *** Attachments
 
     One annoying thing is not being able to find attachments once
