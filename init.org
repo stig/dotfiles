@@ -1979,16 +1979,7 @@
 	      ("tT" "Trip" entry (file "")
 	       (file "templates/trip.org") :empty-lines 1)
 
-	      ("l" "Log Activity")
-	      ("lr" "Log Daily Reactive Activity" entry (file+datetree "DailyLog.org")
-	       "* %^{Activity} %^g%^{Reactive}p\n\n%?"
-	       :empty-lines 1
-	       :tree-type week)
-	      ("lp" "Log Daily Planned Activity" entry (file+datetree "DailyLog.org")
-	       "* %^{Activity} %^g%^{Planned}p\n\n%?"
-	       :empty-lines 1
-	       :tree-type week)
-	      ("lL" "Log Learning" entry (file+datetree "Learning.org")
+	      ("l" "Log Learning" entry (file+datetree "Learning.org")
 	       "* %^{Title} %^g\n  %?")
 
 	      ("n" "Note" entry (file+datetree "Notes.org")
