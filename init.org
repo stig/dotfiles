@@ -1605,13 +1605,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
+        :bind (:projectile-mode-map "C-c p" . projectile-command-map)
 	:ensure t
-	:init
-	(setq projectile-mode-line
-	      '(:eval (format " Proj[%s]"
-			      (projectile-project-name))))
 	:config
-	(projectile-mode))
+	(projectile-mode +1))
     #+END_SRC
 
 *** Helm Projectile
