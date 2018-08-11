@@ -1427,88 +1427,14 @@
 
 *** SmartParens
 
-    I use smartparens rather that paredit. I cannot remember why; probably
-    something to do with it being better supported for Cider/Clojure? Anyway,
-    here's my SmartParens config. It is  mostly cribbed from the author, with
-    small changes to make suitable for plugging into =use-package=.
-
-    One notable thing: I remove "'" from being a pair, because that character
-    is used for quoting in lisps, and for apostrophe in text modes. Having two
-    inserted every time you hit the key is very annoying.
-
     #+BEGIN_SRC emacs-lisp
-    (use-package smartparens
-      :ensure t
-
-      :config
-      (smartparens-global-mode t)
-      (show-smartparens-global-mode t)
-      (sp-pair "'" nil :actions :rem)
-
-      ;; Add smartparens-strict-mode to all sp--lisp-modes hooks. C-h v sp--lisp-modes
-      ;; to customize/view this list.
-      (mapc (lambda (mode)
-              (add-hook (intern (format "%s-hook" (symbol-name mode))) 'smartparens-strict-mode))
-            sp--lisp-modes)
-
-      ;; Conveniently set keys into the sp-keymap, limiting the keybinding to buffers
-      ;; with SP mode activated
-      (mapc (lambda (info)
-              (let ((key (kbd (car info)))
-                    (function (car (cdr info))))
-		(define-key sp-keymap key function)))
-            '(("C-M-f" sp-forward-sexp)
-              ("C-M-b" sp-backward-sexp)
-
-              ("C-M-d" sp-down-sexp)
-              ("C-M-a" sp-backward-down-sexp)
-              ("C-S-a" sp-beginning-of-sexp)
-              ("C-S-d" sp-end-of-sexp)
-
-              ("C-M-e" sp-up-sexp)
-
-              ("C-M-u" sp-backward-up-sexp)
-              ("C-M-t" sp-transpose-sexp)
-
-              ("C-M-n" sp-next-sexp)
-              ("C-M-p" sp-previous-sexp)
-
-              ("C-M-k" sp-kill-sexp)
-              ("C-M-w" sp-copy-sexp)
-
-              ("C-M-<delete>" sp-unwrap-sexp)
-              ("C-M-<backspace>" sp-backward-unwrap-sexp)
-
-              ("C-<right>" sp-forward-slurp-sexp)
-              ("C-<left>" sp-forward-barf-sexp)
-              ("C-M-<left>" sp-backward-slurp-sexp)
-              ("C-M-<right>" sp-backward-barf-sexp)
-
-              ("M-D" sp-splice-sexp)
-              ("C-M-<delete>" sp-splice-sexp-killing-forward)
-              ("C-M-<backspace>" sp-splice-sexp-killing-backward)
-              ("C-S-<backspace>" sp-splice-sexp-killing-around)
-
-              ("C-]" sp-select-next-thing-exchange)
-              ("C-<left_bracket>" sp-select-previous-thing)
-              ("C-M-]" sp-select-next-thing)
-
-              ("M-F" sp-forward-symbol)
-              ("M-B" sp-backward-symbol)
-
-              ("H-t" sp-prefix-tag-object)
-              ("H-p" sp-prefix-pair-object)
-              ("H-s c" sp-convolute-sexp)
-              ("H-s a" sp-absorb-sexp)
-              ("H-s e" sp-emit-sexp)
-              ("H-s p" sp-add-to-previous-sexp)
-              ("H-s n" sp-add-to-next-sexp)
-              ("H-s j" sp-join-sexp)
-              ("H-s s" sp-split-sexp)))
-
-      ;; In Lisp modes, let ')' go to end of sexp
-      (bind-key ")" 'sp-up-sexp emacs-lisp-mode-map)
-      (bind-key ")" 'sp-up-sexp lisp-mode-map))
+      (use-package smartparens
+	:ensure t
+	:config
+	(require 'smartparens-config)
+	(sp-use-paredit-bindings)
+	(smartparens-global-strict-mode)
+	:diminish smartparens-mode)
     #+END_SRC
 
 *** CSS
