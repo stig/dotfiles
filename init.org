@@ -829,21 +829,6 @@
       (prefer-coding-system 'utf-8)
     #+END_SRC
 
-*** Conveniently type Norwegian characters
-
-    Let's define keybindings for the three additional Norwegian
-    characters characters that I don't have natively on my British
-    keyboard.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "s-'") (kbd "æ"))
-      (global-set-key (kbd "s-\"") (kbd "Æ"))
-      (global-set-key (kbd "s-O") (kbd "Ø"))
-      (global-set-key (kbd "s-o") (kbd "ø"))
-      (global-set-key (kbd "s-A") (kbd "Å"))
-      (global-set-key (kbd "s-a") (kbd "å"))
-      #+END_SRC
-
 *** Use Aspell with UK English Dictionary
 
     Configure Emacs to use the Queen's English for spell checking. Also,
@@ -860,13 +845,6 @@
       brew install aspell
     #+END_SRC
 
-*** (Some) Polish Characters Support
-
-    I have Polish colleagues whose names I don't want to mangle.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-x 8 ' l") (kbd "ł"))
-    #+END_SRC
 ** Lilypond
 
   #+BEGIN_SRC emacs-lisp
