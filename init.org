@@ -1908,7 +1908,7 @@
 	      ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* DONE %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
 	      ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* TODO %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
 
-	      ("P" "password" entry (file "~/Org/passwords.org.gpg")
+	      ("P" "password" entry (file "~/org/passwords.org.gpg")
 	       "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
 
 	      ("b" "Blog Post" plain
@@ -2031,7 +2031,7 @@
 	(setq org-passwords-time-opened "30 min")
 
 	;; Where's my passwords file?
-	(setq org-passwords-file "~/Org/passwords.org.gpg")
+	(setq org-passwords-file "~/org/passwords.org.gpg")
 
 	;; Use completion for org elements
 	(setq org-completion-use-ido t)
@@ -2055,7 +2055,7 @@
 	 (org-map-entries (lambda ()
                             (org-entry-get nil "InvoiceId"))
                           nil
-                          '("~/Org/invoices/Invoices.org"))))
+                          '("~/org/invoices/Invoices.org"))))
 
       (defun max-invoice-id ()
 	(apply #'max
