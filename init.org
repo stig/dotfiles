@@ -1410,7 +1410,7 @@
 	:ensure t
 	:config
 	(require 'smartparens-config)
-	(sp-use-paredit-bindings)
+	(sp-use-smartparens-bindings)
 	(smartparens-global-strict-mode)
 	:diminish smartparens-mode)
     #+END_SRC
