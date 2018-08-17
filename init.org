@@ -1748,6 +1748,9 @@
 
        <<key-bindings>>
 
+       :mode (("\\.org\\'" . org-mode)
+	     ("\\.org_archive\\'" . org-mode))
+
        :init
        <<capturing>>
        <<refiling>>
