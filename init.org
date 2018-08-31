@@ -971,11 +971,11 @@
     any programs installed by =brew=.
 
     #+BEGIN_SRC emacs-lisp
-      (add-to-list 'exec-path "/usr/local/bin")
-
-      ;; This is for Eshell
-      (require 's)
-      (setenv "PATH" (s-join ":" (-butlast exec-path)))
+      (use-package exec-path-from-shell
+        :ensure t
+	:config
+	(when (memq window-system '(mac ns x))
+	(exec-path-from-shell-initialize)))
 
       ;; Avoid "WARNING: terminal is not fully functional" prompt every time
       ;; I invoke `aws $subcommand help`.
