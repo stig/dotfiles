@@ -1875,6 +1875,8 @@
 
       (setq org-capture-templates
 	    '(("t" "TODOs")
+	      ("tn" "Todo Right Now (clock in!)" entry (file "")
+	       "* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
 	      ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
 	       "* TODO %?\n\n  %i")
 	      ("tl" "TODO entry with link" entry (file "")
