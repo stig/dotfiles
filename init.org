@@ -2495,6 +2495,17 @@
      :config
      (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
+** Clojure
+
+#+BEGIN_SRC emacs-lisp
+  (use-package clojure-mode :ensure t)
+  (use-package cider :ensure t)
+  (use-package clj-refactor :ensure t)
+  (use-package cljr-helm
+  :ensure t
+  :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
+#+END_SRC
+
 * Footnotes
 
 [fn:1] Found at http://www.emacswiki.org/emacs/TrampMode#toc31
