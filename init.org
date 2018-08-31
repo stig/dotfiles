@@ -1132,6 +1132,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+      (setq backup-by-copying t)
     #+END_SRC
 
 *** Transparently open compressed files
