@@ -1716,7 +1716,15 @@
 		("https://megatokyo.com/rss/megatokyo.xml" comic)
 		("https://www.gunnerkrigg.com/rss.xml" comic)
 		("https://lobste.rs/t/emacs.rss" emacs lobsters)
-		("https://lobste.rs/t/clojure.rss" clojure lobsters))))
+		("https://www.brautaset.org/index.xml" Me)
+		("https://lobste.rs/t/clojure.rss" clojure lobsters)))
+
+	:config
+	(defalias 'elfeed-toggle-star
+	  (elfeed-expose #'elfeed-search-toggle-all 'star))
+
+	(eval-after-load 'elfeed-search
+	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
     #+END_SRC
 ** Org mode
 
