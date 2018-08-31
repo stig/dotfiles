@@ -2456,28 +2456,6 @@
 		  ("RET" nil "done" :color blue)))))
     #+END_SRC
 
-*** Leuven Theme
-
-    Install & activate a nice-looking theme.  This used to be my
-    default for a looong time.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package leuven-theme
-	:defer t
-	:ensure t)
-    #+END_SRC
-
-*** Material Theme
-
-    I'm experimenting with this theme at the moment.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package material-theme
-	:ensure t
-	:config
-	(load-theme 'material-light))
-    #+END_SRC
-
 ** Writing
 
    I'm not a great writer. I need all the crutches I can get. Lucklily,
