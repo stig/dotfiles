@@ -1890,10 +1890,10 @@
 	      ("tT" "Trip" entry (file "")
 	       (file "templates/trip.org") :empty-lines 1)
 
-	      ("l" "Log Learning" entry (file+datetree "Learning.org")
+	      ("l" "Log Learning" entry (file+datetree "learning.org")
 	       "* %^{Title} %^g\n  %?")
 
-	      ("n" "Note" entry (file+datetree "Notes.org")
+	      ("n" "Note" entry (file+datetree "notes.org")
 	       "* %^{Subject} %^g\n\n  %?"
 	       :empty-lines 1
 	       :clock-in t)
@@ -1907,9 +1907,9 @@
 	       :table-line-pos "II-1")
 
 	      ("a" "Absence")
-	      ("ah" "Holiday" entry (file+olp "Absence.org" "2018") "* TODO %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
-	      ("as" "Sick leave" entry (file+olp "Absence.org" "2018") "* DONE %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
-	      ("ao" "Other leave" entry (file+olp "Absence.org" "2018") "* TODO %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
+	      ("ah" "Holiday" entry (file+olp "absence.org" "2018") "* TODO %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
+	      ("as" "Sick leave" entry (file+olp "absence.org" "2018") "* DONE %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
+	      ("ao" "Other leave" entry (file+olp "absence.org" "2018") "* TODO %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
 
 	      ("P" "password" entry (file "~/org/passwords.org.gpg")
 	       "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
