@@ -1609,15 +1609,6 @@
 	(setq graphviz-dot-view-command "open -a Graphviz %s"))
     #+END_SRC
 
-*** Fish
-
-    Add a mode for editing [[http://fishshell.com][FISH]] shell files.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package fish-mode
-	:ensure t)
-    #+END_SRC
-
 *** Trash
 
     This allows moving files to trash rather than deleting them from =dired=.
