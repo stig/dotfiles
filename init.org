@@ -1703,22 +1703,12 @@
 
 *** Elfeed
 
+    I use custom.el for the actual feeds.
+
     #+BEGIN_SRC emacs-lisp
       (use-package elfeed
 	:ensure t
 	:bind ("C-x w" . elfeed)
-	:init
-
-	(setq elfeed-feeds
-	      '(("https://xkcd.com/rss.xml" comic)
-		("http://dresdencodak.com/feed/" comic)
-		("http://www.girlgeniusonline.com/ggmain.rss" comic)
-		("https://megatokyo.com/rss/megatokyo.xml" comic)
-		("https://www.gunnerkrigg.com/rss.xml" comic)
-		("https://lobste.rs/t/emacs.rss" emacs lobsters)
-		("https://www.brautaset.org/index.xml" Me)
-		("https://lobste.rs/t/clojure.rss" clojure lobsters)))
-
 	:config
 	(defalias 'elfeed-toggle-star
 	  (elfeed-expose #'elfeed-search-toggle-all 'star))
