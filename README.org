@@ -2128,8 +2128,10 @@
       <link rel=\"stylesheet\" type=\"text/css\" href=\"/etc/main.css\" />
       <link rel=\"icon\" type=\"image/png\" href=\"/etc/icon.png\" />
       <link rel=\"alternative\" type=\"application/rss+xml\"
-            href=\"https://www.brautaset.org/index.xml\"
-	    title=\"Stig's Soapbox RSS Feed\" />"
+	    href=\"https://www.brautaset.org/index.xml\"
+	    title=\"Stig's Soapbox RSS Feed\" />
+      <meta name=\"referrer\" content=\"same-origin\">
+    "
 
 	     :html-head-include-default-style nil
 	     :html-head-include-scripts nil
