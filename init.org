@@ -1985,18 +1985,6 @@
 	:ensure t)
     #+END_SRC
 
-    I'm not that fond of writing Markdown either. I don't feel the need to
-    install these by default, but I load them if they are present.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package ox-md)
-    #+END_SRC
-
-    #+BEGIN_SRC emacs-lisp
-    (require 'ox-beamer)
-    (use-package ox-rst)
-    #+END_SRC
-
 *** Presenting
 
     Let's try presenting with Emacs.
