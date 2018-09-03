@@ -990,28 +990,6 @@
       (setq mac-pass-command-to-system nil)
     #+END_SRC
 
-*** Disable mouse interface, splash screen & beeps
-
-    I don't tend to use a mouse in Emacs very often, so I turn off mouse
-    interface early to avoid momentary display during launch.
-
-    #+BEGIN_SRC emacs-lisp :tangle early-init.el
-      (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-      (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-    #+END_SRC
-
-    I also don't need to see a splash screen on every launch.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq inhibit-startup-message t)
-    #+END_SRC
-
-    I do not like Emacs to beep at me; I prefer a visual bell.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq visible-bell t)
-    #+END_SRC
-
 *** Make mouse scrolling smoother
 
     The adaptive mouse scrolling is far, far too quick so let's turn that off.
@@ -2481,6 +2459,31 @@
   :ensure t
   :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
 #+END_SRC
+
+** Disable mouse interface, splash screen & beeps early
+
+   I don't tend to use a mouse in Emacs often, so I turn off mouse
+   interface early to avoid momentary display during launch. Recent
+   Emacsen read =early-init.el= before initialising GUI components, so
+   it's a great place to turn off mouse interface to avoid flicker
+   during startup.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+   #+END_SRC
+
+   I also don't need to see a splash screen on every launch.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq inhibit-startup-message t)
+   #+END_SRC
+
+   I do not like Emacs to beep at me; I prefer a visual bell.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq visible-bell t)
+   #+END_SRC
 
 * Footnotes
 
