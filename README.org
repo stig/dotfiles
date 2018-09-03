@@ -1,8 +1,8 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t h:4
-#+PROPERTY: header-args:emacs-lisp    :tangle yes
-#+PROPERTY: header-args:sh            :tangle yes
+#+PROPERTY: header-args:emacs-lisp    :tangle init.el
+#+PROPERTY: header-args:sh            :tangle init.sh
 #+PROPERTY: header-args            :results silent
 #+STARTUP: content
 * Introduction
