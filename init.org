@@ -32,8 +32,6 @@
 
 ** Check out this repo into =~/.emacs.d/=
 
-   I create a symlink from =~/.emacs.d= to the directory containing this file.
-
 ** Install Emacs
 
    I currently get my thrills from using the development version of Emacs.
