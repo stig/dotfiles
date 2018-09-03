@@ -35,3 +35,4 @@ tramp
 url/
 var/
 /magithub/cache
+/init.sh
