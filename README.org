@@ -1,1 +1,0 @@
-This is my Emacs configuration. See [[init.org][init.org]] for details.
