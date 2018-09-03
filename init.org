@@ -37,7 +37,7 @@
    I currently get my thrills from using the development version of Emacs.
 
    #+BEGIN_SRC sh
-   brew install emacs --with-cocoa --with-gnutls --with-dbus --with-mailutils --with-librsvg --HEAD
+   brew install emacs --with-cocoa --with-dbus --with-librsvg --with-mailutils
    #+END_SRC
 
 * Meta configuration
