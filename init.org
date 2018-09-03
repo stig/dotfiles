@@ -1023,7 +1023,7 @@
 
 *** Support for fullscreen
 
-    I like to run apps in fullscreen mode. Unfortunately emerge, when running
+    I like to run apps in fullscreen mode. Unfortunately ediff merge, when running
     an Emacs version without Yamamoto's Mac patch set, doesn't really work in
     fullscreen---it ends up putting the small emerge control frame on a
     different screen. Because I like Emacs 25 (for up-to-date Gnus) I work
