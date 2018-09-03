@@ -995,7 +995,7 @@
     I don't tend to use a mouse in Emacs very often, so I turn off mouse
     interface early to avoid momentary display during launch.
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp :tangle early-init.el
       (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
       (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
     #+END_SRC
