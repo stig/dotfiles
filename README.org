@@ -1370,11 +1370,21 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package smartparens
+	:diminish
+
+	;; I prefer to be explicit about the keybindings I use
+	:bind (:map smartparens-mode-map
+		    ("C-M-f" . sp-forward-sexp)
+		    ("C-M-b" . sp-backward-sexp)
+		    ("C-<right>" . sp-forward-slurp-sexp)
+		    ("C-<left>" . sp-forward-barf-sexp)
+		    ("C-M-<left>" . sp-backward-slurp-sexp)
+		    ("C-M-<right>" . sp-backward-barf-sexp))
 	:config
 	(require 'smartparens-config)
-	(sp-use-smartparens-bindings)
-	(smartparens-global-strict-mode)
-	:diminish smartparens-mode)
+	(smartparens-global-mode t)
+	(smartparens-global-strict-mode nil)
+	(show-smartparens-global-mode t))
     #+END_SRC
 
 *** CSS
