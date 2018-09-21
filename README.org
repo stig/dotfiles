@@ -1965,6 +1965,8 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-passwords
+	:after org
+	:ensure nil
 	:init
 
 	(setq org-passwords-time-opened "30 min")
