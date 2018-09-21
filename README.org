@@ -28,7 +28,7 @@
   also contains some shell snippets to install Emacs itself, and some
   helper programs. By invoking =C-c C-v C-t= on this document an =init.sh=
   file is produced, that contains shell commands that will install all
-  the helper programs via /brew/.
+  the helper programs via =brew=, or in some cases via =nix=.
 
 ** Check out this repo into =~/.emacs.d/=
 
@@ -144,16 +144,16 @@
 
 *** Installation
 
-    I install everything via brew. The mu4e part requires installing
-    emacs via brew too, because Apple's version of Emacs is too old.
-    (And I didn't figure out how to make the build process use the Emacs
-    version installed by =brew cask install emacs=.)
+    I install some things via =brew=, other things via =nix=. The mu4e
+    part requires installing emacs via brew too, because Apple's
+    version of Emacs is too old.  (And I didn't figure out how to make
+    the build process use the Emacs version installed by =brew cask
+    install emacs=.)
 
     #+BEGIN_SRC sh
       brew install mu --with-emacs
-      brew install msmtp
-      brew install isync
-      brew install coreutils
+      nix-env -i msmtp
+      nix-env -i isync
     #+END_SRC
 
 *** Tell Emacs where to find mu & mu4e
@@ -740,7 +740,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (setq message-send-mail-function 'message-send-mail-with-sendmail
-            sendmail-program "/usr/local/bin/msmtp")
+            sendmail-program "msmtp")
     #+END_SRC
 
 *** Don't keep buffer for sent messages
@@ -837,10 +837,10 @@
             ispell-dictionary "british")
     #+END_SRC
 
-    Install aspell with the appropriate dictionary using brew.
+    Install aspell with the appropriate dictionary:
 
     #+BEGIN_SRC sh
-      brew install aspell
+      nix-env -i aspell
     #+END_SRC
 
 ** Lilypond
@@ -965,7 +965,7 @@
 *** Add =/usr/local/bin= to our path
 
     The GUI Emacs gets exec path from the system, rather than the login shell.
-    This requires us to add "/usr/local/bin" to exec-path lest it can't find
+    This requires us to add ~/usr/local/bin~ to ~exec-path~ lest it can't find
     any programs installed by =brew=.
 
     #+BEGIN_SRC emacs-lisp
@@ -973,7 +973,10 @@
         :ensure t
 	:config
 	(when (memq window-system '(mac ns x))
-	(exec-path-from-shell-initialize)))
+	  (exec-path-from-shell-initialize)
+
+	  ;; This is required for curl to work from within Emacs when curl is installed via nix
+	  (exec-path-from-shell-copy-env "NIX_SSL_CERT_FILE")))
 
       ;; Avoid "WARNING: terminal is not fully functional" prompt every time
       ;; I invoke `aws $subcommand help`.
@@ -1430,11 +1433,10 @@
 	(editorconfig-mode))
     #+END_SRC
 
-    Emacs requires an external tool for this to work. I install that using
-    brew.
+    Emacs requires an external tool for this to work.
 
     #+BEGIN_SRC sh
-      brew install editorconfig
+      nix-env -i editorconfig-core-c
     #+END_SRC
 
 *** Ag / The Silver Searcher
@@ -1542,7 +1544,7 @@
     with pip:
 
     #+BEGIN_SRC sh
-      brew install python
+      nix-env -i python3
     #+END_SRC
 
     Then, we need to install sphinx itself:
@@ -1568,11 +1570,10 @@
 
 *** Graphviz
 
-    I sometimes use Graphviz to create diagrams. I have to actually install the
-    graphviz program separately using brew.
+    I sometimes use Graphviz to create diagrams.
 
     #+BEGIN_SRC sh
-    brew cask install graphviz
+      nix-env -i graphviz
     #+END_SRC
 
     I also have to tell Emacs how to launch GraphViz.
@@ -1615,14 +1616,14 @@
 	:ensure t
 	:mode "\\.puml\\'"
 	:init
-	(setq puml-plantuml-jar-path
-	      (-last-item (directory-files "/usr/local/opt/plantuml/libexec" t))))
+	(setq plantuml-jar-path
+	      (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
     #+END_SRC
 
-    This requires installing plantuml using brew.
+    This requires installing plantuml separately:
 
     #+BEGIN_SRC sh
-      brew install plantuml
+      nix-env -i plantuml
     #+END_SRC
 
 *** YAS
@@ -1754,7 +1755,7 @@
    Ditaa requires a package installed by brew.
 
    #+BEGIN_SRC sh
-     brew install ditaa
+     nix-env -i ditaa
    #+END_SRC
 
 *** Key bindings
@@ -1923,10 +1924,10 @@
     #+BEGIN_SRC emacs-lisp
       ;; Tell Org where to find ditaa jar
       (setq org-ditaa-jar-path
-            (-last-item (directory-files "/usr/local/opt/ditaa/libexec" t)))
+	    (expand-file-name "~/.nix-profile/lib/ditaa.jar"))
 
       (setq org-plantuml-jar-path
-            (-last-item (directory-files "/usr/local/opt/plantuml/libexec" t)))
+	    (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
 
       ;; Always include stderr output for shell
       (setq org-babel-default-header-args:sh
