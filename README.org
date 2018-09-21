@@ -670,19 +670,18 @@
 
 *** Compose Emails with Org mode
 
-    I want to be able to create links to messages from Org mode capture
-    templates, as email Inbox is a terrible TODO list.
+    I want to be able to create links to messages from Org mode
+    capture templates, as email Inbox is a terrible TODO list.  I
+    define =C-c x= as a short-cut to switch to Org mode, and back, to
+    message mode, so that I can use full Org mode to edit messages if
+    I want.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package org-mu4e)
-    #+END_SRC
-
-    I define =C-c x= as a short-cut to switch to Org mode, and back, to message
-    mode, so that I can use full Org mode to edit messages if I want.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package mu4e :bind (:map mu4e-compose-mode-map
-                                    ("C-c x" . org-mode)))
+      (use-package mu4e
+	:ensure nil
+	:bind (:map mu4e-compose-mode-map ("C-c x" . org-mode))
+	:config
+	(require 'org-mu4e))
     #+END_SRC
 
     #+BEGIN_SRC emacs-lisp
