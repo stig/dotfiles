@@ -2219,14 +2219,6 @@
 	    (message "No drafts could be found!"))))
     #+END_SRC
 
-*** Drilling
-
-  Org drill is used for learning things by repetition.
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package org-drill)
-  #+END_SRC
-
 *** Attachments
 
     One annoying thing is not being able to find attachments once
