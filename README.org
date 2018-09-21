@@ -1693,6 +1693,7 @@
 	(eval-after-load 'elfeed-search
 	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
     #+END_SRC
+
 ** Org mode
 
    I now use Org mode for all writing I initiate. The Emacs org mode's support
