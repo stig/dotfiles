@@ -108,10 +108,17 @@
 	       ("C-x b" . helm-mini)
 	       ("C-x C-b" . helm-buffers-list)
 	       ("C-x 4 b" . helm-mini)
-	       ("C-x C-f" . helm-find-files))
+	       ("C-x C-f" . helm-find-files)
+
+	       ;; Use Helm to narrow to headings in Org buffers.
+	       (:map org-mode-map
+		     ("C-c h" . helm-org-in-buffer-headings)
+		     ("C-c f" . helm-org-agenda-files-headings)))
 
 	:config
 	(require 'helm-buffers)
+	(require 'helm-org)
+
 	;; Magit creates many buffers, most of which are not interesting.
 	(add-to-list 'helm-boring-buffer-regexp-list "\\*magit")
 
@@ -2228,17 +2235,6 @@
     #+BEGIN_SRC emacs-lisp
     (setq org-attach-store-link-p t)
     #+END_SRC
-*** Helm org
-
-    Use helm to narrow to headings in Org agenda buffers.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package helm-org
-	:bind (:map org-mode-map
-                    ("C-c h" . helm-org-in-buffer-headings)
-                    ("C-c f" . helm-org-agenda-files-headings)))
-    #+END_SRC
-
 *** Diffing Org files
 
     Sometimes I diff Org files. (Particularly for runbooks.) This
