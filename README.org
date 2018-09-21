@@ -2248,14 +2248,6 @@
 
       (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
     #+END_SRC
-*** Tempo
-
-  This was previously called "easy templates" but is now its own package.
-
-  #+BEGIN_SRC emacs-lisp-not-yet
-  (use-package org-tempo)
-  #+END_SRC
-
 ** Python
 
    Work projects are all in Python. This is me exploring Emacs' Python
