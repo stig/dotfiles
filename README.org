@@ -54,30 +54,24 @@
      (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
    #+END_SRC
 
-** Install =use-package=
+** Install & configure =use-package=
 
-   Most of my config use the excellent [[https://github.com/jwiegley/use-package][use-package]] for installing &
-   configuring packages. Because it is /itself/ installed via Melpa,
-   there's a minor bootstrapping problem: we have to make sure it is
-   installed before we can use it to install the rest of the packages.
+   I use [[https://github.com/jwiegley/use-package][use-package]] for installing & configuring packages. Because it
+   is /itself/ installed via Melpa, there's a minor bootstrapping
+   problem: we have to install it before we can use it to install the
+   rest of the packages.
 
    #+BEGIN_SRC emacs-lisp
-     ;; Bootstrap `use-package' and `dash'
      (unless (and (package-installed-p 'use-package)
 		  (package-installed-p 'dash))
        (package-refresh-contents)
-       (package-install 'use-package)
-       (package-install 'bind-key)
-       (package-install 'dash))
-   #+END_SRC
+       (package-install 'use-package))
 
-   Configure =use-package= to pre-compile the configuration for faster loading.
-
-   #+BEGIN_SRC emacs-lisp
      (eval-when-compile
        (require 'use-package))
-     (require 'bind-key)
-     (require 'dash)
+
+     ;; No need to put ':ensure t' everywhere, since we don't use anything else to install packages.
+     (setq use-package-always-ensure t)
    #+END_SRC
 
 * Configuration
@@ -104,7 +98,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package helm
-	:ensure t
 	:init
 
 	;; Ag buffer names are insanely long...
@@ -132,7 +125,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package swiper
-	:ensure t
 	:bind (("C-x /" . swiper)))
     #+END_SRC
 ** Email
@@ -688,7 +680,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-mime
-	:ensure t
 	:bind (:map message-mode-map
                     ("C-c h" . org-mime-htmlize))
 	:init
@@ -789,7 +780,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package flyspell-lazy
-	:ensure t
 	:config
 	(defun my-message-setup-routine ()
           (flyspell-mode 1))
@@ -864,7 +854,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package magit
-	:ensure t
 	:bind (("M-m" . magit-status)
 	       ("s-b" . magit-blame)))
     #+END_SRC
@@ -876,7 +865,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package magithub
-	:ensure t
 	:after magit
 	:init
 	(setq magithub-clone-default-directory "~/work")
@@ -888,7 +876,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package git-link
-	:ensure t
 	:bind ("C-c g l" . git-link))
     #+END_SRC
 
@@ -898,7 +885,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package gist
-	:ensure t
 	:bind (("C-x g l" . gist-list)
                ("C-x g c" . gist-region-or-buffer-private))
 	:init
@@ -937,7 +923,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package git-auto-commit-mode
-	:ensure t
 	:init
 	(setq gac-shell-and "; and "))
     #+END_SRC
@@ -949,7 +934,6 @@
 
     #+BEGIN_SRC emacs-lisp
     (use-package company
-      :ensure t
       :init
       ;; https://emacs.stackexchange.com/a/10838
       (setq company-dabbrev-downcase nil)
@@ -970,7 +954,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package exec-path-from-shell
-        :ensure t
 	:config
 	(when (memq window-system '(mac ns x))
 	  (exec-path-from-shell-initialize)
@@ -1387,7 +1370,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package smartparens
-	:ensure t
 	:config
 	(require 'smartparens-config)
 	(sp-use-smartparens-bindings)
@@ -1399,7 +1381,6 @@
 
     #+BEGIN_SRC emacs-lisp
     (use-package flymake-css
-      :ensure t
       :config
       (add-hook 'css-mode-hook 'flymake-css-load))
     #+END_SRC
@@ -1410,7 +1391,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package aggressive-indent
-	:ensure t
 
 	:config
 	(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
@@ -1425,7 +1405,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package editorconfig
-	:ensure t
 	:init
 	(setq editorconfig-exclude-modes '(org-mode))
 	(setq editorconfig-mode-lighter " EC")
@@ -1451,7 +1430,7 @@
     Then make sure the Emacs ag package is installed.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ag :ensure t)
+      (use-package ag)
     #+END_SRC
 
     "Writable grep" mode for ag is pretty close to magic. When in a buffer
@@ -1468,7 +1447,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package wgrep-ag
-	:ensure t
 	:init
 	(setq ag-group-matches t))
     #+END_SRC
@@ -1490,7 +1468,6 @@
       (use-package projectile
 	:bind (:map projectile-mode-map
 		    ("C-c p" . projectile-command-map))
-	:ensure t
 	:config
 	(projectile-mode +1))
     #+END_SRC
@@ -1502,7 +1479,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package helm-projectile
-	:ensure t
 	:config
 	(helm-projectile-on))
     #+END_SRC
@@ -1515,7 +1491,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package multiple-cursors
-	:ensure t
 
 	:bind (("C-c M-e" . mc/edit-lines)
                ("C-c M-a" . mc/mark-all-dwim)
@@ -1526,8 +1501,7 @@
 *** AppleScript support
 
     #+BEGIN_SRC emacs-lisp
-      (use-package apples-mode
-	:ensure t)
+      (use-package apples-mode)
     #+END_SRC
 
 *** Sphinx & reStructuredText
@@ -1536,8 +1510,7 @@
     that links are accounted for. I use sphinx-fronted for that:
 
     #+BEGIN_SRC emacs-lisp
-    (use-package sphinx-frontend
-      :ensure t)
+    (use-package sphinx-frontend)
     #+END_SRC
 
     That does require installing python, as OS X's default install doesn't come
@@ -1557,7 +1530,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package auto-complete-rst
-	:ensure t
 	:mode "\\.rst\'"
 	:config
 	(auto-complete-rst-init)
@@ -1580,7 +1552,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package graphviz-dot-mode
-	:ensure t
 	:init
 	(setq default-tab-width 8)
 	(setq graphviz-dot-view-command "open -a Graphviz %s"))
@@ -1594,7 +1565,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package osx-trash
-	:ensure t
 	:init
 	(setq delete-by-moving-to-trash t)
 	:config
@@ -1613,7 +1583,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package plantuml-mode
-	:ensure t
 	:mode "\\.puml\\'"
 	:init
 	(setq plantuml-jar-path
@@ -1634,7 +1603,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
-	:ensure t
 	:config
 	(yas-global-mode))
     #+END_SRC
@@ -1652,7 +1620,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package markdown-mode
-	:ensure t
 	:bind (("M-<up>" . markdown-move-list-item-up)
 	       ("M-<down>" . markdown-move-list-item-down)))
     #+END_SRC
@@ -1675,7 +1642,7 @@
     #+END_EXAMPLE
 
     #+BEGIN_SRC emacs-lisp
-      (use-package boxquote :ensure t)
+      (use-package boxquote)
     #+END_SRC
 
 *** Elfeed
@@ -1684,7 +1651,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package elfeed
-	:ensure t
 	:bind ("C-x w" . elfeed)
 	:config
 	(defalias 'elfeed-toggle-star
@@ -1903,8 +1869,7 @@
     we can make sure it works.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ob-applescript
-	:ensure t)
+      (use-package ob-applescript)
     #+END_SRC
 
     Some initialisation settings for Org Babel is in order.
@@ -1961,8 +1926,7 @@
     I hate writing JIRA markup, so I wrote a JIRA export backend for Org mode.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ox-jira
-	:ensure t)
+      (use-package ox-jira)
     #+END_SRC
 
 *** Presenting
@@ -2306,7 +2270,6 @@
 
    #+BEGIN_SRC emacs-lisp :noweb yes
      (use-package elpy
-       :ensure t
        :config
        (elpy-enable)
        (add-hook 'elpy-mode-hook 'flymake-mode))
@@ -2340,7 +2303,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package python-switch-quotes
-	:ensure t
 	:bind ("C-c '" . python-switch-quotes))
     #+END_SRC
 
@@ -2354,7 +2316,6 @@
 
     #+BEGIN_SRC emacs-lisp
     (use-package flymake-python-pyflakes
-      :ensure t
       :init
       (setq flymake-python-pyflakes-executable "flake8")
       :config
@@ -2425,7 +2386,6 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package writegood-mode
-	:ensure t
 	:init
 	(add-hook 'text-mode-hook 'writegood-mode))
     #+END_SRC
@@ -2446,21 +2406,19 @@
 ** YAML
 
    #+BEGIN_SRC emacs-lisp
-   (use-package yaml-mode :ensure t)
+   (use-package yaml-mode)
 
    (use-package flymake-yaml
-     :ensure t
      :config
      (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-  (use-package clojure-mode :ensure t)
-  (use-package cider :ensure t)
-  (use-package clj-refactor :ensure t)
+  (use-package clojure-mode)
+  (use-package cider)
+  (use-package clj-refactor)
   (use-package cljr-helm
-  :ensure t
   :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
 #+END_SRC
 
