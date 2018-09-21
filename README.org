@@ -1974,9 +1974,6 @@
 	;; Where's my passwords file?
 	(setq org-passwords-file "~/org/passwords.org.gpg")
 
-	;; Use completion for org elements
-	(setq org-completion-use-ido t)
-
 	:bind (("C-c P P" . org-passwords)
                ("C-c P g" . org-passwords-generate-password)
                :map org-passwords-mode-map
