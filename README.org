@@ -1975,11 +1975,11 @@
 	(setq org-passwords-file "~/org/passwords.org.gpg")
 
 	:bind (("C-c P P" . org-passwords)
-               ("C-c P g" . org-passwords-generate-password)
-               :map org-passwords-mode-map
-               ("C-c C-c u" . org-passwords-copy-username)
-               ("C-c C-c p" . org-passwords-copy-password)
-               ("C-c C-c o" . org-passwords-open-url)))
+	       ("C-c P g" . org-passwords-generate-password)
+	       :map org-passwords-mode-map
+	       ("C-c C-c u" . org-passwords-copy-username)
+	       ("C-c C-c p" . org-passwords-copy-password)
+	       ("C-c C-c o" . org-passwords-open-url)))
     #+END_SRC
 
 *** Invoicing
