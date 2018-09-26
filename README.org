@@ -964,6 +964,12 @@
 	(when (memq window-system '(mac ns x))
 	  (exec-path-from-shell-initialize)
 
+	  (exec-path-from-shell-copy-env "EDITOR")
+
+	  ;; Avoid the following error:
+	  ;; error: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:13
+	  (exec-path-from-shell-copy-env "NIX_PATH")
+
 	  ;; This is required for curl to work from within Emacs when curl is installed via nix
 	  (exec-path-from-shell-copy-env "NIX_SSL_CERT_FILE")))
 
@@ -1682,6 +1688,17 @@
 	(eval-after-load 'elfeed-search
 	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
     #+END_SRC
+
+** Nix
+
+   Some modules useful for Nix.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package nix-mode)
+     (use-package nix-buffer)
+     (use-package nix-update)
+     (use-package nix-sandbox)
+   #+END_SRC
 
 ** Org mode
 
