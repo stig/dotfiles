@@ -1395,6 +1395,8 @@
 	:bind (:map smartparens-mode-map
 		    ("C-M-f" . sp-forward-sexp)
 		    ("C-M-b" . sp-backward-sexp)
+		    ("C-M-<SPC>" . sp-splice-sexp)
+		    ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
 		    ("C-<right>" . sp-forward-slurp-sexp)
 		    ("C-<left>" . sp-forward-barf-sexp)
 		    ("C-M-<left>" . sp-backward-slurp-sexp)
