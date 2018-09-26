@@ -75,12 +75,16 @@
    #+END_SRC
 
 * Configuration
-** Who Am I
+** Clojure
 
-   #+BEGIN_SRC emacs-lisp
-   (setq user-full-name "Stig Brautaset")
-   (setq user-mail-address "stig@brautaset.org")
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package clojure-mode)
+  (use-package cider)
+  (use-package clj-refactor)
+  (use-package cljr-helm
+  :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
+#+END_SRC
+
 ** Completion
 
    In the past I've been using Helm, but I did a recent experiment with
@@ -134,6 +138,31 @@
       (use-package swiper
 	:bind (("C-x /" . swiper)))
     #+END_SRC
+** Disable mouse interface, splash screen & beeps early
+
+   I don't tend to use a mouse in Emacs often, so I turn off mouse
+   interface early to avoid momentary display during launch. Recent
+   Emacsen read =early-init.el= before initialising GUI components, so
+   it's a great place to turn off mouse interface to avoid flicker
+   during startup.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+   #+END_SRC
+
+   I also don't need to see a splash screen on every launch.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq inhibit-startup-message t)
+   #+END_SRC
+
+   I do not like Emacs to beep at me; I prefer a visual bell.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq visible-bell t)
+   #+END_SRC
+
 ** Email
 
    I'm trying to see if I can become happy reading and writing mail in
@@ -2400,6 +2429,12 @@
        (which-key-mode))
    #+END_SRC
 
+** Who Am I
+
+   #+BEGIN_SRC emacs-lisp
+   (setq user-full-name "Stig Brautaset")
+   (setq user-mail-address "stig@brautaset.org")
+   #+END_SRC
 ** Writing
 
    I'm not a great writer. I need all the crutches I can get. Lucklily,
@@ -2437,41 +2472,6 @@
      :config
      (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
-** Clojure
-
-#+BEGIN_SRC emacs-lisp
-  (use-package clojure-mode)
-  (use-package cider)
-  (use-package clj-refactor)
-  (use-package cljr-helm
-  :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
-#+END_SRC
-
-** Disable mouse interface, splash screen & beeps early
-
-   I don't tend to use a mouse in Emacs often, so I turn off mouse
-   interface early to avoid momentary display during launch. Recent
-   Emacsen read =early-init.el= before initialising GUI components, so
-   it's a great place to turn off mouse interface to avoid flicker
-   during startup.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-   #+END_SRC
-
-   I also don't need to see a splash screen on every launch.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (setq inhibit-startup-message t)
-   #+END_SRC
-
-   I do not like Emacs to beep at me; I prefer a visual bell.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (setq visible-bell t)
-   #+END_SRC
-
 * Footnotes
 
 [fn:1] Found at http://www.emacswiki.org/emacs/TrampMode#toc31
