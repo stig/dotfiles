@@ -1950,6 +1950,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package ox-jira)
+      (require 'ox-latex)
     #+END_SRC
 
 *** Presenting
