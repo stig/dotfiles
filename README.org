@@ -2390,6 +2390,16 @@
 		  ("RET" nil "done" :color blue)))))
     #+END_SRC
 
+** Which Key Mode
+
+   Show incomplete key cheatsheet.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :config
+       (which-key-mode))
+   #+END_SRC
+
 ** Writing
 
    I'm not a great writer. I need all the crutches I can get. Lucklily,
