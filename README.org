@@ -2101,7 +2101,8 @@
 ** SmartParens
 
    #+BEGIN_SRC emacs-lisp
-     (use-package smartparens
+     (use-package smartparens-config
+       :ensure smartparens
        :diminish
 
        ;; I prefer to be explicit about the keybindings I use
@@ -2115,10 +2116,11 @@
 		   ("C-M-<left>" . sp-backward-slurp-sexp)
 		   ("C-M-<right>" . sp-backward-barf-sexp))
        :config
-       (require 'smartparens-config)
-       (smartparens-global-mode t)
-       (smartparens-global-strict-mode nil)
        (show-smartparens-global-mode t))
+
+     (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+     (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+     (add-hook 'org-mode-hook 'turn-on-smartparens-strict-mode)
    #+END_SRC
 
 ** Sphinx & reStructuredText
