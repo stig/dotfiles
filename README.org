@@ -75,6 +75,148 @@
    #+END_SRC
 
 * Configuration
+** Add keybinding to join next line to this
+
+   With cursor at any point in a line, hit =M-j= to move to the end, and
+   delete the newline. The cursor is left where the newline used to be.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-j")
+                     (lambda ()
+		       (interactive)
+		       (join-line -1)))
+   #+END_SRC
+
+** Add =/usr/local/bin= to our path
+
+   The GUI Emacs gets exec path from the system, rather than the login shell.
+   This requires us to add ~/usr/local/bin~ to ~exec-path~ lest it can't find
+   any programs installed by =brew=.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package exec-path-from-shell
+       :config
+       (when (memq window-system '(mac ns x))
+	 (exec-path-from-shell-initialize)
+
+	 (exec-path-from-shell-copy-env "EDITOR")
+
+	 ;; Avoid the following error:
+	 ;; error: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:13
+	 (exec-path-from-shell-copy-env "NIX_PATH")
+
+	 ;; This is required for curl to work from within Emacs when curl is installed via nix
+	 (exec-path-from-shell-copy-env "NIX_SSL_CERT_FILE")))
+
+     ;; Avoid "WARNING: terminal is not fully functional" prompt every time
+     ;; I invoke `aws $subcommand help`.
+     (setenv "PAGER" "cat")
+   #+END_SRC
+
+** Ag / The Silver Searcher
+
+   I use =ag= for searching quite a lot in Emacs.
+   This requires an additional external tool for best performance:
+
+   #+BEGIN_SRC sh
+     brew install the_silver_searcher
+   #+END_SRC
+
+   Then make sure the Emacs ag package is installed.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package ag)
+   #+END_SRC
+
+   "Writable grep" mode for ag is pretty close to magic. When in a buffer
+   showing ag results, try hitting =C-c C-p=--this lets you _edit the results
+   of the search, right from the ag results buffer!_ Just hit =C-x C-s= to
+   save the results.
+
+   If you hit =C-c C-p= while already in writable grep mode you can delete the
+   entire matched line from the file where it was found by hitting =C-c C-d=
+   on it. I use this _a lot_ when cleaning up Hieradata.
+
+   Recently ag broke wgrep-ag by starting to group its output. The grouping is
+   quite nice, but I prefer working wgrep so I turn the grouping off.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package wgrep-ag
+       :init
+       (setq ag-group-matches t))
+   #+END_SRC
+
+** Aggressive Indent
+
+   I like to keep my code indented properly at all times. Aggressive-indent
+   helps ensure this. Turn it on for lisp modes.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package aggressive-indent
+
+       :config
+       (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+       (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+       (add-hook 'css-mode-hook #'aggressive-indent-mode))
+   #+END_SRC
+
+** AppleScript support
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package apples-mode)
+   #+END_SRC
+
+** Auto revert mode
+
+   When files change on disk, revert the buffer automatically.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-auto-revert-mode 1)
+   #+END_SRC
+
+** Auto-complete
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package company
+     :init
+     ;; https://emacs.stackexchange.com/a/10838
+     (setq company-dabbrev-downcase nil)
+     :config
+     (global-company-mode))
+   #+END_SRC
+
+** Box quotes are so cute!
+
+   Install boxquote to make fancy text boxes like this:
+
+   #+BEGIN_EXAMPLE
+     ,----
+     | This is a box quote!
+     `----
+   #+END_EXAMPLE
+
+   You can even set a title!
+
+   #+BEGIN_EXAMPLE
+     ,----[ with a title! ]
+     | This is another box quote
+     `----
+   #+END_EXAMPLE
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package boxquote)
+   #+END_SRC
+
+** Buffer-local regex search
+
+   I like the =C-s= and =C-r= keybindings to mean "search forward/backward
+   for this regex".
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+     (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+   #+END_SRC
+
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
@@ -138,6 +280,43 @@
       (use-package swiper
 	:bind (("C-x /" . swiper)))
     #+END_SRC
+** CSS
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package flymake-css
+     :config
+     (add-hook 'css-mode-hook 'flymake-css-load))
+   #+END_SRC
+** Delete the file for the current buffer function
+
+   "Delete this file." Simple, huh?
+
+   #+BEGIN_SRC emacs-lisp
+     (defun delete-current-buffer-file ()
+       "Removes file connected to current buffer and kills buffer."
+       (interactive)
+       (let ((filename (buffer-file-name))
+             (buffer (current-buffer))
+             (name (buffer-name)))
+         (if (not (and filename (file-exists-p filename)))
+             (ido-kill-buffer)
+           (when (yes-or-no-p "Are you sure you want to remove this file? ")
+             (delete-file filename)
+             (kill-buffer buffer)
+             (message "File '%s' successfully removed" filename)))))
+
+     (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
+   #+END_SRC
+
+** Disable kill-emacs
+
+   Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
+   reflowing text.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "s-q") nil)
+   #+END_SRC
+
 ** Disable mouse interface, splash screen & beeps early
 
    I don't tend to use a mouse in Emacs often, so I turn off mouse
@@ -161,6 +340,61 @@
 
    #+BEGIN_SRC emacs-lisp :tangle early-init.el
      (setq visible-bell t)
+   #+END_SRC
+
+** Don't hide Emacs when  ⌘-h is pressed
+
+   In Emacs Mac Port, ⌘-h bypasses any Emacs keybindings and instead sends a
+   "pass command to system" message to Mac OSX, which then hides the entire
+   application. [[https://github.com/railwaycat/homebrew-emacsmacport/issues/55][I don't want that]].
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mac-pass-command-to-system nil)
+   #+END_SRC
+
+** Don't store backup files next to originals
+
+   I don't like backup files (those dreaded =foo~= ones) all over my disk.
+   This places them in =~/.emacs.d/backups=.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+     (setq backup-by-copying t)
+   #+END_SRC
+
+** Editorconfig
+
+   Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
+   their indentation and file format preferences.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package editorconfig
+       :init
+       (setq editorconfig-exclude-modes '(org-mode))
+       (setq editorconfig-mode-lighter " EC")
+       :config
+       (editorconfig-mode))
+   #+END_SRC
+
+   Emacs requires an external tool for this to work.
+
+   #+BEGIN_SRC sh
+     nix-env -i editorconfig-core-c
+   #+END_SRC
+
+** Elfeed
+
+   I use custom.el for the actual feeds.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package elfeed
+       :bind ("C-x w" . elfeed)
+       :config
+       (defalias 'elfeed-toggle-star
+	 (elfeed-expose #'elfeed-search-toggle-all 'star))
+
+       (eval-after-load 'elfeed-search
+	 '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
    #+END_SRC
 
 ** Email
@@ -825,6 +1059,30 @@
     #+begin_src emacs-lisp
     (setq mu4e-get-mail-command "mbsync -a")
     #+end_src
+** End all files in a newline
+
+   All files should end in a newline. Insert one if there isn't one already.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq require-final-newline t)
+   #+END_SRC
+
+** Eshell
+
+   I have started using /Eshell/. It is close to magic. There's not a lot of
+   setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
+   eshell quickly. This launches eshell if it is not already running, or
+   switches to it if it is.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c s") 'eshell)
+   #+END_SRC
+
+   Eshell is great, and its Tramp integration allows me to open remote files
+   in local Emacs seamlessly with the =find-file= command. (Which I have
+   aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
+   and has the same config, whether I am on a local machine or a remote one.
+
 ** Flymake
 
    #+BEGIN_SRC emacs-lisp
@@ -833,6 +1091,52 @@
 	      ("M-n" . flymake-goto-next-error)
 	      ("M-p" . flymake-goto-prev-error)))
    #+END_SRC
+** Graphviz
+
+   I sometimes use Graphviz to create diagrams.
+
+   #+BEGIN_SRC sh
+     nix-env -i graphviz
+   #+END_SRC
+
+   I also have to tell Emacs how to launch GraphViz.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package graphviz-dot-mode
+       :init
+       (setq default-tab-width 8)
+       (setq graphviz-dot-view-command "open -a Graphviz %s"))
+   #+END_SRC
+
+** Helm Projectile
+
+   This next package adds =C-c p h=, which invokes =helm-find-file= in project
+   context. Invaluable.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-projectile
+       :config
+       (helm-projectile-on))
+   #+END_SRC
+
+** Highlight & deal with whitespace annoyances
+
+   This highlights certain whitespace annoyances, and adds a key binding to
+   clean it up.
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'whitespace)
+     (setq whitespace-style '(face empty tabs trailing))
+     (global-whitespace-mode t)
+
+     (global-set-key (kbd "s-w") 'whitespace-cleanup)
+   #+END_SRC
+
+** I like big fonts and I cannot lie
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :height 150)
+#+END_SRC
 ** International Support
 
     I'm Norwegian, but use a GB keyboard. I also use Dvorak keyboard
@@ -867,6 +1171,16 @@
     #+BEGIN_SRC sh
       nix-env -i aspell
     #+END_SRC
+
+** IRC
+
+   But /of course/ Emacs has a built-in IRC client. In fact it has two! But I
+   digress. Let's use the oldest one, and configure it slightly.
+
+   #+BEGIN_SRC emacs-lisp
+   (setq rcirc-default-nick "stigbra")
+   (setq rcirc-default-full-name "Stig Brautaset")
+   #+END_SRC
 
 ** Lilypond
 
@@ -962,763 +1276,48 @@
 	(setq gac-shell-and "; and "))
     #+END_SRC
 
-** Miscellaneous
-   Now on to the actual configuration of packages & Emacs behaviour.
+** Make 'y' and 'n' satisfy prompts
 
-*** Auto-complete
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :init
-      ;; https://emacs.stackexchange.com/a/10838
-      (setq company-dabbrev-downcase nil)
-      :config
-      (global-company-mode))
-    #+END_SRC
-
-*** I like big fonts and I cannot lie
-
- #+BEGIN_SRC emacs-lisp
- (set-face-attribute 'default nil :height 150)
- #+END_SRC
-*** Add =/usr/local/bin= to our path
-
-    The GUI Emacs gets exec path from the system, rather than the login shell.
-    This requires us to add ~/usr/local/bin~ to ~exec-path~ lest it can't find
-    any programs installed by =brew=.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package exec-path-from-shell
-	:config
-	(when (memq window-system '(mac ns x))
-	  (exec-path-from-shell-initialize)
-
-	  (exec-path-from-shell-copy-env "EDITOR")
-
-	  ;; Avoid the following error:
-	  ;; error: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:13
-	  (exec-path-from-shell-copy-env "NIX_PATH")
-
-	  ;; This is required for curl to work from within Emacs when curl is installed via nix
-	  (exec-path-from-shell-copy-env "NIX_SSL_CERT_FILE")))
-
-      ;; Avoid "WARNING: terminal is not fully functional" prompt every time
-      ;; I invoke `aws $subcommand help`.
-      (setenv "PAGER" "cat")
-    #+END_SRC
-
-*** Don't hide Emacs when  ⌘-h is pressed
-
-    In Emacs Mac Port, ⌘-h bypasses any Emacs keybindings and instead sends a
-    "pass command to system" message to Mac OSX, which then hides the entire
-    application. [[https://github.com/railwaycat/homebrew-emacsmacport/issues/55][I don't want that]].
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mac-pass-command-to-system nil)
-    #+END_SRC
-
-*** Make mouse scrolling smoother
-
-    The adaptive mouse scrolling is far, far too quick so let's turn that off.
-
-    #+BEGIN_SRC emacs-lisp
-    (setq mouse-wheel-progressive-speed nil)
-    (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
-    #+END_SRC
-
-*** Support for fullscreen
-
-    I like to run apps in fullscreen mode. Unfortunately ediff merge, when running
-    an Emacs version without Yamamoto's Mac patch set, doesn't really work in
-    fullscreen---it ends up putting the small emerge control frame on a
-    different screen. Because I like Emacs 25 (for up-to-date Gnus) I work
-    around this problem by exiting fullscreen and just maximising the frame
-    instead.
-
-    Toggling frame maximation is already available as =M-<f10>=, so all we need
-    to do is add a key binding to toggle fullscreen. I found this function at
-    the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]], and it does just that.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun my-toggle-fullscreen ()
-	"Toggle full screen"
-	(interactive)
-	(set-frame-parameter
-         nil 'fullscreen
-         (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-
-      (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
-    #+END_SRC
-
-    Sometimes (when using ediff) I don't use fullscreen. By resizing the window
-    by pixels rather than characters we can still fill the entire screen.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq frame-resize-pixelwise t)
-    #+END_SRC
-
-*** Disable kill-emacs
-
-    Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
-    reflowing text.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "s-q") nil)
-    #+END_SRC
-
-*** Put Custom settings in a separate file
-
-    I prefer to code my configuration, but sometimes Custom settings are good
-    enough. I prefer that such settings live in a separate file though. Load
-    that file if it exists.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-      (if (file-exists-p custom-file)
-          (load custom-file))
-    #+END_SRC
-
-*** Start the Emacs Daemon
-
-    We want Emacs to be running its server so we can interact with it using =emacsclient=.
+   Answering just 'y' or 'n' will do, rather than having to spell out "yes"
+   or "no".
 
    #+BEGIN_SRC emacs-lisp
-     (require 'server)
-     (unless (server-running-p)
-       (server-start))
+     (defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
 
-*** End all files in a newline
-
-    All files should end in a newline. Insert one if there isn't one already.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq require-final-newline t)
-    #+END_SRC
-
-*** Highlight & deal with whitespace annoyances
-
-    This highlights certain whitespace annoyances, and adds a key binding to
-    clean it up.
-
-    #+BEGIN_SRC emacs-lisp
-      (require 'whitespace)
-      (setq whitespace-style '(face empty tabs trailing))
-      (global-whitespace-mode t)
-
-      (global-set-key (kbd "s-w") 'whitespace-cleanup)
-    #+END_SRC
-
-*** Set up modifier keys on OS X
-
-    Set up the modifier keys the way that best fits my keyboard.
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Both Command keys are 'Meta'
-      (setq mac-right-command-modifier 'meta
-	    mac-command-modifier 'meta)
-
-      ;; Option or Alt is 'Super'
-      (setq mac-option-modifier 'super)
-
-      ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
-      (setq mac-right-option-modifier 'nil)
-
-      (setq ns-function-modifier 'hyper)
-    #+END_SRC
-
-*** Auto revert mode
-
-    When files change on disk, revert the buffer automatically.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-auto-revert-mode 1)
-    #+END_SRC
-
-*** Don't store backup files next to originals
-
-    I don't like backup files (those dreaded =foo~= ones) all over my disk.
-    This places them in =~/.emacs.d/backups=.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-      (setq backup-by-copying t)
-    #+END_SRC
-
-*** Transparently open compressed files
-
-    I *do* like it when Emacs transparently opens compressed files. It gives
-    me the warm fuzzies.
-
-    #+BEGIN_SRC emacs-lisp
-      (auto-compression-mode t)
-    #+END_SRC
-
-*** Make 'y' and 'n' satisfy prompts
-
-    Answering just 'y' or 'n' will do, rather than having to spell out "yes"
-    or "no".
-
-    #+BEGIN_SRC emacs-lisp
-      (defalias 'yes-or-no-p 'y-or-n-p)
-    #+END_SRC
-
-*** Toggle Window Split function
-
-    Sometimes a window is split horizontally, and you would prefer
-    vertically. Or vice versa. This function can help! Just don't ask me how
-    it works: I found it on StackOverflow. (I think. Again.)
-
-    #+BEGIN_SRC emacs-lisp
-      (defun toggle-window-split ()
-	(interactive)
-	(if (= (count-windows) 2)
-            (let* ((this-win-buffer (window-buffer))
-                   (next-win-buffer (window-buffer (next-window)))
-                   (this-win-edges (window-edges (selected-window)))
-                   (next-win-edges (window-edges (next-window)))
-                   (this-win-2nd (not (and (<= (car this-win-edges)
-                                               (car next-win-edges))
-                                           (<= (cadr this-win-edges)
-                                               (cadr next-win-edges)))))
-                   (splitter
-                    (if (= (car this-win-edges)
-                           (car (window-edges (next-window))))
-			'split-window-horizontally
-                      'split-window-vertically)))
-              (delete-other-windows)
-              (let ((first-win (selected-window)))
-		(funcall splitter)
-		(if this-win-2nd (other-window 1))
-		(set-window-buffer (selected-window) this-win-buffer)
-		(set-window-buffer (next-window) next-win-buffer)
-		(select-window first-win)
-		(if this-win-2nd (other-window 1))))))
-
-      (define-key ctl-x-4-map "t" 'toggle-window-split)
-    #+END_SRC
-
-*** Delete the file for the current buffer function
-
-    "Delete this file." Simple, huh?
-
-    #+BEGIN_SRC emacs-lisp
-      (defun delete-current-buffer-file ()
-	"Removes file connected to current buffer and kills buffer."
-	(interactive)
-	(let ((filename (buffer-file-name))
-              (buffer (current-buffer))
-              (name (buffer-name)))
-          (if (not (and filename (file-exists-p filename)))
-              (ido-kill-buffer)
-            (when (yes-or-no-p "Are you sure you want to remove this file? ")
-              (delete-file filename)
-              (kill-buffer buffer)
-              (message "File '%s' successfully removed" filename)))))
-
-      (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
-    #+END_SRC
-
-*** Eshell
-
-    I have started using /Eshell/. It is close to magic. There's not a lot of
-    setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
-    eshell quickly. This launches eshell if it is not already running, or
-    switches to it if it is.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-c s") 'eshell)
-    #+END_SRC
-
-    Eshell is great, and its Tramp integration allows me to open remote files
-    in local Emacs seamlessly with the =find-file= command. (Which I have
-    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
-    and has the same config, whether I am on a local machine or a remote one.
-
-*** Tramp
-
-    Allow using sudo over ssh, so we can sudo to root remotely on a machine
-    that does not allow root login.
-
-    #+BEGIN_SRC emacs-lisp
-      (set-default 'tramp-default-proxies-alist
-                   (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
-    #+END_SRC
-
-    For opening files using sudo locally, don't connect via SSH. (My local
-    machine doesn't accept SSH connections.)
-
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'tramp-default-proxies-alist
-                   '((regexp-quote (system-name)) nil nil))
-    #+END_SRC
-
-    If I don't set this then tramp will attempt to use OS X's tempfile
-    directory on a remote machine, which does not work. I don't understand
-    why it won't use the remote machine's temp directory automatically, but
-    there you go.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq temporary-file-directory "/tmp/")
-    #+END_SRC
-
-    Apparently using =ssh= is faster than the default =scp= mode, so let's use
-    that.
-
-    #+BEGIN_SRC emacs-lisp
-    (setq tramp-default-method "ssh")
-    #+END_SRC
-
-    This function lets me re-open the currently open file using sudo[fn:1].
-    I've bound it to =C-c C-s=. It works for both local and remote buffers.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sudo-edit-current-file ()
-	(interactive)
-	(let ((position (point)))
-          (find-alternate-file
-           (if (file-remote-p (buffer-file-name))
-               (let ((vec (tramp-dissect-file-name (buffer-file-name))))
-                 (tramp-make-tramp-file-name
-                  "sudo"
-                  (tramp-file-name-user vec)
-                  (tramp-file-name-host vec)
-                  (tramp-file-name-localname vec)))
-             (concat "/sudo:root@localhost:" (buffer-file-name))))
-          (goto-char position)))
-    #+END_SRC
-
-    The man pages on my OS X local machine are very oqften different from the
-    remote machines I'm logged in to. Thus, when in eshell, in a /remote/ path,
-    I would like to display /remote/ man pages from that system. I'm not sure
-    the regular man command can do that, but /woman/ can, with a bit of help.
-
-    I've not /completely/ nailed this, so the useability is a bit rough. But
-    with the below command in eshell you can do:
-
-    #+BEGIN_EXAMPLE
-    alias man 'tramp-aware-woman ${*man -c --path $1}'
-    #+END_EXAMPLE
-
-    Now you have an alias which will open a woman buffer with the /remote/ man
-    page of the man page you want.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun tramp-aware-woman (man-page-path)
-	(interactive)
-	(let ((dir (eshell/pwd)))
-          (woman-find-file
-           (if (file-remote-p dir)
-               (let ((vec (tramp-dissect-file-name dir)))
-                 (tramp-make-tramp-file-name
-                  (tramp-file-name-method vec)
-                  (tramp-file-name-user vec)
-                  (tramp-file-name-host vec)
-                  man-page-path))
-             man-page-path))))
-    #+END_SRC
-
-*** Set up Clipboard
-
-    These settings improve pasting behaviour with programs outside Emacs.
-
-    Save clipboard strings into the kill ring before replacing them. This is
-    useful if you select something in Emacs, then select something from
-    _another_ program. If you don't set this to non-nil the previous selection
-    done from within Emacs is gone. This preserves it in the kill ring,
-    enabling you to retrieve it.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq save-interprogram-paste-before-kill t)
-    #+END_SRC
-
-    Copying ("yanking") with the mouse copies at point, rather than where you
-    click.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mouse-yank-at-point t)
-    #+END_SRC
-
-*** Show more "recent files" in =M-x b= window
-
-    Keep up to 100 recent files, rather than the default of 20.
-
-    #+BEGIN_SRC emacs-lisp
-     (setq recentf-max-saved-items 100)
-    #+END_SRC
-
-*** Save my place in each file
-
-    It's nice if Emacs knows where I was last time I opened a file.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq-default save-place t)
-      (setq save-place-file (concat user-emacs-directory "places"))
-    #+END_SRC
-
-*** Save minibuffer history
-
-    This allows us to "tap up" in the minibuffer to recall previous items,
-    even from a previous session.
-
-    #+BEGIN_SRC emacs-lisp
-      (savehist-mode 1)
-    #+END_SRC
-
-*** Show Matching parens
-
-    This is extremely useful. Put the mark on a paren (any of =()[]{}=,
-    actually) and Emacs shows the matching closing/opening one.
-
-    #+BEGIN_SRC emacs-lisp
-      (show-paren-mode 1)
-    #+END_SRC
-
-*** Add keybinding to join next line to this
-
-    With cursor at any point in a line, hit =M-j= to move to the end, and
-    delete the newline. The cursor is left where the newline used to be.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "M-j")
-                      (lambda ()
-			(interactive)
-			(join-line -1)))
-    #+END_SRC
-
-*** Buffer-local regex search
-
-    I like the =C-s= and =C-r= keybindings to mean "search forward/backward
-    for this regex".
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-      (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-    #+END_SRC
-
-*** Running tests
-
-    Add a convenient keybinding for running tests interactively.
-
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-x t") 'ert)
-    #+END_SRC
-
-*** IRC
-
-    But /of course/ Emacs has a built-in IRC client. In fact it has two! But I
-    digress. Let's use the oldest one, and configure it slightly.
-
-    #+BEGIN_SRC emacs-lisp
-    (setq rcirc-default-nick "stigbra")
-    (setq rcirc-default-full-name "Stig Brautaset")
-    #+END_SRC
-
-*** SmartParens
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package smartparens
-	:diminish
-
-	;; I prefer to be explicit about the keybindings I use
-	:bind (:map smartparens-mode-map
-		    ("C-M-f" . sp-forward-sexp)
-		    ("C-M-b" . sp-backward-sexp)
-		    ("C-M-<SPC>" . sp-splice-sexp)
-		    ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-		    ("C-<right>" . sp-forward-slurp-sexp)
-		    ("C-<left>" . sp-forward-barf-sexp)
-		    ("C-M-<left>" . sp-backward-slurp-sexp)
-		    ("C-M-<right>" . sp-backward-barf-sexp))
-	:config
-	(require 'smartparens-config)
-	(smartparens-global-mode t)
-	(smartparens-global-strict-mode nil)
-	(show-smartparens-global-mode t))
-    #+END_SRC
-
-*** CSS
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package flymake-css
-      :config
-      (add-hook 'css-mode-hook 'flymake-css-load))
-    #+END_SRC
-*** Aggressive Indent
-
-    I like to keep my code indented properly at all times. Aggressive-indent
-    helps ensure this. Turn it on for lisp modes.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package aggressive-indent
-
-	:config
-	(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-	(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-	(add-hook 'css-mode-hook #'aggressive-indent-mode))
-    #+END_SRC
-
-*** Editorconfig
-
-    Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
-    their indentation and file format preferences.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package editorconfig
-	:init
-	(setq editorconfig-exclude-modes '(org-mode))
-	(setq editorconfig-mode-lighter " EC")
-	:config
-	(editorconfig-mode))
-    #+END_SRC
-
-    Emacs requires an external tool for this to work.
-
-    #+BEGIN_SRC sh
-      nix-env -i editorconfig-core-c
-    #+END_SRC
-
-*** Ag / The Silver Searcher
-
-    I use =ag= for searching quite a lot in Emacs.
-    This requires an additional external tool for best performance:
-
-    #+BEGIN_SRC sh
-      brew install the_silver_searcher
-    #+END_SRC
-
-    Then make sure the Emacs ag package is installed.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package ag)
-    #+END_SRC
-
-    "Writable grep" mode for ag is pretty close to magic. When in a buffer
-    showing ag results, try hitting =C-c C-p=--this lets you _edit the results
-    of the search, right from the ag results buffer!_ Just hit =C-x C-s= to
-    save the results.
-
-    If you hit =C-c C-p= while already in writable grep mode you can delete the
-    entire matched line from the file where it was found by hitting =C-c C-d=
-    on it. I use this _a lot_ when cleaning up Hieradata.
-
-    Recently ag broke wgrep-ag by starting to group its output. The grouping is
-    quite nice, but I prefer working wgrep so I turn the grouping off.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package wgrep-ag
-	:init
-	(setq ag-group-matches t))
-    #+END_SRC
-
-*** Projectile
-
-    I use Projectile to navigate my projects. Some of the things I like about
-    it are that it provides the following key bindings:
-
-    - =C-c p t= :: This switches from an implementation file to its test file,
-                   or vice versa. I use this extensively in Clojure mode. It
-                   might not make sense for all languages; YMMV.
-    - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
-    - =C-c p s s= :: Ag search for something in this project. If point is at a
-                     token, default to searching for that. (Mnemonic:
-                     "Projectile Silver Searcher".)
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package projectile
-	:bind (:map projectile-mode-map
-		    ("C-c p" . projectile-command-map))
-	:config
-	(projectile-mode +1))
-    #+END_SRC
-
-*** Helm Projectile
-
-    This next package adds =C-c p h=, which invokes =helm-find-file= in project
-    context. Invaluable.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package helm-projectile
-	:config
-	(helm-projectile-on))
-    #+END_SRC
-
-*** Multiple Cursors
-
-    This package is another one of those near-magical ones. It allows me to do
-    multiple edits in the same buffer, using several cursors. You can think of
-    it as an interactive macro, where you can constantly see what's being done.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package multiple-cursors
-
-	:bind (("C-c M-e" . mc/edit-lines)
-               ("C-c M-a" . mc/mark-all-dwim)
-               ("s-n" . mc/mark-next-like-this)
-               ("s-p" . mc/mark-previous-like-this)))
-    #+END_SRC
-
-*** AppleScript support
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package apples-mode)
-    #+END_SRC
-
-*** Sphinx & reStructuredText
-
-    I like to build Sphinx docs locally to check I've got the right syntax, and
-    that links are accounted for. I use sphinx-fronted for that:
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package sphinx-frontend)
-    #+END_SRC
-
-    That does require installing python, as OS X's default install doesn't come
-    with pip:
-
-    #+BEGIN_SRC sh
-      nix-env -i python3
-    #+END_SRC
-
-    Then, we need to install sphinx itself:
-
-    #+BEGIN_SRC sh
-      pip install sphinx
-    #+END_SRC
-
-    While we're at it, turn on auto-complete for reStructuredText.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package auto-complete-rst
-	:mode "\\.rst\'"
-	:config
-	(auto-complete-rst-init)
-	(setq auto-complete-rst-other-sources
-              '(ac-source-filename
-		ac-source-abbrev
-		ac-source-dictionary
-		ac-source-yasnippet)))
-    #+END_SRC
-
-*** Graphviz
-
-    I sometimes use Graphviz to create diagrams.
-
-    #+BEGIN_SRC sh
-      nix-env -i graphviz
-    #+END_SRC
-
-    I also have to tell Emacs how to launch GraphViz.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package graphviz-dot-mode
-	:init
-	(setq default-tab-width 8)
-	(setq graphviz-dot-view-command "open -a Graphviz %s"))
-    #+END_SRC
-
-*** Trash
-
-    This allows moving files to trash rather than deleting them from =dired=.
-    Delete files by moving them to Trash. This way they _can_ be retrieved
-    again.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package osx-trash
-	:init
-	(setq delete-by-moving-to-trash t)
-	:config
-	(osx-trash-setup))
-    #+END_SRC
-
-    To support that we need to install a supporting program.
-
-    #+BEGIN_SRC sh
-     brew install trash
-    #+END_SRC
-
-*** Plant UML Mode
-
-    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package plantuml-mode
-	:mode "\\.puml\\'"
-	:init
-	(setq plantuml-jar-path
-	      (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
-    #+END_SRC
-
-    This requires installing plantuml separately:
-
-    #+BEGIN_SRC sh
-      nix-env -i plantuml
-    #+END_SRC
-
-*** YAS
-
-    YAS is a templating package. You can define mode-specific or global
-    templates, and insert templates with keycombinations or triggered based on
-    trigger words in the text.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package yasnippet
-	:config
-	(yas-global-mode))
-    #+END_SRC
-
-*** Visual line mode / word wrapping
-
-    #+BEGIN_SRC emacs-lisp
-    (add-hook 'text-mode-hook 'visual-line-mode)
-    #+END_SRC
-
-*** Markdown
-
-    I'm a sucker for lists, and I want to be able to reorder list items
-    easily and have them renumbered automatically.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package markdown-mode
-	:bind (("M-<up>" . markdown-move-list-item-up)
-	       ("M-<down>" . markdown-move-list-item-down)))
-    #+END_SRC
-*** Box quotes are so cute!
-
-    Install boxquote to make fancy text boxes like this:
-
-    #+BEGIN_EXAMPLE
-      ,----
-      | This is a box quote!
-      `----
-    #+END_EXAMPLE
-
-    You can even set a title!
-
-    #+BEGIN_EXAMPLE
-      ,----[ with a title! ]
-      | This is another box quote
-      `----
-    #+END_EXAMPLE
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package boxquote)
-    #+END_SRC
-
-*** Elfeed
-
-    I use custom.el for the actual feeds.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package elfeed
-	:bind ("C-x w" . elfeed)
-	:config
-	(defalias 'elfeed-toggle-star
-	  (elfeed-expose #'elfeed-search-toggle-all 'star))
-
-	(eval-after-load 'elfeed-search
-	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
-    #+END_SRC
+** Make mouse scrolling smoother
+
+   The adaptive mouse scrolling is far, far too quick so let's turn that off.
+
+   #+BEGIN_SRC emacs-lisp
+   (setq mouse-wheel-progressive-speed nil)
+   (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+   #+END_SRC
+
+** Markdown
+
+   I'm a sucker for lists, and I want to be able to reorder list items
+   easily and have them renumbered automatically.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package markdown-mode
+       :bind (("M-<up>" . markdown-move-list-item-up)
+	      ("M-<down>" . markdown-move-list-item-down)))
+   #+END_SRC
+** Multiple Cursors
+
+   This package is another one of those near-magical ones. It allows me to do
+   multiple edits in the same buffer, using several cursors. You can think of
+   it as an interactive macro, where you can constantly see what's being done.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+
+       :bind (("C-c M-e" . mc/edit-lines)
+              ("C-c M-a" . mc/mark-all-dwim)
+              ("s-n" . mc/mark-next-like-this)
+              ("s-p" . mc/mark-previous-like-this)))
+   #+END_SRC
 
 ** Nix
 
@@ -2303,6 +1902,57 @@
 
       (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
     #+END_SRC
+** Plant UML Mode
+
+   I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package plantuml-mode
+       :mode "\\.puml\\'"
+       :init
+       (setq plantuml-jar-path
+	     (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
+   #+END_SRC
+
+   This requires installing plantuml separately:
+
+   #+BEGIN_SRC sh
+     nix-env -i plantuml
+   #+END_SRC
+
+** Projectile
+
+   I use Projectile to navigate my projects. Some of the things I like about
+   it are that it provides the following key bindings:
+
+   - =C-c p t= :: This switches from an implementation file to its test file,
+                  or vice versa. I use this extensively in Clojure mode. It
+                  might not make sense for all languages; YMMV.
+   - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
+   - =C-c p s s= :: Ag search for something in this project. If point is at a
+                    token, default to searching for that. (Mnemonic:
+                    "Projectile Silver Searcher".)
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :bind (:map projectile-mode-map
+		   ("C-c p" . projectile-command-map))
+       :config
+       (projectile-mode +1))
+   #+END_SRC
+
+** Put Custom settings in a separate file
+
+   I prefer to code my configuration, but sometimes Custom settings are good
+   enough. I prefer that such settings live in a separate file though. Load
+   that file if it exists.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+     (if (file-exists-p custom-file)
+         (load custom-file))
+   #+END_SRC
+
 ** Python
 
    Work projects are all in Python. This is me exploring Emacs' Python
@@ -2366,6 +2016,188 @@
       (add-hook 'python-mode-hook 'flymake-python-pyflakes-load))
     #+END_SRC
 
+** Running tests
+
+   Add a convenient keybinding for running tests interactively.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x t") 'ert)
+   #+END_SRC
+
+** Save minibuffer history
+
+   This allows us to "tap up" in the minibuffer to recall previous items,
+   even from a previous session.
+
+   #+BEGIN_SRC emacs-lisp
+     (savehist-mode 1)
+   #+END_SRC
+
+** Save my place in each file
+
+   It's nice if Emacs knows where I was last time I opened a file.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default save-place t)
+     (setq save-place-file (concat user-emacs-directory "places"))
+   #+END_SRC
+
+** Set up Clipboard
+
+   These settings improve pasting behaviour with programs outside Emacs.
+
+   Save clipboard strings into the kill ring before replacing them. This is
+   useful if you select something in Emacs, then select something from
+   _another_ program. If you don't set this to non-nil the previous selection
+   done from within Emacs is gone. This preserves it in the kill ring,
+   enabling you to retrieve it.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq save-interprogram-paste-before-kill t)
+   #+END_SRC
+
+   Copying ("yanking") with the mouse copies at point, rather than where you
+   click.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mouse-yank-at-point t)
+   #+END_SRC
+
+** Set up modifier keys on OS X
+
+   Set up the modifier keys the way that best fits my keyboard.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Both Command keys are 'Meta'
+     (setq mac-right-command-modifier 'meta
+	   mac-command-modifier 'meta)
+
+     ;; Option or Alt is 'Super'
+     (setq mac-option-modifier 'super)
+
+     ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
+     (setq mac-right-option-modifier 'nil)
+
+     (setq ns-function-modifier 'hyper)
+   #+END_SRC
+
+** Show Matching parens
+
+   This is extremely useful. Put the mark on a paren (any of =()[]{}=,
+   actually) and Emacs shows the matching closing/opening one.
+
+   #+BEGIN_SRC emacs-lisp
+     (show-paren-mode 1)
+   #+END_SRC
+
+** Show more "recent files" in =M-x b= window
+
+   Keep up to 100 recent files, rather than the default of 20.
+
+   #+BEGIN_SRC emacs-lisp
+    (setq recentf-max-saved-items 100)
+   #+END_SRC
+
+** SmartParens
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package smartparens
+       :diminish
+
+       ;; I prefer to be explicit about the keybindings I use
+       :bind (:map smartparens-mode-map
+		   ("C-M-f" . sp-forward-sexp)
+		   ("C-M-b" . sp-backward-sexp)
+		   ("C-M-<SPC>" . sp-splice-sexp)
+		   ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+		   ("C-<right>" . sp-forward-slurp-sexp)
+		   ("C-<left>" . sp-forward-barf-sexp)
+		   ("C-M-<left>" . sp-backward-slurp-sexp)
+		   ("C-M-<right>" . sp-backward-barf-sexp))
+       :config
+       (require 'smartparens-config)
+       (smartparens-global-mode t)
+       (smartparens-global-strict-mode nil)
+       (show-smartparens-global-mode t))
+   #+END_SRC
+
+** Sphinx & reStructuredText
+
+   I like to build Sphinx docs locally to check I've got the right syntax, and
+   that links are accounted for. I use sphinx-fronted for that:
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package sphinx-frontend)
+   #+END_SRC
+
+   That does require installing python, as OS X's default install doesn't come
+   with pip:
+
+   #+BEGIN_SRC sh
+     nix-env -i python3
+   #+END_SRC
+
+   Then, we need to install sphinx itself:
+
+   #+BEGIN_SRC sh
+     pip install sphinx
+   #+END_SRC
+
+   While we're at it, turn on auto-complete for reStructuredText.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package auto-complete-rst
+       :mode "\\.rst\'"
+       :config
+       (auto-complete-rst-init)
+       (setq auto-complete-rst-other-sources
+             '(ac-source-filename
+	       ac-source-abbrev
+	       ac-source-dictionary
+	       ac-source-yasnippet)))
+   #+END_SRC
+
+** Start the Emacs Daemon
+
+   We want Emacs to be running its server so we can interact with it using =emacsclient=.
+
+  #+BEGIN_SRC emacs-lisp
+    (require 'server)
+    (unless (server-running-p)
+      (server-start))
+  #+END_SRC
+
+** Support for fullscreen
+
+   I like to run apps in fullscreen mode. Unfortunately ediff merge, when running
+   an Emacs version without Yamamoto's Mac patch set, doesn't really work in
+   fullscreen---it ends up putting the small emerge control frame on a
+   different screen. Because I like Emacs 25 (for up-to-date Gnus) I work
+   around this problem by exiting fullscreen and just maximising the frame
+   instead.
+
+   Toggling frame maximation is already available as =M-<f10>=, so all we need
+   to do is add a key binding to toggle fullscreen. I found this function at
+   the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]], and it does just that.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun my-toggle-fullscreen ()
+       "Toggle full screen"
+       (interactive)
+       (set-frame-parameter
+        nil 'fullscreen
+        (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+     (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
+   #+END_SRC
+
+   Sometimes (when using ediff) I don't use fullscreen. By resizing the window
+   by pixels rather than characters we can still fill the entire screen.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq frame-resize-pixelwise t)
+   #+END_SRC
+
 ** Themes
 *** Load one theme at a time
 
@@ -2418,6 +2250,159 @@
 		  ("DEL" (sb/disable-all-themes))
 		  ("RET" nil "done" :color blue)))))
     #+END_SRC
+
+** Toggle Window Split function
+
+   Sometimes a window is split horizontally, and you would prefer
+   vertically. Or vice versa. This function can help! Just don't ask me how
+   it works: I found it on StackOverflow. (I think. Again.)
+
+   #+BEGIN_SRC emacs-lisp
+     (defun toggle-window-split ()
+       (interactive)
+       (if (= (count-windows) 2)
+           (let* ((this-win-buffer (window-buffer))
+                  (next-win-buffer (window-buffer (next-window)))
+                  (this-win-edges (window-edges (selected-window)))
+                  (next-win-edges (window-edges (next-window)))
+                  (this-win-2nd (not (and (<= (car this-win-edges)
+                                              (car next-win-edges))
+                                          (<= (cadr this-win-edges)
+                                              (cadr next-win-edges)))))
+                  (splitter
+                   (if (= (car this-win-edges)
+                          (car (window-edges (next-window))))
+		       'split-window-horizontally
+                     'split-window-vertically)))
+             (delete-other-windows)
+             (let ((first-win (selected-window)))
+	       (funcall splitter)
+	       (if this-win-2nd (other-window 1))
+	       (set-window-buffer (selected-window) this-win-buffer)
+	       (set-window-buffer (next-window) next-win-buffer)
+	       (select-window first-win)
+	       (if this-win-2nd (other-window 1))))))
+
+     (define-key ctl-x-4-map "t" 'toggle-window-split)
+   #+END_SRC
+
+** Tramp
+
+   Allow using sudo over ssh, so we can sudo to root remotely on a machine
+   that does not allow root login.
+
+   #+BEGIN_SRC emacs-lisp
+     (set-default 'tramp-default-proxies-alist
+                  (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
+   #+END_SRC
+
+   For opening files using sudo locally, don't connect via SSH. (My local
+   machine doesn't accept SSH connections.)
+
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'tramp-default-proxies-alist
+                  '((regexp-quote (system-name)) nil nil))
+   #+END_SRC
+
+   If I don't set this then tramp will attempt to use OS X's tempfile
+   directory on a remote machine, which does not work. I don't understand
+   why it won't use the remote machine's temp directory automatically, but
+   there you go.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq temporary-file-directory "/tmp/")
+   #+END_SRC
+
+   Apparently using =ssh= is faster than the default =scp= mode, so let's use
+   that.
+
+   #+BEGIN_SRC emacs-lisp
+   (setq tramp-default-method "ssh")
+   #+END_SRC
+
+   This function lets me re-open the currently open file using sudo[fn:1].
+   I've bound it to =C-c C-s=. It works for both local and remote buffers.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun sudo-edit-current-file ()
+       (interactive)
+       (let ((position (point)))
+         (find-alternate-file
+          (if (file-remote-p (buffer-file-name))
+              (let ((vec (tramp-dissect-file-name (buffer-file-name))))
+                (tramp-make-tramp-file-name
+                 "sudo"
+                 (tramp-file-name-user vec)
+                 (tramp-file-name-host vec)
+                 (tramp-file-name-localname vec)))
+            (concat "/sudo:root@localhost:" (buffer-file-name))))
+         (goto-char position)))
+   #+END_SRC
+
+   The man pages on my OS X local machine are very oqften different from the
+   remote machines I'm logged in to. Thus, when in eshell, in a /remote/ path,
+   I would like to display /remote/ man pages from that system. I'm not sure
+   the regular man command can do that, but /woman/ can, with a bit of help.
+
+   I've not /completely/ nailed this, so the useability is a bit rough. But
+   with the below command in eshell you can do:
+
+   #+BEGIN_EXAMPLE
+   alias man 'tramp-aware-woman ${*man -c --path $1}'
+   #+END_EXAMPLE
+
+   Now you have an alias which will open a woman buffer with the /remote/ man
+   page of the man page you want.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun tramp-aware-woman (man-page-path)
+       (interactive)
+       (let ((dir (eshell/pwd)))
+         (woman-find-file
+          (if (file-remote-p dir)
+              (let ((vec (tramp-dissect-file-name dir)))
+                (tramp-make-tramp-file-name
+                 (tramp-file-name-method vec)
+                 (tramp-file-name-user vec)
+                 (tramp-file-name-host vec)
+                 man-page-path))
+            man-page-path))))
+   #+END_SRC
+
+** Transparently open compressed files
+
+   I *do* like it when Emacs transparently opens compressed files. It gives
+   me the warm fuzzies.
+
+   #+BEGIN_SRC emacs-lisp
+     (auto-compression-mode t)
+   #+END_SRC
+
+** Trash
+
+   This allows moving files to trash rather than deleting them from =dired=.
+   Delete files by moving them to Trash. This way they _can_ be retrieved
+   again.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package osx-trash
+       :init
+       (setq delete-by-moving-to-trash t)
+       :config
+       (osx-trash-setup))
+   #+END_SRC
+
+   To support that we need to install a supporting program.
+
+   #+BEGIN_SRC sh
+    brew install trash
+   #+END_SRC
+
+** Visual line mode / word wrapping
+
+   #+BEGIN_SRC emacs-lisp
+   (add-hook 'text-mode-hook 'visual-line-mode)
+   #+END_SRC
 
 ** Which Key Mode
 
@@ -2472,6 +2457,18 @@
      :config
      (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
+** YAS
+
+   YAS is a templating package. You can define mode-specific or global
+   templates, and insert templates with keycombinations or triggered based on
+   trigger words in the text.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package yasnippet
+       :config
+       (yas-global-mode))
+   #+END_SRC
+
 * Footnotes
 
 [fn:1] Found at http://www.emacswiki.org/emacs/TrampMode#toc31
