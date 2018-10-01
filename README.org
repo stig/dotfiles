@@ -1096,14 +1096,6 @@
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
-** Flymake
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package flymake
-       :bind (:map flymake-mode-map
-	      ("M-n" . flymake-goto-next-error)
-	      ("M-p" . flymake-goto-prev-error)))
-   #+END_SRC
 ** Graphviz
 
    I sometimes use Graphviz to create diagrams.
@@ -1978,17 +1970,8 @@
    #+BEGIN_SRC emacs-lisp :noweb yes
      (use-package elpy
        :config
-       (elpy-enable)
-       (add-hook 'elpy-mode-hook 'flymake-mode))
+       (elpy-enable))
    #+END_SRC
-
-*** Python prerequisites
-
-    Some [[https://github.com/jorgenschaefer/elpy#quick-installation][python modules are required]]:
-
-    #+BEGIN_SRC sh
-      pip install jedi flake8 autopep8
-    #+END_SRC
 
 *** Create a UTF-8 alias
 
@@ -2016,18 +1999,12 @@
 *** Pipenv
 
   #+BEGIN_SRC emacs-lisp
-  (use-package pipenv
-    :hook (python-mode . pipenv-mode))
-  #+END_SRC
-*** Flymake
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package flymake-python-pyflakes
+    (use-package pipenv
+      :hook (python-mode . pipenv-mode)
       :init
-      (setq flymake-python-pyflakes-executable "flake8")
-      :config
-      (add-hook 'python-mode-hook 'flymake-python-pyflakes-load))
-    #+END_SRC
+      (setq pipenv-projectile-after-switch-function
+	    #'pipenv-projectile-after-switch-extended))
+  #+END_SRC
 
 ** Running tests
 
