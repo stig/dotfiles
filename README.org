@@ -34,13 +34,53 @@
 
 ** Install Emacs
 
-   I currently get my thrills from using the development version of Emacs.
+   I'm experimenting with installing Emacs via Nix rather than
+   homebrew. I use the Mac-version, and it's installed like this:
 
    #+BEGIN_SRC sh
-   brew install emacs --with-cocoa --with-dbus --with-librsvg --with-mailutils
+   nix-env -i emacs-mac
    #+END_SRC
 
 * Meta configuration
+
+** Disable mouse interface, splash screen & beeps in =early-init.el=
+
+   I don't tend to use a mouse in Emacs often, so I turn off mouse
+   interface early to avoid momentary display during launch. Recent
+   Emacsen read =early-init.el= before initialising GUI components, so
+   it's a great place to turn off mouse interface to avoid flicker
+   during startup.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+   #+END_SRC
+
+   I also don't need to see a splash screen on every launch.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq inhibit-startup-message t)
+   #+END_SRC
+
+   I do not like Emacs to beep at me; I prefer a visual bell.
+
+   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+     (setq visible-bell t)
+   #+END_SRC
+
+** Pre Emacs 27 compat                                               :COMPAT:
+
+  Older versions of Emacs doesn't have the early-init built-in, so
+  load that file before anything else, if we haven't already turned on
+  visible bell.
+
+  #+BEGIN_SRC emacs-lisp
+    (if (not visible-bell)
+	(progn
+	  (load (expand-file-name "~/.emacs.d/early-init.el") t)
+	  (require 'package)
+	  (package-initialize)))
+  #+END_SRC
 
 ** Add Package Archives & priorities
 
@@ -119,7 +159,7 @@
    This requires an additional external tool for best performance:
 
    #+BEGIN_SRC sh
-     brew install the_silver_searcher
+     nix-env -i silver-searcher
    #+END_SRC
 
    Then make sure the Emacs ag package is installed.
@@ -317,31 +357,6 @@
      (global-set-key (kbd "s-q") nil)
    #+END_SRC
 
-** Disable mouse interface, splash screen & beeps early
-
-   I don't tend to use a mouse in Emacs often, so I turn off mouse
-   interface early to avoid momentary display during launch. Recent
-   Emacsen read =early-init.el= before initialising GUI components, so
-   it's a great place to turn off mouse interface to avoid flicker
-   during startup.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-   #+END_SRC
-
-   I also don't need to see a splash screen on every launch.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (setq inhibit-startup-message t)
-   #+END_SRC
-
-   I do not like Emacs to beep at me; I prefer a visual bell.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
-     (setq visible-bell t)
-   #+END_SRC
-
 ** Don't hide Emacs when  ⌘-h is pressed
 
    In Emacs Mac Port, ⌘-h bypasses any Emacs keybindings and instead sends a
@@ -413,7 +428,7 @@
     install emacs=.)
 
     #+BEGIN_SRC sh
-      brew install mu --with-emacs
+      nix-env -i mu
       nix-env -i msmtp
       nix-env -i isync
     #+END_SRC
@@ -424,11 +439,9 @@
     our =mu= binary is.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package mu4e
-  ;;      :load-path (lambda () (expand-file-name "~/play/mu/mu4e/"))
-	:load-path "/usr/local/share/emacs/site-lisp/mu/mu4e/"
-	:init
-	(setq mu4e-mu-binary "/usr/local/bin/mu"))
+    (use-package mu4e
+      :ensure nil
+      :load-path"~/.nix-profile/share/emacs/site-lisp/mu4e")
     #+END_SRC
 
 *** Where mu4e should save attachments
@@ -2392,12 +2405,6 @@
        (setq delete-by-moving-to-trash t)
        :config
        (osx-trash-setup))
-   #+END_SRC
-
-   To support that we need to install a supporting program.
-
-   #+BEGIN_SRC sh
-    brew install trash
    #+END_SRC
 
 ** Visual line mode / word wrapping
