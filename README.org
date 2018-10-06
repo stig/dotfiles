@@ -1193,18 +1193,6 @@
    (setq rcirc-default-full-name "Stig Brautaset")
    #+END_SRC
 
-** Lilypond
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package lilypond-mode
-      :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp/"
-      :mode (("\\.ly\\'" . LilyPond-mode)
-	     ("\\.ily\\'" . LilyPond-mode))
-      :init
-      (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
-      (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
-  #+END_SRC
-
 ** Magit & GitHub
 *** Magit
 
