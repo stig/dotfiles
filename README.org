@@ -142,21 +142,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
        :config
-       (when (memq window-system '(mac ns x))
-	 (exec-path-from-shell-initialize)
-
-	 (exec-path-from-shell-copy-env "EDITOR")
-
-	 ;; Avoid the following error:
-	 ;; error: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:13
-	 (exec-path-from-shell-copy-env "NIX_PATH")
-
-	 ;; This is required for curl to work from within Emacs when curl is installed via nix
-	 (exec-path-from-shell-copy-env "NIX_SSL_CERT_FILE")))
-
-     ;; Avoid "WARNING: terminal is not fully functional" prompt every time
-     ;; I invoke `aws $subcommand help`.
-     (setenv "PAGER" "cat")
+       (exec-path-from-shell-copy-env "NIX_PATH")
+       (exec-path-from-shell-copy-env "SSL_CERT_FILE"))
    #+END_SRC
 
 ** Ag / The Silver Searcher
@@ -1095,6 +1082,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-c s") 'eshell)
+     (setenv "PAGER" "cat")
    #+END_SRC
 
    Eshell is great, and its Tramp integration allows me to open remote files
