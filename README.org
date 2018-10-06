@@ -812,7 +812,7 @@
       AuthMechs PLAIN
       SSLType IMAPS
       # SSLVersions SSLv3
-      CertificateFile /usr/local/etc/openssl/cert.pem
+      CertificateFile /etc/ssl/cert.pem
 
       # THEN WE SPECIFY THE LOCAL AND REMOTE STORAGE
       # - THE REMOTE STORAGE IS WHERE WE GET THE MAIL FROM (E.G., THE
@@ -987,7 +987,7 @@
 
       port 587
       tls on
-      tls_trust_file /usr/local/etc/openssl/cert.pem
+      tls_trust_file /etc/ssl/cert.pem
       auth on
 
       ###############
