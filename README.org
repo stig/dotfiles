@@ -1597,6 +1597,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package ox-jira)
       (require 'ox-latex)
+      (setq org-export-backends '(html md freemind jira latex))
     #+END_SRC
 
 *** Presenting
