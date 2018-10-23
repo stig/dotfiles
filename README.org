@@ -1129,7 +1129,7 @@
      (setq whitespace-style '(face empty tabs trailing))
      (global-whitespace-mode t)
 
-     (global-set-key (kbd "s-w") 'whitespace-cleanup)
+     (global-set-key (kbd "C-c w") 'whitespace-cleanup)
    #+END_SRC
 
 ** I like big fonts and I cannot lie
