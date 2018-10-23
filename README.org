@@ -432,9 +432,10 @@
     our =mu= binary is.
 
     #+BEGIN_SRC emacs-lisp
-    (use-package mu4e
-      :ensure nil
-      :load-path "~/.nix-profile/share/emacs/site-lisp/mu4e")
+      (use-package mu4e
+	:ensure nil
+	:bind ("C-c m" . mu4e)
+	:load-path "~/.nix-profile/share/emacs/site-lisp/mu4e")
     #+END_SRC
 
 *** Where mu4e should save attachments
