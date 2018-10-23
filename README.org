@@ -1083,6 +1083,8 @@
 
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-c s") 'eshell)
+
+     ;; This helps with aws cli commands, and nix-env --help, a bit
      (setenv "PAGER" "cat")
    #+END_SRC
 
