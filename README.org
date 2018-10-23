@@ -370,6 +370,15 @@
      (setq backup-by-copying t)
    #+END_SRC
 
+** Dotenv Mode
+
+   Automatically source variables in =.env= files into Emacs.
+
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package dotenv-mode)
+
+   #+END_SRC
 ** Editorconfig
 
    Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
