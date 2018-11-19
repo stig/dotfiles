@@ -1528,7 +1528,6 @@
 	      ("r" "GTD Review" entry (file+datetree "GTDReview.org")
 	       (file "templates/gtd-review.org")
 	       :empty-lines 1
-	       :clock-in t
 	       :jump-to-captured t)
 
 	      ("i" "New Invoice" plain (file "invoices/Invoices.org")
