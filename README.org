@@ -1906,6 +1906,14 @@
 
       (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
     #+END_SRC
+*** Org Download
+
+    This allows me to drag-and-drop images into Org mode buffers.
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package org-download)
+    #+END_SRC
+
 ** Plant UML Mode
 
    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
