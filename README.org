@@ -1342,23 +1342,31 @@
    config. However, =use-package= supports this by passing the name of the
    package to install as the value to =:ensure=.
 
-   #+BEGIN_SRC emacs-lisp :noweb yes
+   The Org manual expects the =C-c {l,a,c,b}= keybindings to be
+   available in any mode, so define them globally. I prefer to follow
+   conventions. It makes reading the manual and tutorials a lot
+   easier!
+
+   #+BEGIN_SRC emacs-lisp
      (use-package org
        :ensure org-plus-contrib
- ;;      :load-path (lambda () (expand-file-name "~/play/org-mode/lisp"))
+       ;;      :load-path (lambda () (expand-file-name "~/play/org-mode/lisp"))
 
-       <<key-bindings>>
+       :bind (("C-c l" . org-store-link)
+	      ("C-c a" . org-agenda)
+	      ("C-c c" . org-capture)
+	      ("C-c b" . org-iswitchb)
+	      ("C-s-<return>" . org-insert-subheading)
+	      ("C-s-S-<return>" . org-insert-todo-subheading)
+	      :map org-mode-map
+	      ("C-c x" . mu4e-compose-mode)
+	      ("C-n" . org-next-link)
+	      ("C-p" . org-previous-link))
 
        :mode (("\\.org\\'" . org-mode)
-	     ("\\.org_archive\\'" . org-mode))
+	      ("\\.org_archive\\'" . org-mode))
 
        :init
-       <<capturing>>
-       <<refiling>>
-
-       ;; I don't rely on many properties, so this should speed up my Agenda
-       ;; view, according to http://orgmode.org/worg/agenda-optimization.html
-       (setq org-agenda-ignore-properties '(effort appt stats))
 
        ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
        (setq org-log-into-drawer t)
@@ -1374,16 +1382,7 @@
 
        (setq org-element-use-cache nil)
 
-       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
-       <<org-babel-init>>
-
-       <<org-agenda-init>>
-       :config
-
-       <<org-habit-config>>
-
-       <<org-babel-config>>)
+       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
    #+END_SRC
 
    Ditaa requires a package installed by brew.
@@ -1392,30 +1391,13 @@
      nix-env -i ditaa
    #+END_SRC
 
-*** Key bindings
-
-    The Org manual expects the top four of these to be available in any mode, so
-    define them globally. I prefer to follow conventions. It makes reading the
-    manual and tutorials a lot easier!
-
-    #+name: key-bindings
-    #+BEGIN_SRC emacs-lisp :tangle no
-      :bind (("C-c l" . org-store-link)
-             ("C-c a" . org-agenda)
-             ("C-c c" . org-capture)
-             ("C-c b" . org-iswitchb)
-	     ("C-s-<return>" . org-insert-subheading)
-	     ("C-s-S-<return>" . org-insert-todo-subheading)
-             :map org-mode-map
-             ("C-c x" . mu4e-compose-mode)
-             ("C-n" . org-next-link)
-             ("C-p" . org-previous-link))
-    #+END_SRC
-
 *** Agenda
 
-    #+name: org-agenda-init
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+BEGIN_SRC emacs-lisp
+      ;; I don't rely on many properties, so this should speed up my Agenda
+      ;; view, according to http://orgmode.org/worg/agenda-optimization.html
+      (setq org-agenda-ignore-properties '(effort appt stats))
+
       ;; I don't want to show these in the TODO list,
       ;; because they'll show in the Agenda anyway.
       (setq org-agenda-todo-ignore-scheduled 'future
@@ -1447,8 +1429,7 @@
 
     I got all of this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
 
-    #+name: refiling
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+BEGIN_SRC emacs-lisp
       (setq org-refile-targets '((org-agenda-files :maxlevel . 2)
 				 (org-agenda-files :tag . "PROJ")
 
@@ -1468,8 +1449,7 @@
     Set up capture templates. This is mainly from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]. No doubt
     this will grow...
 
-    #+name: capturing
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+BEGIN_SRC emacs-lisp
       (defun capture-blog-post-file ()
 	(let* ((title (read-string "Slug: "))
 	       (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
