@@ -754,6 +754,9 @@
       SSLType IMAPS
       SSLVersions TLSv1
       PassCmd "security find-generic-password -s mbsync-icloud-password -w"
+      # To rotate:
+      # > security delete-generic-password -s mbsync-icloud-password
+      # > security add-generic-password -a stig@brautaset.org -s mbsync-icloud-password -w APP-SPECIFIC-PASSWORD
 
       IMAPStore icloud-remote
       Account icloud
