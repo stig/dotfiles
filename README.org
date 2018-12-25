@@ -1421,7 +1421,7 @@
 	    '(("d" "Agenda & NEXTs"
 	       ((agenda "" ((org-agenda-span 'day)))
 		(todo "NEXT")))
-	      ("p" "Projects" tags "/PROJ")
+	      ("p" "Projects" todo "PROJ")
 	      ("S" "Someday" tags-todo "-VOID"
 	       ((org-agenda-files '("~/org/Someday.org"))))
 	      ("n" todo "NEXT")
