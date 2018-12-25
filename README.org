@@ -1541,7 +1541,6 @@
     achieve that by redirecting stderr to stdout. I got this from a post on the
     orgmode mailing list, I believe.
 
-    #+name: org-babel-init
     #+BEGIN_SRC emacs-lisp
       ;; Tell Org where to find ditaa jar
       (setq org-ditaa-jar-path
@@ -1559,8 +1558,7 @@
     We have to specify the list of languages we want to support so Orgmode knows
     to look out for them:
 
-    #+name: org-babel-config
-    #+BEGIN_SRC emacs-lisp :tangle no
+    #+BEGIN_SRC emacs-lisp
       (org-babel-do-load-languages
        'org-babel-load-languages
        '((emacs-lisp . t)
