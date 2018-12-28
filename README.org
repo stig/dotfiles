@@ -979,6 +979,10 @@
     MSMTP's configuration is really simple, and it will detect the account to
     use from the "from" address. Let's go!
 
+    #+BEGIN_SRC sh
+      nix-env -i msmtp
+    #+END_SRC
+
     MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
     section in the msmtp documentation for details.
 
