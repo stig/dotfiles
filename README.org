@@ -416,328 +416,97 @@
 
 ** Email
 
-   I'm trying to see if I can become happy reading and writing mail in
-   Emacs. I tried Gnus for a while, but am now using [[http://www.djcbsoftware.nl/code/mu/][mu/mu4e]]. I use
-   [[http://msmtp.sourceforge.net/][msmtp]] for sending email. I use mbsync (part of isync) for syncing
-   IMAP messages between my local machine and upstream servers.
+   Because I like to use Emacs for writing, I like to use it for email
+   too. I tried Gnus, but don't really read news so it felt a bit
+   overkill. I've been using [[http://www.djcbsoftware.nl/code/mu/][mu4e]] for a while, but I'm slightly
+   annoyed by some of its quirks (particularly interacting with Gmail,
+   which I have to use for work) so thought I'd try [[https://notmuchmail.org][notmuch]].
 
-*** Installation
+   I use [[http://msmtp.sourceforge.net/][msmtp]] for sending email, and [[http://isync.sourceforge.net][mbsync]] for syncing IMAP messages
+   between my local machine and upstream servers.
 
-    I install some things via =brew=, other things via =nix=. The mu4e
-    part requires installing emacs via brew too, because Apple's
-    version of Emacs is too old.  (And I didn't figure out how to make
-    the build process use the Emacs version installed by =brew cask
-    install emacs=.)
+*** Reading mail with NotMuch
+
+    After installing NotMuch it I ran =notmuch setup= to configure
+    it. Then I ran =notmuch new= to index my existing mail.  (This was
+    already in =~/Maildir/= since I've been using mu4e before.) I then
+    installed the Emacs package from Melpa, and launched it with =M-x
+    notmuch=.  Its threading and MIME appears a lot better than mu4e,
+    from a cursory glance.
+
+    Installation is with =nix=:
 
     #+BEGIN_SRC sh
-      nix-env -i mu
-      nix-env -i msmtp
-      nix-env -i isync
+      nix-env -i notmuch
     #+END_SRC
 
-*** Tell Emacs where to find mu & mu4e
+    Notmuch has to be configured by running =notmuch setup= on the
+    commandline. I haven't yet figured out how to tangle that from
+    this config, but the key parts of my config are:
 
-    First we add mu4e to our load path and load the package, and tell it where
-    our =mu= binary is.
+    #+BEGIN_SRC sh :results output replace :exports results :tangle no
+    notmuch config list
+    #+END_SRC
+
+    #+RESULTS:
+    #+begin_example
+    database.path=/Users/stig/Mail
+    user.name=Stig Brautaset
+    user.primary_email=stig@brautaset.org
+    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com
+    new.tags=unread;inbox;
+    new.ignore=.mbsyncstate;.uidvalidity
+    search.exclude_tags=deleted;spam;
+    maildir.synchronize_flags=true
+    built_with.compact=true
+    built_with.field_processor=true
+    built_with.retry_lock=true
+    #+end_example
+
+    With that out of the way, and installing the package from Melpa,
+    Notmuch works pretty well for me. Mainly I set up a keybinding to
+    quickly bring it up.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package mu4e
-	:ensure nil
-	:bind ("C-c m" . mu4e)
-	:load-path "~/.nix-profile/share/emacs/site-lisp/mu4e")
+      (use-package notmuch
+	:bind (("C-c m" . notmuch)))
     #+END_SRC
 
-*** Where mu4e should save attachments
+**** Multiple sending profiles
 
-    When saving attachments, do so to my ~/Downloads folder. Apparently
-    this value can also be a function, but I've not needed that yet.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-attachment-dir "~/Downloads")
-    #+END_SRC
-
-*** Show images inline in mu4e
-
-    Try to show images inline if possible, and use imagemagick if our Emacs
-    supports that.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-view-show-images t)
-
-      ;; use imagemagick, if available
-      (when (fboundp 'imagemagick-register-types)
-	(imagemagick-register-types))
-    #+END_SRC
-
-*** Show addresses of senders (not just their names)
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-view-show-addresses t)
-    #+END_SRC
-
-*** Ignore my company's domain alias
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-compose-complete-ignore-address-regexp
-            "no-?reply")
-    #+END_SRC
-
-*** For threads, only show the subject once (like mutt)
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-headers-fields '((:human-date . 10)
-                                  (:flags . 4)
-                                  (:maildir . 16)
-                                  (:mailing-list . 8)
-                                  (:from . 22)
-                                  (:thread-subject . nil)))
-    #+END_SRC
-
-*** Viewing HTML messages
-
-    For the default shr rendering of HTML mail, bind TAB (& SHIFT+TAB)to
-    finding next/previous links.
-
-    #+BEGIN_SRC emacs-lisp
-      (require 'mu4e-contrib)
-
-      (add-hook 'mu4e-view-mode-hook
-		(lambda()
-                  ;; try to emulate some of the eww key-bindings
-                  (local-set-key (kbd "<tab>") 'shr-next-link)
-                  (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-
-    #+END_SRC
-
-    Add ability to open any HTML messages in a browser.
-
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'mu4e-headers-actions
-                    '("in browser" . mu4e-action-view-in-browser) t)
-      (add-to-list 'mu4e-view-actions
-                    '("in browser" . mu4e-action-view-in-browser) t)
-    #+END_SRC
-
-    Turn off colours, as often background colours makes text illegible.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq shr-use-colors nil)
-    #+END_SRC
-
-*** Bookmarks
-
-    I used to switch bookmarks based on context, but I've come to the
-    conclusion it is more hassle than it's worth. It means more
-    keystrokes to switch views, for one. And it means an almighty amount
-    of duplication in the contexts.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-bookmarks
-	    (list
-	     (make-mu4e-bookmark
-	      :name "Inbox Messages"
-	      :query "maildir:/Private/INBOX OR maildir:/Work/INBOX"
-	      :key ?i)
-	     (make-mu4e-bookmark
-	      :name "Flagged Messages"
-	      :query "flag:flagged"
-	      :key ?f)
-	     (make-mu4e-bookmark
-	      :name "Unread Messages (Private)"
-	      :query "flag:unread AND maildir:/Private/* AND NOT maildir:/Private/spam"
-	      :key ?u)
-	     (make-mu4e-bookmark
-	      :name "Unread Messages (Work)"
-	      :query "flag:unread AND maildir:/Work/INBOX"
-	      :key ?w)
-	     (make-mu4e-bookmark
-	      :name "Today's messages"
-	      :query "date:today..now"
-	      :key ?t)
-	     (make-mu4e-bookmark
-	      :name "Last 7 days"
-	      :query "date:7d..now"
-	      :key ?7)))
-    #+END_SRC
-
-*** Signatures
-
-    I use different signatures for different purposes. Work signature is
-    read from a file, while some mailinglists get dynamic signatures
-    with relevant Emacs / Org / Mu4e version information.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun get-string-from-file (filePath)
-	"Return filePath's file content."
-	(with-temp-buffer
-          (insert-file-contents filePath)
-          (buffer-string)))
-
-      (defun my-emacs-org-sig ()
-	(concat "; " (car (split-string (emacs-version) " ("))
-		", " (car (split-string (org-version nil t) " ("))))
-
-      (defun my-emacs-mu4e-sig ()
-	(concat "; " (car (split-string (emacs-version) " ("))
-		", Mu4e " (car (split-string mu4e-mu-version))))
-    #+END_SRC
-
-*** Maildir Shortcuts
-
-    Allow convenient jumping or moving directly to some maildirs.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-maildir-shortcuts '(("/Private/INBOX" . ?i)
-                                     ("/Private/spam" . ?s)
-                                     ("/Private/Archive" . ?a)
-                                     ("/Work/INBOX" . ?I)
-                                     ("/Work/spam" . ?S)
-                                     ("/Work/archive" . ?A)))
-    #+END_SRC
-
-*** Dynamic folders
-
-    Define sent, drafts, trash and refile folders based on the account
-    we find the mail in.
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Messages sent via GMail gets added to sent mail on the server side
-      (setq mu4e-sent-folder "/Private/sent")
-
-      ;; I don't want to sync drafts
-      (setq mu4e-drafts-folder "/drafts")
-
-      (setq mu4e-trash-folder
-            (lambda (msg)
-              (if (string-prefix-p "/Work/" (mu4e-msg-field msg :maildir))
-                  "/Work/trash" "/Private/trash")))
-
-      (setq mu4e-refile-folder
-            (lambda (msg)
-              (if (string-prefix-p "/Work/" (mu4e-msg-field msg :maildir))
-                  "/Work/archive" "/Private/Archive")))
-    #+END_SRC
-
-*** Switch between multiple contexts
-
-    Set up different contexts based on which folder / mailbox I'm in. This is
-    much more obvious than Gnus' approach, IMO. I like it.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/maildir-match (needle)
-	`(lambda (msg)
-	   (when msg
-	     (s-contains-p ,needle
-			   (mu4e-message-field msg :maildir)))))
-
-      (defun sb/to-match (needle)
-	`(lambda (msg)
-	   (when msg
-	     (-some (lambda (entry)
-		      (s-contains-p ,needle (cdr entry)))
-		    (mu4e-message-field msg :to)))))
-
-      (setq mu4e-contexts
-	    (list
-	     (make-mu4e-context
-	      :name "Org"
-	      :match-func (sb/to-match "emacs-orgmode")
-	      :vars '((user-mail-address . "stig@brautaset.org")
-		      (mu4e-compose-signature . (my-emacs-org-sig))))
-
-	     (make-mu4e-context
-	      :name "Mu"
-	      :match-func (sb/to-match "mu-discuss")
-	      :vars '((user-mail-address . "stig@brautaset.org")
-		      (mu4e-compose-signature . (my-emacs-mu4e-sig))))
-
-	     (make-mu4e-context
-	      :name "Private"
-	      :match-func (sb/maildir-match "/Private/")
-	      :vars '((user-mail-address . "stig@brautaset.org")
-		      (mu4e-compose-signature . nil)))
-
-	     (make-mu4e-context
-	      :name "GitHub"
-	      :match-func (sb/to-match "@reply.github.com")
-	      :vars '((user-mail-address . "sbrautaset@laterpay.net")
-		      (mu4e-compose-signature . nil)))
-
-	     (make-mu4e-context
-	      :name "JIRA"
-	      :match-func (sb/to-match "@laterpay.atlassian.net")
-	      :vars '((user-mail-address . "sbrautaset@laterpay.net")
-		      (mu4e-compose-signature . nil)))
-
-	     (make-mu4e-context
-	      :name "Work"
-	      :match-func (sb/maildir-match "/Work/")
-	      :vars '((user-mail-address . "sbrautaset@laterpay.net")
-		      (mu4e-compose-signature . (get-string-from-file "~/Dropbox/Config/LaterPay.signature"))))))
-    #+END_SRC
-
-*** Context defaults
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-context-policy nil)
-      (setq mu4e-compose-context-policy 'ask)
-    #+END_SRC
-
-*** A list of my addresses
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-user-mail-address-list
-            '("stig@brautaset.org"
-              "stig.brautaset@icloud.com"
-              "sbrautaset@laterpay.net"))
-    #+END_SRC
-
-*** Tell mu4e that I don't want to email myself, normally
-
-    #+BEGIN_SRC emacs-lisp
-    (setq mu4e-compose-dont-reply-to-self t)
-    #+END_SRC
-
-*** Gmail hacks
-**** Don't store sent messages
-
-     Google automatically stores messages sent through their SMTP
-     servers to sent messages, so we should not duplicate that.
+     NotMuch doesn't have built-in support for multiple profiles, but
+     we can use =gnus-alias= for that:
 
      #+BEGIN_SRC emacs-lisp
-       (setq mu4e-sent-messages-behavior
-             (lambda ()
-               (if (string= (message-sendmail-envelope-from) "sbrautaset@laterpay.net")
-                   'delete 'sent)))
+       (use-package gnus-alias)
+
+       (setq gnus-alias-identity-alist
+	     '(("home"
+		nil ;; Does not refer to any other identity
+		"Stig Brautaset <stig@brautaset.org>"
+		nil ;; No organization header
+		nil
+		nil ;; No extra body text
+		"~/.signature")
+	       ("work"
+		nil
+		"Stig Brautaset <sbrautaset@laterpay.net>"
+		"LaterPay GmbH"
+		nil
+		nil
+		"~/.signature.work")))
+
+       (setq gnus-alias-identity-rules
+	     '(("work" ("any" "sbrautaset@laterpay.net" both) "work")))
+
+       (setq gnus-alias-default-identity "home")
+
+       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
+
+       (setq notmuch-fcc-dirs
+	     '(("stig@brautaset.org" . "Private/sent +sent +archived -unread -inbox")))
+
      #+END_SRC
-
-**** Skip duplicate emails
-
-     Because of the weird interaction between Gmail labels and IMAP, often
-     messages show up in =archive= /and/ INBOX. This setting should help in that
-     case:
-
-     #+BEGIN_SRC emacs-lisp
-     (setq mu4e-headers-skip-duplicates t)
-     #+END_SRC
-
-*** Support queueing outgoing mail
-
-    Configure mu4e to support queueing mail for sending later, for cases when I
-    don't have network connection.
-
-    #+BEGIN_SRC emacs-lisp
-	(setq smtpmail-queue-mail nil
-            smtpmail-queue-dir   "~/Maildir/queue/cur")
-    #+END_SRC
-
-    This requires creating the queue directory, which you can do with =mu=. We
-    also tell mu not to index the queue:
-
-    #+BEGIN_SRC sh
-    mu mkdir ~/Maildir/queue
-    touch ~/Maildir/queue/.noindex
-    #+END_SRC
 
 *** Downloading email over IMAP
 
@@ -768,8 +537,8 @@
       Account icloud
 
       MaildirStore icloud-local
-      Path ~/Maildir/Private/
-      Inbox ~/Maildir/Private/INBOX
+      Path ~/Mail/Private/
+      Inbox ~/Mail/Private/INBOX
 
       Channel icloud-inbox
       Master :icloud-remote:
@@ -778,40 +547,11 @@
       Expunge Both
       SyncState *
 
-      Channel icloud-archive
-      Master :icloud-remote:
-      Slave :icloud-local:
-      Patterns "Archive"
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel icloud-trash
-      Master :icloud-remote:"Deleted Messages"
-      Slave :icloud-local:trash
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel icloud-spam
-      Master :icloud-remote:"Junk"
-      Slave :icloud-local:spam
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel icloud-sent
-      Master :icloud-remote:"Sent Messages"
-      Slave :icloud-local:sent
-      Create Both
-      Expunge Both
-      SyncState *
-
-
       # ACCOUNT INFORMATION
       IMAPAccount gmail
       Host imap.gmail.com
       User sbrautaset@laterpay.net
+      Timeout 60
       PassCmd "security find-generic-password -s mbsync-gmail-password -w"
       # UseIMAPS yes
       # AuthMechs LOGIN
@@ -829,56 +569,14 @@
       IMAPStore gmail-remote
       Account gmail
 
-      # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Maildir/gmail)
+      # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
       MaildirStore gmail-local
-      Path ~/Maildir/Work/
-      Inbox ~/Maildir/Work/INBOX
-
-      # CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
-      #
-      # CONNECTIONS ARE SPECIFIED USING PATTERNS, WHICH MATCH REMOTE MAIL
-      # FOLDERS. SOME COMMONLY USED PATTERS INCLUDE:
-      #
-      # 1 "*" TO MATCH EVERYTHING
-      # 2 "!DIR" TO EXCLUDE "DIR"
-      # 3 "DIR" TO MATCH DIR
-      #
-      # FOR INSTANCE IN THE SPECIFICATION BELOW:
-      #
-      # gmail-inbox gets the folder INBOX, ARCHIVE, and everything under "ARCHIVE*"
-      # gmail-trash gets only the "[Gmail]/Trash" folder and stores it to the local "trash" folder
-
-      Channel gmail-inbox
-      Master :gmail-remote:
-      Slave :gmail-local:
-      Create Both
-      Expunge Both
-      SyncState *
+      Path ~/Mail/Work/
+      Inbox ~/Mail/Work/INBOX
 
       Channel gmail-archive
-      Master :gmail-remote:"Archived"
+      Master :gmail-remote:"[Gmail]/All Mail"
       Slave :gmail-local:archive
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel gmail-trash
-      Master :gmail-remote:"[Gmail]/Bin"
-      Slave :gmail-local:trash
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel gmail-spam
-      Master :gmail-remote:"[Gmail]/Spam"
-      Slave :gmail-local:spam
-      Create Both
-      Expunge Both
-      SyncState *
-
-      Channel gmail-sent
-      Master :gmail-remote:"[Gmail]/Sent Mail"
-      Slave :gmail-local:sent
       Create Both
       Expunge Both
       SyncState *
@@ -892,68 +590,7 @@
 
       Group all
       Channel gmail-archive
-      Channel gmail-inbox
-      Channel gmail-sent
-      Channel gmail-spam
-      Channel gmail-trash
-      Channel icloud-archive
       Channel icloud-inbox
-      Channel icloud-sent
-      Channel icloud-spam
-      Channel icloud-trash
-
-      Group inboxes
-      Channel gmail-inbox
-      Channel icloud-inbox
-    #+END_SRC
-
-*** Avoid "Duplicate UID" messages during mbsync runs
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-change-filenames-when-moving t)
-    #+END_SRC
-
-*** Make the mu4e update window smaller than default
-
-    This seems more appropriate for mbsync, since it's much less verbose
-    than offlineimap by default.
-
-    #+BEGIN_SRC emacs-lisp
-    (setq mu4e~update-buffer-height 3)
-    #+END_SRC
-
-*** Be silent about indexing messages
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-hide-index-messages t)
-      (setq mu4e-update-interval nil)
-    #+END_SRC
-
-*** Cycle addresses in the From header
-
-    Add a keybinding to cycle between from addresses in the message buffer.
-    Credit to [[https://www.emacswiki.org/emacs/GnusTutorial][GnusTutorial]] which is where I found the example I adopted this
-    from.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq message-alternative-emails
-            (regexp-opt mu4e-user-mail-address-list))
-
-      (setq message-from-selected-index 0)
-      (defun message-loop-from ()
-	(interactive)
-	(setq message-article-current-point (point))
-	(goto-char (point-min))
-	(if (eq message-from-selected-index (length mu4e-user-mail-address-list))
-            (setq message-from-selected-index 0) nil)
-	(while (re-search-forward "^From:.*$" nil t)
-          (replace-match (concat "From: " user-full-name " <" (nth message-from-selected-index mu4e-user-mail-address-list) ">")))
-	(goto-char message-article-current-point)
-	(setq message-from-selected-index (+ message-from-selected-index 1)))
-
-      (add-hook 'message-mode-hook
-		(lambda ()
-                  (define-key message-mode-map "\C-c\C-f\C-f" 'message-loop-from)))
     #+END_SRC
 
 *** Compose Emails with Org mode
@@ -965,17 +602,9 @@
     I want.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package mu4e
-	:ensure nil
-	:bind (:map mu4e-compose-mode-map ("C-c x" . org-mode))
-	:config
-	(require 'org-mu4e))
-    #+END_SRC
-
-    #+BEGIN_SRC emacs-lisp
       (use-package org-mime
 	:bind (:map message-mode-map
-                    ("C-c h" . org-mime-htmlize))
+		    ("C-c h" . org-mime-htmlize))
 	:init
 	(setq org-mime-preserve-breaks nil))
     #+END_SRC
@@ -1035,62 +664,12 @@
 	    mail-specify-envelope-from t)
     #+END_SRC
 
-*** Don't keep buffer for sent messages
+**** Don't keep buffer for sent messages
 
-    #+BEGIN_SRC emacs-lisp
-    (setq message-kill-buffer-on-exit t)
-    #+END_SRC
+     #+BEGIN_SRC emacs-lisp
+     (setq message-kill-buffer-on-exit t)
+     #+END_SRC
 
-*** Lookup by lists
-
-    #+BEGIN_SRC emacs-lisp
-      (defun my4e~query-lists-command ()
-	(concat
-	 "mu find --fields v 'list:.* AND date:1m.. AND flag:new' | sort -u"))
-
-      (defun my4e~headers-ask-for-list ()
-	(let* ((output (shell-command-to-string
-			(my4e~query-lists-command)))
-               (lists (split-string output "\n")))
-          (ivy-completing-read "[mu4e] Jump to list: " lists)))
-
-      (defun my4e-headers-jump-to-list (listid)
-	(interactive
-	 (let ((listid (my4e~headers-ask-for-list)))
-           (list listid)))
-	(when listid
-          (mu4e-mark-handle-when-leaving)
-          (mu4e-headers-search (format "flag:new list:\"%s\"" listid))))
-
-      (define-key mu4e-headers-mode-map (kbd "l") 'my4e-headers-jump-to-list)
-    #+END_SRC
-
-*** Make editing with mu4e's format=flowed mode nicer
-
-    I don't like how it forces you to use long lines, rather than use
-    soft newlines, but setting a wide fringe and visual line mode makes
-    it bearable.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq mu4e-compose-format-flowed t)
-    #+END_SRC
-
-*** On-the-fly spell checking for email messages
-
-    Do spell checking on-the-fly in message mode.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package flyspell-lazy
-	:config
-	(defun my-message-setup-routine ()
-          (flyspell-mode 1))
-	(add-hook 'mu4e-compose-mode-hook 'my-message-setup-routine))
-    #+END_SRC
-*** Get New Mail                                               :EXPERIMENTAL:
-
-    #+begin_src emacs-lisp
-    (setq mu4e-get-mail-command "mbsync -a")
-    #+end_src
 ** End all files in a newline
 
    All files should end in a newline. Insert one if there isn't one already.
