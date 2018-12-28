@@ -1194,34 +1194,26 @@
    (setq rcirc-default-full-name "Stig Brautaset")
    #+END_SRC
 
-** Magit & GitHub
+** Git-ish
 *** Magit
 
     I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
     Emacs just for it. It is excellent. I bind =H-m= to =magit-status=, which is
     the main entry point for the mode.
 
+    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
+
     #+BEGIN_SRC emacs-lisp
       (use-package magit
 	:bind (("M-m" . magit-status)
 	       ("s-b" . magit-blame)))
+
+      (use-package forge)
     #+END_SRC
 
-*** GitHub
+*** Git Link
 
-    There's a new GitHub integration tool... Let's try that instead of
-    magit-gh-pulls for a bit.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package magithub
-	:after magit
-	:init
-	(setq magithub-clone-default-directory "~/work")
-	:config
-	(magithub-feature-autoinject t))
-    #+END_SRC
-
-    Link to file location on github.
+    Link to file location on GitHub/Bitbucket/GitLab/...
 
     #+BEGIN_SRC emacs-lisp
       (use-package git-link
