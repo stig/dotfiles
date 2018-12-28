@@ -504,7 +504,7 @@
        (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
 
        (setq notmuch-fcc-dirs
-	     '(("stig@brautaset.org" . "Private/sent +sent +archived -unread -inbox")))
+	     '(("stig@brautaset.org" . "Gandi/INBOX +sent +archived -unread -inbox")))
 
      #+END_SRC
 
@@ -521,28 +521,26 @@
     Config looks like this:
 
     #+BEGIN_SRC conf :tangle ~/.mbsyncrc
-      IMAPAccount icloud
-      Host imap.mail.me.com
-      User stig.brautaset@icloud.com
-      # UseIMAPS yes
-      AuthMechs LOGIN
+      IMAPAccount gandi
+      Host mail.gandi.net
+      User stig@brautaset.org
       SSLType IMAPS
-      SSLVersions TLSv1
-      PassCmd "security find-generic-password -s mbsync-icloud-password -w"
+      AuthMechs LOGIN
+      PassCmd "security find-generic-password -s mbsync-gandi-password -w"
       # To rotate:
-      # > security delete-generic-password -s mbsync-icloud-password
-      # > security add-generic-password -a stig@brautaset.org -s mbsync-icloud-password -w APP-SPECIFIC-PASSWORD
+      # > security delete-generic-password -s mbsync-gandi-password
+      # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-      IMAPStore icloud-remote
-      Account icloud
+      IMAPStore gandi-remote
+      Account gandi
 
-      MaildirStore icloud-local
-      Path ~/Mail/Private/
-      Inbox ~/Mail/Private/INBOX
+      MaildirStore gandi-local
+      Path ~/Mail/Gandi
+      Inbox ~/Mail/Gandi/INBOX
 
-      Channel icloud-inbox
-      Master :icloud-remote:
-      Slave :icloud-local:
+      Channel gandi-inbox
+      Master :gandi-remote:
+      Slave :gandi-local:
       Create Both
       Expunge Both
       SyncState *
@@ -553,17 +551,9 @@
       User sbrautaset@laterpay.net
       Timeout 60
       PassCmd "security find-generic-password -s mbsync-gmail-password -w"
-      # UseIMAPS yes
-      # AuthMechs LOGIN
       AuthMechs PLAIN
       SSLType IMAPS
-      # SSLVersions SSLv3
       CertificateFile /etc/ssl/cert.pem
-
-      # THEN WE SPECIFY THE LOCAL AND REMOTE STORAGE
-      # - THE REMOTE STORAGE IS WHERE WE GET THE MAIL FROM (E.G., THE
-      #   SPECIFICATION OF AN IMAP ACCOUNT)
-      # - THE LOCAL STORAGE IS WHERE WE STORE THE EMAIL ON OUR COMPUTER
 
       # REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
       IMAPStore gmail-remote
@@ -583,14 +573,10 @@
 
       # GROUPS PUT TOGETHER CHANNELS, SO THAT WE CAN INVOKE
       # MBSYNC ON A GROUP TO SYNC ALL CHANNELS
-      #
-      # FOR INSTANCE: "mbsync gmail" GETS MAIL FROM
-      # "gmail-inbox", "gmail-sent", and "gmail-trash"
-      #
 
       Group all
       Channel gmail-archive
-      Channel icloud-inbox
+      Channel gandi-inbox
     #+END_SRC
 
 *** Compose Emails with Org mode
@@ -634,7 +620,7 @@
 
       from stig@brautaset.org
       host mail.gandi.net
-      user mailbox@brautaset.org
+      user stig@brautaset.org
 
       #############
       account icloud
