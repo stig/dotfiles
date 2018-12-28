@@ -743,7 +743,13 @@
 
     I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
     faster and doesn't have this annoying db outside of the Maildir to keep in
-    sync. Config looks like this:
+    sync. First install mbsync:
+
+    #+BEGIN_SRC sh
+      nix-env -i isync
+    #+END_SRC
+
+    Config looks like this:
 
     #+BEGIN_SRC conf :tangle ~/.mbsyncrc
       IMAPAccount icloud
