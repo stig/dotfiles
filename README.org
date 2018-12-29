@@ -542,7 +542,6 @@
       Master :gandi-remote:
       Slave :gandi-local:
       Create Both
-      Expunge Both
       SyncState *
 
       # ACCOUNT INFORMATION
@@ -568,7 +567,6 @@
       Master :gmail-remote:"[Gmail]/All Mail"
       Slave :gmail-local:archive
       Create Both
-      Expunge Both
       SyncState *
 
       # GROUPS PUT TOGETHER CHANNELS, SO THAT WE CAN INVOKE
