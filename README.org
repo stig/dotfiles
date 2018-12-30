@@ -305,6 +305,16 @@
 	(add-to-list 'helm-boring-buffer-regexp-list "TAGS"))
     #+END_SRC
 
+    This next package adds =C-c p h=, which invokes =helm-find-file= in project
+    context. Invaluable.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package helm-projectile
+         :after projectile
+	 :config
+	 (helm-projectile-on))
+    #+END_SRC
+
 *** Swiper
 
     Invoke swiper (find in current buffer).
@@ -694,17 +704,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package graphviz-dot-mode
        :bind ("C-c C-p" . graphviz-dot-preview))
-   #+END_SRC
-
-** Helm Projectile
-
-   This next package adds =C-c p h=, which invokes =helm-find-file= in project
-   context. Invaluable.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package helm-projectile
-       :config
-       (helm-projectile-on))
    #+END_SRC
 
 ** Highlight & deal with whitespace annoyances
