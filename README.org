@@ -479,7 +479,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package notmuch
-	:bind (("C-c m" . notmuch)))
+	:bind (("C-c m" . (lambda ()
+			    (interactive)
+			    (start-process "mbsync" "*mbsync-output*" "mbsync" "-aV")
+			    (notmuch)))))
     #+END_SRC
 
 **** Multiple sending profiles
