@@ -463,7 +463,7 @@
     database.path=/Users/stig/Mail
     user.name=Stig Brautaset
     user.primary_email=stig@brautaset.org
-    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com
+    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk
     new.tags=unread;inbox;
     new.ignore=.mbsyncstate;.uidvalidity
     search.exclude_tags=deleted;spam;
