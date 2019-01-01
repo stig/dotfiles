@@ -485,41 +485,50 @@
 			    (notmuch)))))
     #+END_SRC
 
-**** Multiple sending profiles
+**** Create a pre-new hook to download messages
 
-     NotMuch doesn't have built-in support for multiple profiles, but
-     we can use =gnus-alias= for that:
+     See =notmuch-hooks(5)= for details.
 
-     #+BEGIN_SRC emacs-lisp
-       (use-package gnus-alias)
-
-       (setq gnus-alias-identity-alist
-	     '(("home"
-		nil ;; Does not refer to any other identity
-		"Stig Brautaset <stig@brautaset.org>"
-		nil ;; No organization header
-		nil
-		nil ;; No extra body text
-		"~/.signature")
-	       ("work"
-		nil
-		"Stig Brautaset <sbrautaset@laterpay.net>"
-		"LaterPay GmbH"
-		nil
-		nil
-		"~/.signature.work")))
-
-       (setq gnus-alias-identity-rules
-	     '(("work" ("any" "sbrautaset@laterpay.net" both) "work")))
-
-       (setq gnus-alias-default-identity "home")
-
-       (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
-
-       (setq notmuch-fcc-dirs
-	     '(("stig@brautaset.org" . "Gandi/INBOX +sent +archived -unread -inbox")))
-
+     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
+       #!/bin/sh -euo pipefail
+       mbsync -a
      #+END_SRC
+
+*** Composing multiple Email sending profiles
+
+    NotMuch doesn't have built-in support for multiple profiles, but
+    we can use =gnus-alias= for that:
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package gnus-alias)
+
+      (setq gnus-alias-identity-alist
+	    '(("home"
+	       nil ;; Does not refer to any other identity
+	       "Stig Brautaset <stig@brautaset.org>"
+	       nil ;; No organization header
+	       nil
+	       nil ;; No extra body text
+	       "~/.signature")
+	      ("work"
+	       nil
+	       "Stig Brautaset <sbrautaset@laterpay.net>"
+	       "LaterPay GmbH"
+	       nil
+	       nil
+	       "~/.signature.work")))
+
+      (setq gnus-alias-identity-rules
+	    '(("work" ("any" "sbrautaset@laterpay.net" both) "work")))
+
+      (setq gnus-alias-default-identity "home")
+
+      (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
+
+      (setq notmuch-fcc-dirs
+	    '(("stig@brautaset.org" . "Gandi/INBOX +sent +archived -unread -inbox")))
+
+    #+END_SRC
 
 *** Downloading email over IMAP
 
