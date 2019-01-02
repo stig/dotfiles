@@ -479,19 +479,35 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package notmuch
-	:bind (("C-c m" . (lambda ()
-			    (interactive)
-			    (start-process "mbsync" "*mbsync-output*" "mbsync" "-aV")
-			    (notmuch)))))
+	:bind (("C-c m" . notmuch)))
     #+END_SRC
 
 **** Create a pre-new hook to download messages
 
-     See =notmuch-hooks(5)= for details.
+     See =notmuch-hooks(5)= for details. I found inspiration for the
+     lockfile part of this in answer on [[https://stackoverflow.com/a/31955862/5950][StackOverflow]].
 
      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
-       #!/bin/sh -euo pipefail
-       mbsync -a
+       #!/bin/bash
+       set -o errexit
+       set -o nounset
+       set -o pipefail
+
+       set -x
+
+       LOCKFILE="$0.lock"
+
+       function finish {
+	   # If the lockfile was created by us, delete it.
+	   [ $$ -eq $(cat $LOCKFILE) ] && rm $LOCKFILE
+       }
+       trap finish EXIT
+
+       # Write our pid to the lockfile, but fail if file already exists
+       (set -o noclobber; echo $$ > $LOCKFILE ) || exit 0
+
+       # Ok, now do stuff...
+       mbsync -a --pull --new
      #+END_SRC
 
 *** Composing multiple Email sending profiles
