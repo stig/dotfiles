@@ -510,6 +510,49 @@
        mbsync -a --pull --new
      #+END_SRC
 
+**** Create post-new hook to tag spam
+
+     It's possible I'm overthinking this, but it's fun to experiment :-)
+
+     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
+       #!/bin/bash
+       set -o errexit
+       set -o nounset
+       set -o pipefail
+
+       set -x
+
+       LOCKFILE="$0.lock"
+
+       function finish {
+	   # If the lockfile was created by us, delete it.
+	   [ $$ -eq $(cat $LOCKFILE) ] && rm $LOCKFILE
+       }
+       trap finish EXIT
+
+       # Write our pid to the lockfile, but fail if file already exists
+       (set -o noclobber; echo $$ > $LOCKFILE ) || exit 0
+
+       # Jan 2019; a spammer started sending me spam from dated email
+       # addresses. Unfortunately "notmuch query" doesn't let me search for
+       # arbitrary headers, otherwise I'd probably use the `X-GND-Spam'
+       # one.
+
+       YESTERDAY=$(date -v-1d +%Y%m%d)
+       TODAY=$(date +%Y%m%d)
+       TOMORROW=$(date -v+1d +%Y%m%d)
+       notmuch tag +spam -- from:$YESTERDAY@CONGAPORE.INFO
+       notmuch tag +spam -- from:$TODAY@CONGAPORE.INFO
+       notmuch tag +spam -- from:$TOMORROW@CONGAPORE.INFO
+       notmuch tag +spam -- to:phildonesia7113467883@jpmonfort.int
+
+       # Mute all messages in threads that have at least one muted message
+       MUTED_THREADS=$(notmuch search --output=threads tag:muted)
+       if [ -n "$MUTED_THREADS" ] ; then
+	   notmuch tag +muted $MUTED_THREADS
+       fi
+     #+END_SRC
+
 *** Composing multiple Email sending profiles
 
     NotMuch doesn't have built-in support for multiple profiles, but
