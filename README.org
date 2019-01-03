@@ -485,7 +485,9 @@
 **** Create a pre-new hook to download messages
 
      See =notmuch-hooks(5)= for details. I found inspiration for the
-     lockfile part of this in answer on [[https://stackoverflow.com/a/31955862/5950][StackOverflow]].
+     lockfile part of this in answer on [[https://stackoverflow.com/a/31955862/5950][StackOverflow]]. We only get /new/
+     mail here, but that's alright because we [[*Run mbsync periodically while Emacs is open][run a full mbsync
+     periodically]].
 
      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
        #!/bin/bash
@@ -639,6 +641,24 @@
       Channel gmail-archive
       Channel gandi-inbox
     #+END_SRC
+
+**** Run mbsync periodically while Emacs is open
+
+     I use a [[*Create a pre-new hook to download messages][Notmuch hook to fetch new mail]]. However, we also need to
+     occasionally push local changes back to the IMAP server. Here we
+     set up a timer to periodically run mbsync to do the full sync.
+     It's not abnormal for this to take 30 seconds, but usually it's
+     less.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun sb/mbsync (args)
+	 (message "Running mbsync %s..." args)
+	 (start-process "mbsync" "*mbsync*" "mbsync" args))
+
+       ;; Capture the timer so we can cancel it later if we need to
+       (setq sb/mbsync-timer
+	     (run-with-timer 60 900 'sb/mbsync "-qaV"))
+     #+END_SRC
 
 *** Compose Emails with Org mode
 
