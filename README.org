@@ -207,17 +207,6 @@
      (global-auto-revert-mode 1)
    #+END_SRC
 
-** Auto-complete
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package company
-     :init
-     ;; https://emacs.stackexchange.com/a/10838
-     (setq company-dabbrev-downcase nil)
-     :config
-     (global-company-mode))
-   #+END_SRC
-
 ** Box quotes are so cute!
 
    Install boxquote to make fancy text boxes like this:
@@ -323,6 +312,17 @@
       (use-package swiper
 	:bind (("C-x /" . swiper)))
     #+END_SRC
+*** Auto-complete of code and prose
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package company
+      :init
+      ;; https://emacs.stackexchange.com/a/10838
+      (setq company-dabbrev-downcase nil)
+      :config
+      (global-company-mode))
+    #+END_SRC
+
 ** CSS
 
    #+BEGIN_SRC emacs-lisp
