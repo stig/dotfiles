@@ -482,37 +482,6 @@
 	:bind (("C-c m" . notmuch)))
     #+END_SRC
 
-**** Create a pre-new hook to download messages
-
-     See =notmuch-hooks(5)= for details. I found inspiration for the
-     lockfile part of this in answer on [[https://stackoverflow.com/a/31955862/5950][StackOverflow]]. We only get /new/
-     mail here, but that's alright because we [[*Run mbsync periodically while Emacs is open][run a full mbsync
-     periodically]].
-
-     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
-       #!/bin/bash
-       pgrep -q -f mbsync || mbsync --quiet --all --pull --new
-     #+END_SRC
-
-**** Create post-new hook to tag spam
-
-     It's possible I'm overthinking this, but it's fun to experiment :-)
-
-     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
-       #!/bin/bash
-       set -o errexit
-       set -o nounset
-       set -o pipefail
-
-       set -x
-
-       # Mute all messages in threads that have at least one muted message
-       MUTED_THREADS=$(notmuch search --output=threads tag:muted)
-       if [ -n "$MUTED_THREADS" ] ; then
-	   notmuch tag +muted $MUTED_THREADS
-       fi
-     #+END_SRC
-
 *** Composing multiple Email sending profiles
 
     NotMuch doesn't have built-in support for multiple profiles, but
