@@ -628,7 +628,6 @@
 
      #+BEGIN_SRC emacs-lisp
        (defun sb/mbsync (args)
-	 (message "Running mbsync %s..." args)
 	 (start-process "mbsync" "*mbsync*" "mbsync" args))
 
        ;; Capture the timer so we can cancel it later if we need to
