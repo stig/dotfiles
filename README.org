@@ -480,6 +480,9 @@
     #+BEGIN_SRC emacs-lisp
       (use-package notmuch
 	:bind (("C-c m" . notmuch)))
+
+      ;; Allow linking to NotMuch messages from Org mode
+      (require 'org-notmuch)
     #+END_SRC
 
 **** Add post-new hook to tag sent messages etc
