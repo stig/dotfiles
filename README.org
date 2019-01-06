@@ -1,6 +1,6 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
-#+OPTIONS: f:t h:4
+#+OPTIONS: f:t
 #+PROPERTY: header-args:emacs-lisp    :tangle init.el
 #+PROPERTY: header-args:sh            :tangle init.sh
 #+PROPERTY: header-args            :results silent
@@ -628,11 +628,9 @@
 
 **** Run mbsync periodically while Emacs is open
 
-     I use a [[*Create a pre-new hook to download messages][Notmuch hook to fetch new mail]]. However, we also need to
-     occasionally push local changes back to the IMAP server. Here we
-     set up a timer to periodically run mbsync to do the full sync.
-     It's not abnormal for this to take 30 seconds, but usually it's
-     less.
+     Here we set up a timer to periodically run mbsync from within
+     Emacs.  It's not abnormal for this to take 30 seconds, but
+     usually it's less.
 
      #+BEGIN_SRC emacs-lisp
        (defun sb/mbsync (args)
@@ -1497,9 +1495,9 @@
 *** Diffing Org files
 
     Sometimes I diff Org files. (Particularly for runbooks.) This
-    snippet makes sure that Org buffers don't start folded, as ediff is
-    rather useless in that case. (Credit: [[mu4e:msgid:CAA01p3rSzUYvH4EmwOjw0xG=3q049fujbfC5Qi6vGZCV03EPfg@mail.gmail.com][Oleh Krehel]] on emacs-orgmode
-    mailing list.)
+    snippet makes sure that Org buffers don't start folded, as ediff
+    is rather useless in that case. (Credit: Oleh Krehel on
+    emacs-orgmode mailing list.)
 
     #+BEGIN_SRC emacs-lisp
       (defun sb/ediff-prepare-buffer ()
