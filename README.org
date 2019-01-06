@@ -1405,8 +1405,7 @@
 
 	    ;; Need to go back to the first line to set tags
 	    (goto-char (point-min))
-	    (org-set-tags-to categories)
-	    (org-set-tags nil t) ;; adjust tags in the source
+	    (org-set-tags categories)
 
 	    ;; Return the contents temporary buffer as a string *without properties*
 	    (copy-region-as-kill
