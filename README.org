@@ -638,7 +638,7 @@
 
        ;; Capture the timer so we can cancel it later if we need to
        (setq sb/mbsync-timer
-	     (run-with-timer 60 900 'sb/mbsync "-qaV"))
+	     (run-with-timer 60 900 'sb/mbsync "-qa"))
      #+END_SRC
 
 *** Compose Emails with Org mode
