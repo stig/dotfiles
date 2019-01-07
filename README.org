@@ -465,8 +465,8 @@
     user.primary_email=stig@brautaset.org
     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
     new.tags=unread;inbox;
-    new.ignore=.mbsyncstate;.uidvalidity
-    search.exclude_tags=deleted;spam;
+    new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
+    search.exclude_tags=deleted;spam;muted
     maildir.synchronize_flags=true
     built_with.compact=true
     built_with.field_processor=true
@@ -496,8 +496,15 @@
        notmuch tag +sent -inbox -- path:/sent/ and not tag:sent
        notmuch tag +deleted -inbox -- path:/trash/ and not tag:deleted
 
-       # # Mute all messages in threads that have at least one muted message
-       # notmuch tag +muted $(notmuch search --output=threads tag:muted)
+       # Mailing lists..
+       notmuch tag +lists +org-mode -- to:emacs-orgmode@gnu.org and not tag:inbox
+       notmuch tag +lists +tuls -- to:tuls@ and not tag:inbox
+
+       # Remove mailing list posts from inbox
+       notmuch tag -inbox -- tag:lists
+
+       # Mute all messages in threads that have at least one muted message
+       notmuch tag +muted $(notmuch search --output=threads tag:muted)
      #+END_SRC
 
 *** Composing multiple Email sending profiles
