@@ -525,10 +525,18 @@
 	       "LaterPay GmbH"
 	       nil
 	       nil
-	       "~/.signature.work")))
+	       "~/.signature.work")
+	      ("atlassian"
+	       nil
+	       "Stig Brautaset <sbrautaset@laterpay.net>"
+	       nil
+	       nil
+	       nil
+	       nil)))
 
       (setq gnus-alias-identity-rules
-	    '(("work" ("any" "sbrautaset@laterpay.net" both) "work")))
+	    '(("atlassian" ("to" "@laterpay.atlassian.net" current) "atlassian")
+	      ("work" ("to" "sbrautaset@laterpay.net" previous) "work")))
 
       (setq gnus-alias-default-identity "home")
 
