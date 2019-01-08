@@ -497,14 +497,10 @@
        notmuch tag +deleted -inbox -- path:/trash/ and not tag:deleted
 
        # Mailing lists..
-       notmuch tag +lists +org-mode -- to:emacs-orgmode@gnu.org and not tag:inbox
-       notmuch tag +lists +tuls -- to:tuls@ and not tag:inbox
-
-       # Remove mailing list posts from inbox
-       notmuch tag -inbox -- tag:lists
+       notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
 
        # Mute all messages in threads that have at least one muted message
-       notmuch tag +muted $(notmuch search --output=threads tag:muted)
+       notmuch tag +muted -- $(notmuch search --output=threads tag:muted)
      #+END_SRC
 
 *** Composing multiple Email sending profiles
@@ -592,6 +588,13 @@
       Master :gandi-remote:Trash
       Slave :gandi-local:trash
       Create Both
+      SyncState *
+
+      Channel gandi-ml
+      Master :gandi-remote:
+      Slave :gandi-local:
+      Patterns ml-%
+      Create Slave
       SyncState *
 
       # ACCOUNT INFORMATION
