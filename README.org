@@ -644,6 +644,20 @@
       SyncState *
     #+END_SRC
 
+
+**** Wrap mbsync to detect missing network
+
+     #+begin_src sh :mkdirp t :tangle ~/.local/bin/getmail.sh :tangle-mode (identity #o755) :prologue "" :epilogue ""
+       #!/bin/bash
+       set -o errexit
+       set -o nounset
+       set -o pipefail
+
+       ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0 # no network
+
+       mbsync -qa
+     #+end_src
+
 **** Run mbsync periodically while Emacs is open
 
      Here we set up a timer to periodically run mbsync from within
@@ -651,12 +665,12 @@
      usually it's less.
 
      #+BEGIN_SRC emacs-lisp
-       (defun sb/mbsync (args)
-	 (start-process "mbsync" "*mbsync*" "mbsync" args))
+       (defun sb/getmail (args)
+	 (start-process "getmail.sh" "*getmail*" "~/.local/bin/getmail.sh" args))
 
        ;; Capture the timer so we can cancel it later if we need to
-       (setq sb/mbsync-timer
-	     (run-with-timer 60 900 'sb/mbsync "-qa"))
+       (setq sb/getmail-timer
+	     (run-with-timer 60 900 'sb/getmail ""))
      #+END_SRC
 
 *** Compose Emails with Org mode
