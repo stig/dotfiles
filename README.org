@@ -485,7 +485,7 @@
       (require 'org-notmuch)
     #+END_SRC
 
-**** Add post-new hook to tag sent messages etc
+**** Add post-new hook to tag messages
 
      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
        #!/bin/bash
@@ -500,7 +500,7 @@
        notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
 
        # Mute all messages in threads that have at least one muted message
-       notmuch tag +muted -- $(notmuch search --output=threads tag:muted)
+       notmuch tag +muted -- $(notmuch search --exclude=false --output=threads tag:muted)
      #+END_SRC
 
 *** Composing multiple Email sending profiles
