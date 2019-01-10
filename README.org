@@ -829,21 +829,25 @@
       (prefer-coding-system 'utf-8)
     #+END_SRC
 
-*** Use Aspell with UK English Dictionary
-
-    Configure Emacs to use the Queen's English for spell checking. Also,
-    use /aspell/ rather than /ispell/.
+*** Install and configure Aspell
 
     #+BEGIN_SRC emacs-lisp
-      (setq ispell-program-name "aspell"
-            ispell-dictionary "british")
+      (setq ispell-dictionary "british"
+	    ispell-extra-args '("-W" "2" "--sug-mode=ultra"))
     #+END_SRC
 
-    Install aspell with the appropriate dictionary:
+    Install aspell and dictionaries:
 
     #+BEGIN_SRC sh
-      nix-env -i aspell
+      nix-env -i aspell-dict-en aspell-dict-en-computers aspell-dict-en-science aspell
     #+END_SRC
+
+    #+begin_src conf :tangle ~/.aspell.conf
+    master british
+    extra-dicts en-computers.rws
+    add-extra-dicts en_GB-science.rws
+    data-dir /Users/stig/.nix-profile/lib/aspell
+    #+end_src
 
 ** IRC
 
