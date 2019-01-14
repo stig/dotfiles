@@ -495,6 +495,7 @@
 
        notmuch tag +sent -inbox -- path:/sent/ and not tag:sent
        notmuch tag +deleted -inbox -- path:/trash/ and not tag:deleted
+       notmuch tag +spam -inbox -- path:/spam/ and not tag:spam
 
        # Mailing lists..
        notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
@@ -592,7 +593,13 @@
        Channel gandi-sent
        Master :gandi-remote:Sent
        Slave :gandi-local:sent
-       Create Both
+       Create Slave
+       SyncState *
+
+       Channel gandi-spam
+       Master :gandi-remote:Junk
+       Slave :gandi-local:spam
+       Create Slave
        SyncState *
 
        Channel gandi-trash
@@ -637,7 +644,13 @@
        Channel gmail-sent
        Master :gmail-remote:"[Gmail]/Sent Mail"
        Slave :gmail-local:sent
-       Create Both
+       Create Slave
+       SyncState *
+
+       Channel gmail-spam
+       Master :gmail-remote:"[Gmail]/Spam"
+       Slave :gmail-local:spam
+       Create Slave
        SyncState *
 
        Channel gmail-trash
