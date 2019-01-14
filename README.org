@@ -1552,7 +1552,12 @@
     #+BEGIN_SRC emacs-lisp
     (use-package org-download)
     #+END_SRC
+*** Edit "Org-like" lists in non-Org buffers
 
+    #+begin_src emacs-lisp
+    (use-package orgalist)
+    (add-to-list 'message-mode-hook 'orgalist-mode)
+    #+end_src
 ** Plant UML Mode
 
    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
