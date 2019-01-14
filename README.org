@@ -586,7 +586,7 @@
        Channel gandi-inbox
        Master :gandi-remote:
        Slave :gandi-local:
-       Create Both
+       Create Slave
        SyncState *
 
        Channel gandi-sent
@@ -598,7 +598,7 @@
        Channel gandi-trash
        Master :gandi-remote:Trash
        Slave :gandi-local:trash
-       Create Both
+       Create Slave
        SyncState *
 
        Channel gandi-ml
@@ -631,7 +631,7 @@
        Channel gmail-archive
        Master :gmail-remote:"[Gmail]/All Mail"
        Slave :gmail-local:archive
-       Create Both
+       Create Slave
        SyncState *
 
        Channel gmail-sent
@@ -643,7 +643,7 @@
        Channel gmail-trash
        Master :gmail-remote:"[Gmail]/Bin"
        Slave :gmail-local:trash
-       Create Both
+       Create Slave
        SyncState *
      #+END_SRC
 
