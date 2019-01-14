@@ -1136,7 +1136,7 @@
 	      ("te" "To Expense" entry (file "")
 	       "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
 	      ("tp" "New Project" entry (file "")
-	       "* PROJ %^{Project Name} :PROJ:\n  :LOGBOOK:\n  - Added: %U\n  :END:")
+	       "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
 	      ("tT" "Trip" entry (file "")
 	       (file "templates/trip.org") :empty-lines 1)
 
