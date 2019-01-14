@@ -539,7 +539,7 @@
 
       (setq gnus-alias-identity-rules
 	    '(("atlassian" ("to" "@laterpay.atlassian.net" current) "atlassian")
-	      ("work" ("to" "sbrautaset@laterpay.net" previous) "work")))
+	      ("work" ("any" "sbrautaset@laterpay.net" any) "work")))
 
       (setq gnus-alias-default-identity "home")
 
