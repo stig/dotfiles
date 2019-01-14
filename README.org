@@ -562,90 +562,90 @@
       nix-env -i isync
     #+END_SRC
 
-    Config looks like this:
+**** mbsync configuration
 
-    #+BEGIN_SRC conf :tangle ~/.mbsyncrc
-      IMAPAccount gandi
-      Host mail.gandi.net
-      User stig@brautaset.org
-      SSLType IMAPS
-      AuthMechs LOGIN
-      PassCmd "security find-generic-password -s mbsync-gandi-password -w"
-      # To rotate:
-      # > security delete-generic-password -s mbsync-gandi-password
-      # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
+     #+BEGIN_SRC conf :tangle ~/.mbsyncrc
+       IMAPAccount gandi
+       Host mail.gandi.net
+       User stig@brautaset.org
+       SSLType IMAPS
+       AuthMechs LOGIN
+       PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+       # To rotate:
+       # > security delete-generic-password -s mbsync-gandi-password
+       # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-      IMAPStore gandi-remote
-      Account gandi
+       IMAPStore gandi-remote
+       Account gandi
 
-      MaildirStore gandi-local
-      AltMap yes
-      Path ~/Mail/Gandi/
-      Inbox ~/Mail/Gandi/INBOX
+       MaildirStore gandi-local
+       AltMap yes
+       Path ~/Mail/Gandi/
+       Inbox ~/Mail/Gandi/INBOX
 
-      Channel gandi-inbox
-      Master :gandi-remote:
-      Slave :gandi-local:
-      Create Both
-      SyncState *
+       Channel gandi-inbox
+       Master :gandi-remote:
+       Slave :gandi-local:
+       Create Both
+       SyncState *
 
-      Channel gandi-sent
-      Master :gandi-remote:Sent
-      Slave :gandi-local:sent
-      Create Both
-      SyncState *
+       Channel gandi-sent
+       Master :gandi-remote:Sent
+       Slave :gandi-local:sent
+       Create Both
+       SyncState *
 
-      Channel gandi-trash
-      Master :gandi-remote:Trash
-      Slave :gandi-local:trash
-      Create Both
-      SyncState *
+       Channel gandi-trash
+       Master :gandi-remote:Trash
+       Slave :gandi-local:trash
+       Create Both
+       SyncState *
 
-      Channel gandi-ml
-      Master :gandi-remote:
-      Slave :gandi-local:
-      Patterns ml-%
-      Create Slave
-      SyncState *
+       Channel gandi-ml
+       Master :gandi-remote:
+       Slave :gandi-local:
+       Patterns ml-%
+       Create Slave
+       SyncState *
 
-      # ACCOUNT INFORMATION
-      IMAPAccount gmail
-      Host imap.gmail.com
-      User sbrautaset@laterpay.net
-      Timeout 60
-      PassCmd "security find-generic-password -s mbsync-gmail-password -w"
-      AuthMechs PLAIN
-      SSLType IMAPS
-      CertificateFile /etc/ssl/cert.pem
+       # ACCOUNT INFORMATION
+       IMAPAccount gmail
+       Host imap.gmail.com
+       User sbrautaset@laterpay.net
+       Timeout 60
+       PassCmd "security find-generic-password -s mbsync-gmail-password -w"
+       AuthMechs PLAIN
+       SSLType IMAPS
+       CertificateFile /etc/ssl/cert.pem
 
-      # REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
-      IMAPStore gmail-remote
-      Account gmail
+       # REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
+       IMAPStore gmail-remote
+       Account gmail
 
-      # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
-      MaildirStore gmail-local
-      AltMap yes
-      Path ~/Mail/Work/
-      Inbox ~/Mail/Work/INBOX
+       # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
+       MaildirStore gmail-local
+       AltMap yes
+       Path ~/Mail/Work/
+       Inbox ~/Mail/Work/INBOX
 
-      Channel gmail-archive
-      Master :gmail-remote:"[Gmail]/All Mail"
-      Slave :gmail-local:archive
-      Create Both
-      SyncState *
+       Channel gmail-archive
+       Master :gmail-remote:"[Gmail]/All Mail"
+       Slave :gmail-local:archive
+       Create Both
+       SyncState *
 
-      Channel gmail-sent
-      Master :gmail-remote:"[Gmail]/Sent Mail"
-      Slave :gmail-local:sent
-      Create Both
-      SyncState *
+       Channel gmail-sent
+       Master :gmail-remote:"[Gmail]/Sent Mail"
+       Slave :gmail-local:sent
+       Create Both
+       SyncState *
 
-      Channel gmail-trash
-      Master :gmail-remote:"[Gmail]/Bin"
-      Slave :gmail-local:trash
-      Create Both
-      SyncState *
-    #+END_SRC
+       Channel gmail-trash
+       Master :gmail-remote:"[Gmail]/Bin"
+       Slave :gmail-local:trash
+       Create Both
+       SyncState *
+     #+END_SRC
 
 
 **** Wrap mbsync to detect missing network
