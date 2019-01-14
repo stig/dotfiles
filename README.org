@@ -501,6 +501,9 @@
 
        # Mute all messages in threads that have at least one muted message
        notmuch tag +muted -- $(notmuch search --exclude=false --output=threads tag:muted)
+
+       # Immediately archive Microsoft family spam
+       notmuch tag -inbox -unread from:microsoftfamily@microsoft.com AND NOT to:stig@brautaset.org
      #+END_SRC
 
 *** Composing multiple Email sending profiles
