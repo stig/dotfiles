@@ -658,7 +658,7 @@
 
        ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0 # no network
 
-       mbsync -qa
+       pgrep -q -f mbsync || mbsync -qaV
      #+end_src
 
 **** Run mbsync periodically while Emacs is open
