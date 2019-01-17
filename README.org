@@ -685,12 +685,17 @@
      usually it's less.
 
      #+BEGIN_SRC emacs-lisp
-       (defun sb/getmail (args)
-	 (start-process "getmail.sh" "*getmail*" "~/.local/bin/getmail.sh" args))
+       (defun sb/getmail ()
+	 (interactive)
+	 (start-process "getmail.sh" "*getmail*" "~/.local/bin/getmail.sh"))
+
+       ;; run-with-timer requires arguments, but I can't get the function to
+       ;; run interactively with arguments, hence this indirection.
+       (defun sb/getmail-wrapper (args) (sb/getmail))
 
        ;; Capture the timer so we can cancel it later if we need to
        (setq sb/getmail-timer
-	     (run-with-timer 60 900 'sb/getmail ""))
+	     (run-with-timer 60 900 'sb/getmail-wrapper ""))
      #+END_SRC
 
 *** Compose Emails with Org mode
