@@ -1176,11 +1176,6 @@
 	       "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
 	       :table-line-pos "II-1")
 
-	      ("a" "Absence")
-	      ("ah" "Holiday" entry (file+olp "absence.org" "2018") "* TODO %^{Reason} :Holiday:\n  %^{From}t--%^{To}t\n\n  %?%^{Holidays}p")
-	      ("as" "Sick leave" entry (file+olp "absence.org" "2018") "* DONE %^{Reason} :Sick:\n  %^{From}t--%^{To}t\n\n  %?%^{Sickdays}p")
-	      ("ao" "Other leave" entry (file+olp "absence.org" "2018") "* TODO %^{Reason} :Other:\n  %^{From}t--%^{To}t\n\n  %?%^{Days}p")
-
 	      ("P" "password" entry (file "~/org/passwords.org.gpg")
 	       "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
 
