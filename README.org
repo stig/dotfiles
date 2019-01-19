@@ -917,13 +917,8 @@
     #+BEGIN_SRC emacs-lisp
       (use-package gist
 	:bind (("C-x g l" . gist-list)
-               ("C-x g c" . gist-region-or-buffer-private))
+	       ("C-x g c" . gist-region-or-buffer-private))
 	:init
-
-	;; The defaults for these are too small for gists
-	(setq max-specpdl-size 3000)
-	(setq max-lisp-eval-depth 2000)
-
 	(setq gist-ask-for-description t))
     #+END_SRC
 
