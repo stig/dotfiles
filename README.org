@@ -1341,27 +1341,37 @@
     (setq org-agenda-include-diary t)
     #+END_SRC
 
-    I prepare my invoice on the last weekday of the month. Here's a
-    function to determine if that is today.
+    I do certain things every weekday. Here's a function to check
+    whether it is a weekday:
+
+    #+begin_src emacs-lisp
+      (defun sb/weekday-p (date)
+	"Is `date' a weekday?"
+	(let ((dayname (calendar-day-of-week date)))
+	  (memq dayname '(1 2 3 4 5))))
+    #+end_src
+
+    I prepare my invoice on a weekday towards the end of the month,
+    but before the 28th. Here's a function to determine if today is a
+    suitable day.
 
     #+BEGIN_SRC emacs-lisp
-      (defun last-weekday-of-month-p (date)
+      (defun sb/file-invoice-p (date)
 	(let* ((day-of-week (calendar-day-of-week date))
-               (month (calendar-extract-month date))
-               (year (calendar-extract-year date))
-               (last-month-day (calendar-last-day-of-month month year))
-               (month-day (cadr date)))
+	       (month (calendar-extract-month date))
+	       (year (calendar-extract-year date))
+	       (last-month-day (calendar-last-day-of-month month year))
+	       (month-day (cadr date)))
 
-          (or
-           ;; it's the last day of the month & it is a weekday
-           (and (eq month-day last-month-day)
-		(memq day-of-week '(1 2 3 4 5)))
+	  (and
+	   ;; It's a week day
+	   (sb/weekday-p date)
 
-           ;; it's a friday, and it's the last-but-one or last-but-two days
-           ;; of the month
-           (and (eq day-of-week 5)
-		(or (eq month-day (1- last-month-day))
-                    (eq month-day (1- (1- last-month-day))))))))
+	   ;; It's less than 4 days until the 28th
+	   (< 28 (+ month-day 4))
+
+	   ;; It's on or before the 28th
+	   (<= month-day 28))))
     #+END_SRC
 
 *** Publishing
