@@ -953,9 +953,7 @@
     automatically commit when editing files.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package git-auto-commit-mode
-	:init
-	(setq gac-shell-and "; and "))
+      (use-package git-auto-commit-mode)
     #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
