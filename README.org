@@ -2034,20 +2034,6 @@
      (auto-compression-mode t)
    #+END_SRC
 
-** Trash
-
-   This allows moving files to trash rather than deleting them from =dired=.
-   Delete files by moving them to Trash. This way they _can_ be retrieved
-   again.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package osx-trash
-       :init
-       (setq delete-by-moving-to-trash t)
-       :config
-       (osx-trash-setup))
-   #+END_SRC
-
 ** Visual line mode / word wrapping
 
    #+BEGIN_SRC emacs-lisp
