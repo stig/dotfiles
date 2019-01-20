@@ -494,6 +494,29 @@
        set -o nounset
        set -o pipefail
 
+       # A function to move a file only if it exists
+       mmv () {
+	   if test -f "$1" ; then mv "$1" "$2" ; fi
+       }
+
+       # Move spam messages that slipped through the net to their respective spam folders
+       for f in $(notmuch search --output=files not path:/spam/ and tag:spam and path:/Gandi/); do
+	   mmv $f ~/Mail/Gandi/spam/cur/
+       done
+
+       for f in $(notmuch search --output=files not path:/spam/ and tag:spam and path:/Work/); do
+	   mmv $f ~/Mail/Work/spam/cur/
+       done
+
+       # Mode deleted messages to their respective trash folders
+       for f in $(notmuch search --output=files not path:/trash/ and tag:deleted and path:/Gandi/); do
+	   mmv $f ~/Mail/Gandi/trash/cur/
+       done
+
+       for f in $(notmuch search --output=files not path:/trash/ and tag:deleted and path:/Work/); do
+	   mmv $f ~/Mail/Work/trash/cur/
+       done
+
        # Exit quickly if we have no network, as mbsync will surely fail
        ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0
        mbsync -qaV
