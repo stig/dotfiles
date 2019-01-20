@@ -485,6 +485,20 @@
       (require 'org-notmuch)
     #+END_SRC
 
+
+**** Add pre-new hook to sync messages with upstream
+
+     #+begin_src sh :mkdirp t :tangle ~/Mail/.notmuch/hooks/pre-new :tangle-mode (identity #o755) :prologue "" :epilogue ""
+       #!/bin/bash
+       set -o errexit
+       set -o nounset
+       set -o pipefail
+
+       # Exit quickly if we have no network, as mbsync will surely fail
+       ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0
+       mbsync -qaV
+     #+end_src
+
 **** Add post-new hook to tag messages
 
      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
@@ -660,43 +674,6 @@
        SyncState *
      #+END_SRC
 
-
-**** Wrap mbsync to detect missing network
-
-     #+begin_src sh :mkdirp t :tangle ~/.local/bin/getmail.sh :tangle-mode (identity #o755) :prologue "" :epilogue ""
-       #!/bin/bash
-       set -o errexit
-       set -o nounset
-       set -o pipefail
-
-       ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0 # no network
-
-       pgrep -q -f mbsync || mbsync -qaV
-
-       echo
-       echo "It is now:"
-       date
-     #+end_src
-
-**** Run mbsync periodically while Emacs is open
-
-     Here we set up a timer to periodically run mbsync from within
-     Emacs.  It's not abnormal for this to take 30 seconds, but
-     usually it's less.
-
-     #+BEGIN_SRC emacs-lisp
-       (defun sb/getmail ()
-	 (interactive)
-	 (start-process "getmail.sh" "*getmail*" "~/.local/bin/getmail.sh"))
-
-       ;; run-with-timer requires arguments, but I can't get the function to
-       ;; run interactively with arguments, hence this indirection.
-       (defun sb/getmail-wrapper (args) (sb/getmail))
-
-       ;; Capture the timer so we can cancel it later if we need to
-       (setq sb/getmail-timer
-	     (run-with-timer 60 900 'sb/getmail-wrapper ""))
-     #+END_SRC
 
 *** Compose Emails with Org mode
 
