@@ -2114,6 +2114,66 @@
        (yas-global-mode))
    #+END_SRC
 
+** LilyPond
+   With Nix I am not able to install LilyPond, but I can install it
+   via a download from https://lilypond.org.
+
+   #+begin_src emacs-lisp
+     (use-package lilypond-mode
+       :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
+       :demand
+       :mode ("\\.ly\\'" . lilypond-mode)
+       :init
+       (setq LilyPond-midi-command "playmidi"))
+     #+end_src
+
+   We can play midi files with VLC, but for this we need a wrapper.
+
+   #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755) :prologue "" :epilogue ""
+     #!/bin/bash
+     set -o errexit
+     set -o nounset
+     set -o pipefail
+
+     /Applications/VLC.app/Contents/MacOS/VLC -I dummy "$@" vlc://quit
+   #+end_src
+
+** Zsh
+
+   This is how I set up ZSH. It is a little insestuous, as Emacs
+   relies on this...
+
+   #+begin_src sh :tangle ~/.zshrc
+     setopt INC_APPEND_HISTORY
+     setopt HIST_IGNORE_ALL_DUPS
+
+     # Basic Useability ZSH setup
+     export HISTFILE=~/.zsh_history
+     export SAVEHIST=800
+     export HISTSIZE=1000
+   #+end_src
+
+   #+begin_src sh :tangle ~/.zshenv
+     # Use the OS-provided Certificate file.
+     export SSL_CERT_FILE=/etc/ssl/cert.pem
+
+     export EDITOR=emacsclient
+
+     export PIPENV_NOSPIN=true
+
+     export PIPENV_COLORBLIND=true
+
+     # Find LilyPond binaries
+     export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
+
+     # Find Local binaries
+     export PATH=~/.local/bin:$PATH
+   #+end_src
+
+   #+begin_src sh :tangle ~/.zprofile
+     . ~/.nix-profile/etc/profile.d/nix.sh
+   #+end_src
+
 * Footnotes
 
 [fn:1] Found at http://www.emacswiki.org/emacs/TrampMode#toc31
