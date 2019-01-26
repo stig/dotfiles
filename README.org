@@ -1101,6 +1101,9 @@
 	      ("p" "Projects" todo "PROJ")
 	      ("S" "Someday" tags-todo "-VOID"
 	       ((org-agenda-files '("~/org/Someday.org"))))
+	      ("A" "Actionable NEXT & TODOs"
+	       ((todo "NEXT")
+		(todo "TODO")))
 	      ("n" todo "NEXT")
 	      ("w" todo "WAITING")))
     #+END_SRC
