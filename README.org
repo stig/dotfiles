@@ -2129,7 +2129,46 @@
        (setq LilyPond-midi-command "playmidi"))
      #+end_src
 
-   We can play midi files with VLC, but for this we need a wrapper.
+** Playing Midi files
+
+   We can play midi files with fluidsynth. First we need to install it.
+
+   #+begin_src sh
+     nix-env -i fluidsynth
+   #+end_src
+
+   Then we need a soundfont. Fluidsynth appears to recommend the one
+   from http://www.schristiancollins.com/generaluser.php.
+
+   #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755) :prologue "" :epilogue ""
+     #!/bin/bash
+     set -o errexit
+     set -o nounset
+     set -o pipefail
+
+     tempfoo=`basename $0`
+     TMPDIR=`mktemp -d -t ${tempfoo}`
+
+     VERSION="1.471"
+
+     mkdir -p ~/.local/share
+     TARGET=~/.local/share/GeneralUserGS
+     if test -d $TARGET ; then
+         mv $TARGET $TARGET.$(date +%Y-%m-%d).$RANDOM
+     fi
+
+     DL=GeneralUser_GS_$VERSION
+     curl -L https://www.dropbox.com/s/4x27l49kxcwamp5/GeneralUser_GS_$VERSION.zip?dl=1 -o ~/Downloads/$DL.zip
+     cd $TMPDIR
+     unzip ~/Downloads/$DL.zip
+
+     mv "$(find $TMPDIR -mindepth 1 -maxdepth 1 -type d)" "$TARGET"
+
+     rmdir $TMPDIR
+   #+end_src
+
+
+   Finally let's install a wrapper to more easily play stuff.
 
    #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755) :prologue "" :epilogue ""
      #!/bin/bash
@@ -2137,7 +2176,12 @@
      set -o nounset
      set -o pipefail
 
-     /Applications/VLC.app/Contents/MacOS/VLC -I dummy "$@" vlc://quit
+     if ! test -d ~/.local/share/GeneralUserGS ; then
+       echo "No soundfonts found, attempting to download..."
+       download_soundfont
+     fi
+
+     fluidsynth -a coreaudio -m coremidi -i ~/.local/share/GeneralUserGS/GeneralUser\ GS\ v1.471.sf2 "$@"
    #+end_src
 
 ** Zsh
