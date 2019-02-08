@@ -1385,6 +1385,15 @@
 	   (<= month-day 28))))
     #+END_SRC
 
+*** Drilling
+
+    I use org-drill for drilling music theory.
+
+    #+begin_src emacs-lisp
+      (require 'org-drill)
+      (setq org-drill-maximum-items-per-session 5)
+    #+end_src
+
 *** Publishing
 
     Publishing projects.
