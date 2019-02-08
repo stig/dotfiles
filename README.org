@@ -199,6 +199,15 @@
      (use-package apples-mode)
    #+END_SRC
 
+** Auto commit
+
+   In some projects (notably, my Org/Agenda setup) I want to
+   automatically commit when editing files.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-auto-commit-mode)
+   #+END_SRC
+
 ** Auto revert mode
 
    When files change on disk, revert the buffer automatically.
@@ -239,89 +248,35 @@
      (global-set-key (kbd "C-r") 'isearch-backward-regexp)
    #+END_SRC
 
+** Counsel
+
+   This provides =counsel-find-file=, among others.
+
+   #+begin_src emacs-lisp
+   (use-package counsel :demand)
+   (counsel-mode 1)
+   #+end_src
+
 ** Clojure
 
-#+BEGIN_SRC emacs-lisp
-  (use-package clojure-mode)
-  (use-package cider)
-  (use-package clj-refactor)
-  (use-package cljr-helm
-  :bind (:map clojure-mode-map ("C-c C-r" . cljr-helm)))
-#+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    (use-package clojure-mode)
+    (use-package cider)
+    (use-package clj-refactor)
+  #+END_SRC
 
-** Completion
+** Company
 
-   In the past I've been using Helm, but I did a recent experiment with
-   Ivy because I'm a perpetual tinkerer. It doesn't do everything that
-   Helm does, and it was annoying in some respects (notably not
-   allowing me to create new files in the minibuffer, not allowing
-   /closing buffers/ in the minibuffer, and not allowing editable results
-   in ag buffer) but I'm a bit confused by helm in some situations and
-   checking to see if Ivy suits those better.
+   Auto-complete of code and prose.
 
-*** Helm
-
-    I use [[https://github.com/emacs-helm/helm][Helm]] for interactive completion and finding things,
-    particularly files.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package helm
-	:init
-
-	;; Ag buffer names are insanely long...
-	(setq helm-buffer-max-length 35)
-
-	:bind (("M-x" . helm-M-x)
-	       ("M-y" . helm-show-kill-ring)
-	       ("C-x b" . helm-mini)
-	       ("C-x C-b" . helm-buffers-list)
-	       ("C-x 4 b" . helm-mini)
-	       ("C-x C-f" . helm-find-files)
-
-	       ;; Use Helm to narrow to headings in Org buffers.
-	       (:map org-mode-map
-		     ("C-c h" . helm-org-in-buffer-headings)
-		     ("C-c f" . helm-org-agenda-files-headings)))
-
-	:config
-	(require 'helm-buffers)
-	(require 'helm-org)
-
-	;; Magit creates many buffers, most of which are not interesting.
-	(add-to-list 'helm-boring-buffer-regexp-list "\\*magit")
-
-	;; TAGS files are rarely interesting.
-	(add-to-list 'helm-boring-buffer-regexp-list "TAGS"))
-    #+END_SRC
-
-    This next package adds =C-c p h=, which invokes =helm-find-file= in project
-    context. Invaluable.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package helm-projectile
-         :after projectile
-	 :config
-	 (helm-projectile-on))
-    #+END_SRC
-
-*** Swiper
-
-    Invoke swiper (find in current buffer).
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package swiper
-	:bind (("C-x /" . swiper)))
-    #+END_SRC
-*** Auto-complete of code and prose
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :init
-      ;; https://emacs.stackexchange.com/a/10838
-      (setq company-dabbrev-downcase nil)
-      :config
-      (global-company-mode))
-    #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+   (use-package company
+     :init
+     ;; https://emacs.stackexchange.com/a/10838
+     (setq company-dabbrev-downcase nil)
+     :config
+     (global-company-mode))
+   #+END_SRC
 
 ** CSS
 
@@ -389,6 +344,43 @@
    (use-package dotenv-mode)
 
    #+END_SRC
+** Ediff
+
+*** Automatically Unfold Org files
+
+    Sometimes I diff Org files. (Particularly for runbooks.) This
+    snippet makes sure that Org buffers don't start folded, as ediff
+    is rather useless in that case. (Credit: Oleh Krehel on
+    emacs-orgmode mailing list.)
+
+    #+BEGIN_SRC emacs-lisp
+      (defun sb/ediff-prepare-buffer ()
+	(when (memq major-mode '(org-mode emacs-lisp-mode))
+	  (outline-show-all)))
+
+      (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+    #+END_SRC
+
+*** Picking /both/ sides in a conflict
+
+    Sometimes I have to resolve conflicts. I then use Ediff, which I
+    launch from Magit. Occasionally I want to pick *both* sides of the
+    conflicts. (If both branches add an entry to a list, for example;
+    which can often happen in hieradata / puppet.) This adds =d= as a
+    shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) You can use =~= to swap the A and B
+    buffers, so in effect you can get A then B, /or/ B then A.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun ediff-copy-both-to-C ()
+	(interactive)
+	(ediff-copy-diff ediff-current-difference nil 'C nil
+			 (concat
+                          (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                          (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+      (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
+      (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
+    #+END_SRC
+
 ** Editorconfig
 
    Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
@@ -487,7 +479,6 @@
       ;; Allow linking to NotMuch messages from Org mode
       (require 'org-notmuch)
     #+END_SRC
-
 
 **** Add pre-new hook to sync messages with upstream
 
@@ -700,7 +691,6 @@
        SyncState *
      #+END_SRC
 
-
 *** Compose Emails with Org mode
 
     I want to be able to create links to messages from Org mode
@@ -805,6 +795,27 @@
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
+** Gists
+
+   Viewing & editing gists in Emacs? Sure! I want that!
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package gist
+       :bind (("C-x g l" . gist-list)
+	      ("C-x g c" . gist-region-or-buffer-private))
+       :init
+       (setq gist-ask-for-description t))
+   #+END_SRC
+
+** Git Link
+
+   Link to file location on GitHub/Bitbucket/GitLab/...
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-link
+       :bind ("C-c g l" . git-link))
+   #+END_SRC
+
 ** Graphviz
 
    I sometimes use Graphviz to create diagrams.
@@ -887,72 +898,49 @@
    (setq rcirc-default-full-name "Stig Brautaset")
    #+END_SRC
 
-** Git-ish
-*** Magit
+** Ivy
 
-    I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
-    Emacs just for it. It is excellent. I bind =H-m= to =magit-status=, which is
-    the main entry point for the mode.
+   I've long been a happy Helm user, but it confuses me (and is slow!)
+   in some situations so I thought I'd try again to see if Ivy fares
+   any better.
 
-    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
+   #+begin_src emacs-lisp
+   (use-package ivy :demand
+      :config
+      (setq ivy-use-virtual-buffers t
+            ivy-count-format "%d/%d "))
+   (ivy-mode 1)
+   #+end_src
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package magit
-	:bind (("M-m" . magit-status)
-	       ("s-b" . magit-blame)))
+** LilyPond
 
-      (use-package forge)
-    #+END_SRC
+   With Nix I am not able to install LilyPond, but I can install it
+   via a download from https://lilypond.org.
 
-*** Git Link
+   #+begin_src emacs-lisp
+     (use-package lilypond-mode
+       :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
+       :demand
+       :mode ("\\.ly\\'" . lilypond-mode)
+       :init
+       (setq LilyPond-midi-command "playmidi"))
+     #+end_src
 
-    Link to file location on GitHub/Bitbucket/GitLab/...
+** Magit
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package git-link
-	:bind ("C-c g l" . git-link))
-    #+END_SRC
+   I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
+   Emacs just for it. It is excellent. I bind =H-m= to =magit-status=, which is
+   the main entry point for the mode.
 
-*** Gists
+   Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
-    Viewing & editing gists in Emacs? Sure! I want that!
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :bind (("M-m" . magit-status)
+	      ("s-b" . magit-blame)))
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package gist
-	:bind (("C-x g l" . gist-list)
-	       ("C-x g c" . gist-region-or-buffer-private))
-	:init
-	(setq gist-ask-for-description t))
-    #+END_SRC
-
-*** Resolving Conflicts
-
-    Sometimes I have to resolve conflicts. I then use Ediff, which I
-    launch from Magit. Occasionally I want to pick *both* sides of the
-    conflicts. (If both branches add an entry to a list, for example;
-    which can often happen in hieradata / puppet.) This adds =d= as a
-    shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) You can use =~= to swap the A and B
-    buffers, so in effect you can get A then B, /or/ B then A.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun ediff-copy-both-to-C ()
-	(interactive)
-	(ediff-copy-diff ediff-current-difference nil 'C nil
-			 (concat
-                          (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                          (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
-      (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
-      (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
-    #+END_SRC
-
-*** Auto commit
-
-    In some projects (notably, my Org/Agenda setup) I want to
-    automatically commit when editing files.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package git-auto-commit-mode)
-    #+END_SRC
+     (use-package forge)
+   #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
 
@@ -1192,6 +1180,12 @@
 	       (file "templates/invoice.org")
 	       :empty-lines 1 :immediate-finish t :jump-to-captured t)))
     #+END_SRC
+
+**** Allow capturing from Firefox
+
+     #+begin_src emacs-lisp
+     (require 'org-protocol)
+     #+end_src
 
 *** Babel
 
@@ -1571,20 +1565,7 @@
     #+BEGIN_SRC emacs-lisp
     (setq org-attach-store-link-p t)
     #+END_SRC
-*** Diffing Org files
 
-    Sometimes I diff Org files. (Particularly for runbooks.) This
-    snippet makes sure that Org buffers don't start folded, as ediff
-    is rather useless in that case. (Credit: Oleh Krehel on
-    emacs-orgmode mailing list.)
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/ediff-prepare-buffer ()
-	(when (memq major-mode '(org-mode emacs-lisp-mode))
-	  (outline-show-all)))
-
-      (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
-    #+END_SRC
 *** Org Download
 
     This allows me to drag-and-drop images into Org mode buffers.
@@ -1598,6 +1579,7 @@
     (use-package orgalist)
     (add-to-list 'message-mode-hook 'orgalist-mode)
     #+end_src
+
 ** Plant UML Mode
 
    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
@@ -1935,6 +1917,14 @@
      (setq frame-resize-pixelwise t)
    #+END_SRC
 
+** Swiper
+
+   Invoke swiper (find in current buffer).
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package swiper
+       :bind (("C-x /" . swiper)))
+   #+END_SRC
 ** Themes
 *** Load one theme at a time
 
@@ -2185,74 +2175,6 @@
        :config
        (yas-global-mode))
    #+END_SRC
-
-** LilyPond
-   With Nix I am not able to install LilyPond, but I can install it
-   via a download from https://lilypond.org.
-
-   #+begin_src emacs-lisp
-     (use-package lilypond-mode
-       :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
-       :demand
-       :mode ("\\.ly\\'" . lilypond-mode)
-       :init
-       (setq LilyPond-midi-command "playmidi"))
-     #+end_src
-
-** Playing Midi files
-
-   We can play midi files with fluidsynth. First we need to install it.
-
-   #+begin_src sh
-     nix-env -i fluidsynth
-   #+end_src
-
-   Then we need a soundfont. Fluidsynth appears to recommend the one
-   from http://www.schristiancollins.com/generaluser.php.
-
-   #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755) :prologue "" :epilogue ""
-     #!/bin/bash
-     set -o errexit
-     set -o nounset
-     set -o pipefail
-
-     tempfoo=`basename $0`
-     TMPDIR=`mktemp -d -t ${tempfoo}`
-
-     VERSION="1.471"
-
-     mkdir -p ~/.local/share
-     TARGET=~/.local/share/GeneralUserGS
-     if test -d $TARGET ; then
-         mv $TARGET $TARGET.$(date +%Y-%m-%d).$RANDOM
-     fi
-
-     DL=GeneralUser_GS_$VERSION
-     curl -L https://www.dropbox.com/s/4x27l49kxcwamp5/GeneralUser_GS_$VERSION.zip?dl=1 -o ~/Downloads/$DL.zip
-     cd $TMPDIR
-     unzip ~/Downloads/$DL.zip
-
-     mv "$(find $TMPDIR -mindepth 1 -maxdepth 1 -type d)" "$TARGET"
-
-     rmdir $TMPDIR
-   #+end_src
-
-
-   Finally let's install a wrapper to more easily play stuff.
-
-   #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755) :prologue "" :epilogue ""
-     #!/bin/bash
-     set -o errexit
-     set -o nounset
-     set -o pipefail
-
-     if ! test -d ~/.local/share/GeneralUserGS ; then
-       echo "No soundfonts found, attempting to download..."
-       download_soundfont
-     fi
-
-     fluidsynth -a coreaudio -m coremidi -i ~/.local/share/GeneralUserGS/GeneralUser\ GS\ v1.471.sf2 "$@"
-   #+end_src
 
 ** Zsh
 
