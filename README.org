@@ -937,7 +937,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package magit
        :bind (("M-m" . magit-status)
-	      ("s-b" . magit-blame)))
+	      ("s-b" . magit-blame))
+       :init
+       (setq magit-completing-read-function 'ivy-completing-read))
 
      (use-package forge)
    #+END_SRC
