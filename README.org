@@ -253,7 +253,8 @@
    This provides =counsel-find-file=, among others.
 
    #+begin_src emacs-lisp
-   (use-package counsel :demand)
+   (use-package amx) ;; make counsel-M-x work the way I like
+   (use-package counsel)
    (counsel-mode 1)
    #+end_src
 
@@ -1929,6 +1930,7 @@
      (use-package swiper
        :bind (("C-x /" . swiper)))
    #+END_SRC
+
 ** Themes
 *** Load one theme at a time
 
