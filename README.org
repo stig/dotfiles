@@ -647,6 +647,7 @@
        Patterns ml-%
        Create Slave
        SyncState *
+       MaxMessages 500
 
        # ACCOUNT INFORMATION
        IMAPAccount gmail
