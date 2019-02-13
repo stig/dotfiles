@@ -531,6 +531,7 @@
 
        # Mailing lists..
        notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
+       notmuch tag +lists +lilypond -inbox -- path:/ml-lilypond/
 
        # Mute all messages in threads that have at least one muted message
        notmuch tag +muted -- $(notmuch search --exclude=false --output=threads tag:muted)
