@@ -286,27 +286,6 @@
      :config
      (add-hook 'css-mode-hook 'flymake-css-load))
    #+END_SRC
-** Delete the file for the current buffer function
-
-   "Delete this file." Simple, huh?
-
-   #+BEGIN_SRC emacs-lisp
-     (defun delete-current-buffer-file ()
-       "Removes file connected to current buffer and kills buffer."
-       (interactive)
-       (let ((filename (buffer-file-name))
-             (buffer (current-buffer))
-             (name (buffer-name)))
-         (if (not (and filename (file-exists-p filename)))
-             (ido-kill-buffer)
-           (when (yes-or-no-p "Are you sure you want to remove this file? ")
-             (delete-file filename)
-             (kill-buffer buffer)
-             (message "File '%s' successfully removed" filename)))))
-
-     (global-set-key (kbd "C-x C-k") 'delete-current-buffer-file)
-   #+END_SRC
-
 ** Disable kill-emacs
 
    Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
