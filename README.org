@@ -2140,10 +2140,10 @@
 
   #+begin_src emacs-lisp
     (use-package string-inflection
-      :bind (("C-c C-s C-v" . string-inflection-all-cycle)
-	     ("C-c C-s C-c" . string-inflection-camelcase)
-	     ("C-c C-s C-k" . string-inflection-kebab-case)
-	     ("C-c C-s C-u" . string-inflection-upcase)))
+      :bind (("C-c C-x C-s" . string-inflection-all-cycle)
+	     ("C-c C-x C-c" . string-inflection-camelcase)
+	     ("C-c C-x C-k" . string-inflection-kebab-case)
+	     ("C-c C-x C-u" . string-inflection-upcase)))
   #+end_src
 
 ** YAML
