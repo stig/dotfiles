@@ -248,16 +248,6 @@
      (global-set-key (kbd "C-r") 'isearch-backward-regexp)
    #+END_SRC
 
-** Counsel
-
-   This provides =counsel-find-file=, among others.
-
-   #+begin_src emacs-lisp
-   (use-package amx) ;; make counsel-M-x work the way I like
-   (use-package counsel)
-   (counsel-mode 1)
-   #+end_src
-
 ** Clojure
 
   #+BEGIN_SRC emacs-lisp
@@ -278,6 +268,16 @@
      :config
      (global-company-mode))
    #+END_SRC
+
+** Counsel
+
+   This provides =counsel-find-file=, among others.
+
+   #+begin_src emacs-lisp
+   (use-package amx) ;; make counsel-M-x work the way I like
+   (use-package counsel)
+   (counsel-mode 1)
+   #+end_src
 
 ** CSS
 
