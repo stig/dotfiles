@@ -1373,7 +1373,7 @@
 
     #+begin_src emacs-lisp
       (require 'org-drill)
-      (setq org-drill-maximum-items-per-session 5)
+      (setq org-drill-maximum-items-per-session 10)
     #+end_src
 
 *** Publishing
