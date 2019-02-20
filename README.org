@@ -533,14 +533,14 @@
 	       "Stig Brautaset <stig@brautaset.org>"
 	       nil ;; No organization header
 	       nil
-	       nil ;; No extra body text
-	       "~/.signature")
+	       "~/.signature"
+	       nil)
 	      ("work"
 	       nil
 	       "Stig Brautaset <sbrautaset@laterpay.net>"
 	       "LaterPay GmbH"
 	       nil
-	       nil
+               "~/.signature"
 	       "~/.signature.work")
 	      ("atlassian"
 	       nil
