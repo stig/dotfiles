@@ -436,9 +436,9 @@
     user.name=Stig Brautaset
     user.primary_email=stig@brautaset.org
     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
-    new.tags=unread;inbox;
+    new.tags=unread;inbox
     new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
-    search.exclude_tags=deleted;spam;muted
+    search.exclude_tags=deleted;spam;muted;draft
     maildir.synchronize_flags=true
     built_with.compact=true
     built_with.field_processor=true
