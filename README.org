@@ -556,7 +556,8 @@
 
       (setq gnus-alias-default-identity "home")
 
-      (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
+      (gnus-alias-init)
+
 
       ;; I rely on Gmail saving my outgoing messages in the "sent" folder,
       ;; hence I only manually save mail to sent for my personal mail.
