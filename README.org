@@ -1090,9 +1090,11 @@
 				 (org-agenda-files :tag . "PROJ")
 
 				 ;; Add special rule for refiling to
-				 ;; Someday.org, so we can omit it from
-				 ;; org-agenda-files but still refile there
-				 ("~/org/Someday.org" :maxlevel . 2)))
+				 ;; Someday.org & Leisure so we can omit
+				 ;; them from org-agenda-files but still
+				 ;; refile there
+				 ("~/org/Someday.org" :maxlevel . 2)
+				 ("~/org/Leisure.org" :maxlevel . 2)))
 
       ;; Make 'org-refile' work better with Ivy
       (setq org-goto-interface 'outline-path-completion)
