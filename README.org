@@ -452,7 +452,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package notmuch
         :demand t
-	:bind (("C-c m" . notmuch)))
+	:bind (("C-x m" . notmuch)))
 
       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
 
