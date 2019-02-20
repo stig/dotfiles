@@ -540,7 +540,7 @@
 	       "Stig Brautaset <sbrautaset@laterpay.net>"
 	       "LaterPay GmbH"
 	       nil
-               "~/.signature"
+	       "~/.signature"
 	       "~/.signature.work")
 	      ("atlassian"
 	       nil
