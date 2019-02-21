@@ -516,7 +516,10 @@
        notmuch tag +muted -- $(notmuch search --exclude=false --output=threads tag:muted)
 
        # Immediately archive Microsoft family spam
-       notmuch tag -inbox -unread from:microsoftfamily@microsoft.com AND NOT to:stig@brautaset.org
+       notmuch tag -inbox -unread -- from:microsoftfamily@microsoft.com AND NOT to:stig@brautaset.org
+
+       # This spammer just don't care about opt-outs
+       notmuch tag -inbox -unread +spam -- from:acaeglobal.com
      #+END_SRC
 
 *** Composing multiple Email sending profiles
