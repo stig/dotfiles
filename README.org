@@ -493,7 +493,7 @@
 
        # Exit quickly if we have no network, as mbsync will surely fail
        ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0
-       mbsync -qaV
+       mbsync --all --quiet --pull-new
      #+end_src
 
 **** Add post-new hook to tag messages
