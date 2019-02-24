@@ -445,10 +445,8 @@
     quickly bring it up.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package notmuch
-        :demand t
-	:bind (("C-x m" . notmuch)))
-
+      (require 'notmuch)
+      (bind-key "C-x m" 'notmuch)
       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
 
       ;; Allow linking to NotMuch messages from Org mode
