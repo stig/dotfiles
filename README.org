@@ -46,7 +46,8 @@
 ** Nix Site Start
 
    #+BEGIN_SRC emacs-lisp
-   (load "~/.nix-profile/share/emacs/site-lisp/site-start.el")
+   (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp"))
+   (load "site-start.el")
    #+END_SRC
 
 ** Disable mouse interface, splash screen & beeps in =early-init.el=
