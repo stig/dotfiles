@@ -1013,8 +1013,8 @@
 	      ("C-c a" . org-agenda)
 	      ("C-c c" . org-capture)
 	      ("C-c b" . org-iswitchb)
-	      ("C-s-<return>" . org-insert-subheading)
-	      ("C-s-S-<return>" . org-insert-todo-subheading)
+	      ("C-x C-<return>" . org-insert-subheading)
+	      ("C-S-<return>" . org-insert-todo-subheading)
 	      :map org-mode-map
 	      ("C-c x" . mu4e-compose-mode)
 	      ("C-n" . org-next-link)
