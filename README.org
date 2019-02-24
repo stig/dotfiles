@@ -310,15 +310,6 @@
      (setq backup-by-copying t)
    #+END_SRC
 
-** Dotenv Mode
-
-   Automatically source variables in =.env= files into Emacs.
-
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package dotenv-mode)
-
-   #+END_SRC
 ** Ediff
 
 *** Automatically Unfold Org files
