@@ -832,7 +832,7 @@
 
     I'm Norwegian, but use a GB keyboard. I also use Dvorak keyboard
     layout. I also have Polish colleagues whose names I don't want to
-    mangle completely. Keep this in mind if you find the below
+    mangle completly. Keep this in mind if you find the below
     confusing.
 
 *** Always use UTF-8 encoding
@@ -2176,8 +2176,8 @@
 
 ** Zsh
 
-   This is how I set up ZSH. It is a little insestuous, as Emacs
-   relies on this...
+   This is how I set up ZSH. It feels weird to set it up here, as
+   Emacs relies on it, but it's the best way I have found so far.
 
    #+begin_src sh :tangle ~/.zshrc
      setopt INC_APPEND_HISTORY
