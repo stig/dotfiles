@@ -243,6 +243,27 @@
      (global-set-key (kbd "C-r") 'isearch-backward-regexp)
    #+END_SRC
 
+** Clipboard
+
+   These settings improve pasting behaviour with programs outside Emacs.
+
+   Save clipboard strings into the kill ring before replacing them. This is
+   useful if you select something in Emacs, then select something from
+   _another_ program. If you don't set this to non-nil the previous selection
+   done from within Emacs is gone. This preserves it in the kill ring,
+   enabling you to retrieve it.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq save-interprogram-paste-before-kill t)
+   #+END_SRC
+
+   Copying ("yanking") with the mouse copies at point, rather than where you
+   click.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mouse-yank-at-point t)
+   #+END_SRC
+
 ** Clojure
 
   #+BEGIN_SRC emacs-lisp
@@ -942,6 +963,24 @@
        :bind (("M-<up>" . markdown-move-list-item-up)
 	      ("M-<down>" . markdown-move-list-item-down)))
    #+END_SRC
+** Modifier keys on OS X
+
+   Set up the modifier keys the way that best fits my keyboard.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Both Command keys are 'Meta'
+     (setq mac-right-command-modifier 'meta
+	   mac-command-modifier 'meta)
+
+     ;; Option or Alt is 'Super'
+     (setq mac-option-modifier 'super)
+
+     ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
+     (setq mac-right-option-modifier 'nil)
+
+     (setq ns-function-modifier 'hyper)
+   #+END_SRC
+
 ** Multiple Cursors
 
    This package is another one of those near-magical ones. It allows me to do
@@ -1748,45 +1787,6 @@
      (setq ensime-search-interface 'ivy)
    #+end_src
 
-** Set up Clipboard
-
-   These settings improve pasting behaviour with programs outside Emacs.
-
-   Save clipboard strings into the kill ring before replacing them. This is
-   useful if you select something in Emacs, then select something from
-   _another_ program. If you don't set this to non-nil the previous selection
-   done from within Emacs is gone. This preserves it in the kill ring,
-   enabling you to retrieve it.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq save-interprogram-paste-before-kill t)
-   #+END_SRC
-
-   Copying ("yanking") with the mouse copies at point, rather than where you
-   click.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq mouse-yank-at-point t)
-   #+END_SRC
-
-** Set up modifier keys on OS X
-
-   Set up the modifier keys the way that best fits my keyboard.
-
-   #+BEGIN_SRC emacs-lisp
-     ;; Both Command keys are 'Meta'
-     (setq mac-right-command-modifier 'meta
-	   mac-command-modifier 'meta)
-
-     ;; Option or Alt is 'Super'
-     (setq mac-option-modifier 'super)
-
-     ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
-     (setq mac-right-option-modifier 'nil)
-
-     (setq ns-function-modifier 'hyper)
-   #+END_SRC
-
 ** Show Matching parens
 
    This is extremely useful. Put the mark on a paren (any of =()[]{}=,
@@ -1873,6 +1873,19 @@
     (unless (server-running-p)
       (server-start))
   #+END_SRC
+
+** String Inflection
+
+   Sometimes I need to swap between CamelCase and snake_case, or even
+   SNAKE_CASE.
+
+   #+begin_src emacs-lisp
+     (use-package string-inflection
+       :bind (("C-c C-x C-s" . string-inflection-all-cycle)
+	      ("C-c C-x C-c" . string-inflection-camelcase)
+	      ("C-c C-x C-k" . string-inflection-kebab-case)
+	      ("C-c C-x C-u" . string-inflection-upcase)))
+   #+end_src
 
 ** Support for fullscreen
 
@@ -2116,35 +2129,22 @@
    (setq user-full-name "Stig Brautaset")
    (setq user-mail-address "stig@brautaset.org")
    #+END_SRC
-** Writing
+** Writegood Mode
 
    I'm not a great writer. I need all the crutches I can get. Lucklily,
    Emacs has them.
 
-*** Writegood Mode
+   This helps highlight passive voice, weasel words, etc in writing.
 
-    This helps highlight passive voice, weasel words, etc in writing.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package writegood-mode
-	:init
-	(add-hook 'text-mode-hook 'writegood-mode))
-    #+END_SRC
-
-*** String Inflection
-
-  Sometimes I need to swap between CamelCase and snake_case, or even
-  SNAKE_CASE.
-
-  #+begin_src emacs-lisp
-    (use-package string-inflection
-      :bind (("C-c C-x C-s" . string-inflection-all-cycle)
-	     ("C-c C-x C-c" . string-inflection-camelcase)
-	     ("C-c C-x C-k" . string-inflection-kebab-case)
-	     ("C-c C-x C-u" . string-inflection-upcase)))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package writegood-mode
+       :init
+       (add-hook 'text-mode-hook 'writegood-mode))
+   #+END_SRC
 
 ** YAML
+
+   CircleCI and CloudFormation loves YAML.
 
    #+BEGIN_SRC emacs-lisp
    (use-package yaml-mode)
