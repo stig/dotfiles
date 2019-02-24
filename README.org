@@ -1740,6 +1740,23 @@
      (setq save-place-file (concat user-emacs-directory "places"))
    #+END_SRC
 
+** Scala
+
+   First install SBT, the Scala Build Tool.
+
+   #+begin_src sh
+   nix-env -i sbt
+   #+end_src
+
+   Then install ensime, the /ENhanced Scala Interaction Mode for Emacs/.
+
+   #+begin_src emacs-lisp
+     (use-package ensime)
+     (use-package sbt-mode)
+     (use-package scala-mode)
+     (setq ensime-search-interface 'ivy)
+   #+end_src
+
 ** Set up Clipboard
 
    These settings improve pasting behaviour with programs outside Emacs.
