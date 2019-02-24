@@ -194,12 +194,6 @@
        (add-hook 'css-mode-hook #'aggressive-indent-mode))
    #+END_SRC
 
-** AppleScript support
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package apples-mode)
-   #+END_SRC
-
 ** Auto commit
 
    In some projects (notably, my Org/Agenda setup) I want to
@@ -1184,15 +1178,7 @@
 
 *** Babel
 
-    I wrote a module for executing AppleScript from Babel. Let's install it, so
-    we can make sure it works.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package ob-applescript)
-    #+END_SRC
-
     Some initialisation settings for Org Babel is in order.
-
     I don't want export to execute babel stuff: I like to execute them manually
     before exporting. This is a security feature, as sometimes I have documents
     that log in to servers and does things.
@@ -1232,7 +1218,6 @@
 	 (lilypond . t)
 	 (ditaa . t)
 	 (plantuml . t)
-	 (applescript . t)
 	 (dot . t)
 	 (sql . t)
 	 (shell . t)))
