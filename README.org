@@ -445,7 +445,7 @@
     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
     new.tags=unread;inbox
     new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
-    search.exclude_tags=deleted;spam;muted;draft
+    search.exclude_tags=deleted;spam;draft
     maildir.synchronize_flags=true
     built_with.compact=true
     built_with.field_processor=true
@@ -517,9 +517,6 @@
        notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
        notmuch tag +lists +lilypond -inbox -- path:/ml-lilypond/
 
-       # Mute all messages in threads that have at least one muted message
-       notmuch tag +muted -- $(notmuch search --exclude=false --output=threads tag:muted)
-
        # Immediately archive Microsoft family spam
        notmuch tag -inbox -unread -- from:microsoftfamily@microsoft.com AND NOT to:stig@brautaset.org
 
@@ -559,7 +556,9 @@
 	       nil)))
 
       (setq gnus-alias-identity-rules
-	    '(("atlassian" ("any" ".+@laterpay.atlassian.net" both) "atlassian")
+	    '(("work" ("from" "sbrautaset@laterpay.net" current) "work")
+	      ("home" ("from" "stig@brautaset.org" current) "home")
+	      ("atlassian" ("any" ".+@laterpay.atlassian.net" both) "atlassian")
 	      ("work" ("any" ".+@laterpay.net" both) "work")))
 
       (setq gnus-alias-default-identity "home")
