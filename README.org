@@ -509,9 +509,10 @@
        set -o nounset
        set -o pipefail
 
-       notmuch tag +sent -inbox -- path:/sent/ and not tag:sent
-       notmuch tag +deleted -inbox -- path:/trash/ and not tag:deleted
-       notmuch tag +spam -inbox -- path:/spam/ and not tag:spam
+       notmuch tag +sent -inbox -- path:/sent/
+       notmuch tag +deleted -inbox -- path:/trash/
+       notmuch tag +spam -inbox -- path:/spam/
+       notmuch tag +work -- path:/Work/
 
        # Mailing lists..
        notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
