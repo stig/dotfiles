@@ -525,54 +525,30 @@
        notmuch tag -inbox -unread +spam -- from:acaeglobal.com
      #+END_SRC
 
-*** Composing multiple Email sending profiles
+*** Select different signature for work email
 
-    NotMuch doesn't have built-in support for multiple profiles, but
-    we can use =gnus-alias= for that:
+    NotMuch doesn't have built-in support for multiple profiles. I
+    tried using "gnus-alias", but couldn't get it to work. Going with
+    a simpler scheme now: reply to the address they write to, and base
+    signature on the from address.
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package gnus-alias)
+    #+begin_src emacs-lisp
+      (defun sb/message-signature-setup-hook ()
+	(setq message-signature-file
+	      (if (string-match "laterpay" (mail-fetch-field "from"))
+	         "~/.signature.work" nil))
+	(message "Selected %s for signature" message-signature-file))
 
-      (setq gnus-alias-identity-alist
-	    '(("home"
-	       nil ;; Does not refer to any other identity
-	       "Stig Brautaset <stig@brautaset.org>"
-	       nil ;; No organization header
-	       nil
-	       "~/.signature"
-	       nil)
-	      ("work"
-	       nil
-	       "Stig Brautaset <sbrautaset@laterpay.net>"
-	       "LaterPay GmbH"
-	       nil
-	       "~/.signature"
-	       "~/.signature.work")
-	      ("atlassian"
-	       nil
-	       "Stig Brautaset <sbrautaset@laterpay.net>"
-	       nil
-	       nil
-	       nil
-	       nil)))
+      (add-hook 'message-signature-setup-hook
+		'sb/message-signature-setup-hook)
+    #+end_src
 
-      (setq gnus-alias-identity-rules
-	    '(("work" ("from" "sbrautaset@laterpay.net" current) "work")
-	      ("home" ("from" "stig@brautaset.org" current) "home")
-	      ("atlassian" ("any" ".+@laterpay.atlassian.net" both) "atlassian")
-	      ("work" ("any" ".+@laterpay.net" both) "work")))
+*** Save a copy of outgoing personal mail
 
-      (setq gnus-alias-default-identity "home")
-
-      (gnus-alias-init)
-
-
-      ;; I rely on Gmail saving my outgoing messages in the "sent" folder,
-      ;; hence I only manually save mail to sent for my personal mail.
+    #+begin_src emacs-lisp
       (setq notmuch-fcc-dirs
-	    '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
-
-    #+END_SRC
+	    `((,user-mail-address . "Gandi/sent +sent -unread -inbox")))
+    #+end_src
 
 *** Downloading email over IMAP
 
