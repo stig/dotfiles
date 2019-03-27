@@ -1072,15 +1072,10 @@
 
       (setq org-agenda-custom-commands
 	    '(("d" "Day Agenda"
-	       ((agenda "" ((org-agenda-span 'day)))))
-	      ("p" "Projects" todo "PROJ")
+	       ((agenda "" ((org-agenda-span 'day)))
+		(todo "NEXT")))
 	      ("S" "Someday" tags-todo "-VOID"
-	       ((org-agenda-files '("~/org/Someday.org"))))
-	      ("A" "Actionable NEXT & TODOs"
-	       ((todo "NEXT")
-		(todo "TODO")))
-	      ("n" todo "NEXT")
-	      ("w" todo "WAITING")))
+	       ((org-agenda-files '("~/org/Someday.org"))))))
     #+END_SRC
 
 *** Refiling
