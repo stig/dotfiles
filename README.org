@@ -612,6 +612,7 @@
        Create Slave
        SyncState *
        MaxMessages 500
+       ExpireUnread yes
 
        # ACCOUNT INFORMATION
        IMAPAccount gmail
