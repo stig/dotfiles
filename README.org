@@ -1164,11 +1164,7 @@
 	      ("r" "GTD Review" entry (file+datetree "GTDReview.org")
 	       (file "templates/gtd-review.org")
 	       :empty-lines 1
-	       :jump-to-captured t)
-
-	      ("i" "New Invoice" plain (file "invoices/Invoices.org")
-	       (file "templates/invoice.org")
-	       :empty-lines 1 :immediate-finish t :jump-to-captured t)))
+	       :jump-to-captured t)))
     #+END_SRC
 
 **** Allow capturing from Firefox
@@ -1276,44 +1272,6 @@
 	       ("C-c C-c p" . org-passwords-copy-password)
 	       ("C-c C-c o" . org-passwords-open-url)))
     #+END_SRC
-
-*** Invoicing
-
-    I have a capture template that generate invoices. In it I use the following
-    functions to generate the next invoice id.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun all-invoice-ids ()
-	(-non-nil
-	 (org-map-entries (lambda ()
-                            (org-entry-get nil "InvoiceId"))
-                          nil
-                          '("~/org/invoices/Invoices.org"))))
-
-      (defun max-invoice-id ()
-	(apply #'max
-               (mapcar #'string-to-number
-                       (all-invoice-ids))))
-
-      (defun next-invoice-id ()
-	(number-to-string
-	 (+ 1
-            (max-invoice-id))))
-    #+END_SRC
-
-    All my invoices go into the same file. In the template, it's used like this:
-
-    #+BEGIN_SRC org
-    * DRAFT Invoice #%(next-invoice-id)
-    :PROPERTIES:
-    :InvoiceId: %(next-invoice-id)
-    :EXPORT_DATE: %(format-time-string "%-d %B, %Y" (org-read-date nil t "1"))
-    :EXPORT_FILE_NAME: Invoice-%(next-invoice-id)
-    :END:
-    #+END_SRC
-
-    I generally export each section separately, which is why I've got that
-    =EXPORT_FILE_NAME= property in there.
 
 *** Calendar
 
