@@ -459,6 +459,7 @@
     #+BEGIN_SRC emacs-lisp
       (require 'notmuch)
       (bind-key "C-x m" 'notmuch)
+      (bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
 
       ;; Allow linking to NotMuch messages from Org mode
