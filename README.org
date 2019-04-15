@@ -2002,8 +2002,10 @@
    (setq tramp-default-method "ssh")
    #+END_SRC
 
-   This function lets me re-open the currently open file using sudo[fn:1].
-   I've bound it to =C-c C-s=. It works for both local and remote buffers.
+   This function lets me re-open the currently open file using
+   sudo[fn:: Found at http://www.emacswiki.org/emacs/TrampMode#toc31].
+   I've bound it to =C-c C-s=. It works for both local and remote
+   buffers.
 
    #+BEGIN_SRC emacs-lisp
      (defun sudo-edit-current-file ()
@@ -2157,6 +2159,3 @@
      . ~/.nix-profile/etc/profile.d/nix.sh
    #+end_src
 
-* Footnotes
-
-[fn:1] Found at http://www.emacswiki.org/emacs/TrampMode#toc31
