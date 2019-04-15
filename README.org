@@ -526,6 +526,28 @@
        notmuch tag -inbox -unread +spam -- from:acaeglobal.com
      #+END_SRC
 
+*** Run mbsync periodically while Emacs is open
+
+    In the pre-new hook we run mbsync to pull new messages only, to
+    avoid it taking too long. Periodically we run a "full" run, to
+    make sure we push changes back to the server. Here we set up a
+    timer to periodically run mbsync from within Emacs. It's not
+    abnormal for this to take 30 seconds, but usually it's less.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun sb/mbsync ()
+	(interactive)
+	(start-process "*mbsync -Vaq*" "*mbsync*" "mbsync" "-Vaq"))
+
+      ;; run-with-timer requires arguments, but I can't get the function to
+      ;; run interactively with arguments, hence this indirection.
+      (defun sb/mbsync-wrapper (args) (sb/mbsync))
+
+      ;; Capture the timer so we can cancel it later if we need to
+      (setq sb/mbsync-timer
+	    (run-with-timer 60 10000 'sb/mbsync-wrapper ""))
+    #+END_SRC
+
 *** Select different signature for work email
 
     NotMuch doesn't have built-in support for multiple profiles. I
