@@ -117,8 +117,6 @@
      (eval-when-compile
        (require 'use-package))
 
-     ;; No need to put ':ensure t' everywhere, since we don't use anything else to install packages.
-     (setq use-package-always-ensure t)
    #+END_SRC
 
 * Configuration
@@ -1281,7 +1279,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package org-passwords
 	:after org
-	:ensure nil
 	:init
 
 	(setq org-passwords-time-opened "30 min")
