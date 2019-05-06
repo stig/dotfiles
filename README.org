@@ -1104,8 +1104,12 @@
 	    '(("d" "Day Agenda"
 	       ((agenda "" ((org-agenda-span 'day)))
 		(todo "NEXT")))
-	      ("S" "Someday" tags-todo "-VOID"
-	       ((org-agenda-files '("~/org/Someday.org"))))))
+	      ("S" "Someday"
+	       ((todo "PROJ"
+		      ((org-agenda-files '("~/org/Someday.org"))))
+		(todo "TODO"
+		      ((org-agenda-todo-list-sublevels nil)
+		       (org-agenda-files '("~/org/Someday.org"))))))))
     #+END_SRC
 
 *** Refiling
