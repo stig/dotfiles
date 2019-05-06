@@ -1963,21 +1963,13 @@
 
      export EDITOR=emacsclient
 
-     export PIPENV_NOSPIN=true
-
-     export PIPENV_COLORBLIND=true
-
      # Find LilyPond binaries
      export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
 
      # Find Local binaries
      export PATH=~/.local/bin:$PATH
-
-     # Find Ruby Gems
-     export PATH=$PATH:~/.gem/ruby/2.3.0/bin
    #+end_src
 
    #+begin_src sh :tangle ~/.zprofile
      . ~/.nix-profile/etc/profile.d/nix.sh
    #+end_src
-
