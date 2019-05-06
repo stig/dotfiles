@@ -895,8 +895,8 @@
      (use-package transient :ensure t)
      (use-package magit
        :ensure t
-       :bind (("M-m" . magit-status)
-	      ("M-b" . magit-blame)))
+       :bind ("M-m" . magit-status))
+
      (use-package forge :ensure t)
    #+END_SRC
 
