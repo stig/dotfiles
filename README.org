@@ -1606,13 +1606,6 @@
     #+BEGIN_SRC emacs-lisp
       (define-coding-system-alias 'UTF-8 'utf-8)
     #+END_SRC
-*** Convert between string types
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package python-switch-quotes
-	:bind ("C-c '" . python-switch-quotes))
-    #+END_SRC
-
 *** Pipenv
 
   #+BEGIN_SRC emacs-lisp
