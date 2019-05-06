@@ -122,6 +122,12 @@
    #+END_SRC
 
 * Configuration
+** Ace Window
+
+   #+begin_src emacs-lisp
+   (use-package ace-window
+     :bind ("M-`" . ace-window))
+   #+end_src
 ** Add keybinding to join next line to this
 
    With cursor at any point in a line, hit =M-j= to move to the end, and
