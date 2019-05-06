@@ -1929,10 +1929,6 @@
 
    #+BEGIN_SRC emacs-lisp
    (use-package yaml-mode)
-
-   (use-package flymake-yaml
-     :config
-     (add-hook 'yaml-mode-hook 'flymake-yaml-load))
    #+END_SRC
 ** YAS
 
