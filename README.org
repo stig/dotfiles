@@ -98,7 +98,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
    #+END_SRC
 
 ** Install & configure =use-package=
@@ -1000,9 +999,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package org
-       :ensure org-plus-contrib
-       ;;      :load-path (lambda () (expand-file-name "~/play/org-mode/lisp"))
-
        :bind (("C-c l" . org-store-link)
 	      ("C-c a" . org-agenda)
 	      ("C-c c" . org-capture)
@@ -1217,28 +1213,6 @@
       (use-package ox-jira)
       (require 'ox-latex)
       (setq org-export-backends '(html md freemind jira latex))
-    #+END_SRC
-
-*** Presenting
-
-    Let's try presenting with Emacs.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-present)
-      (eval-after-load "org-present"
-	'(progn
-	   (add-hook 'org-present-mode-hook
-		     (lambda ()
-		       (org-present-big)
-		       (org-display-inline-images)
-		       (org-present-hide-cursor)
-		       (org-present-read-only)))
-	   (add-hook 'org-present-mode-quit-hook
-		     (lambda ()
-		       (org-present-small)
-		       (org-remove-inline-images)
-		       (org-present-show-cursor)
-		       (org-present-read-write)))))
     #+END_SRC
 
 *** Passwords
@@ -1493,13 +1467,6 @@
     (setq org-attach-store-link-p t)
     #+END_SRC
 
-*** Org Download
-
-    This allows me to drag-and-drop images into Org mode buffers.
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package org-download)
-    #+END_SRC
 *** Edit "Org-like" lists in non-Org buffers
 
     #+begin_src emacs-lisp
