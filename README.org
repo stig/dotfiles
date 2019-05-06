@@ -35,11 +35,19 @@
 ** Install Emacs
 
    I'm experimenting with installing Emacs via Nix rather than
-   homebrew. I use the Mac-version, and it's installed like this:
+   homebrew. [[file:emacs.nix][emacs.nix]] contains a Nix expression for installing Emacs
+   & many packages & auxiliary tools. With the aid of the below Nix
+   config, I can install it thus:
 
-   #+BEGIN_SRC sh
-   nix-env -i emacs-mac
-   #+END_SRC
+   : nix-env -f "<nixpkgs>" -iA myemacs
+
+   #+begin_src nix :tangle ~/.config/nixpkgs/config.nix
+     {
+       packageOverrides = super: let self = super.pkgs; in {
+	 myemacs = import ~/.emacs.d/emacs.nix { pkgs = self; };
+       };
+     }
+   #+end_src
 
 * Meta configuration
 
@@ -132,13 +140,14 @@
 
 ** Add =/usr/local/bin= to our path
 
-   The GUI Emacs gets exec path from the system, rather than the login shell.
-   This requires us to add ~/usr/local/bin~ to ~exec-path~ lest it can't find
-   any programs installed by =brew=.
+   The GUI Emacs gets exec path from the system, rather than the login
+   shell. We have to load the Zsh path to get access to programs
+   installed by Nix.
 
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
        :config
+       (exec-path-from-shell-initialize)
        (exec-path-from-shell-copy-env "NIX_PATH")
        (exec-path-from-shell-copy-env "SSL_CERT_FILE"))
    #+END_SRC
@@ -146,13 +155,6 @@
 ** Ag / The Silver Searcher
 
    I use =ag= for searching quite a lot in Emacs.
-   This requires an additional external tool for best performance:
-
-   #+BEGIN_SRC sh
-     nix-env -i silver-searcher
-   #+END_SRC
-
-   Then make sure the Emacs ag package is installed.
 
    #+BEGIN_SRC emacs-lisp
      (use-package ag)
@@ -349,12 +351,6 @@
        (editorconfig-mode))
    #+END_SRC
 
-   Emacs requires an external tool for this to work.
-
-   #+BEGIN_SRC sh
-     nix-env -i editorconfig-core-c
-   #+END_SRC
-
 ** Elfeed
 
    I use custom.el for the actual feeds.
@@ -389,12 +385,6 @@
     installed the Emacs package from Melpa, and launched it with =M-x
     notmuch=.  Its threading and MIME appears a lot better than mu4e,
     from a cursory glance.
-
-    Installation is with =nix=:
-
-    #+BEGIN_SRC sh
-      nix-env -i notmuch
-    #+END_SRC
 
     Notmuch has to be configured by running =notmuch setup= on the
     commandline. I haven't yet figured out how to tangle that from
@@ -544,11 +534,7 @@
 
     I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
     faster and doesn't have this annoying db outside of the Maildir to keep in
-    sync. First install mbsync:
-
-    #+BEGIN_SRC sh
-      nix-env -i isync
-    #+END_SRC
+    sync.
 
 **** mbsync configuration
 
@@ -670,10 +656,6 @@
     MSMTP's configuration is really simple, and it will detect the account to
     use from the "from" address. Let's go!
 
-    #+BEGIN_SRC sh
-      nix-env -i msmtp
-    #+END_SRC
-
     MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
     section in the msmtp documentation for details.
 
@@ -778,10 +760,6 @@
 
    I sometimes use Graphviz to create diagrams.
 
-   #+BEGIN_SRC sh
-     nix-env -i graphviz
-   #+END_SRC
-
    I also have to tell Emacs how to launch GraphViz.
 
    #+BEGIN_SRC emacs-lisp
@@ -833,11 +811,7 @@
 	    ispell-extra-args '("-W" "2" "--sug-mode=ultra"))
     #+END_SRC
 
-    Install aspell and dictionaries:
-
-    #+BEGIN_SRC sh
-      nix-env -i aspell-dict-en aspell-dict-en-computers aspell-dict-en-science aspell
-    #+END_SRC
+    Configure aspell and let it find dictionaries:
 
     #+begin_src conf :tangle ~/.aspell.conf
     master british
@@ -1023,12 +997,6 @@
        (setq org-element-use-cache nil)
 
        (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
-   #+END_SRC
-
-   Ditaa requires a package installed by brew.
-
-   #+BEGIN_SRC sh
-     nix-env -i ditaa
    #+END_SRC
 
 *** Agenda
@@ -1474,29 +1442,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package plantuml-mode
        :mode "\\.puml\\'"
-       :init
-       (setq plantuml-jar-path
-	     (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
-   #+END_SRC
-
-   This requires installing plantuml separately:
-
-   #+BEGIN_SRC sh
-     nix-env -i plantuml
+       ;;       :init (setq plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
+       )
    #+END_SRC
 
 ** Playing Midi files
 
-   We can play midi files with fluidsynth. First we need to install it.
-
-   #+begin_src sh
-     nix-env -i fluidsynth
-   #+end_src
+   We can play midi files with fluidsynth.
 
    Then we need a soundfont. Fluidsynth appears to recommend the one
    from http://www.schristiancollins.com/generaluser.php.
 
-   #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755) :prologue "" :epilogue ""
+   #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755)
      #!/bin/bash
      set -o errexit
      set -o nounset
@@ -1643,12 +1600,6 @@
    #+END_SRC
 
 ** Scala
-
-   First install SBT, the Scala Build Tool.
-
-   #+begin_src sh
-   nix-env -i sbt
-   #+end_src
 
    Then install ensime, the /ENhanced Scala Interaction Mode for Emacs/.
 
