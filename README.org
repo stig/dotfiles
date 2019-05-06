@@ -277,13 +277,6 @@
    (counsel-mode 1)
    #+end_src
 
-** CSS
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package flymake-css
-     :config
-     (add-hook 'css-mode-hook 'flymake-css-load))
-   #+END_SRC
 ** Disable kill-emacs
 
    Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
