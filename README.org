@@ -1668,19 +1668,11 @@
      (show-paren-mode 1)
    #+END_SRC
 
-** Show more "recent files" in =M-x b= window
-
-   Keep up to 100 recent files, rather than the default of 20.
-
-   #+BEGIN_SRC emacs-lisp
-    (setq recentf-max-saved-items 100)
-   #+END_SRC
-
 ** SmartParens
 
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens-config
-       :ensure smartparens
+       ;; :ensure smartparens
        :diminish
 
        ;; I prefer to be explicit about the keybindings I use
