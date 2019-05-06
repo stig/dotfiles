@@ -215,28 +215,6 @@
      (global-auto-revert-mode 1)
    #+END_SRC
 
-** Box quotes are so cute!
-
-   Install boxquote to make fancy text boxes like this:
-
-   #+BEGIN_EXAMPLE
-     ,----
-     | This is a box quote!
-     `----
-   #+END_EXAMPLE
-
-   You can even set a title!
-
-   #+BEGIN_EXAMPLE
-     ,----[ with a title! ]
-     | This is another box quote
-     `----
-   #+END_EXAMPLE
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package boxquote)
-   #+END_SRC
-
 ** Buffer-local regex search
 
    I like the =C-s= and =C-r= keybindings to mean "search forward/backward
