@@ -975,8 +975,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package nix-mode)
-     (use-package nix-buffer)
-     (use-package nix-update)
      (use-package nix-sandbox)
    #+END_SRC
 
