@@ -1212,10 +1212,6 @@
     because I had upgraded Ditaa, and the Jar has a version number in its name.
     Now we look at the file system and grab the highest-versioned Jar available.
 
-    When executing shell commands, I want to see the stderr output. We can
-    achieve that by redirecting stderr to stdout. I got this from a post on the
-    orgmode mailing list, I believe.
-
     #+BEGIN_SRC emacs-lisp
       ;; Tell Org where to find ditaa jar
       (setq org-ditaa-jar-path
@@ -1224,10 +1220,6 @@
       (setq org-plantuml-jar-path
 	    (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
 
-      ;; Always include stderr output for shell
-      (setq org-babel-default-header-args:sh
-            '((:prologue . "exec 2>&1")
-              (:epilogue . ":")))
     #+END_SRC
 
     We have to specify the list of languages we want to support so Orgmode knows
