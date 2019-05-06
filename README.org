@@ -1518,6 +1518,15 @@
        (setq projectile-completion-system 'ivy)
        :config
        (projectile-mode +1))
+
+
+     ;; Register project subtype used by "gilded rose" kata.
+     (projectile-register-project-type 'lein-spec '("project.clj" "spec")
+				       :compile "lein compile"
+				       :test "lein test"
+				       :test-suffix "_spec")
+
+     (use-package counsel-projectile)
    #+END_SRC
 
 ** Put Custom settings in a separate file
