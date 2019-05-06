@@ -505,7 +505,7 @@
 
        # Exit quickly if we have no network, as mbsync will surely fail
        ping -t1 -q -n -c1 8.8.8.8 >/dev/null || exit 0
-       mbsync --all --quiet --pull-new
+       mbsync --quiet --pull-new gandi-inbox gandi-ml gmail-archive
      #+end_src
 
 **** Add post-new hook to tag messages
