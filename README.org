@@ -894,19 +894,18 @@
 ** Magit
 
    I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
-   Emacs just for it. It is excellent. I bind =H-m= to =magit-status=, which is
+   Emacs just for it. It is excellent. I bind =M-m= to =magit-status=, which is
    the main entry point for the mode.
 
    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
    #+BEGIN_SRC emacs-lisp
+     (use-package transient :ensure t)
      (use-package magit
+       :ensure t
        :bind (("M-m" . magit-status)
-	      ("s-b" . magit-blame))
-       :init
-       (setq magit-completing-read-function 'ivy-completing-read))
-
-     (use-package forge)
+	      ("M-b" . magit-blame)))
+     (use-package forge :ensure t)
    #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
