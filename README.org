@@ -1691,42 +1691,6 @@
      (add-hook 'text-mode-hook 'turn-on-smartparens-strict-mode)
    #+END_SRC
 
-** Sphinx & reStructuredText
-
-   I like to build Sphinx docs locally to check I've got the right syntax, and
-   that links are accounted for. I use sphinx-fronted for that:
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package sphinx-frontend)
-   #+END_SRC
-
-   That does require installing python, as OS X's default install doesn't come
-   with pip:
-
-   #+BEGIN_SRC sh
-     nix-env -i python3
-   #+END_SRC
-
-   Then, we need to install sphinx itself:
-
-   #+BEGIN_SRC sh
-     pip install sphinx
-   #+END_SRC
-
-   While we're at it, turn on auto-complete for reStructuredText.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package auto-complete-rst
-       :mode "\\.rst\'"
-       :config
-       (auto-complete-rst-init)
-       (setq auto-complete-rst-other-sources
-             '(ac-source-filename
-	       ac-source-abbrev
-	       ac-source-dictionary
-	       ac-source-yasnippet)))
-   #+END_SRC
-
 ** Start the Emacs Daemon
 
    We want Emacs to be running its server so we can interact with it using =emacsclient=.
