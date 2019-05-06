@@ -886,7 +886,6 @@
    #+begin_src emacs-lisp
      (use-package lilypond-mode
        :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
-       :demand
        :mode ("\\.ly\\'" . lilypond-mode)
        :init
        (setq LilyPond-midi-command "playmidi"))
