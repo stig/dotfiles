@@ -24,7 +24,6 @@ in
     ag
     aggressive-indent
     amx
-    boxquote
     cider
     clj-refactor
     clojure-mode
@@ -33,22 +32,21 @@ in
     editorconfig
     elfeed
     elpy
+    ensime
     exec-path-from-shell
     gist
     git-auto-commit-mode
     git-link
     graphviz-dot-mode
     ivy
-    magit          # ; Integrate git <C-x g>
     markdown-mode
     material-theme
     multiple-cursors
-    nix-buffer
     nix-mode
-    org-download
-    org-mime
-    plantuml-mode
     projectile
+    sbt-mode
+    scala-mode
+    smartparens
     string-inflection
     swiper
     use-package
@@ -61,16 +59,10 @@ in
 
   ]) ++ (with epkgs.melpaPackages; [
 
-    forge
-    auto-complete-rst
-    flymake-yaml
     leuven-theme
     nix-sandbox
-    nix-update
-    org-present
     ox-jira
     pipenv
-    python-switch-quotes
     sphinx-frontend
 
   ]) ++ (with epkgs.elpaPackages; [
@@ -81,7 +73,7 @@ in
 
   ]) ++ (with epkgs.orgPackages; [
 
-    org
+    org-plus-contrib
 
   ]) ++ [
 
