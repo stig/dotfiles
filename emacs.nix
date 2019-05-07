@@ -49,7 +49,6 @@ in
     string-inflection
     swiper
     use-package
-    wgrep
     which-key
     writegood-mode
     yaml-mode
@@ -64,6 +63,7 @@ in
     ox-jira
     pipenv
     sphinx-frontend
+    wgrep
     wgrep-ag
 
   ]) ++ (with epkgs.elpaPackages; [
