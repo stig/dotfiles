@@ -154,26 +154,49 @@
 
 ** Ag / The Silver Searcher
 
-   I use =ag= for searching quite a lot in Emacs.
+   I use =ag= for searching a lot in Emacs. Its "writable grep"
+   companion mode is pretty close to magic. When in a buffer showing
+   ag results, try hitting =C-c C-p=--this lets you /edit the results of
+   the search, right from the ag results buffer!/ Just hit =C-x C-s= to
+   save the results.
+
+   If you hit =C-c C-p= while already in writable grep mode you can
+   delete the entire matched line by hitting =C-c C-d=.
 
    #+BEGIN_SRC emacs-lisp
      (use-package ag)
-   #+END_SRC
-
-   "Writable grep" mode for ag is pretty close to magic. When in a buffer
-   showing ag results, try hitting =C-c C-p=--this lets you _edit the results
-   of the search, right from the ag results buffer!_ Just hit =C-x C-s= to
-   save the results.
-
-   If you hit =C-c C-p= while already in writable grep mode you can delete the
-   entire matched line from the file where it was found by hitting =C-c C-d=
-   on it. I use this _a lot_ when cleaning up Hieradata.
-
-   Recently ag broke wgrep-ag by starting to group its output. The grouping is
-   quite nice, but I prefer working wgrep so I turn the grouping off.
-
-   #+BEGIN_SRC emacs-lisp
      (use-package wgrep-ag)
+
+     ;; This fixes the last group not being editable until it's fixed
+     ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
+     (eval-after-load "wgrep-ag"
+       '(defun wgrep-ag-prepare-header/footer ()
+	  (save-excursion
+	    (goto-char (point-min))
+	    ;; Look for the first useful result line.
+	    (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
+					   "\\|"
+					   wgrep-ag-ungrouped-result-regexp))
+		(add-text-properties (point-min) (line-beginning-position)
+				     '(read-only t wgrep-header t))
+	      ;; No results in this buffer, let's mark the whole thing as
+	      ;; header.
+	      (add-text-properties (point-min) (point-max)
+				   '(read-only t wgrep-header t)))
+
+	    ;; OK, header dealt with. Now let's try find the footer.
+	    (goto-char (point-max))
+	    (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
+	    ;; Point is now at the beginning of the result nearest the end
+	    ;; of the buffer, AKA the last result.  Move to the start of
+	    ;; the line after the last result, and mark everything from
+	    ;; that line forward as wgrep-footer.  If we can't move to the
+	    ;; line after the last line then there apparently is no
+	    ;; footer.
+	    (when (zerop (forward-line 1))
+	      (add-text-properties (point) (point-max)
+				   '(read-only t wgrep-footer t))))))
+
      (add-hook 'ag-mode-hook 'wgrep-ag-setup)
    #+END_SRC
 
