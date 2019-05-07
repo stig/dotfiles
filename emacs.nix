@@ -21,7 +21,6 @@ in
   emacsWithPackages (epkgs: (with epkgs.melpaStablePackages; [
 
     ace-window
-    ag
     aggressive-indent
     amx
     cider
@@ -50,7 +49,7 @@ in
     string-inflection
     swiper
     use-package
-    wgrep-ag
+    wgrep
     which-key
     writegood-mode
     yaml-mode
@@ -59,11 +58,13 @@ in
 
   ]) ++ (with epkgs.melpaPackages; [
 
+    ag
     leuven-theme
     nix-sandbox
     ox-jira
     pipenv
     sphinx-frontend
+    wgrep-ag
 
   ]) ++ (with epkgs.elpaPackages; [
 

@@ -173,9 +173,8 @@
    quite nice, but I prefer working wgrep so I turn the grouping off.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package wgrep-ag
-       :init
-       (setq ag-group-matches t))
+     (use-package wgrep-ag)
+     (add-hook 'ag-mode-hook 'wgrep-ag-setup)
    #+END_SRC
 
 ** Aggressive Indent
