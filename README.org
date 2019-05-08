@@ -101,24 +101,6 @@
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
    #+END_SRC
 
-** Install & configure =use-package=
-
-   I use [[https://github.com/jwiegley/use-package][use-package]] for installing & configuring packages. Because it
-   is /itself/ installed via Melpa, there's a minor bootstrapping
-   problem: we have to install it before we can use it to install the
-   rest of the packages.
-
-   #+BEGIN_SRC emacs-lisp
-     (unless (and (package-installed-p 'use-package)
-		  (package-installed-p 'dash))
-       (package-refresh-contents)
-       (package-install 'use-package))
-
-     (eval-when-compile
-       (require 'use-package))
-
-   #+END_SRC
-
 * Configuration
 ** Ace Window
 
