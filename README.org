@@ -442,7 +442,7 @@
 
 **** Add pre-new hook to sync messages with upstream
 
-     #+begin_src sh :mkdirp t :tangle ~/Mail/.notmuch/hooks/pre-new :tangle-mode (identity #o755) :prologue "" :epilogue ""
+     #+begin_src sh :mkdirp t :tangle ~/Mail/.notmuch/hooks/pre-new :tangle-mode (identity #o755)
        #!/bin/bash
        set -o errexit
        set -o nounset
@@ -478,7 +478,7 @@
 
 **** Add post-new hook to tag messages
 
-     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755) :prologue "" :epilogue ""
+     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
        #!/bin/bash
        set -o errexit
        set -o nounset
@@ -1500,7 +1500,7 @@
 
    Finally let's install a wrapper to more easily play stuff.
 
-   #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755) :prologue "" :epilogue ""
+   #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
      #!/bin/bash
      set -o errexit
      set -o nounset
