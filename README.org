@@ -791,7 +791,7 @@
       (prefer-coding-system 'utf-8)
     #+END_SRC
 
-*** Install and configure Aspell
+*** Configure Aspell
 
     #+BEGIN_SRC emacs-lisp
       (setq ispell-dictionary "british"
