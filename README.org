@@ -279,16 +279,6 @@
      (global-set-key (kbd "s-q") nil)
    #+END_SRC
 
-** Don't hide Emacs when  ⌘-h is pressed
-
-   In Emacs Mac Port, ⌘-h bypasses any Emacs keybindings and instead sends a
-   "pass command to system" message to Mac OSX, which then hides the entire
-   application. [[https://github.com/railwaycat/homebrew-emacsmacport/issues/55][I don't want that]].
-
-   #+BEGIN_SRC emacs-lisp
-     (setq mac-pass-command-to-system nil)
-   #+END_SRC
-
 ** Don't store backup files next to originals
 
    I don't like backup files (those dreaded =foo~= ones) all over my disk.
