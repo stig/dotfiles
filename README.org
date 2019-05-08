@@ -128,10 +128,10 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
+       :init
+       (setq exec-path-from-shell-variables '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"))
        :config
-       (exec-path-from-shell-initialize)
-       (exec-path-from-shell-copy-env "NIX_PATH")
-       (exec-path-from-shell-copy-env "SSL_CERT_FILE"))
+       (exec-path-from-shell-initialize))
    #+END_SRC
 
 ** Ag / The Silver Searcher
