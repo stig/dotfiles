@@ -308,22 +308,24 @@
 
 *** Picking /both/ sides in a conflict
 
-    Sometimes I have to resolve conflicts. I then use Ediff, which I
-    launch from Magit. Occasionally I want to pick *both* sides of the
-    conflicts. (If both branches add an entry to a list, for example;
-    which can often happen in hieradata / puppet.) This adds =d= as a
-    shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) You can use =~= to swap the A and B
-    buffers, so in effect you can get A then B, /or/ B then A.
+    Sometimes I have to resolve conflicts. I use Ediff, which I launch
+    from Magit. I sometimes want to pick *both* sides of the conflicts,
+    If both branches add an entry to a list, for example. This adds =d=
+    as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use =~= to swap the A
+    and B buffers, which lets me choose A then B, /or/ B then A.
 
     #+BEGIN_SRC emacs-lisp
-      (defun ediff-copy-both-to-C ()
+      (defun sb/ediff-copy-both-to-C ()
 	(interactive)
 	(ediff-copy-diff ediff-current-difference nil 'C nil
 			 (concat
-                          (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                          (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
-      (defun add-d-to-ediff-mode-map () (define-key ediff-mode-map "d" 'ediff-copy-both-to-C))
-      (add-hook 'ediff-keymap-setup-hook 'add-d-to-ediff-mode-map)
+			  (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+			  (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+
+      (defun sb/add-d-to-ediff-mode-map ()
+	(define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+
+      (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
     #+END_SRC
 
 ** Editorconfig
