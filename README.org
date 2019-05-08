@@ -80,7 +80,8 @@
 
   Older versions of Emacs doesn't have the early-init built-in, so
   load that file before anything else, if we haven't already turned on
-  visible bell.
+  visible bell. The way I've written my config also require older
+  Emacsen to call =package-initialize= at this point.
 
   #+BEGIN_SRC emacs-lisp
     (if (not visible-bell)
@@ -92,10 +93,9 @@
 
 ** Add Package Archives & priorities
 
-   Before we can install packages, we need to add the URLs of the
-   package archives we want to use. I like the ability to use
-   Melpa-stable for select packages. I don't use Marmelade as it seems
-   to overlap with Melpa.
+   We need to add the URLs of the package archives we want to use.
+   Currently I install most packages via Nix for its roll-back
+   ability, but Magit moves too fast for that.
 
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
@@ -129,7 +129,7 @@
 ** Add keybinding to join next line to this
 
    With cursor at any point in a line, hit =M-j= to move to the end, and
-   delete the newline. The cursor is left where the newline used to be.
+   delete the newline. Leave the cursor where the newline used to be.
 
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "M-j")
@@ -138,10 +138,10 @@
 		       (join-line -1)))
    #+END_SRC
 
-** Add =/usr/local/bin= to our path
+** Set =PATH= etc from the login shell
 
    The GUI Emacs gets exec path from the system, rather than the login
-   shell. We have to load the Zsh path to get access to programs
+   shell. We have to load PATH etc from Zsh to get access to programs
    installed by Nix.
 
    #+BEGIN_SRC emacs-lisp
@@ -157,7 +157,7 @@
    I use =ag= for searching a lot in Emacs. Its "writable grep"
    companion mode is pretty close to magic. When in a buffer showing
    ag results, try hitting =C-c C-p=--this lets you /edit the results of
-   the search, right from the ag results buffer!/ Just hit =C-x C-s= to
+   the search right from the ag results buffer!/ Just hit =C-x C-s= to
    save the results.
 
    If you hit =C-c C-p= while already in writable grep mode you can
@@ -207,7 +207,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package aggressive-indent
-
        :config
        (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
        (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
@@ -245,11 +244,7 @@
 
    These settings improve pasting behaviour with programs outside Emacs.
 
-   Save clipboard strings into the kill ring before replacing them. This is
-   useful if you select something in Emacs, then select something from
-   _another_ program. If you don't set this to non-nil the previous selection
-   done from within Emacs is gone. This preserves it in the kill ring,
-   enabling you to retrieve it.
+   Save clipboard text into kill ring before replacing them.
 
    #+BEGIN_SRC emacs-lisp
      (setq save-interprogram-paste-before-kill t)
