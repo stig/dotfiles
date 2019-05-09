@@ -566,7 +566,7 @@
      #+BEGIN_SRC emacs-lisp
        (defun sb/sync-mail ()
 	 (interactive)
-	 (start-process "*mbsync*" "*mbsync-output*" "mbsync" "--verbose --all --quiet"))
+	 (start-process "*mbsync*" "*mbsync-output*" "mbsync" "--verbose" "--all" "--quiet"))
 
        (defvar sb/sync-mail-timer nil
          "A variable to let us hold an existing sync timer so we can delete it")
