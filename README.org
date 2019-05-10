@@ -270,6 +270,21 @@
    (counsel-mode 1)
    #+end_src
 
+** Diary (Calendar) Functions
+
+    Prefer YMD to the /crazy/ american MDY order.
+
+    I schedule some things every weekday,
+    so add a convenience function for that.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq calendar-date-style 'iso)
+
+      (defun sb/weekday-p (date)
+	"Is `date' a weekday?"
+	(memq (calendar-day-of-week date) '(1 2 3 4 5)))
+     #+END_SRC
+
 ** Disable kill-emacs
 
    Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
@@ -725,6 +740,14 @@
      (global-set-key (kbd "C-c w") 'whitespace-cleanup)
    #+END_SRC
 
+** Iedit
+
+   Edit multiple symbols in one go. Similar in some respects to
+   Multiple Cursors, but seems a little more light-weight.
+
+   #+begin_src emacs-lisp
+   (use-package iedit :ensure t)
+   #+end_src
 ** I like big fonts and I cannot lie
 
 #+BEGIN_SRC emacs-lisp
@@ -947,6 +970,9 @@
 *** Agenda
 
     #+BEGIN_SRC emacs-lisp
+      ;; Include Calendar/Diary information in Agenda
+      (setq org-agenda-include-diary t)
+
       ;; I don't rely on many properties, so this should speed up my Agenda
       ;; view, according to http://orgmode.org/worg/agenda-optimization.html
       (setq org-agenda-ignore-properties '(effort appt stats))
@@ -1140,58 +1166,40 @@
 	       ("C-c C-c o" . org-passwords-open-url)))
     #+END_SRC
 
-*** Calendar
-
-    I use calendar with org, so configure it here.
-
-    #+BEGIN_SRC emacs-lisp
-    ;; Prefer YMD to the crazy american MDY
-    (setq calendar-date-style 'iso)
-
-    ;; Include Calendar/Diary information in Agenda
-    (setq org-agenda-include-diary t)
-    #+END_SRC
-
-    I do certain things every weekday. Here's a function to check
-    whether it is a weekday:
-
-    #+begin_src emacs-lisp
-      (defun sb/weekday-p (date)
-	"Is `date' a weekday?"
-	(let ((dayname (calendar-day-of-week date)))
-	  (memq dayname '(1 2 3 4 5))))
-    #+end_src
-
-    I prepare my invoice on a weekday towards the end of the month,
-    but before the 28th. Here's a function to determine if today is a
-    suitable day.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/file-invoice-p (date)
-	(let* ((day-of-week (calendar-day-of-week date))
-	       (month (calendar-extract-month date))
-	       (year (calendar-extract-year date))
-	       (last-month-day (calendar-last-day-of-month month year))
-	       (month-day (cadr date)))
-
-	  (and
-	   ;; It's a week day
-	   (sb/weekday-p date)
-
-	   ;; It's less than 4 days until the 28th
-	   (< 28 (+ month-day 4))
-
-	   ;; It's on or before the 28th
-	   (<= month-day 28))))
-    #+END_SRC
-
 *** Drilling
 
     I use org-drill for drilling music theory.
 
     #+begin_src emacs-lisp
-      (require 'org-drill)
-      (setq org-drill-maximum-items-per-session 10)
+      (use-package org-drill
+	:init
+	(setq org-drill-maximum-items-per-session 10))
+
+      ;; Override until fixed in upstream distro
+      ;; https://emacs.stackexchange.com/a/46961/10625
+      (eval-after-load "org-drill"
+	'(defun org-drill-hide-subheadings-if (test)
+	   "TEST is a function taking no arguments. TEST will be called for each
+      of the immediate subheadings of the current drill item, with the point
+      on the relevant subheading. TEST should return nil if the subheading is
+      to be revealed, non-nil if it is to be hidden.
+      Returns a list containing the position of each immediate subheading of
+      the current topic."
+	   (let ((drill-entry-level (org-current-level))
+		 (drill-sections nil))
+	     (org-show-subtree)
+	     (save-excursion
+	       (org-map-entries
+		(lambda ()
+		  (when (and (not (org-invisible-p))
+			     (> (org-current-level) drill-entry-level))
+		    (when (or (/= (org-current-level) (1+ drill-entry-level))
+			      (funcall test))
+		      (hide-subtree))
+		    (push (point) drill-sections)))
+		nil 'tree))
+	     (reverse drill-sections)))
+	)
     #+end_src
 
 *** Publishing
