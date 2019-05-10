@@ -969,8 +969,7 @@
 
       (setq org-agenda-custom-commands
 	    '(("d" "Day Agenda"
-	       ((agenda "" ((org-agenda-span 'day)))
-		(todo "NEXT")))
+	       ((agenda "" ((org-agenda-span 'day)))))
 	      ("S" "Someday"
 	       ((todo "PROJ"
 		      ((org-agenda-files '("~/org/Someday.org"))))
