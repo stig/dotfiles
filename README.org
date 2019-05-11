@@ -1,87 +1,62 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:emacs-lisp    :tangle init.el
-#+PROPERTY: header-args:sh            :tangle init.sh
-#+PROPERTY: header-args            :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/init.el :results silent :mkdirp yes
 #+STARTUP: content
 * Introduction
 
-  This is my Emacs configuration. Because I'm prone to forget what does what,
-  my configuration is in the form of a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose,
-  interspaced with code.
+  This is my Emacs configuration. Because I'm prone to forget what
+  does what, my configuration is in the form of a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]]
+  document: prose, interspaced with code. Thus the configuration
+  snippets here are not copied-and-pasted from my config. This
+  =README.org= is the document where I edit my config, then I and /tangle/
+  the config into [[file:init.el][init.el]] by hitting =C-c C-v C-t=.
 
-  After over a decade with BBEdit I started looking at Emacs again
-  when I started learning Clojure. I started with the "better
-  defaults" package and added things one-by-one as I found them,
-  rather than stealing someone else's mammoth =.emacs= file that I
-  didn't understand any of. Initially I drew a lot of inspiration from
-  [[https://github.com/magnars/.emacs.d][magnars' .emacs.d]], but after rewriting it using [[https://github.com/jwiegley/use-package][use-package]] (which
-  is great) and later using Org mode, it now feels like my own work.
+* Install Emacs
 
-  When I say this document uses literate programming, I mean that the
-  configuration snippets here are not copied-and-pasted from my
-  config, they /are/ my config. I edit everything in =init.org= and /tangle/
-  the code into [[file:init.el][init.el]] by hitting =C-c C-v C-t=.
+  The file [[file:emacs.nix][emacs.nix]] in this repo contains a Nix expression for
+  installing Emacs & many packages & auxiliary tools. With the aid of
+  the below Nix config, I can install it thus:
 
-  However, this document doesn't just contain =emacs-lisp= snippets. It
-  also contains some shell snippets to install Emacs itself, and some
-  helper programs. By invoking =C-c C-v C-t= on this document an =init.sh=
-  file is produced, that contains shell commands that will install all
-  the helper programs via =brew=, or in some cases via =nix=.
+  : nix-env -f "<nixpkgs>" -iA myemacs
 
-** Check out this repo into =~/.emacs.d/=
+  #+begin_src nix :tangle ~/.config/nixpkgs/config.nix :mkdirp yes
+    {
+      packageOverrides = super: let self = super.pkgs; in {
+	myemacs = import ~/.emacs.d/emacs.nix { pkgs = self; };
+      };
+    }
+  #+end_src
 
-** Install Emacs
+* Early Configuration
 
-   I'm experimenting with installing Emacs via Nix rather than
-   homebrew. [[file:emacs.nix][emacs.nix]] contains a Nix expression for installing Emacs
-   & many packages & auxiliary tools. With the aid of the below Nix
-   config, I can install it thus:
+** Disable splash screen, mouse interface & beeps in =early-init.el=
+   :PROPERTIES:
+   :header-args:emacs-lisp: :tangle ~/.emacs.d/early-init.el :mkdirp yes
+   :END:
 
-   : nix-env -f "<nixpkgs>" -iA myemacs
+   I turn off the mouse interface early to avoid momentary display
+   during launch. I also don't need to see a splash screen on every
+   launch. Finally I do not like Emacs to beep at me; I prefer a
+   visual bell.
 
-   #+begin_src nix :tangle ~/.config/nixpkgs/config.nix
-     {
-       packageOverrides = super: let self = super.pkgs; in {
-	 myemacs = import ~/.emacs.d/emacs.nix { pkgs = self; };
-       };
-     }
-   #+end_src
-
-* Meta configuration
-
-** Disable mouse interface, splash screen & beeps in =early-init.el=
-
-   I don't tend to use a mouse in Emacs often, so I turn off mouse
-   interface early to avoid momentary display during launch. Recent
-   Emacsen read =early-init.el= before initialising GUI components, so
-   it's a great place to turn off mouse interface to avoid flicker
-   during startup.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
+   #+BEGIN_SRC emacs-lisp
      (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
      (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-   #+END_SRC
-
-   I also don't need to see a splash screen on every launch.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
      (setq inhibit-startup-message t)
-   #+END_SRC
-
-   I do not like Emacs to beep at me; I prefer a visual bell.
-
-   #+BEGIN_SRC emacs-lisp :tangle early-init.el
      (setq visible-bell t)
    #+END_SRC
 
 ** Pre Emacs 27 compat                                               :COMPAT:
 
-   Older versions of Emacs doesn't have the early-init built-in, so
-   load that file before anything else, if we haven't already turned on
-   visible bell. The way I've written my config also require older
-   Emacsen to call =package-initialize= at this point.
+   Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
+   initialising GUI components, so it's a great place to turn off
+   mouse interface to avoid flicker during startup. In older versions
+   of Emacs we load that file before anything else.
+
+   Emacs 27 also initialises packages before loading the user config,
+   but older ones does not, requiring me to manually call
+   =package-initialize= at this point.
 
    #+BEGIN_SRC emacs-lisp
     (if (not visible-bell)
@@ -91,11 +66,12 @@
 	  (package-initialize)))
    #+END_SRC
 
-** Add Package Archives & priorities
+** Add Melpa Package Archive
 
-   We need to add the URLs of the package archives we want to use.
-   Currently I install most packages via Nix for its roll-back
-   ability, but Magit moves too fast for that.
+   We need to add the URLs of the package archives we want to use. I
+   install most packages via Nix for its roll-back ability, but Magit
+   moves too fast for that. Also, it's nice to be able to try out
+   packages without having to rebuild & relaunch Emacs.
 
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
