@@ -78,18 +78,18 @@
 
 ** Pre Emacs 27 compat                                               :COMPAT:
 
-  Older versions of Emacs doesn't have the early-init built-in, so
-  load that file before anything else, if we haven't already turned on
-  visible bell. The way I've written my config also require older
-  Emacsen to call =package-initialize= at this point.
+   Older versions of Emacs doesn't have the early-init built-in, so
+   load that file before anything else, if we haven't already turned on
+   visible bell. The way I've written my config also require older
+   Emacsen to call =package-initialize= at this point.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (if (not visible-bell)
 	(progn
 	  (load (expand-file-name "~/.emacs.d/early-init.el") t)
 	  (require 'package)
 	  (package-initialize)))
-  #+END_SRC
+   #+END_SRC
 
 ** Add Package Archives & priorities
 
@@ -241,11 +241,11 @@
 
 ** Clojure
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (use-package clojure-mode)
     (use-package cider)
     (use-package clj-refactor)
-  #+END_SRC
+   #+END_SRC
 
 ** Company
 
@@ -272,18 +272,18 @@
 
 ** Diary (Calendar) Functions
 
-    Prefer YMD to the /crazy/ american MDY order.
+   Prefer YMD to the /crazy/ american MDY order.
 
-    I schedule some things every weekday,
-    so add a convenience function for that.
+   I schedule some things every weekday,
+   so add a convenience function for that.
 
-    #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
       (setq calendar-date-style 'iso)
 
       (defun sb/weekday-p (date)
 	"Is `date' a weekday?"
 	(memq (calendar-day-of-week date) '(1 2 3 4 5)))
-     #+END_SRC
+   #+END_SRC
 
 ** Disable kill-emacs
 
@@ -748,17 +748,18 @@
    #+begin_src emacs-lisp
    (use-package iedit :ensure t)
    #+end_src
+
 ** I like big fonts and I cannot lie
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :height 150)
-#+END_SRC
+   #+END_SRC
 ** International Support
 
-    I'm Norwegian, but use a GB keyboard. I also use Dvorak keyboard
-    layout. I also have Polish colleagues whose names I don't want to
-    mangle completly. Keep this in mind if you find the below
-    confusing.
+   I'm Norwegian, but use a GB keyboard. I also use Dvorak keyboard
+   layout. I also have Polish colleagues whose names I don't want to
+   mangle completly. Keep this in mind if you find the below
+   confusing.
 
 *** Always use UTF-8 encoding
 
@@ -823,7 +824,7 @@
        :mode ("\\.ly\\'" . lilypond-mode)
        :init
        (setq LilyPond-midi-command "playmidi"))
-     #+end_src
+   #+end_src
 
 ** Magit
 
@@ -1206,7 +1207,7 @@
 
     Publishing projects.
 
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (defun sb/org-html-format-drawer (name content)
       (concat "<div class=\"drawer " (downcase name) "\">\n"
 	      "<h6>" (capitalize name) "</h6>\n"
@@ -1280,7 +1281,7 @@
 	     :exclude ".*"              ;; To exclude all files...
 	     :include ("index.org")     ;; ... except index.org.
 	     :table-of-contents nil)))
-  #+END_SRC
+    #+END_SRC
 
 *** Blogging Support
 
@@ -1502,11 +1503,11 @@
 
     I'll try Elpy first because of its touted refactoring support.
 
-   #+BEGIN_SRC emacs-lisp :noweb yes
+    #+BEGIN_SRC emacs-lisp :noweb yes
      (use-package elpy
        :config
        (elpy-enable))
-   #+END_SRC
+    #+END_SRC
 
 *** Create a UTF-8 alias
 
@@ -1526,13 +1527,13 @@
     #+END_SRC
 *** Pipenv
 
-  #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (use-package pipenv
       :hook (python-mode . pipenv-mode)
       :init
       ;; (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
       )
-  #+END_SRC
+    #+END_SRC
 
 ** Running tests
 
@@ -1607,11 +1608,11 @@
 
    We want Emacs to be running its server so we can interact with it using =emacsclient=.
 
-  #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
     (require 'server)
     (unless (server-running-p)
       (server-start))
-  #+END_SRC
+   #+END_SRC
 
 ** String Inflection
 
