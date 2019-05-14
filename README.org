@@ -254,11 +254,11 @@
    so add a convenience function for that.
 
    #+BEGIN_SRC emacs-lisp
-      (setq calendar-date-style 'iso)
+     (setq calendar-date-style 'iso)
 
-      (defun sb/weekday-p (date)
-	"Is `date' a weekday?"
-	(memq (calendar-day-of-week date) '(1 2 3 4 5)))
+     (defun sb/weekday-p (date)
+       "Is `date' a weekday?"
+       (memq (calendar-day-of-week date) '(1 2 3 4 5)))
    #+END_SRC
 
 ** Disable kill-emacs
