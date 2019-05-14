@@ -1595,16 +1595,9 @@
 
 ** Support for fullscreen
 
-   I like to run apps in fullscreen mode. Unfortunately ediff merge, when running
-   an Emacs version without Yamamoto's Mac patch set, doesn't really work in
-   fullscreen---it ends up putting the small emerge control frame on a
-   different screen. Because I like Emacs 25 (for up-to-date Gnus) I work
-   around this problem by exiting fullscreen and just maximising the frame
-   instead.
-
-   Toggling frame maximation is already available as =M-<f10>=, so all we need
-   to do is add a key binding to toggle fullscreen. I found this function at
-   the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]], and it does just that.
+   I like to run apps in fullscreen mode. Sometimes it's useful to be
+   able to toggle it on or off, which this function does. I found it
+   at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
 
    #+BEGIN_SRC emacs-lisp
      (defun my-toggle-fullscreen ()
@@ -1615,13 +1608,6 @@
         (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
      (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
-   #+END_SRC
-
-   Sometimes (when using ediff) I don't use fullscreen. By resizing the window
-   by pixels rather than characters we can still fill the entire screen.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq frame-resize-pixelwise t)
    #+END_SRC
 
 ** Swiper
