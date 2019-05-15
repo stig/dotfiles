@@ -889,6 +889,35 @@
      (use-package nix-sandbox)
    #+END_SRC
 
+** Unfill paragraphs and regions
+
+   The default binding for =M-q= fills a paragraph. Very good. But
+   sometimes I want to /unfill/[fn:: Particularly when editing markdown
+   that is going to end up on GitHub, as otherwise the result has lots
+   of hard linebreaks. This happens every time I edit a PR description
+   in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
+
+   #+begin_src emacs-lisp
+     (defun sb/unfill-paragraph ()
+       (interactive)
+       (let ((fill-column (point-max)))
+	 (fill-paragraph nil)))
+
+     (defun sb/fill-or-unfill-paragraph (arg)
+       "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
+       (interactive "P")
+       (if arg
+	   (sb/unfill-paragraph)
+	 (fill-paragraph)))
+
+     (bind-key "M-q" 'sb/fill-or-unfill-paragraph)
+
+     (defun sb/unfill-region ()
+       (interactive)
+       (let ((fill-column (point-max)))
+	 (fill-region (region-beginning) (region-end) nil)))
+   #+end_src
+
 ** Org mode
 
    I now use Org mode for all writing I initiate. The Emacs org mode's support
