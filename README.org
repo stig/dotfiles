@@ -555,20 +555,24 @@
      not abnormal for this to take 30 seconds, but usually it's less.
 
      #+BEGIN_SRC emacs-lisp
-       (defun sb/sync-mail ()
-	 (interactive)
-	 (start-process "*mbsync*" "*mbsync-output*" "mbsync" "--verbose" "--all" "--quiet"))
+       (defun sb/mbsync (arg)
+	 (interactive "p")
+	 (let ((buffer-name "*mbsync-log*"))
+	   (if (zerop arg)
+	       (message "Launching mbsync")
+	     (switch-to-buffer buffer-name))
+	   (start-process "*mbsync*" buffer-name "mbsync" "--verbose" "--all" "--quiet")))
 
-       (defvar sb/sync-mail-timer nil
-         "A variable to let us hold an existing sync timer so we can delete it")
+       (defvar sb/mbsync-timer nil
+	 "A variable to let us hold an existing sync timer so we can delete it")
 
        ;; Cancel any existing sync timer
-       (when sb/sync-mail-timer
-	 (cancel-timer sb/sync-mail-timer))
+       (when sb/mbsync-timer
+	 (cancel-timer sb/mbsync-timer))
 
        ;; Capture new timer so we can cancel it later above
-       (setq sb/sync-mail-timer
-	     (run-with-timer 60 10000 'sb/sync-mail))
+       (setq sb/mbsync-timer
+	     (run-with-timer 60 10000 'sb/mbsync 0))
      #+END_SRC
 
 *** Compose Emails with Org mode
