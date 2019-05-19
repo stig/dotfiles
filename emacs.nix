@@ -57,7 +57,6 @@ in
   ]) ++ (with epkgs.melpaPackages; [
 
     ag
-    leuven-theme
     nix-sandbox
     ox-jira
     pipenv
@@ -68,7 +67,6 @@ in
   ]) ++ (with epkgs.elpaPackages; [
 
     beacon         # ; highlight my cursor when scrolling
-    nameless       # ; hide current package name everywhere in elisp code
     orgalist
 
   ]) ++ (with epkgs.orgPackages; [
