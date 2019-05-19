@@ -834,6 +834,8 @@
        :bind ("M-m" . magit-status))
 
      (use-package forge :ensure t)
+     (use-package magit-org-todos :ensure t)
+     (use-package magit-todos :ensure t)
    #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
