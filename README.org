@@ -188,6 +188,14 @@
      (global-auto-revert-mode 1)
    #+END_SRC
 
+** Beacon
+
+   Highlight my cursor when scrolling
+
+   #+begin_src emacs-lisp
+   (use-package beacon)
+   #+end_src
+
 ** Buffer-local regex search
 
    I like the =C-s= and =C-r= keybindings to mean "search forward/backward
@@ -1791,18 +1799,6 @@
    #+BEGIN_SRC emacs-lisp
    (use-package yaml-mode)
    #+END_SRC
-** YAS
-
-   YAS is a templating package. You can define mode-specific or global
-   templates, and insert templates with keycombinations or triggered based on
-   trigger words in the text.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package yasnippet
-       :config
-       (yas-global-mode))
-   #+END_SRC
-
 ** Zsh
 
    This is how I set up ZSH. It feels weird to set it up here, as

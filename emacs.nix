@@ -52,8 +52,6 @@ in
     which-key
     writegood-mode
     yaml-mode
-    yasnippet
-    zerodark-theme
 
   ]) ++ (with epkgs.melpaPackages; [
 
