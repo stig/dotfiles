@@ -28,6 +28,7 @@ in
     clojure-mode
     company
     counsel
+    counsel-projectile
     editorconfig
     elfeed
     elpy
