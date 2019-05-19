@@ -794,12 +794,17 @@
    any better.
 
    #+begin_src emacs-lisp
-   (use-package ivy :demand
-      :config
-      (setq ivy-use-virtual-buffers t
-            ivy-count-format "%d/%d "))
-   (ivy-mode 1)
+     (use-package ivy :demand
+	:config
+	(setq ivy-use-virtual-buffers t
+	      ivy-count-format "%d/%d "))
+     (ivy-mode 1)
+
+     ;; This should apparently allow opening multiple files from
+     ;; ivy-find-file.
+     (use-package ivy-hydra)
    #+end_src
+
 
 ** LilyPond
 

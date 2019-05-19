@@ -38,7 +38,6 @@ in
     git-auto-commit-mode
     git-link
     graphviz-dot-mode
-    ivy
     markdown-mode
     material-theme
     multiple-cursors
@@ -57,6 +56,8 @@ in
   ]) ++ (with epkgs.melpaPackages; [
 
     ag
+    ivy
+    ivy-hydra
     nix-sandbox
     ox-jira
     pipenv
