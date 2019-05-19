@@ -56,8 +56,10 @@ in
   ]) ++ (with epkgs.melpaPackages; [
 
     ag
+    iedit
     ivy
     ivy-hydra
+    markdown-mode
     nix-sandbox
     ox-jira
     pipenv
