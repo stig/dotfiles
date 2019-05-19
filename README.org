@@ -1114,12 +1114,6 @@
 	       :jump-to-captured t)))
     #+END_SRC
 
-**** Allow capturing from Firefox
-
-     #+begin_src emacs-lisp
-     (require 'org-protocol)
-     #+end_src
-
 *** Babel
 
     Some initialisation settings for Org Babel is in order.
