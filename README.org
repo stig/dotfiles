@@ -1070,6 +1070,8 @@
 
       (setq org-default-notes-file "~/org/inbox.org")
 
+      (use-package org-contacts)
+
       (setq org-capture-templates
 	    '(("t" "TODOs")
 	      ("tn" "Todo Right Now (clock in!)" entry (file "")
@@ -1086,6 +1088,20 @@
 	       "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
 	      ("tT" "Trip" entry (file "")
 	       (file "templates/trip.org") :empty-lines 1)
+
+	      ("c" "Contacts" entry (file "~/org/contacts.org")
+	       "* %(org-contacts-template-name)
+	:PROPERTIES:
+	:EMAIL: %(org-contacts-template-email)
+	:BIRTHDAY:
+	:PHONE:
+	:ALIAS:
+	:NICKNAME:
+	:IGNORE:
+	:ICON:
+	:NOTE:
+	:ADDRESS:
+	:END:")
 
 	      ("l" "Log Learning" entry (file+datetree "learning.org")
 	       "* %^{Title} %^g\n  %?")
