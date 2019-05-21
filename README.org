@@ -14,21 +14,20 @@
 
 * Install Emacs
 
-  The file [[file:emacs.nix][emacs.nix]] in this repo contains a Nix expression for
-  installing Emacs & many packages & auxiliary tools. With the aid of
-  the below Nix config, I can install it thus:
+  I download Emacs from https://emacsformacosx.com/ & install that package.
 
-  : nix-env -f "<nixpkgs>" -iA myemacs
+  I install (most) dependent tools using Nix:
 
-  #+begin_src nix :tangle ~/.config/nixpkgs/config.nix :mkdirp yes
-    {
-      packageOverrides = super: let self = super.pkgs; in {
-	myemacs = import ~/.emacs.d/emacs.nix { pkgs = self; };
-      };
-    }
+  #+begin_src sh
+    nix-env -i aspell aspellDicts.en awscli clojure curl ditaa editorconfig-core-c fluidsynth freepats gnused gnutls graphviz isync jq msmtp notmuch pinentry plantuml pwgen python3 sbt silver-searcher
   #+end_src
 
 * Early Configuration
+** Configure Nix Site Lib
+
+   #+begin_src emacs-lisp
+     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
+   #+end_src
 
 ** Disable splash screen, mouse interface & beeps in =early-init.el=
    :PROPERTIES:
@@ -74,8 +73,28 @@
    packages without having to rebuild & relaunch Emacs.
 
    #+BEGIN_SRC emacs-lisp
+     (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+     (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
    #+END_SRC
+
+** Install & configure =use-package=
+
+   Pin packages to stable melpa archive by default.
+
+   #+begin_src emacs-lisp
+     ;; Automatically :ensure each use-package.
+     (setq use-package-always-ensure t)
+
+     ;; Default value for :pin in each use-package.
+     (setq use-package-always-pin "melpa-stable")
+
+     ;; Bootstrap use-package
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+     (require 'use-package)
+   #+end_src
 
 * Configuration
 ** Ace Window
@@ -110,7 +129,7 @@
        (exec-path-from-shell-initialize))
    #+END_SRC
 
-** Ag / The Silver Searcher
+** Ag (The Silver Searcher)
 
    I use =ag= for searching a lot in Emacs. Its "writable grep"
    companion mode is pretty close to magic. When in a buffer showing
@@ -122,8 +141,9 @@
    delete the entire matched line by hitting =C-c C-d=.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package ag)
-     (use-package wgrep-ag)
+     (use-package ag :pin melpa)
+     (use-package wgrep :pin melpa)
+     (use-package wgrep-ag :pin melpa)
 
      ;; This fixes the last group not being editable until it's fixed
      ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
@@ -193,7 +213,7 @@
    Highlight my cursor when scrolling
 
    #+begin_src emacs-lisp
-   (use-package beacon)
+   (use-package beacon :pin gnu)
    #+end_src
 
 ** Buffer-local regex search
@@ -410,7 +430,7 @@
       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
 
       ;; Allow linking to NotMuch messages from Org mode
-      (use-package org-notmuch)
+      (require 'org-notmuch)
     #+END_SRC
 
 **** Add post-new hook to tag messages
@@ -734,7 +754,7 @@
    Multiple Cursors, but seems a little more light-weight.
 
    #+begin_src emacs-lisp
-   (use-package iedit :ensure t)
+   (use-package iedit :pin melpa)
    #+end_src
 
 ** I like big fonts and I cannot lie
@@ -794,15 +814,18 @@
    any better.
 
    #+begin_src emacs-lisp
-     (use-package ivy :demand
-	:config
-	(setq ivy-use-virtual-buffers t
-	      ivy-count-format "%d/%d "))
+     (use-package ivy
+       :pin melpa
+       :demand
+       :config
+       (setq ivy-use-virtual-buffers t
+	     ivy-count-format "%d/%d "))
      (ivy-mode 1)
 
      ;; This should apparently allow opening multiple files from
      ;; ivy-find-file.
-     (use-package ivy-hydra)
+     (use-package ivy-hydra
+       :pin melpa)
    #+end_src
 
 
@@ -828,14 +851,14 @@
    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package transient :ensure t)
+     (use-package transient :pin melpa)
      (use-package magit
-       :ensure t
+       :pin melpa
        :bind ("M-m" . magit-status))
 
-     (use-package forge :ensure t)
-     (use-package magit-org-todos :ensure t)
-     (use-package magit-todos :ensure t)
+     (use-package forge :pin melpa)
+     (use-package magit-org-todos :pin melpa)
+     (use-package magit-todos :pin melpa)
    #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
@@ -863,6 +886,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package markdown-mode
+       :pin melpa
        :bind (("M-<up>" . markdown-move-list-item-up)
 	      ("M-<down>" . markdown-move-list-item-down)))
    #+END_SRC
@@ -904,8 +928,8 @@
    Some modules useful for Nix.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package nix-mode)
-     (use-package nix-sandbox)
+     (use-package nix-mode :pin melpa)
+     (use-package nix-sandbox :pin melpa)
    #+END_SRC
 
 ** Unfill paragraphs and regions
@@ -959,6 +983,8 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package org
+       :ensure org-plus-contrib
+       :pin org
        :bind (("C-c l" . org-store-link)
 	      ("C-c a" . org-agenda)
 	      ("C-c c" . org-capture)
@@ -1070,7 +1096,9 @@
 
       (setq org-default-notes-file "~/org/inbox.org")
 
-      (use-package org-contacts)
+      (use-package org-contacts
+	:ensure org-plus-contrib
+	:pin org)
 
       (setq org-capture-templates
 	    '(("t" "TODOs")
@@ -1176,7 +1204,7 @@
     I hate writing JIRA markup, so I wrote a JIRA export backend for Org mode.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ox-jira)
+      (use-package ox-jira :pin melpa)
       (require 'ox-latex)
       (setq org-export-backends '(html md freemind jira latex))
     #+END_SRC
@@ -1185,6 +1213,8 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-passwords
+        :ensure org-plus-contrib
+	:pin org
 	:after org
 	:init
 
@@ -1207,6 +1237,8 @@
 
     #+begin_src emacs-lisp
       (use-package org-drill
+        :ensure org-plus-contrib
+	:pin org
 	:init
 	(setq org-drill-maximum-items-per-session 10))
 
@@ -1418,7 +1450,7 @@
 *** Edit "Org-like" lists in non-Org buffers
 
     #+begin_src emacs-lisp
-    (use-package orgalist)
+    (use-package orgalist :pin gnu)
     (add-to-list 'message-mode-hook 'orgalist-mode)
     #+end_src
 
@@ -1563,6 +1595,7 @@
 
     #+BEGIN_SRC emacs-lisp
     (use-package pipenv
+      :pin melpa
       :hook (python-mode . pipenv-mode)
       :init
       ;; (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
@@ -1619,6 +1652,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens-config
+       :ensure smartparens
        :diminish
 
        ;; I prefer to be explicit about the keybindings I use
