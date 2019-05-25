@@ -423,6 +423,20 @@
     Notmuch works pretty well for me. Mainly I set up a keybinding to
     quickly bring it up.
 
+    I don't like using my email inbox as a todo list, so when I
+    receive an email I need to act on but can't yet, I link to it from
+    my Org mode agenda and archive it. When Org agenda prompts me I
+    can click on the link and immediately get to the mail in my
+    archive, and can reply to it from there.
+
+    NotMuch doesn't have built-in support for multiple profiles. I
+    tried using "gnus-alias", but couldn't get it to work. Going with
+    a simpler scheme now: reply to the address they write to, and base
+    signature on the from address.
+
+    Save a copy of outgoing personal mail. For work I rely on Gmail
+    automatically saving outgoing mail to my sent folder.
+
     #+BEGIN_SRC emacs-lisp
       (require 'notmuch)
       (bind-key "C-x m" 'notmuch)
@@ -431,6 +445,18 @@
 
       ;; Allow linking to NotMuch messages from Org mode
       (require 'org-notmuch)
+
+      (defun sb/message-signature-setup-hook ()
+	(setq message-signature-file
+	      (if (string-match "laterpay" (mail-fetch-field "from"))
+		  "~/.signature.work" nil))
+	(message "Selected %s for signature" message-signature-file))
+
+      (add-hook 'message-signature-setup-hook
+		'sb/message-signature-setup-hook)
+
+      (setq notmuch-fcc-dirs
+	    '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
     #+END_SRC
 
 **** Add post-new hook to tag messages
@@ -456,31 +482,6 @@
        # This spammer just don't care about opt-outs
        notmuch tag -inbox -unread +spam -- from:acaeglobal.com
      #+END_SRC
-
-*** Select different signature for work email
-
-    NotMuch doesn't have built-in support for multiple profiles. I
-    tried using "gnus-alias", but couldn't get it to work. Going with
-    a simpler scheme now: reply to the address they write to, and base
-    signature on the from address.
-
-    #+begin_src emacs-lisp
-      (defun sb/message-signature-setup-hook ()
-	(setq message-signature-file
-	      (if (string-match "laterpay" (mail-fetch-field "from"))
-	         "~/.signature.work" nil))
-	(message "Selected %s for signature" message-signature-file))
-
-      (add-hook 'message-signature-setup-hook
-		'sb/message-signature-setup-hook)
-    #+end_src
-
-*** Save a copy of outgoing personal mail
-
-    #+begin_src emacs-lisp
-      (setq notmuch-fcc-dirs
-	    `((,user-mail-address . "Gandi/sent +sent -unread -inbox")))
-    #+end_src
 
 *** Downloading email over IMAP
 
