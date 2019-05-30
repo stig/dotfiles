@@ -862,7 +862,6 @@
        :pin melpa)
    #+end_src
 
-
 ** LilyPond
 
    With Nix I am not able to install LilyPond, but I can install it
