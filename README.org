@@ -467,20 +467,16 @@
        set -o nounset
        set -o pipefail
 
-       notmuch tag +sent -inbox -- path:/sent/
-       notmuch tag +deleted -inbox -- path:/trash/
-       notmuch tag +spam -inbox -- path:/spam/
-       notmuch tag +work -- path:/Work/
+       # Tag previously unseen messages
+       notmuch tag +work -- path:/Work/ and tag:inbox
+       notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
+       notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
+       notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
 
-       # Mailing lists..
-       notmuch tag +lists +org-mode -inbox -- path:/ml-org-mode/
-       notmuch tag +lists +lilypond -inbox -- path:/ml-lilypond/
-
-       # Immediately archive Microsoft family spam
-       notmuch tag -inbox -unread -- from:microsoftfamily@microsoft.com AND NOT to:stig@brautaset.org
-
-       # This spammer just don't care about opt-outs
-       notmuch tag -inbox -unread +spam -- from:acaeglobal.com
+       # Add extra tags for mailing lists, and remove inbox tag.
+       notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
+       notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
+       notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
      #+END_SRC
 
 *** Downloading email over IMAP
@@ -529,14 +525,32 @@
        Create Slave
        SyncState *
 
-       Channel gandi-ml
-       Master :gandi-remote:
-       Slave :gandi-local:
-       Patterns ml-%
+       Channel gandi-org-mode
+       Master :gandi-remote:org-mode
+       Slave :gandi-local:org-mode
        Create Slave
        SyncState *
        MaxMessages 500
        ExpireUnread yes
+       Expunge Both
+
+       Channel gandi-lilypond
+       Master :gandi-remote:lilypond
+       Slave :gandi-local:lilypond
+       Create Slave
+       SyncState *
+       MaxMessages 500
+       ExpireUnread yes
+       Expunge Both
+
+       Channel gandi-clojure
+       Master :gandi-remote:clojure
+       Slave :gandi-local:clojure
+       Create Slave
+       SyncState *
+       MaxMessages 500
+       ExpireUnread yes
+       Expunge Both
 
        # ACCOUNT INFORMATION
        IMAPAccount gmail
