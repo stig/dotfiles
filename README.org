@@ -477,6 +477,7 @@
        notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
        notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
        notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
+       notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
      #+END_SRC
 
 *** Downloading email over IMAP
@@ -550,6 +551,14 @@
        SyncState *
        MaxMessages 500
        ExpireUnread yes
+       Expunge Both
+
+       Channel gandi-tuls
+       Master :gandi-remote:tuls
+       Slave :gandi-local:tuls
+       Create Slave
+       SyncState *
+       MaxMessages 500
        Expunge Both
 
        # ACCOUNT INFORMATION
