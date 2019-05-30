@@ -387,100 +387,7 @@
    I use [[http://msmtp.sourceforge.net/][msmtp]] for sending email, and [[http://isync.sourceforge.net][mbsync]] for syncing IMAP messages
    between my local machine and upstream servers.
 
-*** Reading mail with NotMuch
-
-    After installing NotMuch it I ran =notmuch setup= to configure
-    it. Then I ran =notmuch new= to index my existing mail.  (This was
-    already in =~/Maildir/= since I've been using mu4e before.) I then
-    installed the Emacs package from Melpa, and launched it with =M-x
-    notmuch=.  Its threading and MIME appears a lot better than mu4e,
-    from a cursory glance.
-
-    Notmuch has to be configured by running =notmuch setup= on the
-    commandline. I haven't yet figured out how to tangle that from
-    this config, but the key parts of my config are:
-
-    #+BEGIN_SRC sh :results output replace :exports results :tangle no
-    notmuch config list
-    #+END_SRC
-
-    #+RESULTS:
-    #+begin_example
-    database.path=/Users/stig/Mail
-    user.name=Stig Brautaset
-    user.primary_email=stig@brautaset.org
-    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
-    new.tags=unread;inbox
-    new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
-    search.exclude_tags=deleted;spam;draft
-    maildir.synchronize_flags=true
-    built_with.compact=true
-    built_with.field_processor=true
-    built_with.retry_lock=true
-    #+end_example
-
-    With that out of the way, and installing the package from Melpa,
-    Notmuch works pretty well for me. Mainly I set up a keybinding to
-    quickly bring it up.
-
-    I don't like using my email inbox as a todo list, so when I
-    receive an email I need to act on but can't yet, I link to it from
-    my Org mode agenda and archive it. When Org agenda prompts me I
-    can click on the link and immediately get to the mail in my
-    archive, and can reply to it from there.
-
-    NotMuch doesn't have built-in support for multiple profiles. I
-    tried using "gnus-alias", but couldn't get it to work. Going with
-    a simpler scheme now: reply to the address they write to, and base
-    signature on the from address.
-
-    Save a copy of outgoing personal mail. For work I rely on Gmail
-    automatically saving outgoing mail to my sent folder.
-
-    #+BEGIN_SRC emacs-lisp
-      (require 'notmuch)
-      (bind-key "C-x m" 'notmuch)
-      (bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
-      (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
-
-      ;; Allow linking to NotMuch messages from Org mode
-      (require 'org-notmuch)
-
-      (defun sb/message-signature-setup-hook ()
-	(setq message-signature-file
-	      (if (string-match "laterpay" (mail-fetch-field "from"))
-		  "~/.signature.work" nil))
-	(message "Selected %s for signature" message-signature-file))
-
-      (add-hook 'message-signature-setup-hook
-		'sb/message-signature-setup-hook)
-
-      (setq notmuch-fcc-dirs
-	    '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
-    #+END_SRC
-
-**** Add post-new hook to tag messages
-
-     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
-       #!/bin/bash
-       set -o errexit
-       set -o nounset
-       set -o pipefail
-
-       # Tag previously unseen messages
-       notmuch tag +work -- path:/Work/ and tag:inbox
-       notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
-       notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
-       notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
-
-       # Add extra tags for mailing lists, and remove inbox tag.
-       notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
-       notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
-       notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
-       notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
-     #+END_SRC
-
-*** Downloading email over IMAP
+*** Download email with mbsync
 
     I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
     faster and doesn't have this annoying db outside of the Maildir to keep in
@@ -601,34 +508,133 @@
        SyncState *
      #+END_SRC
 
-**** Sync mail periodically while Emacs is open
+**** Invoke mbsync
 
-     Set up a timer to periodically sync mail from within Emacs. It's
-     not abnormal for this to take 30 seconds, but usually it's less.
+     I used to run this periodically, but I've noticed I usually run
+     it interactively just before checking mail, so let's just go wiht
+     that. It's not abnormal for this to take 30 seconds, but usually
+     it's less.
 
      #+BEGIN_SRC emacs-lisp
        (defun sb/mbsync (arg)
 	 (interactive "p")
 	 (let* ((buffer-name "*mbsync*")
 		(process (start-process "mbsync" buffer-name "mbsync" "--verbose" "--all" "--quiet")))
-	   (when (> arg 1)
-	     (switch-to-buffer buffer-name))
+	   (if (> arg 1)
+	       (switch-to-buffer buffer-name)
+
+	     (progn
+	       ;; Clear minibuffer shortly
+	       (message "mbsync: started")
+	       (run-with-timer 3 nil #'message nil)))
+
+	   ;; Signal that mbsync finished, and clear minibuffer afterwards.
 	   (set-process-sentinel process (lambda (proc state)
-					   (notmuch-poll)
-					   (notmuch)))))
+					   (message "mbsync: completed")
+					   (run-with-timer 3 nil #'message nil)))
 
-       (bind-key "C-c f" #'sb/mbsync)
+	   ;; Return process so we can attach additional things to it
+	   process))
+     #+END_SRC
 
-       (defvar sb/mbsync-timer nil
-	 "A variable to let us hold an existing sync timer so we can delete it")
+*** Reading mail with NotMuch
 
-       ;; Cancel any existing sync timer
-       (when sb/mbsync-timer
-	 (cancel-timer sb/mbsync-timer))
+    After installing NotMuch it I ran =notmuch setup= to configure
+    it. Then I ran =notmuch new= to index my existing mail.  (This was
+    already in =~/Maildir/= since I've been using mu4e before.) I then
+    installed the Emacs package from Melpa, and launched it with =M-x
+    notmuch=.  Its threading and MIME appears a lot better than mu4e,
+    from a cursory glance.
 
-       ;; Capture new timer so we can cancel it later above
-       (setq sb/mbsync-timer
-	     (run-with-timer 60 10000 'sb/mbsync 0))
+    Notmuch has to be configured by running =notmuch setup= on the
+    commandline. I haven't yet figured out how to tangle that from
+    this config, but the key parts of my config are:
+
+    #+BEGIN_SRC sh :results output replace :exports results :tangle no
+    notmuch config list
+    #+END_SRC
+
+    #+RESULTS:
+    #+begin_example
+    database.path=/Users/stig/Mail
+    user.name=Stig Brautaset
+    user.primary_email=stig@brautaset.org
+    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
+    new.tags=unread;inbox
+    new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
+    search.exclude_tags=deleted;spam;draft
+    maildir.synchronize_flags=true
+    built_with.compact=true
+    built_with.field_processor=true
+    built_with.retry_lock=true
+    #+end_example
+
+    With that out of the way, and installing the package from Melpa,
+    Notmuch works pretty well for me. Mainly I set up a keybinding to
+    quickly bring it up.
+
+    I don't like using my email inbox as a todo list, so when I
+    receive an email I need to act on but can't yet, I link to it from
+    my Org mode agenda and archive it. When Org agenda prompts me I
+    can click on the link and immediately get to the mail in my
+    archive, and can reply to it from there.
+
+    NotMuch doesn't have built-in support for multiple profiles. I
+    tried using "gnus-alias", but couldn't get it to work. Going with
+    a simpler scheme now: reply to the address they write to, and base
+    signature on the from address.
+
+    Save a copy of outgoing personal mail. For work I rely on Gmail
+    automatically saving outgoing mail to my sent folder.
+
+    #+BEGIN_SRC emacs-lisp
+      (require 'notmuch)
+      (bind-key "C-x m" (lambda ()
+			  (interactive)
+			  (notmuch)
+			  (set-process-sentinel (sb/mbsync 0)
+						(lambda (proc state)
+						  (message "notmuch: refreshing this buffer")
+						  (notmuch-poll-and-refresh-this-buffer)))))
+
+      (bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
+      (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
+
+      ;; Allow linking to NotMuch messages from Org mode
+      (require 'org-notmuch)
+
+      (defun sb/message-signature-setup-hook ()
+	(setq message-signature-file
+	      (if (string-match "laterpay" (mail-fetch-field "from"))
+		  "~/.signature.work" nil))
+	(message "Selected %s for signature" message-signature-file))
+
+      (add-hook 'message-signature-setup-hook
+		'sb/message-signature-setup-hook)
+
+      (setq notmuch-fcc-dirs
+	    '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
+    #+END_SRC
+
+**** Add post-new hook to tag messages
+
+     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
+       #!/bin/bash
+       set -o errexit
+       set -o nounset
+       set -o pipefail
+
+       # Tag previously unseen messages
+       notmuch tag +work -- path:/Work/ and tag:inbox
+       notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
+       notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
+       notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
+
+       # Add extra tags for mailing lists, and remove inbox tag.
+       notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
+       notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
+       notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
+       notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
      #+END_SRC
 
 *** Compose Emails with Org mode
