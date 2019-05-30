@@ -600,11 +600,13 @@
      #+BEGIN_SRC emacs-lisp
        (defun sb/mbsync (arg)
 	 (interactive "p")
-	 (let ((buffer-name "*mbsync-log*"))
+	 (let* ((buffer-name "*mbsync*")
+		(process (start-process "mbsync" buffer-name "mbsync" "--verbose" "--all" "--quiet")))
 	   (when (> arg 1)
-	     (message "Launching mbsync")
 	     (switch-to-buffer buffer-name))
-	   (start-process "*mbsync*" buffer-name "mbsync" "--verbose" "--all" "--quiet")))
+	   (set-process-sentinel process (lambda (proc state)
+					   (notmuch-poll)
+					   (notmuch)))))
 
        (bind-key "C-c f" #'sb/mbsync)
 
