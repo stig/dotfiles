@@ -1701,11 +1701,12 @@
 		   ("C-<left>" . sp-forward-barf-sexp)
 		   ("C-M-<left>" . sp-backward-slurp-sexp)
 		   ("C-M-<right>" . sp-backward-barf-sexp))
+       :init
+       (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+       (add-hook 'text-mode-hook 'turn-on-smartparens-mode)
+
        :config
        (show-smartparens-global-mode t))
-
-     (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-     (add-hook 'text-mode-hook 'turn-on-smartparens-strict-mode)
    #+END_SRC
 
 ** String Inflection
