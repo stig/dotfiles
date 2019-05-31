@@ -589,13 +589,16 @@
 
     #+BEGIN_SRC emacs-lisp
       (require 'notmuch)
-      (bind-key "C-x m" (lambda ()
-			  (interactive)
-			  (notmuch)
-			  (set-process-sentinel (sb/mbsync 0)
-						(lambda (proc state)
-						  (message "notmuch: refreshing this buffer")
-						  (notmuch-poll-and-refresh-this-buffer)))))
+
+      (defun sb/notmuch ()
+	(interactive)
+	(notmuch)
+	(set-process-sentinel (sb/mbsync 1)
+			      (lambda (proc state)
+				(message "notmuch: refreshing this buffer")
+				(notmuch-poll-and-refresh-this-buffer))))
+
+      (bind-key "C-x m" 'sb/notmuch)
 
       (bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
