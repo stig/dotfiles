@@ -873,9 +873,11 @@
    #+begin_src emacs-lisp
      (use-package lilypond-mode
        :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
-       :mode ("\\.ly\\'" . lilypond-mode)
+       :mode (("\\.ily\\'" . LilyPond-mode)
+	      ("\\.ly\\'" . LilyPond-mode))
        :init
-       (setq LilyPond-midi-command "playmidi"))
+       (setq LilyPond-midi-command "playmidi")
+       (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
    #+end_src
 
 ** Magit
