@@ -538,9 +538,26 @@
     notmuch=.  Its threading and MIME appears a lot better than mu4e,
     from a cursory glance.
 
-    Notmuch has to be configured by running =notmuch setup= on the
-    commandline. I haven't yet figured out how to tangle that from
-    this config, but the key parts of my config are:
+    I configured Notmuch by running =notmuch setup= on the commandline.
+    However, you can then set config values independently.
+
+    #+begin_src sh :results silent
+    notmuch config set database.path ~/Mail
+
+    notmuch config set user.name "Stig Brautaset"
+
+    notmuch config set user.primary_email "stig@brautaset.org"
+
+    notmuch config set user.other_email 'sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com'
+
+    notmuch config set new.tags 'unread;inbox'
+
+    notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
+
+    notmuch config set search.exclude_tags 'deleted;spam;draft'
+    #+end_src
+
+    We can now read the config back in, to verify our change.
 
     #+BEGIN_SRC sh :results output replace :exports results :tangle no
     notmuch config list
