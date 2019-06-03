@@ -553,7 +553,7 @@
     user.primary_email=stig@brautaset.org
     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
     new.tags=unread;inbox
-    new.ignore=.mbsyncstate;.uidvalidity;.isyncuidmap.db
+    new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
     search.exclude_tags=deleted;spam;draft
     maildir.synchronize_flags=true
     built_with.compact=true
