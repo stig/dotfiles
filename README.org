@@ -652,6 +652,19 @@
        notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
      #+END_SRC
 
+**** Reading HTML mail
+
+     Reading HTML with eww I don't like the default way eww adds
+     linebreaks. Luckily, I [[https://emacs.stackexchange.com/a/31883/10625][found]] a way to improve it:
+
+     #+begin_src emacs-lisp
+       (eval-after-load 'shr
+	 '(progn (setq shr-width -1)
+		 (defun shr-fill-text (text) text)
+		 (defun shr-fill-lines (start end) nil)
+		 (defun shr-fill-line () nil)))
+     #+end_src
+
 *** Compose Emails with Org mode
 
     I want to be able to create links to messages from Org mode
