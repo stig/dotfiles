@@ -7,14 +7,14 @@
 
   This is my Emacs configuration. Because I'm prone to forget what
   does what, my configuration is in the form of a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]]
-  document: prose, interspaced with code. Thus the configuration
-  snippets here are not copied-and-pasted from my config. This
-  =README.org= is the document where I edit my config, then I and /tangle/
-  the config into [[file:init.el][init.el]] by hitting =C-c C-v C-t=.
+  document: prose, interspaced with code. The configuration snippets
+  here are not copied-and-pasted from my config; rather this is the
+  document where I edit my config, then I and /tangle/ the config into
+  [[file:init.el][init.el]] and other config files by hitting =C-c C-v C-t=.
 
-* Install Emacs
+* Install Emacs & tools
 
-  I download Emacs from https://emacsformacosx.com/ & install that package.
+  I install Emacs from https://emacsformacosx.com/
 
   I install (most) dependent tools using Nix:
 
@@ -22,40 +22,32 @@
     nix-env -i aspell aspellDicts.en awscli clojure curl ditaa editorconfig-core-c fluidsynth freepats gnused gnutls graphviz isync jq msmtp notmuch pinentry plantuml pwgen python3 sbt silver-searcher
   #+end_src
 
-* Early Configuration
-** Configure Nix Site Lib
+* Early Init
 
-   #+begin_src emacs-lisp
-     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
-   #+end_src
+  Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
+  initialising GUI components, so it's a great place to turn off mouse
+  interface etc to avoid flicker during startup.
 
-** Disable splash screen, mouse interface & beeps in =early-init.el=
-   :PROPERTIES:
-   :header-args:emacs-lisp: :tangle ~/.emacs.d/early-init.el :mkdirp yes
-   :END:
+** Disable splash screen, mouse interface & beeps
 
-   I turn off the mouse interface early to avoid momentary display
-   during launch. I also don't need to see a splash screen on every
-   launch. Finally I do not like Emacs to beep at me; I prefer a
+   I like to turn off the mouse interface early to avoid momentary
+   display during launch. I also don't need to see a splash screen on
+   every launch. Finally I do not like Emacs to beep at me; I prefer a
    visual bell.
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el :mkdirp yes
      (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
      (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
      (setq inhibit-startup-message t)
      (setq visible-bell t)
    #+END_SRC
 
-** Pre Emacs 27 compat                                               :COMPAT:
+** Emacs <27 Compatibility
 
-   Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
-   initialising GUI components, so it's a great place to turn off
-   mouse interface to avoid flicker during startup. In older versions
-   of Emacs we load that file before anything else.
-
-   Emacs 27 also initialises packages before loading the user config,
-   but older ones does not, requiring me to manually call
-   =package-initialize= at this point.
+   In older versions of Emacs we load ~early-init.el~ manually. Emacs 27
+   also initialises packages before loading the user config, but older
+   ones does not, requiring me to manually call =package-initialize= at
+   this point.
 
    #+BEGIN_SRC emacs-lisp
     (if (not visible-bell)
@@ -65,44 +57,53 @@
 	  (package-initialize)))
    #+END_SRC
 
-** Add Melpa Package Archive
+** Introduce Myself
 
-   We need to add the URLs of the package archives we want to use. I
-   install most packages via Nix for its roll-back ability, but Magit
-   moves too fast for that. Also, it's nice to be able to try out
-   packages without having to rebuild & relaunch Emacs.
+   In case something needs my name/email address.
 
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-     (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-     (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+   (setq user-full-name "Stig Brautaset")
+   (setq user-mail-address "stig@brautaset.org")
    #+END_SRC
 
-** Install & configure =use-package=
+** Zsh
 
-   Pin packages to stable melpa archive by default.
+   This is how I set up Zsh. It feels weird to set it up here, but
+   it's the best way I have found so far.
 
-   #+begin_src emacs-lisp
-     ;; Automatically :ensure each use-package.
-     (setq use-package-always-ensure t)
+   #+begin_src sh :tangle ~/.zshrc
+     setopt INC_APPEND_HISTORY
+     setopt HIST_IGNORE_ALL_DUPS
 
-     ;; Default value for :pin in each use-package.
-     (setq use-package-always-pin "melpa-stable")
-
-     ;; Bootstrap use-package
-     (unless (package-installed-p 'use-package)
-       (package-refresh-contents)
-       (package-install 'use-package))
-     (require 'use-package)
+     # Basic Useability ZSH setup
+     export HISTFILE=~/.zsh_history
+     export SAVEHIST=800
+     export HISTSIZE=1000
    #+end_src
 
-* Configuration
-** Ace Window
+   #+begin_src sh :tangle ~/.zshenv
+     # Use the OS-provided Certificate file.
+     export SSL_CERT_FILE=/etc/ssl/cert.pem
+
+     export EDITOR=emacsclient
+
+     # Find LilyPond binaries
+     export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
+
+     # Find Local binaries
+     export PATH=~/.local/bin:$PATH
+   #+end_src
+
+   #+begin_src sh :tangle ~/.zprofile
+     . ~/.nix-profile/etc/profile.d/nix.sh
+   #+end_src
+** Add Nix =site-lisp= directory to ~load-path~
 
    #+begin_src emacs-lisp
-   (use-package ace-window
-     :bind ("M-`" . ace-window))
+     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
    #+end_src
+
+* Configure the base install
 ** Add keybinding to join next line to this
 
    With cursor at any point in a line, hit =M-j= to move to the end, and
@@ -115,89 +116,16 @@
 		       (join-line -1)))
    #+END_SRC
 
-** Set =PATH= etc from the login shell
+** Always use UTF-8 encoding
 
-   The GUI Emacs gets exec path from the system, rather than the login
-   shell. We have to load PATH etc from Zsh to get access to programs
-   installed by Nix.
+   Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package exec-path-from-shell
-       :init
-       (setq exec-path-from-shell-variables '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"))
-       :config
-       (exec-path-from-shell-initialize))
-   #+END_SRC
-
-** Ag (The Silver Searcher)
-
-   I use =ag= for searching a lot in Emacs. Its "writable grep"
-   companion mode is pretty close to magic. When in a buffer showing
-   ag results, try hitting =C-c C-p=--this lets you /edit the results of
-   the search right from the ag results buffer!/ Just hit =C-x C-s= to
-   save the results.
-
-   If you hit =C-c C-p= while already in writable grep mode you can
-   delete the entire matched line by hitting =C-c C-d=.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package ag :pin melpa)
-     (use-package wgrep :pin melpa)
-     (use-package wgrep-ag :pin melpa)
-
-     ;; This fixes the last group not being editable until it's fixed
-     ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
-     (eval-after-load "wgrep-ag"
-       '(defun wgrep-ag-prepare-header/footer ()
-	  (save-excursion
-	    (goto-char (point-min))
-	    ;; Look for the first useful result line.
-	    (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
-					   "\\|"
-					   wgrep-ag-ungrouped-result-regexp))
-		(add-text-properties (point-min) (line-beginning-position)
-				     '(read-only t wgrep-header t))
-	      ;; No results in this buffer, let's mark the whole thing as
-	      ;; header.
-	      (add-text-properties (point-min) (point-max)
-				   '(read-only t wgrep-header t)))
-
-	    ;; OK, header dealt with. Now let's try find the footer.
-	    (goto-char (point-max))
-	    (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
-	    ;; Point is now at the beginning of the result nearest the end
-	    ;; of the buffer, AKA the last result.  Move to the start of
-	    ;; the line after the last result, and mark everything from
-	    ;; that line forward as wgrep-footer.  If we can't move to the
-	    ;; line after the last line then there apparently is no
-	    ;; footer.
-	    (when (zerop (forward-line 1))
-	      (add-text-properties (point) (point-max)
-				   '(read-only t wgrep-footer t))))))
-
-     (add-hook 'ag-mode-hook 'wgrep-ag-setup)
-   #+END_SRC
-
-** Aggressive Indent
-
-   I like to keep my code indented properly at all times. Aggressive-indent
-   helps ensure this. Turn it on for lisp modes.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package aggressive-indent
-       :init
-       (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-       (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-       (add-hook 'css-mode-hook #'aggressive-indent-mode))
-   #+END_SRC
-
-** Auto commit
-
-   In some projects (notably, my Org/Agenda setup) I want to
-   automatically commit when editing files.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-auto-commit-mode)
+     (setq locale-coding-system 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     (set-keyboard-coding-system 'utf-8)
+     (set-selection-coding-system 'utf-8)
+     (prefer-coding-system 'utf-8)
    #+END_SRC
 
 ** Auto revert mode
@@ -207,14 +135,6 @@
    #+BEGIN_SRC emacs-lisp
      (global-auto-revert-mode 1)
    #+END_SRC
-
-** Beacon
-
-   Highlight my cursor when scrolling
-
-   #+begin_src emacs-lisp
-   (use-package beacon :pin gnu)
-   #+end_src
 
 ** Buffer-local regex search
 
@@ -243,35 +163,20 @@
      (setq mouse-yank-at-point t)
    #+END_SRC
 
-** Clojure
+** Configure Aspell with British English dictionary
 
    #+BEGIN_SRC emacs-lisp
-    (use-package clojure-mode)
-    (use-package cider)
-    (use-package clj-refactor)
+     (setq ispell-dictionary "british"
+	   ispell-extra-args '("-W" "2" "--sug-mode=ultra"))
    #+END_SRC
 
-** Company
+   Configure aspell and let it find dictionaries:
 
-   Auto-complete of code and prose.
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package company
-     :init
-     ;; https://emacs.stackexchange.com/a/10838
-     (setq company-dabbrev-downcase nil)
-     :config
-     (global-company-mode))
-   #+END_SRC
-
-** Counsel
-
-   This provides =counsel-find-file=, among others.
-
-   #+begin_src emacs-lisp
-   (use-package amx) ;; make counsel-M-x work the way I like
-   (use-package counsel)
-   (counsel-mode 1)
+   #+begin_src conf :tangle ~/.aspell.conf
+   master british
+   extra-dicts en-computers.rws
+   add-extra-dicts en_GB-science.rws
+   data-dir /Users/stig/.nix-profile/lib/aspell
    #+end_src
 
 ** Diary (Calendar) Functions
@@ -310,11 +215,13 @@
 
 ** Ediff
 
+   Sometimes I have to resolve conflicts. I use Ediff, which I
+   (usually) launch from Magit.
+
 *** Automatically Unfold Org files
 
-    Sometimes I diff Org files. (Particularly for runbooks.) This
-    snippet makes sure that Org buffers don't start folded, as ediff
-    is rather useless in that case. (Credit: Oleh Krehel on
+    This snippet makes sure that Org buffers don't start folded, as
+    ediff is rather useless in that case. (Credit: Oleh Krehel on
     emacs-orgmode mailing list.)
 
     #+BEGIN_SRC emacs-lisp
@@ -327,11 +234,10 @@
 
 *** Picking /both/ sides in a conflict
 
-    Sometimes I have to resolve conflicts. I use Ediff, which I launch
-    from Magit. I sometimes want to pick *both* sides of the conflicts,
-    If both branches add an entry to a list, for example. This adds =d=
-    as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use =~= to swap the A
-    and B buffers, which lets me choose A then B, /or/ B then A.
+    If both branches add an entry to a list I may want to pick *both*
+    sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
+    =~= to swap the A and B buffers, which lets me choose A then B, /or/ B
+    then A.
 
     #+BEGIN_SRC emacs-lisp
       (defun sb/ediff-copy-both-to-C ()
@@ -346,397 +252,6 @@
 
       (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
     #+END_SRC
-
-** Editorconfig
-
-   Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
-   their indentation and file format preferences.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package editorconfig
-       :init
-       (setq editorconfig-exclude-modes '(org-mode))
-       (setq editorconfig-mode-lighter " EC")
-       :config
-       (editorconfig-mode))
-   #+END_SRC
-
-** Elfeed
-
-   I use custom.el for the actual feeds.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package elfeed
-       :bind ("C-x w" . elfeed)
-       :config
-       (defalias 'elfeed-toggle-star
-	 (elfeed-expose #'elfeed-search-toggle-all 'star))
-
-       (eval-after-load 'elfeed-search
-	 '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
-   #+END_SRC
-
-** Email
-
-   Because I like to use Emacs for writing, I like to use it for email
-   too. I tried Gnus, but don't really read news so it felt a bit
-   overkill. I've been using [[http://www.djcbsoftware.nl/code/mu/][mu4e]] for a while, but I'm slightly
-   annoyed by some of its quirks (particularly interacting with Gmail,
-   which I have to use for work) so thought I'd try [[https://notmuchmail.org][notmuch]].
-
-   I use [[http://msmtp.sourceforge.net/][msmtp]] for sending email, and [[http://isync.sourceforge.net][mbsync]] for syncing IMAP messages
-   between my local machine and upstream servers.
-
-*** Download email with mbsync
-
-    I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
-    faster and doesn't have this annoying db outside of the Maildir to keep in
-    sync.
-
-**** mbsync configuration
-
-     #+BEGIN_SRC conf :tangle ~/.mbsyncrc
-       IMAPAccount gandi
-       Host mail.gandi.net
-       User stig@brautaset.org
-       SSLType IMAPS
-       AuthMechs LOGIN
-       PassCmd "security find-generic-password -s mbsync-gandi-password -w"
-       # To rotate:
-       # > security delete-generic-password -s mbsync-gandi-password
-       # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
-
-       IMAPStore gandi-remote
-       Account gandi
-
-       MaildirStore gandi-local
-       AltMap yes
-       Path ~/Mail/Gandi/
-       Inbox ~/Mail/Gandi/INBOX
-       Trash trash
-
-       Channel gandi-inbox
-       Master :gandi-remote:
-       Slave :gandi-local:
-       Create Slave
-       SyncState *
-
-       Channel gandi-sent
-       Master :gandi-remote:Sent
-       Slave :gandi-local:sent
-       Create Slave
-       SyncState *
-
-       Channel gandi-spam
-       Master :gandi-remote:Junk
-       Slave :gandi-local:spam
-       Create Slave
-       SyncState *
-
-       Channel gandi-org-mode
-       Master :gandi-remote:org-mode
-       Slave :gandi-local:org-mode
-       Create Slave
-       SyncState *
-       MaxMessages 500
-       ExpireUnread yes
-       Expunge Both
-
-       Channel gandi-lilypond
-       Master :gandi-remote:lilypond
-       Slave :gandi-local:lilypond
-       Create Slave
-       SyncState *
-       MaxMessages 500
-       ExpireUnread yes
-       Expunge Both
-
-       Channel gandi-clojure
-       Master :gandi-remote:clojure
-       Slave :gandi-local:clojure
-       Create Slave
-       SyncState *
-       MaxMessages 500
-       ExpireUnread yes
-       Expunge Both
-
-       Channel gandi-tuls
-       Master :gandi-remote:tuls
-       Slave :gandi-local:tuls
-       Create Slave
-       SyncState *
-       MaxMessages 500
-       Expunge Both
-
-       # ACCOUNT INFORMATION
-       IMAPAccount gmail
-       Host imap.gmail.com
-       User sbrautaset@laterpay.net
-       Timeout 60
-       PassCmd "security find-generic-password -s mbsync-gmail-password -w"
-       AuthMechs PLAIN
-       SSLType IMAPS
-       CertificateFile /etc/ssl/cert.pem
-
-       # REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
-       IMAPStore gmail-remote
-       Account gmail
-
-       # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
-       MaildirStore gmail-local
-       AltMap yes
-       Path ~/Mail/Work/
-       Inbox ~/Mail/Work/INBOX
-       Trash trash
-
-       Channel gmail-archive
-       Master :gmail-remote:"[Gmail]/All Mail"
-       Slave :gmail-local:archive
-       Create Slave
-       SyncState *
-
-       Channel gmail-sent
-       Master :gmail-remote:"[Gmail]/Sent Mail"
-       Slave :gmail-local:sent
-       Create Slave
-       SyncState *
-
-       Channel gmail-spam
-       Master :gmail-remote:"[Gmail]/Spam"
-       Slave :gmail-local:spam
-       Create Slave
-       SyncState *
-     #+END_SRC
-
-**** Invoke mbsync
-
-     I used to run this periodically, but I've noticed I usually run
-     it interactively just before checking mail, so let's just go wiht
-     that. It's not abnormal for this to take 30 seconds, but usually
-     it's less.
-
-     #+BEGIN_SRC emacs-lisp
-       (defun sb/mbsync ()
-	 (interactive)
-	 (let ((process (start-process "mbsync" "*mbsync*" "mbsync" "--verbose" "--all" "--quiet")))
-	   (message "mbsync: started")
-
-	   ;; Signal that mbsync finished, and clear minibuffer afterwards.
-	   (set-process-sentinel process (lambda (proc state)
-					   (message "mbsync: completed")))
-
-	   ;; Return process so we can attach additional things to it
-	   process))
-     #+END_SRC
-
-*** Reading mail with NotMuch
-
-    After installing NotMuch it I ran =notmuch setup= to configure
-    it. Then I ran =notmuch new= to index my existing mail.  (This was
-    already in =~/Maildir/= since I've been using mu4e before.) I then
-    installed the Emacs package from Melpa, and launched it with =M-x
-    notmuch=.  Its threading and MIME appears a lot better than mu4e,
-    from a cursory glance.
-
-    I configured Notmuch by running =notmuch setup= on the commandline.
-    However, you can then set config values independently.
-
-    #+begin_src sh :results silent
-    notmuch config set database.path ~/Mail
-
-    notmuch config set user.name "Stig Brautaset"
-
-    notmuch config set user.primary_email "stig@brautaset.org"
-
-    notmuch config set user.other_email 'sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com'
-
-    notmuch config set new.tags 'unread;inbox'
-
-    notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
-
-    notmuch config set search.exclude_tags 'deleted;spam;draft'
-    #+end_src
-
-    We can now read the config back in, to verify our change.
-
-    #+BEGIN_SRC sh :results output replace :exports results :tangle no
-    notmuch config list
-    #+END_SRC
-
-    #+RESULTS:
-    #+begin_example
-    database.path=/Users/stig/Mail
-    user.name=Stig Brautaset
-    user.primary_email=stig@brautaset.org
-    user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
-    new.tags=unread;inbox
-    new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
-    search.exclude_tags=deleted;spam;draft
-    maildir.synchronize_flags=true
-    built_with.compact=true
-    built_with.field_processor=true
-    built_with.retry_lock=true
-    #+end_example
-
-**** Configuring Notmuch inside Emacs
-
-     With that out of the way, and installing the package from Melpa,
-     Notmuch works pretty well for me. Mainly I set up a keybinding to
-     quickly bring it up.
-
-     I don't like using my email inbox as a todo list, so when I
-     receive an email I need to act on but can't yet, I link to it from
-     my Org mode agenda and archive it. When Org agenda prompts me I
-     can click on the link and immediately get to the mail in my
-     archive, and can reply to it from there.
-
-     NotMuch doesn't have built-in support for multiple profiles. I
-     tried using "gnus-alias", but couldn't get it to work. Going with
-     a simpler scheme now: reply to the address they write to, and base
-     signature on the from address.
-
-     Save a copy of outgoing personal mail. For work I rely on Gmail
-     automatically saving outgoing mail to my sent folder.
-
-     #+BEGIN_SRC emacs-lisp
-       (require 'notmuch)
-
-       (defun sb/notmuch ()
-	 (interactive)
-	 (notmuch)
-	 (set-process-sentinel (sb/mbsync)
-			       (lambda (proc state)
-				 (message "notmuch: poll & refresh buffer...")
-				 (notmuch-poll-and-refresh-this-buffer)
-				 (message "notmuch: refreshed buffer"))))
-
-       (bind-key "C-x m" 'sb/notmuch)
-
-       (bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
-       (add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
-
-       ;; Allow linking to NotMuch messages from Org mode
-       (require 'org-notmuch)
-
-       (defun sb/message-signature-setup-hook ()
-	 (setq message-signature-file
-	       (if (string-match "laterpay" (mail-fetch-field "from"))
-		   "~/.signature.work" nil))
-	 (message "Selected %s for signature" message-signature-file))
-
-       (add-hook 'message-signature-setup-hook
-		 'sb/message-signature-setup-hook)
-
-       (setq notmuch-fcc-dirs
-	     '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
-     #+END_SRC
-
-**** Add post-new hook to tag messages
-
-     #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
-       #!/bin/bash
-       set -o errexit
-       set -o nounset
-       set -o pipefail
-
-       # Tag previously unseen messages
-       notmuch tag +work -- path:/Work/ and tag:inbox
-       notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
-       notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
-       notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
-
-       # Add extra tags for mailing lists, and remove inbox tag.
-       notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
-       notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
-       notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
-       notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
-     #+END_SRC
-
-**** Reading HTML mail
-
-     Reading HTML with eww I don't like the default way eww adds
-     linebreaks. Luckily, I [[https://emacs.stackexchange.com/a/31883/10625][found]] a way to improve it:
-
-     #+begin_src emacs-lisp
-       (eval-after-load 'shr
-	 '(progn (setq shr-width -1)
-		 (defun shr-fill-text (text) text)
-		 (defun shr-fill-lines (start end) nil)
-		 (defun shr-fill-line () nil)))
-     #+end_src
-
-*** Compose Emails with Org mode
-
-    I want to be able to create links to messages from Org mode
-    capture templates, as email Inbox is a terrible TODO list.  I
-    define =C-c x= as a short-cut to switch to Org mode, and back, to
-    message mode, so that I can use full Org mode to edit messages if
-    I want.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-mime
-	:bind (:map message-mode-map
-		    ("C-c h" . org-mime-htmlize))
-	:init
-	(setq org-mime-preserve-breaks nil))
-    #+END_SRC
-
-*** Sending mail with MSMTP
-
-    MSMTP's configuration is really simple, and it will detect the account to
-    use from the "from" address. Let's go!
-
-    MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
-    section in the msmtp documentation for details.
-
-    #+BEGIN_SRC conf :tangle ~/.msmtprc
-      defaults
-
-      port 587
-      tls on
-      tls_trust_file /etc/ssl/cert.pem
-      auth on
-
-      ###############
-      account private
-
-      from stig@brautaset.org
-      host mail.gandi.net
-      user stig@brautaset.org
-
-      #############
-      account icloud
-
-      from stig.brautaset@icloud.com
-      host smtp.mail.me.com
-      user stig.brautaset@icloud.com
-
-      ############
-      account work
-
-      from sbrautaset@laterpay.net
-      host smtp.gmail.com
-      user sbrautaset@laterpay.net
-
-      #########################
-      account default : private
-    #+END_SRC
-
-    Finally we have to tell Emacs to use msmtp to send mail:
-
-    #+BEGIN_SRC emacs-lisp
-      (setq message-send-mail-function 'message-send-mail-with-sendmail
-            sendmail-program "msmtp"
-	    message-sendmail-envelope-from 'header
-	    mail-envelope-from 'header
-	    mail-specify-envelope-from t)
-    #+END_SRC
-
-**** Don't keep buffer for sent messages
-
-     #+BEGIN_SRC emacs-lisp
-     (setq message-kill-buffer-on-exit t)
-     #+END_SRC
 
 ** End all files in a newline
 
@@ -765,38 +280,6 @@
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
-** Gists
-
-   Viewing & editing gists in Emacs? Sure! I want that!
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package gist
-       :bind (("C-x g l" . gist-list)
-	      ("C-x g c" . gist-region-or-buffer-private))
-       :init
-       (setq gist-ask-for-description t))
-   #+END_SRC
-
-** Git Link
-
-   Link to file location on GitHub/Bitbucket/GitLab/...
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-link
-       :bind ("C-c g l" . git-link))
-   #+END_SRC
-
-** Graphviz
-
-   I sometimes use Graphviz to create diagrams.
-
-   I also have to tell Emacs how to launch GraphViz.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package graphviz-dot-mode
-       :bind ("C-c C-p" . graphviz-dot-preview))
-   #+END_SRC
-
 ** Highlight & deal with whitespace annoyances
 
    This highlights certain whitespace annoyances, and adds a key binding to
@@ -810,54 +293,11 @@
      (global-set-key (kbd "C-c w") 'whitespace-cleanup)
    #+END_SRC
 
-** Iedit
-
-   Edit multiple symbols in one go. Similar in some respects to
-   Multiple Cursors, but seems a little more light-weight.
-
-   #+begin_src emacs-lisp
-   (use-package iedit :pin melpa)
-   #+end_src
-
 ** I like big fonts and I cannot lie
 
    #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :height 150)
+     (set-face-attribute 'default nil :height 150)
    #+END_SRC
-** International Support
-
-   I'm Norwegian, but use a GB keyboard. I also use Dvorak keyboard
-   layout. I also have Polish colleagues whose names I don't want to
-   mangle completly. Keep this in mind if you find the below
-   confusing.
-
-*** Always use UTF-8 encoding
-
-    Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
-
-    #+BEGIN_SRC emacs-lisp
-      (setq locale-coding-system 'utf-8)
-      (set-terminal-coding-system 'utf-8)
-      (set-keyboard-coding-system 'utf-8)
-      (set-selection-coding-system 'utf-8)
-      (prefer-coding-system 'utf-8)
-    #+END_SRC
-
-*** Configure Aspell
-
-    #+BEGIN_SRC emacs-lisp
-      (setq ispell-dictionary "british"
-	    ispell-extra-args '("-W" "2" "--sug-mode=ultra"))
-    #+END_SRC
-
-    Configure aspell and let it find dictionaries:
-
-    #+begin_src conf :tangle ~/.aspell.conf
-    master british
-    extra-dicts en-computers.rws
-    add-extra-dicts en_GB-science.rws
-    data-dir /Users/stig/.nix-profile/lib/aspell
-    #+end_src
 
 ** IRC
 
@@ -867,61 +307,6 @@
    #+BEGIN_SRC emacs-lisp
    (setq rcirc-default-nick "stigbra")
    (setq rcirc-default-full-name "Stig Brautaset")
-   #+END_SRC
-
-** Ivy
-
-   I've long been a happy Helm user, but it confuses me (and is slow!)
-   in some situations so I thought I'd try again to see if Ivy fares
-   any better.
-
-   #+begin_src emacs-lisp
-     (use-package ivy
-       :pin melpa
-       :demand
-       :config
-       (setq ivy-use-virtual-buffers t
-	     ivy-count-format "%d/%d "))
-     (ivy-mode 1)
-
-     ;; This should apparently allow opening multiple files from
-     ;; ivy-find-file.
-     (use-package ivy-hydra
-       :pin melpa)
-   #+end_src
-
-** LilyPond
-
-   With Nix I am not able to install LilyPond, but I can install it
-   via a download from https://lilypond.org.
-
-   #+begin_src emacs-lisp
-     (use-package lilypond-mode
-       :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
-       :mode (("\\.ily\\'" . LilyPond-mode)
-	      ("\\.ly\\'" . LilyPond-mode))
-       :init
-       (setq LilyPond-midi-command "playmidi")
-       (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
-   #+end_src
-
-** Magit
-
-   I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
-   Emacs just for it. It is excellent. I bind =M-m= to =magit-status=, which is
-   the main entry point for the mode.
-
-   Forge is an extension to Magit that interacts with GitHub / GitLab etc.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package transient :pin melpa)
-     (use-package magit
-       :pin melpa
-       :bind ("M-m" . magit-status))
-
-     (use-package forge :pin melpa)
-     (use-package magit-org-todos :pin melpa)
-     (use-package magit-todos :pin melpa)
    #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
@@ -942,17 +327,6 @@
    (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
    #+END_SRC
 
-** Markdown
-
-   I'm a sucker for lists, and I want to be able to reorder list items
-   easily and have them renumbered automatically.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package markdown-mode
-       :pin melpa
-       :bind (("M-<up>" . markdown-move-list-item-up)
-	      ("M-<down>" . markdown-move-list-item-down)))
-   #+END_SRC
 ** Modifier keys on OS X
 
    Set up the modifier keys the way that best fits my keyboard.
@@ -971,28 +345,112 @@
      (setq ns-function-modifier 'hyper)
    #+END_SRC
 
-** Multiple Cursors
+** Put Custom settings in a separate file
 
-   This package is another one of those near-magical ones. It allows me to do
-   multiple edits in the same buffer, using several cursors. You can think of
-   it as an interactive macro, where you can constantly see what's being done.
+   I prefer to code my configuration, but sometimes Custom settings are good
+   enough. I prefer that such settings live in a separate file though. Load
+   that file if it exists.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package multiple-cursors
-
-       :bind (("C-c M-e" . mc/edit-lines)
-              ("C-c M-a" . mc/mark-all-dwim)
-              ("s-n" . mc/mark-next-like-this)
-              ("s-p" . mc/mark-previous-like-this)))
+     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+     (if (file-exists-p custom-file)
+         (load custom-file))
    #+END_SRC
 
-** Nix
+** Running tests
 
-   Some modules useful for Nix.
+   Add a convenient keybinding for running tests interactively.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package nix-mode :pin melpa)
-     (use-package nix-sandbox :pin melpa)
+     (global-set-key (kbd "C-x t") 'ert)
+   #+END_SRC
+
+** Save minibuffer history
+
+   This allows us to "tap up" in the minibuffer to recall previous items,
+   even from a previous session.
+
+   #+BEGIN_SRC emacs-lisp
+     (savehist-mode 1)
+   #+END_SRC
+
+** Save my place in each file
+
+   It's nice if Emacs knows where I was last time I opened a file.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq-default save-place t)
+     (setq save-place-file (concat user-emacs-directory "places"))
+   #+END_SRC
+
+** Show Matching parens
+
+   This is extremely useful. Put the mark on a paren (any of =()[]{}=,
+   actually) and Emacs shows the matching closing/opening one.
+
+   #+BEGIN_SRC emacs-lisp
+     (show-paren-mode 1)
+   #+END_SRC
+
+** Support for fullscreen
+
+   I like to run apps in fullscreen mode. Sometimes it's useful to be
+   able to toggle it on or off, which this function does. I found it
+   at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
+
+   #+BEGIN_SRC emacs-lisp
+     (defun my-toggle-fullscreen ()
+       "Toggle full screen"
+       (interactive)
+       (set-frame-parameter
+        nil 'fullscreen
+        (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+     (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
+   #+END_SRC
+
+** Toggle Window Split function
+
+   Sometimes a window is split horizontally, and you would prefer
+   vertically. Or vice versa. This function can help! Just don't ask me how
+   it works: I found it on StackOverflow. (I think. Again.)
+
+   #+BEGIN_SRC emacs-lisp
+     (defun toggle-window-split ()
+       (interactive)
+       (if (= (count-windows) 2)
+           (let* ((this-win-buffer (window-buffer))
+                  (next-win-buffer (window-buffer (next-window)))
+                  (this-win-edges (window-edges (selected-window)))
+                  (next-win-edges (window-edges (next-window)))
+                  (this-win-2nd (not (and (<= (car this-win-edges)
+                                              (car next-win-edges))
+                                          (<= (cadr this-win-edges)
+                                              (cadr next-win-edges)))))
+                  (splitter
+                   (if (= (car this-win-edges)
+                          (car (window-edges (next-window))))
+		       'split-window-horizontally
+                     'split-window-vertically)))
+             (delete-other-windows)
+             (let ((first-win (selected-window)))
+	       (funcall splitter)
+	       (if this-win-2nd (other-window 1))
+	       (set-window-buffer (selected-window) this-win-buffer)
+	       (set-window-buffer (next-window) next-win-buffer)
+	       (select-window first-win)
+	       (if this-win-2nd (other-window 1))))))
+
+     (define-key ctl-x-4-map "t" 'toggle-window-split)
+   #+END_SRC
+
+** Transparently open compressed files
+
+   I *do* like it when Emacs transparently opens compressed files. It gives
+   me the warm fuzzies.
+
+   #+BEGIN_SRC emacs-lisp
+     (auto-compression-mode t)
    #+END_SRC
 
 ** Unfill paragraphs and regions
@@ -1024,755 +482,10 @@
 	 (fill-region (region-beginning) (region-end) nil)))
    #+end_src
 
-** Org mode
-
-   I now use Org mode for all writing I initiate. The Emacs org mode's support
-   for tables, TOC, footnotes, TODO and agenda items makes it an easy choice.
-   Gists and GitHub READMEs support Org mode too, and I can export to other
-   formats including if I want.
-
-   To avoid having one gigantic section, this file uses NOWEB syntax to weave
-   together config snippets.
-
-   The particular version of package I use is annoying to install because the
-   installed package has a different name from what you would use in your
-   config. However, =use-package= supports this by passing the name of the
-   package to install as the value to =:ensure=.
-
-   The Org manual expects the =C-c {l,a,c,b}= keybindings to be
-   available in any mode, so define them globally. I prefer to follow
-   conventions. It makes reading the manual and tutorials a lot
-   easier!
+** Visual line mode / word wrapping
 
    #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :ensure org-plus-contrib
-       :pin org
-       :bind (("C-c l" . org-store-link)
-	      ("C-c a" . org-agenda)
-	      ("C-c c" . org-capture)
-	      ("C-c b" . org-iswitchb)
-	      ("C-x C-<return>" . org-insert-subheading)
-	      ("C-S-<return>" . org-insert-todo-subheading)
-	      :map org-mode-map
-	      ("C-c x" . mu4e-compose-mode)
-	      ("C-n" . org-next-link)
-	      ("C-p" . org-previous-link))
-
-       :mode (("\\.org\\'" . org-mode)
-	      ("\\.org_archive\\'" . org-mode))
-
-       :init
-
-       ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
-       (setq org-log-into-drawer t)
-
-       ;; Sometimes I accidentally edit non-visible parts of org document. This
-       ;; helps, apparently.
-       (setq org-catch-invisible-edits 'show-and-error)
-
-       ;; If running interactively, I want export to copy to the kill-ring
-       (setq org-export-copy-to-kill-ring 'if-interactive)
-
-       (setq org-hide-emphasis-markers t)
-
-       (setq org-element-use-cache nil)
-
-       (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
-   #+END_SRC
-
-*** Agenda
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Include Calendar/Diary information in Agenda
-      (setq org-agenda-include-diary t)
-
-      ;; I don't rely on many properties, so this should speed up my Agenda
-      ;; view, according to http://orgmode.org/worg/agenda-optimization.html
-      (setq org-agenda-ignore-properties '(effort appt stats))
-
-      ;; I don't want to show these in the TODO list,
-      ;; because they'll show in the Agenda anyway.
-      (setq org-agenda-todo-ignore-scheduled 'future
-	    org-agenda-todo-ignore-deadlines 'far
-	    org-agenda-todo-ignore-timestamp 'future)
-
-      (setq org-agenda-skip-deadline-prewarning-if-scheduled t
-	    org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-
-      ;; Make tags-todo search ignore scheduled items too
-      (setq org-agenda-tags-todo-honor-ignore-options t)
-
-      (setq org-log-done 'time)
-
-      (setq org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
-
-      (setq org-agenda-custom-commands
-	    '(("d" "Day Agenda"
-	       ((agenda "" ((org-agenda-span 'day)))))
-	      ("S" "Someday"
-	       ((todo "PROJ"
-		      ((org-agenda-files '("~/org/Someday.org"))))
-		(todo "TODO"
-		      ((org-agenda-todo-list-sublevels nil)
-		       (org-agenda-files '("~/org/Someday.org"))))))))
-    #+END_SRC
-
-*** Refiling
-
-    I got all of this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
-
-    #+BEGIN_SRC emacs-lisp
-      (setq org-refile-targets '((org-agenda-files :maxlevel . 2)
-				 (org-agenda-files :tag . "PROJ")
-
-				 ;; Add special rule for refiling to
-				 ;; Someday.org & Leisure so we can omit
-				 ;; them from org-agenda-files but still
-				 ;; refile there
-				 ("~/org/Someday.org" :maxlevel . 2)
-				 ("~/org/Leisure.org" :maxlevel . 2)))
-
-      ;; Make 'org-refile' work better with Ivy
-      (setq org-goto-interface 'outline-path-completion)
-      (setq org-outline-path-complete-in-steps nil)
-
-      ;; Allow refiling to sub-paths
-      (setq org-refile-use-outline-path 'file)
-
-      (setq org-refile-allow-creating-parent-nodes 'confirm)
-    #+END_SRC
-
-*** Capturing
-
-    Set up capture templates. This is mainly from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]. No doubt
-    this will grow...
-
-    #+BEGIN_SRC emacs-lisp
-      (defun capture-blog-post-file ()
-	(let* ((title (read-string "Slug: "))
-	       (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
-	  (expand-file-name
-	   (format "~/blog/articles/%s/%s.org"
-		   (format-time-string "%Y" (current-time))
-		   slug))))
-
-      (setq org-default-notes-file "~/org/inbox.org")
-
-      (use-package org-contacts
-	:ensure org-plus-contrib
-	:pin org)
-
-      (setq org-capture-templates
-	    '(("t" "TODOs")
-	      ("tn" "Todo Right Now (clock in!)" entry (file "")
-	       "* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
-	      ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
-	       "* TODO %?\n\n  %i")
-	      ("tl" "TODO entry with link" entry (file "")
-	       "* TODO %?\n\n  %a\n\n  %i")
-	      ("tr" "Process email" entry (file "")
-	       "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
-	      ("te" "To Expense" entry (file "")
-	       "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
-	      ("tp" "New Project" entry (file "")
-	       "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
-	      ("tT" "Trip" entry (file "")
-	       (file "templates/trip.org") :empty-lines 1)
-
-	      ("c" "Contacts" entry (file "~/org/contacts.org")
-	       "* %(org-contacts-template-name)
-	:PROPERTIES:
-	:EMAIL: %(org-contacts-template-email)
-	:BIRTHDAY:
-	:PHONE:
-	:ALIAS:
-	:NICKNAME:
-	:IGNORE:
-	:ICON:
-	:NOTE:
-	:ADDRESS:
-	:END:")
-
-	      ("l" "Log Learning" entry (file+datetree "learning.org")
-	       "* %^{Title} %^g\n  %?")
-
-	      ("n" "Note" entry (file+datetree "notes.org")
-	       "* %^{Subject} %^g\n\n  %?"
-	       :empty-lines 1
-	       :clock-in t)
-
-	      ("m" "Meter Readings")
-	      ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
-	       "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.7}"
-	       :table-line-pos "II-1")
-	      ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
-	       "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
-	       :table-line-pos "II-1")
-
-	      ("P" "password" entry (file "~/org/passwords.org.gpg")
-	       "* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
-
-	      ("b" "Blog Post" plain
-	       (file capture-blog-post-file)
-	       (file "templates/blog-post.org"))
-
-	      ("r" "GTD Review" entry (file+datetree "GTDReview.org")
-	       (file "templates/gtd-review.org")
-	       :empty-lines 1
-	       :jump-to-captured t)))
-    #+END_SRC
-
-*** Babel
-
-    Some initialisation settings for Org Babel is in order.
-    I don't want export to execute babel stuff: I like to execute them manually
-    before exporting. This is a security feature, as sometimes I have documents
-    that log in to servers and does things.
-
-    Ditaa requires a path to the installed Jar; this recently stopped working
-    because I had upgraded Ditaa, and the Jar has a version number in its name.
-    Now we look at the file system and grab the highest-versioned Jar available.
-
-    #+BEGIN_SRC emacs-lisp
-      ;; Tell Org where to find ditaa jar
-      (setq org-ditaa-jar-path
-	    (expand-file-name "~/.nix-profile/lib/ditaa.jar"))
-
-      (setq org-plantuml-jar-path
-	    (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
-
-    #+END_SRC
-
-    We have to specify the list of languages we want to support so Orgmode knows
-    to look out for them:
-
-    #+BEGIN_SRC emacs-lisp
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((emacs-lisp . t)
-	 (clojure . t)
-	 (python . t)
-	 (gnuplot . t)
-	 (lilypond . t)
-	 (ditaa . t)
-	 (plantuml . t)
-	 (dot . t)
-	 (sql . t)
-	 (shell . t)))
-    #+END_SRC
-
-*** Org Export
-
-    I hate writing JIRA markup, so I wrote a JIRA export backend for Org mode.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package ox-jira :pin melpa)
-      (require 'ox-latex)
-      (setq org-export-backends '(html md freemind jira latex))
-    #+END_SRC
-
-*** Passwords
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-passwords
-        :ensure org-plus-contrib
-	:pin org
-	:after org
-	:init
-
-	(setq org-passwords-time-opened "30 min")
-
-	;; Where's my passwords file?
-	(setq org-passwords-file "~/org/passwords.org.gpg")
-
-	:bind (("C-c P P" . org-passwords)
-	       ("C-c P g" . org-passwords-generate-password)
-	       :map org-passwords-mode-map
-	       ("C-c C-c u" . org-passwords-copy-username)
-	       ("C-c C-c p" . org-passwords-copy-password)
-	       ("C-c C-c o" . org-passwords-open-url)))
-    #+END_SRC
-
-*** Drilling
-
-    I use org-drill for drilling music theory.
-
-    #+begin_src emacs-lisp
-      (use-package org-drill
-        :ensure org-plus-contrib
-	:pin org
-	:init
-	(setq org-drill-maximum-items-per-session 10))
-
-      ;; Override until fixed in upstream distro
-      ;; https://emacs.stackexchange.com/a/46961/10625
-      (eval-after-load "org-drill"
-	'(defun org-drill-hide-subheadings-if (test)
-	   "TEST is a function taking no arguments. TEST will be called for each
-      of the immediate subheadings of the current drill item, with the point
-      on the relevant subheading. TEST should return nil if the subheading is
-      to be revealed, non-nil if it is to be hidden.
-      Returns a list containing the position of each immediate subheading of
-      the current topic."
-	   (let ((drill-entry-level (org-current-level))
-		 (drill-sections nil))
-	     (org-show-subtree)
-	     (save-excursion
-	       (org-map-entries
-		(lambda ()
-		  (when (and (not (org-invisible-p))
-			     (> (org-current-level) drill-entry-level))
-		    (when (or (/= (org-current-level) (1+ drill-entry-level))
-			      (funcall test))
-		      (hide-subtree))
-		    (push (point) drill-sections)))
-		nil 'tree))
-	     (reverse drill-sections)))
-	)
-    #+end_src
-
-*** Publishing
-
-    Publishing projects.
-
-    #+BEGIN_SRC emacs-lisp
-    (defun sb/org-html-format-drawer (name content)
-      (concat "<div class=\"drawer " (downcase name) "\">\n"
-	      "<h6>" (capitalize name) "</h6>\n"
-	      content
-	      "\n</div>"))
-
-    (setq org-publish-project-alist
-	  '(("www"
-	     :components ("www-pages" "www-static" "www-rss"))
-
-	    ("www-static"
-	     :base-directory "~/blog"
-	     :publishing-directory "~/public_html"
-	     :base-extension "css\\|jpg\\|png\\|pdf\\|html"
-	     :recursive t
-	     :publishing-function org-publish-attachment)
-
-	    ("www-pages"
-	     :exclude ",.*"
-	     :base-directory "~/blog"
-	     :publishing-directory "~/public_html"
-	     :publishing-function org-html-publish-to-html
-	     :recursive t
-	     :section-numbers nil
-	     :time-stamp-file nil
-	     :with-toc nil
-	     :with-drawers t
-	     :html-format-drawer-function sb/org-html-format-drawer
-
-	     :html-html5-fancy t
-	     :html-doctype "html5"
-	     :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
-	     :html-link-up "/"
-	     :html-link-home "/"
-	     :html-home/up-format "
-      <div id=\"org-div-home-and-up\">
-	<nav>
-	  <ul>
-	    <li><a accesskey=\"H\" href=\"%s\"> Home </a> (<a href=\"/index.xml\">RSS</a>)</li>
-	    <li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
-	    <li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
-	    <li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
-	  </ul>
-	</nav>
-      </div>"
-	     :html-head "
-      <link rel=\"stylesheet\" type=\"text/css\" href=\"/etc/main.css\" />
-      <link rel=\"icon\" type=\"image/png\" href=\"/etc/icon.png\" />
-      <link rel=\"alternative\" type=\"application/rss+xml\"
-	    href=\"https://www.brautaset.org/index.xml\"
-	    title=\"Stig's Soapbox RSS Feed\" />
-      <meta name=\"referrer\" content=\"same-origin\">
-    "
-
-	     :html-head-include-default-style nil
-	     :html-head-include-scripts nil
-
-	     :html-preamble nil
-	     :html-postamble-format auto
-	     :html-metadata-timestamp-format "%e %B %Y")
-
-	    ("www-rss"
-	     :base-directory "~/blog"
-	     :base-extension "org"
-	     :html-link-home "https://www.brautaset.org"
-	     :html-link-use-abs-url t
-	     :rss-extension "xml"
-	     :publishing-directory "~/public_html"
-	     :publishing-function (org-rss-publish-to-rss)
-	     :section-numbers nil
-	     :exclude ".*"              ;; To exclude all files...
-	     :include ("index.org")     ;; ... except index.org.
-	     :table-of-contents nil)))
-    #+END_SRC
-
-*** Blogging Support
-
-    I create blog entries in a directory under =~/blog= and link to them
-    from the main index page. It has so far been a manual job, but I
-    have finally managed to create a function to automate it a bit.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/org-kw-get (key)
-	"Return a lambda that takes an Org keyword element and returns
-      its :value property if its :key property matches `key'."
-	`(lambda (kw)
-	   (if (equal ,key (org-element-property :key kw))
-	       (org-element-property :value kw))))
-
-      (defun sb/parse-metadata ()
-	"Call in a blog post to get an entry suitable for linking to this
-      post from the index page."
-	(interactive)
-	(let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
-	       (tree (org-element-parse-buffer))
-
-	       (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
-	       (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
-	       (abstract
-		(org-element-interpret-data
-		 (org-element-map tree 'special-block
-		   (lambda (sb)
-		     (if (equal "abstract" (org-element-property :type sb))
-			 (org-element-contents sb)))))))
-
-	  (with-temp-buffer
-	    (org-mode)
-	    (org-insert-heading)
-
-	    ;; Would have loved to use `org-insert-link' here but
-	    ;; I can't stop it from presenting a prompt :-(
-	    (insert "[[file:" path "][" title "]]")
-
-	    (insert "\n\n")
-	    (insert abstract)
-
-	    (org-set-property "RSS_PERMALINK"
-			      (format "%s.html"
-				      (file-name-sans-extension path)))
-
-	    ;; Need to go back to the first line to set tags
-	    (goto-char (point-min))
-	    (org-set-tags categories)
-
-	    ;; Return the contents temporary buffer as a string *without properties*
-	    (copy-region-as-kill
-	     (point-min) (point-max)))))
-
-
-      (defun sb/find-drafts ()
-	"Find org files in `~/blog/articles' not already linked from
-		    `~/blog/index.org'."
-	(interactive)
-	(let* ((prefix (expand-file-name "~/blog/"))
-	       (posts
-		(directory-files-recursively
-		 (concat prefix "articles") ".org"))
-	       (index-contents (get-string-from-file (concat prefix "index.org")))
-	       (drafts (cl-remove-if (lambda (needle)
-				       (string-match
-					(string-remove-prefix prefix needle)
-					index-contents))
-				     posts))
-	       (buffer-name "*blog drafts*"))
-	  (if drafts
-	      (progn
-		(with-current-buffer (get-buffer-create buffer-name)
-		  (erase-buffer)
-		  (org-mode)
-		  (insert
-		   (mapconcat
-		    (lambda (entry)
-		      (format "- file:%s" entry))
-		    drafts
-		    "\n"))
-		  (buffer-string))
-		(unless (get-buffer-window buffer-name t)
-		  (pop-to-buffer buffer-name nil t))
-		(shrink-window-if-larger-than-buffer
-		 (get-buffer-window buffer-name)))
-	    (message "No drafts could be found!"))))
-    #+END_SRC
-
-*** Attachments
-
-    One annoying thing is not being able to find attachments once
-    you've attached files. Luckily, it turns out you can ask Org to
-    create links to attachments.
-
-    #+BEGIN_SRC emacs-lisp
-    (setq org-attach-store-link-p t)
-    #+END_SRC
-
-*** Edit "Org-like" lists in non-Org buffers
-
-    #+begin_src emacs-lisp
-    (use-package orgalist :pin gnu)
-    (add-to-list 'message-mode-hook 'orgalist-mode)
-    #+end_src
-
-** Plant UML Mode
-
-   I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package plantuml-mode
-       :mode "\\.puml\\'"
-       ;;       :init (setq plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
-       )
-   #+END_SRC
-
-** Playing Midi files
-
-   We can play midi files with fluidsynth.
-
-   Then we need a soundfont. Fluidsynth appears to recommend the one
-   from http://www.schristiancollins.com/generaluser.php.
-
-   #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755)
-     #!/bin/bash
-     set -o errexit
-     set -o nounset
-     set -o pipefail
-
-     tempfoo=`basename $0`
-     TMPDIR=`mktemp -d -t ${tempfoo}`
-
-     VERSION="1.471"
-
-     mkdir -p ~/.local/share
-     TARGET=~/.local/share/GeneralUserGS
-     if test -d $TARGET ; then
-         mv $TARGET $TARGET.$(date +%Y-%m-%d).$RANDOM
-     fi
-
-     DL=GeneralUser_GS_$VERSION
-     curl -L https://www.dropbox.com/s/4x27l49kxcwamp5/GeneralUser_GS_$VERSION.zip?dl=1 -o ~/Downloads/$DL.zip
-     cd $TMPDIR
-     unzip ~/Downloads/$DL.zip
-
-     mv "$(find $TMPDIR -mindepth 1 -maxdepth 1 -type d)" "$TARGET"
-
-     rmdir $TMPDIR
-   #+end_src
-
-
-   Finally let's install a wrapper to more easily play stuff.
-
-   #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
-     #!/bin/bash
-     set -o errexit
-     set -o nounset
-     set -o pipefail
-
-     if ! test -d ~/.local/share/GeneralUserGS ; then
-       echo "No soundfonts found, attempting to download..."
-       download_soundfont
-     fi
-
-     fluidsynth -a coreaudio -m coremidi -ni ~/.local/share/GeneralUserGS/GeneralUser\ GS\ v1.471.sf2 "$@"
-   #+end_src
-
-** Projectile
-
-   I use Projectile to navigate my projects. Some of the things I like about
-   it are that it provides the following key bindings:
-
-   - =C-c p t= :: This switches from an implementation file to its test file,
-                  or vice versa. I use this extensively in Clojure mode. It
-                  might not make sense for all languages; YMMV.
-   - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
-   - =C-c p s s= :: Ag search for something in this project. If point is at a
-                    token, default to searching for that. (Mnemonic:
-                    "Projectile Silver Searcher".)
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :bind ("C-c p" . projectile-command-map)
-       :demand
-       :init
-       (setq projectile-completion-system 'ivy)
-       :config
-       (projectile-mode +1))
-
-
-     ;; Register project subtype used by "gilded rose" kata.
-     (projectile-register-project-type 'lein-spec '("project.clj" "spec")
-				       :compile "lein compile"
-				       :test "lein test"
-				       :test-suffix "_spec")
-
-     (use-package counsel-projectile)
-   #+END_SRC
-
-** Put Custom settings in a separate file
-
-   I prefer to code my configuration, but sometimes Custom settings are good
-   enough. I prefer that such settings live in a separate file though. Load
-   that file if it exists.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-     (if (file-exists-p custom-file)
-         (load custom-file))
-   #+END_SRC
-
-** Python
-
-   Work projects are all in Python. This is me exploring Emacs' Python
-   support.
-
-*** Elpy
-
-    I'll try Elpy first because of its touted refactoring support.
-
-    #+BEGIN_SRC emacs-lisp :noweb yes
-     (use-package elpy
-       :config
-       (elpy-enable))
-    #+END_SRC
-
-*** Create a UTF-8 alias
-
-    Our Python code tends to have the following lines:
-
-    : # -*- coding: UTF-8 -*-
-
-    These cause Emacs to have a sad and say:
-
-    : Warning (mule): Invalid coding system 'UTF-8' is specified
-
-    I don't want to change all of them, so let's just define an alias. (Thanks
-    to Lucas Sampaio for this tip!)
-
-    #+BEGIN_SRC emacs-lisp
-      (define-coding-system-alias 'UTF-8 'utf-8)
-    #+END_SRC
-*** Pipenv
-
-    #+BEGIN_SRC emacs-lisp
-    (use-package pipenv
-      :pin melpa
-      :hook (python-mode . pipenv-mode)
-      :init
-      ;; (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
-      )
-    #+END_SRC
-
-** Running tests
-
-   Add a convenient keybinding for running tests interactively.
-
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x t") 'ert)
-   #+END_SRC
-
-** Save minibuffer history
-
-   This allows us to "tap up" in the minibuffer to recall previous items,
-   even from a previous session.
-
-   #+BEGIN_SRC emacs-lisp
-     (savehist-mode 1)
-   #+END_SRC
-
-** Save my place in each file
-
-   It's nice if Emacs knows where I was last time I opened a file.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq-default save-place t)
-     (setq save-place-file (concat user-emacs-directory "places"))
-   #+END_SRC
-
-** Scala
-
-   Then install ensime, the /ENhanced Scala Interaction Mode for Emacs/.
-
-   #+begin_src emacs-lisp
-     (use-package ensime)
-     (use-package sbt-mode)
-     (use-package scala-mode)
-     (setq ensime-search-interface 'ivy)
-   #+end_src
-
-** Show Matching parens
-
-   This is extremely useful. Put the mark on a paren (any of =()[]{}=,
-   actually) and Emacs shows the matching closing/opening one.
-
-   #+BEGIN_SRC emacs-lisp
-     (show-paren-mode 1)
-   #+END_SRC
-
-** SmartParens
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package smartparens-config
-       :ensure smartparens
-       :diminish
-
-       ;; I prefer to be explicit about the keybindings I use
-       :bind (:map smartparens-mode-map
-		   ("C-M-f" . sp-forward-sexp)
-		   ("C-M-b" . sp-backward-sexp)
-		   ("C-M-<SPC>" . sp-splice-sexp)
-		   ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-		   ("C-<right>" . sp-forward-slurp-sexp)
-		   ("C-<left>" . sp-forward-barf-sexp)
-		   ("C-M-<left>" . sp-backward-slurp-sexp)
-		   ("C-M-<right>" . sp-backward-barf-sexp))
-       :init
-       (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-       (add-hook 'text-mode-hook 'turn-on-smartparens-mode)
-
-       :config
-       (show-smartparens-global-mode t))
-   #+END_SRC
-
-** String Inflection
-
-   Sometimes I need to swap between CamelCase and snake_case, or even
-   SNAKE_CASE.
-
-   #+begin_src emacs-lisp
-     (use-package string-inflection
-       :bind (("C-c C-x C-s" . string-inflection-all-cycle)
-	      ("C-c C-x C-c" . string-inflection-camelcase)
-	      ("C-c C-x C-k" . string-inflection-kebab-case)
-	      ("C-c C-x C-u" . string-inflection-upcase)))
-   #+end_src
-
-** Support for fullscreen
-
-   I like to run apps in fullscreen mode. Sometimes it's useful to be
-   able to toggle it on or off, which this function does. I found it
-   at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
-
-   #+BEGIN_SRC emacs-lisp
-     (defun my-toggle-fullscreen ()
-       "Toggle full screen"
-       (interactive)
-       (set-frame-parameter
-        nil 'fullscreen
-        (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-
-     (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
-   #+END_SRC
-
-** Swiper
-
-   Invoke swiper (find in current buffer).
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package swiper
-       :bind (("C-x /" . swiper)))
+   (add-hook 'text-mode-hook 'visual-line-mode)
    #+END_SRC
 
 ** Themes
@@ -1828,120 +541,1414 @@
 		  ("RET" nil "done" :color blue)))))
     #+END_SRC
 
-** Toggle Window Split function
+* Configure ELPA Packages
+** Initialise the Package Manager
+*** Initialize ~package-archives~
 
-   Sometimes a window is split horizontally, and you would prefer
-   vertically. Or vice versa. This function can help! Just don't ask me how
-   it works: I found it on StackOverflow. (I think. Again.)
+    We need to add the URLs of the package archives we want to use. I
+    install most packages via Melpa Stable Nix, but some from unstable.
+    I need the =org= archive because I use some =org-contrib= stuff that
+    doesn't make it into Emacs proper.
 
-   #+BEGIN_SRC emacs-lisp
-     (defun toggle-window-split ()
-       (interactive)
-       (if (= (count-windows) 2)
-           (let* ((this-win-buffer (window-buffer))
-                  (next-win-buffer (window-buffer (next-window)))
-                  (this-win-edges (window-edges (selected-window)))
-                  (next-win-edges (window-edges (next-window)))
-                  (this-win-2nd (not (and (<= (car this-win-edges)
-                                              (car next-win-edges))
-                                          (<= (cadr this-win-edges)
-                                              (cadr next-win-edges)))))
-                  (splitter
-                   (if (= (car this-win-edges)
-                          (car (window-edges (next-window))))
-		       'split-window-horizontally
-                     'split-window-vertically)))
-             (delete-other-windows)
-             (let ((first-win (selected-window)))
-	       (funcall splitter)
-	       (if this-win-2nd (other-window 1))
-	       (set-window-buffer (selected-window) this-win-buffer)
-	       (set-window-buffer (next-window) next-win-buffer)
-	       (select-window first-win)
-	       (if this-win-2nd (other-window 1))))))
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+      (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+    #+END_SRC
 
-     (define-key ctl-x-4-map "t" 'toggle-window-split)
-   #+END_SRC
+*** Install ~use-package~
 
-** Transparently open compressed files
+    Install ~use-package~ and configure it to install packages from stable
+    melpa archive by default.
 
-   I *do* like it when Emacs transparently opens compressed files. It gives
-   me the warm fuzzies.
+    #+begin_src emacs-lisp
+      ;; Automatically :ensure each use-package.
+      (setq use-package-always-ensure t)
 
-   #+BEGIN_SRC emacs-lisp
-     (auto-compression-mode t)
-   #+END_SRC
+      ;; Default value for :pin in each use-package.
+      (setq use-package-always-pin "melpa-stable")
 
-** Visual line mode / word wrapping
+      ;; Bootstrap use-package
+      (unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
+      (require 'use-package)
+    #+end_src
 
-   #+BEGIN_SRC emacs-lisp
-   (add-hook 'text-mode-hook 'visual-line-mode)
-   #+END_SRC
+** Install & Configure Packages
+*** Ace Window
 
-** Which Key Mode
+    #+begin_src emacs-lisp
+    (use-package ace-window
+      :bind ("M-`" . ace-window))
+    #+end_src
+*** Set =PATH= etc from the login shell
 
-   Show incomplete key cheatsheet.
+    The GUI Emacs gets exec path from the system, rather than the login
+    shell. We have to load PATH etc from Zsh to get access to programs
+    installed by Nix.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package which-key
-       :config
-       (which-key-mode))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package exec-path-from-shell
+	:init
+	(setq exec-path-from-shell-variables '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"))
+	:config
+	(exec-path-from-shell-initialize))
+    #+END_SRC
 
-** Who Am I
+*** Ag (The Silver Searcher)
 
-   #+BEGIN_SRC emacs-lisp
-   (setq user-full-name "Stig Brautaset")
-   (setq user-mail-address "stig@brautaset.org")
-   #+END_SRC
-** Writegood Mode
+    I use =ag= for searching a lot in Emacs. Its "writable grep"
+    companion mode is pretty close to magic. When in a buffer showing
+    ag results, try hitting =C-c C-p=--this lets you /edit the results of
+    the search right from the ag results buffer!/ Just hit =C-x C-s= to
+    save the results.
 
-   I'm not a great writer. I need all the crutches I can get. Lucklily,
-   Emacs has them.
+    If you hit =C-c C-p= while already in writable grep mode you can
+    delete the entire matched line by hitting =C-c C-d=.
 
-   This helps highlight passive voice, weasel words, etc in writing.
+    #+BEGIN_SRC emacs-lisp
+      (use-package ag :pin melpa)
+      (use-package wgrep :pin melpa)
+      (use-package wgrep-ag :pin melpa)
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package writegood-mode
+      ;; This fixes the last group not being editable until it's fixed
+      ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
+      (eval-after-load "wgrep-ag"
+	'(defun wgrep-ag-prepare-header/footer ()
+	   (save-excursion
+	     (goto-char (point-min))
+	     ;; Look for the first useful result line.
+	     (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
+					    "\\|"
+					    wgrep-ag-ungrouped-result-regexp))
+		 (add-text-properties (point-min) (line-beginning-position)
+				      '(read-only t wgrep-header t))
+	       ;; No results in this buffer, let's mark the whole thing as
+	       ;; header.
+	       (add-text-properties (point-min) (point-max)
+				    '(read-only t wgrep-header t)))
+
+	     ;; OK, header dealt with. Now let's try find the footer.
+	     (goto-char (point-max))
+	     (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
+	     ;; Point is now at the beginning of the result nearest the end
+	     ;; of the buffer, AKA the last result.  Move to the start of
+	     ;; the line after the last result, and mark everything from
+	     ;; that line forward as wgrep-footer.  If we can't move to the
+	     ;; line after the last line then there apparently is no
+	     ;; footer.
+	     (when (zerop (forward-line 1))
+	       (add-text-properties (point) (point-max)
+				    '(read-only t wgrep-footer t))))))
+
+      (add-hook 'ag-mode-hook 'wgrep-ag-setup)
+    #+END_SRC
+
+*** Aggressive Indent
+
+    I like to keep my code indented properly at all times. Aggressive-indent
+    helps ensure this. Turn it on for lisp modes.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package aggressive-indent
+	:init
+	(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+	(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+	(add-hook 'css-mode-hook #'aggressive-indent-mode))
+    #+END_SRC
+
+*** Auto commit
+
+    In some projects (notably, my Org/Agenda setup) I want to
+    automatically commit when editing files.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package git-auto-commit-mode)
+    #+END_SRC
+
+*** Beacon
+
+    Highlight my cursor when scrolling
+
+    #+begin_src emacs-lisp
+    (use-package beacon :pin gnu)
+    #+end_src
+
+*** Clojure
+
+    #+BEGIN_SRC emacs-lisp
+     (use-package clojure-mode)
+     (use-package cider)
+     (use-package clj-refactor)
+    #+END_SRC
+
+*** Company
+
+    Auto-complete of code and prose.
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package company
+      :init
+      ;; https://emacs.stackexchange.com/a/10838
+      (setq company-dabbrev-downcase nil)
+      :config
+      (global-company-mode))
+    #+END_SRC
+
+*** Counsel
+
+    This provides =counsel-find-file=, among others.
+
+    #+begin_src emacs-lisp
+    (use-package amx) ;; make counsel-M-x work the way I like
+    (use-package counsel)
+    (counsel-mode 1)
+    #+end_src
+
+*** Editorconfig
+
+    Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
+    their indentation and file format preferences.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package editorconfig
+	:init
+	(setq editorconfig-exclude-modes '(org-mode))
+	(setq editorconfig-mode-lighter " EC")
+	:config
+	(editorconfig-mode))
+    #+END_SRC
+
+*** Elfeed
+
+    I use custom.el for the actual feeds.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package elfeed
+	:bind ("C-x w" . elfeed)
+	:config
+	(defalias 'elfeed-toggle-star
+	  (elfeed-expose #'elfeed-search-toggle-all 'star))
+
+	(eval-after-load 'elfeed-search
+	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
+    #+END_SRC
+
+*** Email
+
+    Because I like to use Emacs for writing, I like to use it for email
+    too. I tried Gnus, but don't really read news so it felt a bit
+    overkill. I've been using [[http://www.djcbsoftware.nl/code/mu/][mu4e]] for a while, but I'm slightly
+    annoyed by some of its quirks (particularly interacting with Gmail,
+    which I have to use for work) so thought I'd try [[https://notmuchmail.org][notmuch]].
+
+    I use [[http://msmtp.sourceforge.net/][msmtp]] for sending email, and [[http://isync.sourceforge.net][mbsync]] for syncing IMAP messages
+    between my local machine and upstream servers.
+
+**** Download email with mbsync
+
+     I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
+     faster and doesn't have this annoying db outside of the Maildir to keep in
+     sync.
+
+***** mbsync configuration
+
+      #+BEGIN_SRC conf :tangle ~/.mbsyncrc
+	IMAPAccount gandi
+	Host mail.gandi.net
+	User stig@brautaset.org
+	SSLType IMAPS
+	AuthMechs LOGIN
+	PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+	# To rotate:
+	# > security delete-generic-password -s mbsync-gandi-password
+	# > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
+
+	IMAPStore gandi-remote
+	Account gandi
+
+	MaildirStore gandi-local
+	AltMap yes
+	Path ~/Mail/Gandi/
+	Inbox ~/Mail/Gandi/INBOX
+	Trash trash
+
+	Channel gandi-inbox
+	Master :gandi-remote:
+	Slave :gandi-local:
+	Create Slave
+	SyncState *
+
+	Channel gandi-sent
+	Master :gandi-remote:Sent
+	Slave :gandi-local:sent
+	Create Slave
+	SyncState *
+
+	Channel gandi-spam
+	Master :gandi-remote:Junk
+	Slave :gandi-local:spam
+	Create Slave
+	SyncState *
+
+	Channel gandi-org-mode
+	Master :gandi-remote:org-mode
+	Slave :gandi-local:org-mode
+	Create Slave
+	SyncState *
+	MaxMessages 500
+	ExpireUnread yes
+	Expunge Both
+
+	Channel gandi-lilypond
+	Master :gandi-remote:lilypond
+	Slave :gandi-local:lilypond
+	Create Slave
+	SyncState *
+	MaxMessages 500
+	ExpireUnread yes
+	Expunge Both
+
+	Channel gandi-clojure
+	Master :gandi-remote:clojure
+	Slave :gandi-local:clojure
+	Create Slave
+	SyncState *
+	MaxMessages 500
+	ExpireUnread yes
+	Expunge Both
+
+	Channel gandi-tuls
+	Master :gandi-remote:tuls
+	Slave :gandi-local:tuls
+	Create Slave
+	SyncState *
+	MaxMessages 500
+	Expunge Both
+
+	# ACCOUNT INFORMATION
+	IMAPAccount gmail
+	Host imap.gmail.com
+	User sbrautaset@laterpay.net
+	Timeout 60
+	PassCmd "security find-generic-password -s mbsync-gmail-password -w"
+	AuthMechs PLAIN
+	SSLType IMAPS
+	CertificateFile /etc/ssl/cert.pem
+
+	# REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
+	IMAPStore gmail-remote
+	Account gmail
+
+	# LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
+	MaildirStore gmail-local
+	AltMap yes
+	Path ~/Mail/Work/
+	Inbox ~/Mail/Work/INBOX
+	Trash trash
+
+	Channel gmail-archive
+	Master :gmail-remote:"[Gmail]/All Mail"
+	Slave :gmail-local:archive
+	Create Slave
+	SyncState *
+
+	Channel gmail-sent
+	Master :gmail-remote:"[Gmail]/Sent Mail"
+	Slave :gmail-local:sent
+	Create Slave
+	SyncState *
+
+	Channel gmail-spam
+	Master :gmail-remote:"[Gmail]/Spam"
+	Slave :gmail-local:spam
+	Create Slave
+	SyncState *
+      #+END_SRC
+
+***** Invoke mbsync
+
+      I used to run this periodically, but I've noticed I usually run
+      it interactively just before checking mail, so let's just go wiht
+      that. It's not abnormal for this to take 30 seconds, but usually
+      it's less.
+
+      #+BEGIN_SRC emacs-lisp
+	(defun sb/mbsync ()
+	  (interactive)
+	  (let ((process (start-process "mbsync" "*mbsync*" "mbsync" "--verbose" "--all" "--quiet")))
+	    (message "mbsync: started")
+
+	    ;; Signal that mbsync finished, and clear minibuffer afterwards.
+	    (set-process-sentinel process (lambda (proc state)
+					    (message "mbsync: completed")))
+
+	    ;; Return process so we can attach additional things to it
+	    process))
+      #+END_SRC
+
+**** Reading mail with NotMuch
+
+     After installing NotMuch it I ran =notmuch setup= to configure
+     it. Then I ran =notmuch new= to index my existing mail.  (This was
+     already in =~/Maildir/= since I've been using mu4e before.) I then
+     installed the Emacs package from Melpa, and launched it with =M-x
+     notmuch=.  Its threading and MIME appears a lot better than mu4e,
+     from a cursory glance.
+
+     I configured Notmuch by running =notmuch setup= on the commandline.
+     However, you can then set config values independently.
+
+     #+begin_src sh :results silent
+     notmuch config set database.path ~/Mail
+
+     notmuch config set user.name "Stig Brautaset"
+
+     notmuch config set user.primary_email "stig@brautaset.org"
+
+     notmuch config set user.other_email 'sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com'
+
+     notmuch config set new.tags 'unread;inbox'
+
+     notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
+
+     notmuch config set search.exclude_tags 'deleted;spam;draft'
+     #+end_src
+
+     We can now read the config back in, to verify our change.
+
+     #+BEGIN_SRC sh :results output replace :exports results :tangle no
+     notmuch config list
+     #+END_SRC
+
+     #+RESULTS:
+     #+begin_example
+     database.path=/Users/stig/Mail
+     user.name=Stig Brautaset
+     user.primary_email=stig@brautaset.org
+     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
+     new.tags=unread;inbox
+     new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
+     search.exclude_tags=deleted;spam;draft
+     maildir.synchronize_flags=true
+     built_with.compact=true
+     built_with.field_processor=true
+     built_with.retry_lock=true
+     #+end_example
+
+***** Configuring Notmuch inside Emacs
+
+      With that out of the way, and installing the package from Melpa,
+      Notmuch works pretty well for me. Mainly I set up a keybinding to
+      quickly bring it up.
+
+      I don't like using my email inbox as a todo list, so when I
+      receive an email I need to act on but can't yet, I link to it from
+      my Org mode agenda and archive it. When Org agenda prompts me I
+      can click on the link and immediately get to the mail in my
+      archive, and can reply to it from there.
+
+      NotMuch doesn't have built-in support for multiple profiles. I
+      tried using "gnus-alias", but couldn't get it to work. Going with
+      a simpler scheme now: reply to the address they write to, and base
+      signature on the from address.
+
+      Save a copy of outgoing personal mail. For work I rely on Gmail
+      automatically saving outgoing mail to my sent folder.
+
+      #+BEGIN_SRC emacs-lisp
+	(require 'notmuch)
+
+	(defun sb/notmuch ()
+	  (interactive)
+	  (notmuch)
+	  (set-process-sentinel (sb/mbsync)
+				(lambda (proc state)
+				  (message "notmuch: poll & refresh buffer...")
+				  (notmuch-poll-and-refresh-this-buffer)
+				  (message "notmuch: refreshed buffer"))))
+
+	(bind-key "C-x m" 'sb/notmuch)
+
+	(bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
+	(add-to-list 'notmuch-message-mode-hook #'turn-off-auto-fill)
+
+	;; Allow linking to NotMuch messages from Org mode
+	(require 'org-notmuch)
+
+	(defun sb/message-signature-setup-hook ()
+	  (setq message-signature-file
+		(if (string-match "laterpay" (mail-fetch-field "from"))
+		    "~/.signature.work" nil))
+	  (message "Selected %s for signature" message-signature-file))
+
+	(add-hook 'message-signature-setup-hook
+		  'sb/message-signature-setup-hook)
+
+	(setq notmuch-fcc-dirs
+	      '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
+      #+END_SRC
+
+***** Add post-new hook to tag messages
+
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
+	#!/bin/bash
+	set -o errexit
+	set -o nounset
+	set -o pipefail
+
+	# Tag previously unseen messages
+	notmuch tag +work -- path:/Work/ and tag:inbox
+	notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
+	notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
+	notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
+
+	# Add extra tags for mailing lists, and remove inbox tag.
+	notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
+	notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
+	notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
+	notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
+      #+END_SRC
+
+***** Reading HTML mail
+
+      Reading HTML with eww I don't like the default way eww adds
+      linebreaks. Luckily, I [[https://emacs.stackexchange.com/a/31883/10625][found]] a way to improve it:
+
+      #+begin_src emacs-lisp
+	(eval-after-load 'shr
+	  '(progn (setq shr-width -1)
+		  (defun shr-fill-text (text) text)
+		  (defun shr-fill-lines (start end) nil)
+		  (defun shr-fill-line () nil)))
+      #+end_src
+
+**** Compose Emails with Org mode
+
+     I want to be able to create links to messages from Org mode
+     capture templates, as email Inbox is a terrible TODO list.  I
+     define =C-c x= as a short-cut to switch to Org mode, and back, to
+     message mode, so that I can use full Org mode to edit messages if
+     I want.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-mime
+	 :bind (:map message-mode-map
+		     ("C-c h" . org-mime-htmlize))
+	 :init
+	 (setq org-mime-preserve-breaks nil))
+     #+END_SRC
+
+**** Sending mail with MSMTP
+
+     MSMTP's configuration is really simple, and it will detect the account to
+     use from the "from" address. Let's go!
+
+     MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
+     section in the msmtp documentation for details.
+
+     #+BEGIN_SRC conf :tangle ~/.msmtprc
+       defaults
+
+       port 587
+       tls on
+       tls_trust_file /etc/ssl/cert.pem
+       auth on
+
+       ###############
+       account private
+
+       from stig@brautaset.org
+       host mail.gandi.net
+       user stig@brautaset.org
+
+       #############
+       account icloud
+
+       from stig.brautaset@icloud.com
+       host smtp.mail.me.com
+       user stig.brautaset@icloud.com
+
+       ############
+       account work
+
+       from sbrautaset@laterpay.net
+       host smtp.gmail.com
+       user sbrautaset@laterpay.net
+
+       #########################
+       account default : private
+     #+END_SRC
+
+     Finally we have to tell Emacs to use msmtp to send mail:
+
+     #+BEGIN_SRC emacs-lisp
+       (setq message-send-mail-function 'message-send-mail-with-sendmail
+             sendmail-program "msmtp"
+	     message-sendmail-envelope-from 'header
+	     mail-envelope-from 'header
+	     mail-specify-envelope-from t)
+     #+END_SRC
+
+***** Don't keep buffer for sent messages
+
+      #+BEGIN_SRC emacs-lisp
+      (setq message-kill-buffer-on-exit t)
+      #+END_SRC
+
+*** Gists
+
+    Viewing & editing gists in Emacs? Sure! I want that!
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package gist
+	:bind (("C-x g l" . gist-list)
+	       ("C-x g c" . gist-region-or-buffer-private))
+	:init
+	(setq gist-ask-for-description t))
+    #+END_SRC
+
+*** Git Link
+
+    Link to file location on GitHub/Bitbucket/GitLab/...
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package git-link
+	:bind ("C-c g l" . git-link))
+    #+END_SRC
+
+*** Graphviz
+
+    I sometimes use Graphviz to create diagrams.
+
+    I also have to tell Emacs how to launch GraphViz.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package graphviz-dot-mode
+	:bind ("C-c C-p" . graphviz-dot-preview))
+    #+END_SRC
+
+*** Iedit
+
+    Edit multiple symbols in one go. Similar in some respects to
+    Multiple Cursors, but seems a little more light-weight.
+
+    #+begin_src emacs-lisp
+    (use-package iedit :pin melpa)
+    #+end_src
+
+*** Ivy
+
+    I've long been a happy Helm user, but it confuses me (and is slow!)
+    in some situations so I thought I'd try again to see if Ivy fares
+    any better.
+
+    #+begin_src emacs-lisp
+      (use-package ivy
+	:pin melpa
+	:demand
+	:config
+	(setq ivy-use-virtual-buffers t
+	      ivy-count-format "%d/%d "))
+      (ivy-mode 1)
+
+      ;; This should apparently allow opening multiple files from
+      ;; ivy-find-file.
+      (use-package ivy-hydra
+	:pin melpa)
+    #+end_src
+
+*** LilyPond
+
+    With Nix I am not able to install LilyPond, but I can install it
+    via a download from https://lilypond.org.
+
+    #+begin_src emacs-lisp
+      (use-package lilypond-mode
+	:load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
+	:mode (("\\.ily\\'" . LilyPond-mode)
+	       ("\\.ly\\'" . LilyPond-mode))
+	:init
+	(setq LilyPond-midi-command "playmidi")
+	(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+    #+end_src
+
+*** Magit
+
+    I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
+    Emacs just for it. It is excellent. I bind =M-m= to =magit-status=, which is
+    the main entry point for the mode.
+
+    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package transient :pin melpa)
+      (use-package magit
+	:pin melpa
+	:bind ("M-m" . magit-status))
+
+      (use-package forge :pin melpa)
+      (use-package magit-org-todos :pin melpa)
+      (use-package magit-todos :pin melpa)
+    #+END_SRC
+
+*** Markdown
+
+    I'm a sucker for lists, and I want to be able to reorder list items
+    easily and have them renumbered automatically.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+	:pin melpa
+	:bind (("M-<up>" . markdown-move-list-item-up)
+	       ("M-<down>" . markdown-move-list-item-down)))
+    #+END_SRC
+*** Multiple Cursors
+
+    This package is another one of those near-magical ones. It allows me to do
+    multiple edits in the same buffer, using several cursors. You can think of
+    it as an interactive macro, where you can constantly see what's being done.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package multiple-cursors
+
+	:bind (("C-c M-e" . mc/edit-lines)
+               ("C-c M-a" . mc/mark-all-dwim)
+               ("s-n" . mc/mark-next-like-this)
+               ("s-p" . mc/mark-previous-like-this)))
+    #+END_SRC
+
+*** Nix
+
+    Some modules useful for Nix.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package nix-mode :pin melpa)
+      (use-package nix-sandbox :pin melpa)
+    #+END_SRC
+
+*** Org mode
+
+    I now use Org mode for all writing I initiate. The Emacs org mode's support
+    for tables, TOC, footnotes, TODO and agenda items makes it an easy choice.
+    Gists and GitHub READMEs support Org mode too, and I can export to other
+    formats including if I want.
+
+    To avoid having one gigantic section, this file uses NOWEB syntax to weave
+    together config snippets.
+
+    The particular version of package I use is annoying to install because the
+    installed package has a different name from what you would use in your
+    config. However, =use-package= supports this by passing the name of the
+    package to install as the value to =:ensure=.
+
+    The Org manual expects the =C-c {l,a,c,b}= keybindings to be
+    available in any mode, so define them globally. I prefer to follow
+    conventions. It makes reading the manual and tutorials a lot
+    easier!
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package org
+	:ensure org-plus-contrib
+	:pin org
+	:bind (("C-c l" . org-store-link)
+	       ("C-c a" . org-agenda)
+	       ("C-c c" . org-capture)
+	       ("C-c b" . org-iswitchb)
+	       ("C-x C-<return>" . org-insert-subheading)
+	       ("C-S-<return>" . org-insert-todo-subheading)
+	       :map org-mode-map
+	       ("C-c x" . mu4e-compose-mode)
+	       ("C-n" . org-next-link)
+	       ("C-p" . org-previous-link))
+
+	:mode (("\\.org\\'" . org-mode)
+	       ("\\.org_archive\\'" . org-mode))
+
+	:init
+
+	;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
+	(setq org-log-into-drawer t)
+
+	;; Sometimes I accidentally edit non-visible parts of org document. This
+	;; helps, apparently.
+	(setq org-catch-invisible-edits 'show-and-error)
+
+	;; If running interactively, I want export to copy to the kill-ring
+	(setq org-export-copy-to-kill-ring 'if-interactive)
+
+	(setq org-hide-emphasis-markers t)
+
+	(setq org-element-use-cache nil)
+
+	(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+    #+END_SRC
+
+**** Agenda
+
+     #+BEGIN_SRC emacs-lisp
+       ;; Include Calendar/Diary information in Agenda
+       (setq org-agenda-include-diary t)
+
+       ;; I don't rely on many properties, so this should speed up my Agenda
+       ;; view, according to http://orgmode.org/worg/agenda-optimization.html
+       (setq org-agenda-ignore-properties '(effort appt stats))
+
+       ;; I don't want to show these in the TODO list,
+       ;; because they'll show in the Agenda anyway.
+       (setq org-agenda-todo-ignore-scheduled 'future
+	     org-agenda-todo-ignore-deadlines 'far
+	     org-agenda-todo-ignore-timestamp 'future)
+
+       (setq org-agenda-skip-deadline-prewarning-if-scheduled t
+	     org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+
+       ;; Make tags-todo search ignore scheduled items too
+       (setq org-agenda-tags-todo-honor-ignore-options t)
+
+       (setq org-log-done 'time)
+
+       (setq org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
+
+       (setq org-agenda-custom-commands
+	     '(("d" "Day Agenda"
+		((agenda "" ((org-agenda-span 'day)))))
+	       ("S" "Someday"
+		((todo "PROJ"
+		       ((org-agenda-files '("~/org/Someday.org"))))
+		 (todo "TODO"
+		       ((org-agenda-todo-list-sublevels nil)
+			(org-agenda-files '("~/org/Someday.org"))))))))
+     #+END_SRC
+
+**** Refiling
+
+     I got all of this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+
+     #+BEGIN_SRC emacs-lisp
+       (setq org-refile-targets '((nil . (:level . 1))
+				  (org-agenda-files . (:maxlevel . 2))
+				  (org-agenda-files . (:tag . "PROJ"))
+
+				  ;; Add special rule for refiling to
+				  ;; Someday.org & Leisure so we can omit
+				  ;; them from org-agenda-files but still
+				  ;; refile there
+				  ("~/org/Someday.org" . (:maxlevel . 2))
+				  ("~/org/Leisure.org" . (:maxlevel . 2))))
+
+       ;; Make 'org-refile' work better with Ivy
+       (setq org-goto-interface 'outline-path-completion)
+       (setq org-outline-path-complete-in-steps nil)
+
+       ;; Allow refiling to sub-paths
+       (setq org-refile-use-outline-path 'file)
+
+       (setq org-refile-allow-creating-parent-nodes 'confirm)
+     #+END_SRC
+
+**** Capturing
+
+     Set up capture templates. This is mainly from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]. No doubt
+     this will grow...
+
+     #+BEGIN_SRC emacs-lisp
+       (defun capture-blog-post-file ()
+	 (let* ((title (read-string "Slug: "))
+		(slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
+	   (expand-file-name
+	    (format "~/blog/articles/%s/%s.org"
+		    (format-time-string "%Y" (current-time))
+		    slug))))
+
+       (setq org-default-notes-file "~/org/inbox.org")
+
+       (use-package org-contacts
+	 :ensure org-plus-contrib
+	 :pin org)
+
+       (setq org-capture-templates
+	     '(("t" "TODOs")
+	       ("tn" "Todo Right Now (clock in!)" entry (file "")
+		"* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
+	       ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
+		"* TODO %?\n\n  %i")
+	       ("tl" "TODO entry with link" entry (file "")
+		"* TODO %?\n\n  %a\n\n  %i")
+	       ("tr" "Process email" entry (file "")
+		"* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+	       ("te" "To Expense" entry (file "")
+		"* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
+	       ("tp" "New Project" entry (file "")
+		"* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
+	       ("tT" "Trip" entry (file "")
+		(file "templates/trip.org") :empty-lines 1)
+
+	       ("c" "Contacts" entry (file "~/org/contacts.org")
+		"* %(org-contacts-template-name)
+	 :PROPERTIES:
+	 :EMAIL: %(org-contacts-template-email)
+	 :BIRTHDAY:
+	 :PHONE:
+	 :ALIAS:
+	 :NICKNAME:
+	 :IGNORE:
+	 :ICON:
+	 :NOTE:
+	 :ADDRESS:
+	 :END:")
+
+	       ("l" "Log Learning" entry (file+datetree "learning.org")
+		"* %^{Title} %^g\n  %?")
+
+	       ("n" "Note" entry (file+datetree "notes.org")
+		"* %^{Subject} %^g\n\n  %?"
+		:empty-lines 1
+		:clock-in t)
+
+	       ("m" "Meter Readings")
+	       ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
+		"|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.7}"
+		:table-line-pos "II-1")
+	       ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
+		"|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
+		:table-line-pos "II-1")
+
+	       ("P" "password" entry (file "~/org/passwords.org.gpg")
+		"* %^{Title}\n %^{URL}p %^{USERNAME}p %^{PASSWORD}p" :empty-lines 1)
+
+	       ("b" "Blog Post" plain
+		(file capture-blog-post-file)
+		(file "templates/blog-post.org"))
+
+	       ("r" "GTD Review" entry (file+datetree "GTDReview.org")
+		(file "templates/gtd-review.org")
+		:empty-lines 1
+		:jump-to-captured t)))
+     #+END_SRC
+
+**** Babel
+
+     Some initialisation settings for Org Babel is in order.
+     I don't want export to execute babel stuff: I like to execute them manually
+     before exporting. This is a security feature, as sometimes I have documents
+     that log in to servers and does things.
+
+     Ditaa requires a path to the installed Jar; this recently stopped working
+     because I had upgraded Ditaa, and the Jar has a version number in its name.
+     Now we look at the file system and grab the highest-versioned Jar available.
+
+     #+BEGIN_SRC emacs-lisp
+       ;; Tell Org where to find ditaa jar
+       (setq org-ditaa-jar-path
+	     (expand-file-name "~/.nix-profile/lib/ditaa.jar"))
+
+       (setq org-plantuml-jar-path
+	     (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
+
+     #+END_SRC
+
+     We have to specify the list of languages we want to support so Orgmode knows
+     to look out for them:
+
+     #+BEGIN_SRC emacs-lisp
+       (org-babel-do-load-languages
+	'org-babel-load-languages
+	'((emacs-lisp . t)
+	  (clojure . t)
+	  (python . t)
+	  (gnuplot . t)
+	  (lilypond . t)
+	  (ditaa . t)
+	  (plantuml . t)
+	  (dot . t)
+	  (sql . t)
+	  (shell . t)))
+     #+END_SRC
+
+**** Org Export
+
+     I hate writing JIRA markup, so I wrote a JIRA export backend for
+     Org mode. I also write in Org and export to GitHub. Regular GitHub
+     markup unfortunately doesn't properly ignore linebreaks, so the
+     regular markdown exporter is no use: I have to use the gfm
+     exporter, as it deletes linebreaks so the rendered paragraphs
+     re-flow properly on GitHub.
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package ox-jira :pin melpa)
+       (use-package ox-gfm)
+       (require 'ox-latex)
+       (setq org-export-backends '(html gfm jira latex))
+     #+END_SRC
+
+**** Passwords
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-passwords
+         :ensure org-plus-contrib
+	 :pin org
+	 :after org
+	 :init
+
+	 (setq org-passwords-time-opened "30 min")
+
+	 ;; Where's my passwords file?
+	 (setq org-passwords-file "~/org/passwords.org.gpg")
+
+	 :bind (("C-c P P" . org-passwords)
+		("C-c P g" . org-passwords-generate-password)
+		:map org-passwords-mode-map
+		("C-c C-c u" . org-passwords-copy-username)
+		("C-c C-c p" . org-passwords-copy-password)
+		("C-c C-c o" . org-passwords-open-url)))
+     #+END_SRC
+
+**** Drilling
+
+     I use org-drill for drilling music theory.
+
+     #+begin_src emacs-lisp
+       (use-package org-drill
+         :ensure org-plus-contrib
+	 :pin org
+	 :init
+	 (setq org-drill-maximum-items-per-session 10))
+
+       ;; Override until fixed in upstream distro
+       ;; https://emacs.stackexchange.com/a/46961/10625
+       (eval-after-load "org-drill"
+	 '(defun org-drill-hide-subheadings-if (test)
+	    "TEST is a function taking no arguments. TEST will be called for each
+       of the immediate subheadings of the current drill item, with the point
+       on the relevant subheading. TEST should return nil if the subheading is
+       to be revealed, non-nil if it is to be hidden.
+       Returns a list containing the position of each immediate subheading of
+       the current topic."
+	    (let ((drill-entry-level (org-current-level))
+		  (drill-sections nil))
+	      (org-show-subtree)
+	      (save-excursion
+		(org-map-entries
+		 (lambda ()
+		   (when (and (not (org-invisible-p))
+			      (> (org-current-level) drill-entry-level))
+		     (when (or (/= (org-current-level) (1+ drill-entry-level))
+			       (funcall test))
+		       (hide-subtree))
+		     (push (point) drill-sections)))
+		 nil 'tree))
+	      (reverse drill-sections)))
+	 )
+     #+end_src
+
+**** Publishing
+
+     Publishing projects.
+
+     #+BEGIN_SRC emacs-lisp
+     (defun sb/org-html-format-drawer (name content)
+       (concat "<div class=\"drawer " (downcase name) "\">\n"
+	       "<h6>" (capitalize name) "</h6>\n"
+	       content
+	       "\n</div>"))
+
+     (setq org-publish-project-alist
+	   '(("www"
+	      :components ("www-pages" "www-static" "www-rss"))
+
+	     ("www-static"
+	      :base-directory "~/blog"
+	      :publishing-directory "~/public_html"
+	      :base-extension "css\\|jpg\\|png\\|pdf\\|html"
+	      :recursive t
+	      :publishing-function org-publish-attachment)
+
+	     ("www-pages"
+	      :exclude ",.*"
+	      :base-directory "~/blog"
+	      :publishing-directory "~/public_html"
+	      :publishing-function org-html-publish-to-html
+	      :recursive t
+	      :section-numbers nil
+	      :time-stamp-file nil
+	      :with-toc nil
+	      :with-drawers t
+	      :html-format-drawer-function sb/org-html-format-drawer
+
+	      :html-html5-fancy t
+	      :html-doctype "html5"
+	      :html-footnotes-section "<div id=\"footnotes\"><!--%s-->%s</div>"
+	      :html-link-up "/"
+	      :html-link-home "/"
+	      :html-home/up-format "
+       <div id=\"org-div-home-and-up\">
+	 <nav>
+	   <ul>
+	     <li><a accesskey=\"H\" href=\"%s\"> Home </a> (<a href=\"/index.xml\">RSS</a>)</li>
+	     <li><a accesskey=\"p\" href=\"/publications.html\"> Publications </a></li>
+	     <li><a accesskey=\"A\" href=\"/about.html\"> About </a></li>
+	     <li>Licence: <a accesskey=\"l\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a></li>
+	   </ul>
+	 </nav>
+       </div>"
+	      :html-head "
+       <link rel=\"stylesheet\" type=\"text/css\" href=\"/etc/main.css\" />
+       <link rel=\"icon\" type=\"image/png\" href=\"/etc/icon.png\" />
+       <link rel=\"alternative\" type=\"application/rss+xml\"
+	     href=\"https://www.brautaset.org/index.xml\"
+	     title=\"Stig's Soapbox RSS Feed\" />
+       <meta name=\"referrer\" content=\"same-origin\">
+     "
+
+	      :html-head-include-default-style nil
+	      :html-head-include-scripts nil
+
+	      :html-preamble nil
+	      :html-postamble-format auto
+	      :html-metadata-timestamp-format "%e %B %Y")
+
+	     ("www-rss"
+	      :base-directory "~/blog"
+	      :base-extension "org"
+	      :html-link-home "https://www.brautaset.org"
+	      :html-link-use-abs-url t
+	      :rss-extension "xml"
+	      :publishing-directory "~/public_html"
+	      :publishing-function (org-rss-publish-to-rss)
+	      :section-numbers nil
+	      :exclude ".*"              ;; To exclude all files...
+	      :include ("index.org")     ;; ... except index.org.
+	      :table-of-contents nil)))
+     #+END_SRC
+
+**** Blogging Support
+
+     I create blog entries in a directory under =~/blog= and link to them
+     from the main index page. It has so far been a manual job, but I
+     have finally managed to create a function to automate it a bit.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun sb/org-kw-get (key)
+	 "Return a lambda that takes an Org keyword element and returns
+       its :value property if its :key property matches `key'."
+	 `(lambda (kw)
+	    (if (equal ,key (org-element-property :key kw))
+		(org-element-property :value kw))))
+
+       (defun sb/parse-metadata ()
+	 "Call in a blog post to get an entry suitable for linking to this
+       post from the index page."
+	 (interactive)
+	 (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+		(tree (org-element-parse-buffer))
+
+		(title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+		(categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
+		(abstract
+		 (org-element-interpret-data
+		  (org-element-map tree 'special-block
+		    (lambda (sb)
+		      (if (equal "abstract" (org-element-property :type sb))
+			  (org-element-contents sb)))))))
+
+	   (with-temp-buffer
+	     (org-mode)
+	     (org-insert-heading)
+
+	     ;; Would have loved to use `org-insert-link' here but
+	     ;; I can't stop it from presenting a prompt :-(
+	     (insert "[[file:" path "][" title "]]")
+
+	     (insert "\n\n")
+	     (insert abstract)
+
+	     (org-set-property "RSS_PERMALINK"
+			       (format "%s.html"
+				       (file-name-sans-extension path)))
+
+	     ;; Need to go back to the first line to set tags
+	     (goto-char (point-min))
+	     (org-set-tags categories)
+
+	     ;; Return the contents temporary buffer as a string *without properties*
+	     (copy-region-as-kill
+	      (point-min) (point-max)))))
+
+
+       (defun sb/find-drafts ()
+	 "Find org files in `~/blog/articles' not already linked from
+		     `~/blog/index.org'."
+	 (interactive)
+	 (let* ((prefix (expand-file-name "~/blog/"))
+		(posts
+		 (directory-files-recursively
+		  (concat prefix "articles") ".org"))
+		(index-contents (get-string-from-file (concat prefix "index.org")))
+		(drafts (cl-remove-if (lambda (needle)
+					(string-match
+					 (string-remove-prefix prefix needle)
+					 index-contents))
+				      posts))
+		(buffer-name "*blog drafts*"))
+	   (if drafts
+	       (progn
+		 (with-current-buffer (get-buffer-create buffer-name)
+		   (erase-buffer)
+		   (org-mode)
+		   (insert
+		    (mapconcat
+		     (lambda (entry)
+		       (format "- file:%s" entry))
+		     drafts
+		     "\n"))
+		   (buffer-string))
+		 (unless (get-buffer-window buffer-name t)
+		   (pop-to-buffer buffer-name nil t))
+		 (shrink-window-if-larger-than-buffer
+		  (get-buffer-window buffer-name)))
+	     (message "No drafts could be found!"))))
+     #+END_SRC
+
+**** Attachments
+
+     One annoying thing is not being able to find attachments once
+     you've attached files. Luckily, it turns out you can ask Org to
+     create links to attachments.
+
+     #+BEGIN_SRC emacs-lisp
+     (setq org-attach-store-link-p t)
+     #+END_SRC
+
+**** Edit "Org-like" lists in non-Org buffers
+
+     #+begin_src emacs-lisp
+     (use-package orgalist :pin gnu)
+     (add-to-list 'message-mode-hook 'orgalist-mode)
+     #+end_src
+
+*** Plant UML Mode
+
+    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package plantuml-mode
+	:mode "\\.puml\\'"
+	;;       :init (setq plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
+	)
+    #+END_SRC
+
+*** Playing Midi files
+
+    We can play midi files with fluidsynth.
+
+    Then we need a soundfont. Fluidsynth appears to recommend the one
+    from http://www.schristiancollins.com/generaluser.php.
+
+    #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755)
+      #!/bin/bash
+      set -o errexit
+      set -o nounset
+      set -o pipefail
+
+      tempfoo=`basename $0`
+      TMPDIR=`mktemp -d -t ${tempfoo}`
+
+      VERSION="1.471"
+
+      mkdir -p ~/.local/share
+      TARGET=~/.local/share/GeneralUserGS
+      if test -d $TARGET ; then
+          mv $TARGET $TARGET.$(date +%Y-%m-%d).$RANDOM
+      fi
+
+      DL=GeneralUser_GS_$VERSION
+      curl -L https://www.dropbox.com/s/4x27l49kxcwamp5/GeneralUser_GS_$VERSION.zip?dl=1 -o ~/Downloads/$DL.zip
+      cd $TMPDIR
+      unzip ~/Downloads/$DL.zip
+
+      mv "$(find $TMPDIR -mindepth 1 -maxdepth 1 -type d)" "$TARGET"
+
+      rmdir $TMPDIR
+    #+end_src
+
+
+    Finally let's install a wrapper to more easily play stuff.
+
+    #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
+      #!/bin/bash
+      set -o errexit
+      set -o nounset
+      set -o pipefail
+
+      if ! test -d ~/.local/share/GeneralUserGS ; then
+	echo "No soundfonts found, attempting to download..."
+	download_soundfont
+      fi
+
+      fluidsynth -a coreaudio -m coremidi -ni ~/.local/share/GeneralUserGS/GeneralUser\ GS\ v1.471.sf2 "$@"
+    #+end_src
+
+*** Projectile
+
+    I use Projectile to navigate my projects. Some of the things I like about
+    it are that it provides the following key bindings:
+
+    - =C-c p t= :: This switches from an implementation file to its test file,
+                   or vice versa. I use this extensively in Clojure mode. It
+                   might not make sense for all languages; YMMV.
+    - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
+    - =C-c p s s= :: Ag search for something in this project. If point is at a
+                     token, default to searching for that. (Mnemonic:
+                     "Projectile Silver Searcher".)
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile
+	:bind ("C-c p" . projectile-command-map)
+	:demand
+	:init
+	(setq projectile-completion-system 'ivy)
+	:config
+	(projectile-mode +1))
+
+
+      ;; Register project subtype used by "gilded rose" kata.
+      (projectile-register-project-type 'lein-spec '("project.clj" "spec")
+					:compile "lein compile"
+					:test "lein test"
+					:test-suffix "_spec")
+
+      (use-package counsel-projectile)
+    #+END_SRC
+
+*** Python
+
+    Work projects are all in Python. This is me exploring Emacs' Python
+    support.
+
+**** Elpy
+
+     I'll try Elpy first because of its touted refactoring support.
+
+     #+BEGIN_SRC emacs-lisp :noweb yes
+      (use-package elpy
+	:config
+	(elpy-enable))
+     #+END_SRC
+
+**** Create a UTF-8 alias
+
+     Our Python code tends to have the following lines:
+
+     : # -*- coding: UTF-8 -*-
+
+     These cause Emacs to have a sad and say:
+
+     : Warning (mule): Invalid coding system 'UTF-8' is specified
+
+     I don't want to change all of them, so let's just define an alias. (Thanks
+     to Lucas Sampaio for this tip!)
+
+     #+BEGIN_SRC emacs-lisp
+       (define-coding-system-alias 'UTF-8 'utf-8)
+     #+END_SRC
+**** Pipenv
+
+     #+BEGIN_SRC emacs-lisp
+     (use-package pipenv
+       :pin melpa
+       :hook (python-mode . pipenv-mode)
        :init
-       (add-hook 'text-mode-hook 'writegood-mode))
-   #+END_SRC
+       ;; (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
+       )
+     #+END_SRC
 
-** YAML
+*** Scala
 
-   CircleCI and CloudFormation loves YAML.
+    Then install ensime, the /ENhanced Scala Interaction Mode for Emacs/.
 
-   #+BEGIN_SRC emacs-lisp
-   (use-package yaml-mode)
-   #+END_SRC
-** Zsh
+    #+begin_src emacs-lisp
+      (use-package ensime)
+      (use-package sbt-mode)
+      (use-package scala-mode)
+      (setq ensime-search-interface 'ivy)
+    #+end_src
 
-   This is how I set up ZSH. It feels weird to set it up here, as
-   Emacs relies on it, but it's the best way I have found so far.
+*** SmartParens
 
-   #+begin_src sh :tangle ~/.zshrc
-     setopt INC_APPEND_HISTORY
-     setopt HIST_IGNORE_ALL_DUPS
+    #+BEGIN_SRC emacs-lisp
+      (use-package smartparens-config
+	:ensure smartparens
+	:diminish
 
-     # Basic Useability ZSH setup
-     export HISTFILE=~/.zsh_history
-     export SAVEHIST=800
-     export HISTSIZE=1000
-   #+end_src
+	;; I prefer to be explicit about the keybindings I use
+	:bind (:map smartparens-mode-map
+		    ("C-M-f" . sp-forward-sexp)
+		    ("C-M-b" . sp-backward-sexp)
+		    ("C-M-<SPC>" . sp-splice-sexp)
+		    ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+		    ("C-<right>" . sp-forward-slurp-sexp)
+		    ("C-<left>" . sp-forward-barf-sexp)
+		    ("C-M-<left>" . sp-backward-slurp-sexp)
+		    ("C-M-<right>" . sp-backward-barf-sexp))
+	:init
+	(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+	(add-hook 'text-mode-hook 'turn-on-smartparens-mode)
 
-   #+begin_src sh :tangle ~/.zshenv
-     # Use the OS-provided Certificate file.
-     export SSL_CERT_FILE=/etc/ssl/cert.pem
+	:config
+	(show-smartparens-global-mode t))
+    #+END_SRC
 
-     export EDITOR=emacsclient
+*** String Inflection
 
-     # Find LilyPond binaries
-     export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
+    Sometimes I need to swap between CamelCase and snake_case, or even
+    SNAKE_CASE.
 
-     # Find Local binaries
-     export PATH=~/.local/bin:$PATH
-   #+end_src
+    #+begin_src emacs-lisp
+      (use-package string-inflection
+	:bind (("C-c C-x C-s" . string-inflection-all-cycle)
+	       ("C-c C-x C-c" . string-inflection-camelcase)
+	       ("C-c C-x C-k" . string-inflection-kebab-case)
+	       ("C-c C-x C-u" . string-inflection-upcase)))
+    #+end_src
 
-   #+begin_src sh :tangle ~/.zprofile
-     . ~/.nix-profile/etc/profile.d/nix.sh
-   #+end_src
+*** Swiper
+
+    Invoke swiper (find in current buffer).
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package swiper
+	:bind (("C-x /" . swiper)))
+    #+END_SRC
+
+*** Which Key Mode
+
+    Show incomplete key cheatsheet.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package which-key
+	:config
+	(which-key-mode))
+    #+END_SRC
+
+*** Writegood Mode
+
+    I'm not a great writer. I need all the crutches I can get. Lucklily,
+    Emacs has them.
+
+    This helps highlight passive voice, weasel words, etc in writing.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package writegood-mode
+	:init
+	(add-hook 'text-mode-hook 'writegood-mode))
+    #+END_SRC
+
+*** YAML
+
+    CircleCI and CloudFormation loves YAML.
+
+    #+BEGIN_SRC emacs-lisp
+    (use-package yaml-mode)
+    #+END_SRC
