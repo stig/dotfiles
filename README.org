@@ -1445,7 +1445,6 @@
 
        (setq org-plantuml-jar-path
 	     (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
-
      #+END_SRC
 
      We have to specify the list of languages we want to support so Orgmode knows
@@ -1455,10 +1454,6 @@
        (org-babel-do-load-languages
 	'org-babel-load-languages
 	'((emacs-lisp . t)
-	  (clojure . t)
-	  (python . t)
-	  (gnuplot . t)
-	  (lilypond . t)
 	  (ditaa . t)
 	  (plantuml . t)
 	  (dot . t)
