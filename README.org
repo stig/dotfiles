@@ -890,15 +890,11 @@
 
 **** Reading mail with NotMuch
 
-     After installing NotMuch it I ran =notmuch setup= to configure
-     it. Then I ran =notmuch new= to index my existing mail.  (This was
-     already in =~/Maildir/= since I've been using mu4e before.) I then
-     installed the Emacs package from Melpa, and launched it with =M-x
-     notmuch=.  Its threading and MIME appears a lot better than mu4e,
-     from a cursory glance.
-
-     I configured Notmuch by running =notmuch setup= on the commandline.
-     However, you can then set config values independently.
+     After installing NotMuch I ran =notmuch setup= to configure it.
+     Then I ran =notmuch new= to index my existing mail. (This was
+     already in =~/Maildir/= since I've been using mu4e before.) You can
+     also set config values independently. That is my preference now,
+     as I can do everything from this file.
 
      #+begin_src sh :results silent
      notmuch config set database.path ~/Mail
@@ -939,27 +935,39 @@
 
 ***** Configuring Notmuch inside Emacs
 
-      With that out of the way, and installing the package from Melpa,
-      Notmuch works pretty well for me. Mainly I set up a keybinding to
-      quickly bring it up.
+      Installing Notmuch (with brew/nix/apt/yum) should also install
+      the =notmuch.el= Emacs package into somewhere Emacs can find it.
+      (If not you might need to add its directory to your ~load-path~.) I
+      then launched it with =M-x notmuch=.
+
+      With that out of the way Notmuch works pretty well for me out of
+      the box. Mainly I set up a keybinding to quickly bring it up.
+      Its threading and MIME handling appears a lot better than mu4e,
+      from a cursory glance.
 
       I don't like using my email inbox as a todo list, so when I
-      receive an email I need to act on but can't yet, I link to it from
-      my Org mode agenda and archive it. When Org agenda prompts me I
-      can click on the link and immediately get to the mail in my
-      archive, and can reply to it from there.
+      receive an email I need to act on but /can't yet/ for some reason,
+      I link to it from my Org mode agenda and archive it. When Org
+      agenda prompts me I can click on the link and immediately get to
+      the mail in my archive, and can reply to it from there.
 
-      NotMuch doesn't have built-in support for multiple profiles. I
-      tried using "gnus-alias", but couldn't get it to work. Going with
-      a simpler scheme now: reply to the address they write to, and base
-      signature on the from address.
+      NotMuch doesn't have built-in support for multiple profiles.
+      (Mu4e does, but configuring it was difficult, IMO.) I tried
+      using "gnus-alias" with Notmuch, but couldn't get it to work
+      either. (I'm perhaps just not smart enough to deal with multiple
+      identities!) Thus I'm going with a simpler scheme now: reply to
+      the address they write to, and base my signature on the from
+      address.
 
-      Save a copy of outgoing personal mail. For work I rely on Gmail
-      automatically saving outgoing mail to my sent folder.
+      For personal mail I save a copy into my sent mail folder. For
+      work I rely on Gmail to automatically copy outgoing mail to my
+      sent folder.
 
       #+BEGIN_SRC emacs-lisp
 	(require 'notmuch)
 
+	;; A function to launch mbsync in the background whenever I bring up
+	;; Notmuch, and automatically refresh the current buffer when done.
 	(defun sb/notmuch ()
 	  (interactive)
 	  (notmuch)
@@ -1026,11 +1034,9 @@
 
 **** Compose Emails with Org mode
 
-     I want to be able to create links to messages from Org mode
-     capture templates, as email Inbox is a terrible TODO list.  I
-     define =C-c x= as a short-cut to switch to Org mode, and back, to
-     message mode, so that I can use full Org mode to edit messages if
-     I want.
+     Very occasionally I want to create HTML mail. (For tables, for
+     example.) I then write my message using Org mode syntax and use
+     org-mime-htmlize.
 
      #+BEGIN_SRC emacs-lisp
        (use-package org-mime
