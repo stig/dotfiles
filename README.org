@@ -905,7 +905,7 @@
 
      notmuch config set user.other_email 'sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com'
 
-     notmuch config set new.tags 'unread;inbox'
+     notmuch config set new.tags 'new;unread;inbox'
 
      notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
 
@@ -924,7 +924,7 @@
      user.name=Stig Brautaset
      user.primary_email=stig@brautaset.org
      user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
-     new.tags=unread;inbox
+     new.tags=new;unread;inbox
      new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
      search.exclude_tags=deleted;spam;draft
      maildir.synchronize_flags=true
@@ -998,6 +998,18 @@
 	      '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
       #+END_SRC
 
+***** Add pre-new hook to remove "new" tag
+
+      Remove the =new= tag from any messages just before refreshing.
+
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755)
+	#!/bin/bash
+	set -o errexit
+	set -o nounset
+	set -o pipefail
+	notmuch tag -new -- tag:new
+      #+END_SRC
+
 ***** Add post-new hook to tag messages
 
       #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
@@ -1007,16 +1019,19 @@
 	set -o pipefail
 
 	# Tag previously unseen messages
-	notmuch tag +work -- path:/Work/ and tag:inbox
-	notmuch tag +sent -inbox -- path:/sent/ and tag:inbox
-	notmuch tag +deleted -inbox -- path:/trash/ and tag:inbox
-	notmuch tag +spam -inbox -- path:/spam/ and tag:inbox
+	notmuch tag +work -- path:/Work/ and tag:new
+	notmuch tag +sent -- path:/sent/ and tag:new
+	notmuch tag +deleted -- path:/trash/ and tag:new
+	notmuch tag +spam -- path:/spam/ and tag:new
 
-	# Add extra tags for mailing lists, and remove inbox tag.
-	notmuch tag +lists +org-mode -inbox -- path:/org-mode/ and tag:inbox
-	notmuch tag +lists +lilypond -inbox -- path:/lilypond/ and tag:inbox
-	notmuch tag +lists +clojure -inbox -- path:/clojure/ and tag:inbox
-	notmuch tag +lists +tuls -inbox -- path:/tuls/ and tag:inbox
+	# Add extra tags for mailing lists
+	notmuch tag +lists +org-mode -- path:/org-mode/ and tag:new
+	notmuch tag +lists +lilypond -- path:/lilypond/ and tag:new
+	notmuch tag +lists +clojure -- path:/clojure/ and tag:new
+	notmuch tag +lists +tuls -- path:/tuls/ and tag:new
+
+	# Remove inbox tag for mailing lists
+	notmuch tag -inbox -- tag:lists and tag:new
       #+END_SRC
 
 ***** Reading HTML mail
