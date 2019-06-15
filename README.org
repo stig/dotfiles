@@ -870,7 +870,7 @@
 ***** Invoke mbsync
 
       I used to run this periodically, but I've noticed I usually run
-      it interactively just before checking mail, so let's just go wiht
+      it interactively just before checking mail, so let's just go with
       that. It's not abnormal for this to take 30 seconds, but usually
       it's less.
 
