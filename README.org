@@ -1286,6 +1286,8 @@
 
 	:init
 
+	(setq org-link-file-path-type 'relative)
+
 	;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
 	(setq org-log-into-drawer t)
 
