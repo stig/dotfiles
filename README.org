@@ -70,34 +70,42 @@
 ** Zsh
 
    This is how I set up Zsh. It feels weird to set it up here, but
-   it's the best way I have found so far.
-
-   #+begin_src sh :tangle ~/.zshrc
-     setopt INC_APPEND_HISTORY
-     setopt HIST_IGNORE_ALL_DUPS
-
-     # Basic Useability ZSH setup
-     export HISTFILE=~/.zsh_history
-     export SAVEHIST=800
-     export HISTSIZE=1000
-   #+end_src
+   it's the best way I have found so far. The config snippets here are
+   in the order Zsh reads them.
 
    #+begin_src sh :tangle ~/.zshenv
+     # This config file is always read first by Zsh, for both interactive
+     # and non-interactive shells. It's where we should set up PATH, etc.
+
+     # Let our enviroment find binaries installed by Nix
+     . ~/.nix-profile/etc/profile.d/nix.sh
+
      # Use the OS-provided Certificate file.
      export SSL_CERT_FILE=/etc/ssl/cert.pem
-
-     export EDITOR=emacsclient
 
      # Find LilyPond binaries
      export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
 
      # Find Local binaries
      export PATH=~/.local/bin:$PATH
+
+     # Add Python venv to PATH
+     export PATH=venv/bin:$PATH
    #+end_src
 
-   #+begin_src sh :tangle ~/.zprofile
-     . ~/.nix-profile/etc/profile.d/nix.sh
+   #+begin_src sh :tangle ~/.zshrc
+     # This config file is read for interactive shells.
+
+     setopt INC_APPEND_HISTORY
+     setopt HIST_IGNORE_ALL_DUPS
+
+     export HISTFILE=~/.zsh_history
+     export SAVEHIST=800
+     export HISTSIZE=1000
+
+     export EDITOR=emacsclient
    #+end_src
+
 ** Add Nix =site-lisp= directory to ~load-path~
 
    #+begin_src emacs-lisp
