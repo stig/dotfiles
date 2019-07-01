@@ -1,7 +1,8 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/init.el :results silent :mkdirp yes
+#+PROPERTY: header-args:              :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/init.el :results silent
 #+STARTUP: content
 * Introduction
 
@@ -35,7 +36,7 @@
    every launch. Finally I do not like Emacs to beep at me; I prefer a
    visual bell.
 
-   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el :mkdirp yes
+   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
      (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
      (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
      (setq inhibit-startup-message t)
@@ -1002,22 +1003,13 @@
 
       Remove the =new= tag from any messages just before refreshing.
 
-      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :mkdirp yes :tangle-mode (identity #o755)
-	#!/bin/bash
-	set -o errexit
-	set -o nounset
-	set -o pipefail
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
 	notmuch tag -new -- tag:new
       #+END_SRC
 
 ***** Add post-new hook to tag messages
 
-      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :mkdirp yes :tangle-mode (identity #o755)
-	#!/bin/bash
-	set -o errexit
-	set -o nounset
-	set -o pipefail
-
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
 	# Tag previously unseen messages
 	notmuch tag +work -- path:/Work/ and tag:new
 	notmuch tag +sent -- path:/sent/ and tag:new
@@ -1679,7 +1671,7 @@
     Then we need a soundfont. Fluidsynth appears to recommend the one
     from http://www.schristiancollins.com/generaluser.php.
 
-    #+begin_src sh :tangle ~/.local/bin/download_soundfont :mkdirp t :tangle-mode (identity #o755)
+    #+begin_src sh :tangle ~/.local/bin/download_soundfont :tangle-mode (identity #o755)
       #!/bin/bash
       set -o errexit
       set -o nounset
@@ -1709,7 +1701,7 @@
 
     Finally let's install a wrapper to more easily play stuff.
 
-    #+begin_src sh :mkdirp t :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
+    #+begin_src sh :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
       #!/bin/bash
       set -o errexit
       set -o nounset
