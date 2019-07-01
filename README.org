@@ -582,20 +582,6 @@
     (use-package ace-window
       :bind ("M-`" . ace-window))
     #+end_src
-*** Set =PATH= etc from the login shell
-
-    The GUI Emacs gets exec path from the system, rather than the login
-    shell. We have to load PATH etc from Zsh to get access to programs
-    installed by Nix.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package exec-path-from-shell
-	:init
-	(setq exec-path-from-shell-variables '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"))
-	:config
-	(exec-path-from-shell-initialize))
-    #+END_SRC
-
 *** Ag (The Silver Searcher)
 
     I use =ag= for searching a lot in Emacs. Its "writable grep"
@@ -1815,6 +1801,20 @@
       (use-package scala-mode)
       (setq ensime-search-interface 'ivy)
     #+end_src
+
+*** Set =PATH= etc from the login shell
+
+    The GUI Emacs gets exec path from the system, rather than the login
+    shell. We have to load PATH etc from Zsh to get access to programs
+    installed by Nix.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package exec-path-from-shell
+	:init
+	(setq exec-path-from-shell-variables '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"))
+	:config
+	(exec-path-from-shell-initialize))
+    #+END_SRC
 
 *** SmartParens
 
