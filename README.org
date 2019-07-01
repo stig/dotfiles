@@ -1526,36 +1526,9 @@
 
      #+begin_src emacs-lisp
        (use-package org-drill
-         :ensure org-plus-contrib
-	 :pin org
+         :pin melpa
 	 :init
 	 (setq org-drill-maximum-items-per-session 10))
-
-       ;; Override until fixed in upstream distro
-       ;; https://emacs.stackexchange.com/a/46961/10625
-       (eval-after-load "org-drill"
-	 '(defun org-drill-hide-subheadings-if (test)
-	    "TEST is a function taking no arguments. TEST will be called for each
-       of the immediate subheadings of the current drill item, with the point
-       on the relevant subheading. TEST should return nil if the subheading is
-       to be revealed, non-nil if it is to be hidden.
-       Returns a list containing the position of each immediate subheading of
-       the current topic."
-	    (let ((drill-entry-level (org-current-level))
-		  (drill-sections nil))
-	      (org-show-subtree)
-	      (save-excursion
-		(org-map-entries
-		 (lambda ()
-		   (when (and (not (org-invisible-p))
-			      (> (org-current-level) drill-entry-level))
-		     (when (or (/= (org-current-level) (1+ drill-entry-level))
-			       (funcall test))
-		       (hide-subtree))
-		     (push (point) drill-sections)))
-		 nil 'tree))
-	      (reverse drill-sections)))
-	 )
      #+end_src
 
 **** Blogging Support
