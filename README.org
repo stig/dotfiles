@@ -1526,9 +1526,7 @@
 
      #+begin_src emacs-lisp
        (use-package org-drill
-         :pin melpa
-	 :init
-	 (setq org-drill-maximum-items-per-session 10))
+         :pin melpa)
      #+end_src
 
 **** Blogging Support
@@ -1874,3 +1872,10 @@
     #+BEGIN_SRC emacs-lisp
     (use-package yaml-mode)
     #+END_SRC
+*** Direnv
+
+    #+begin_src emacs-lisp
+      (use-package direnv
+	:config
+	(direnv-mode))
+    #+end_src
