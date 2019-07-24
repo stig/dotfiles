@@ -1526,7 +1526,10 @@
 
      #+begin_src emacs-lisp
        (use-package org-drill
-         :pin melpa)
+         :pin melpa
+	 :init
+	 (setq org-drill-add-random-noise-to-intervals-p t)
+	 (setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
      #+end_src
 
 **** Blogging Support
