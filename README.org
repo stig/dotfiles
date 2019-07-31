@@ -1006,6 +1006,7 @@
 
       #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
 	notmuch tag -new -- tag:new
+	notmuch search --output files tag:draft and tag:deleted | xargs rm
       #+END_SRC
 
 ***** Tag new messages
