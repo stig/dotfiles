@@ -797,12 +797,6 @@
 	Create Slave
 	SyncState *
 
-	Channel gandi-spam
-	Master :gandi-remote:Junk
-	Slave :gandi-local:spam
-	Create Slave
-	SyncState *
-
 	Channel gandi-org-mode
 	Master :gandi-remote:org-mode
 	Slave :gandi-local:org-mode
@@ -868,12 +862,6 @@
 	Channel gmail-sent
 	Master :gmail-remote:"[Gmail]/Sent Mail"
 	Slave :gmail-local:sent
-	Create Slave
-	SyncState *
-
-	Channel gmail-spam
-	Master :gmail-remote:"[Gmail]/Spam"
-	Slave :gmail-local:spam
 	Create Slave
 	SyncState *
       #+END_SRC
