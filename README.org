@@ -82,19 +82,10 @@
 
      # Use the OS-provided Certificate file.
      export SSL_CERT_FILE=/etc/ssl/cert.pem
-
-     # Find LilyPond binaries
-     export PATH=$PATH:/Applications/LilyPond.app/Contents/Resources/bin
-
-     # Find Local binaries
-     export PATH=~/.local/bin:$PATH
-
-     # Add Python venv to PATH
-     export PATH=venv/bin:$PATH
    #+end_src
 
    #+begin_src sh :tangle ~/.zshrc
-     # This config file is read for interactive shells.
+     # This config file is for interactive shells.
 
      setopt INC_APPEND_HISTORY
      setopt HIST_IGNORE_ALL_DUPS
