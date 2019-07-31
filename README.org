@@ -997,31 +997,37 @@
 	      '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
       #+END_SRC
 
-***** Add pre-new hook to remove "new" tag
 
-      Remove the =new= tag from any messages just before refreshing.
+***** Remove "new" tag & obsolete drafts
+
+      Remove the =new= tag from any messages just before refreshing.  Do
+      this in a =pre-hook= so we can use the new =new= tag to optimise
+      further tagging in the =post-hook= below.
 
       #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
 	notmuch tag -new -- tag:new
       #+END_SRC
 
-***** Add post-new hook to tag messages
+***** Tag new messages
+
+      Notmuch assigns the =new= tag when it first sees a message, so we
+      can use it to limit the search space for further tagging.
 
       #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
+	notmuch tag --batch <<EOF
 	# Tag previously unseen messages
-	notmuch tag +work -- path:/Work/ and tag:new
-	notmuch tag +sent -- path:/sent/ and tag:new
-	notmuch tag +deleted -- path:/trash/ and tag:new
-	notmuch tag +spam -- path:/spam/ and tag:new
+	+work -- path:/Work/ and tag:new
+	+sent -- path:/sent/ and tag:new
 
 	# Add extra tags for mailing lists
-	notmuch tag +lists +org-mode -- path:/org-mode/ and tag:new
-	notmuch tag +lists +lilypond -- path:/lilypond/ and tag:new
-	notmuch tag +lists +clojure -- path:/clojure/ and tag:new
-	notmuch tag +lists +tuls -- path:/tuls/ and tag:new
+	+lists +org-mode -- path:/org-mode/ and tag:new
+	+lists +lilypond -- path:/lilypond/ and tag:new
+	+lists +clojure -- path:/clojure/ and tag:new
+	+lists +tuls -- path:/tuls/ and tag:new
 
 	# Remove inbox tag for mailing lists
-	notmuch tag -inbox -- tag:lists and tag:new
+	-inbox -- tag:lists and tag:new
+	EOF
       #+END_SRC
 
 ***** Reading HTML mail
