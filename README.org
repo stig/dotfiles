@@ -737,6 +737,16 @@
 	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
     #+END_SRC
 
+*** Elpy
+
+    I'll try Elpy first because of its touted refactoring support.
+
+    #+BEGIN_SRC emacs-lisp :noweb yes
+     (use-package elpy
+       :config
+       (elpy-enable))
+    #+END_SRC
+
 *** Email
 
     Because I like to use Emacs for writing, I like to use it for email
@@ -1749,48 +1759,6 @@
 
       (use-package counsel-projectile)
     #+END_SRC
-
-*** Python
-
-    Work projects are all in Python. This is me exploring Emacs' Python
-    support.
-
-**** Elpy
-
-     I'll try Elpy first because of its touted refactoring support.
-
-     #+BEGIN_SRC emacs-lisp :noweb yes
-      (use-package elpy
-	:config
-	(elpy-enable))
-     #+END_SRC
-
-**** Create a UTF-8 alias
-
-     Our Python code tends to have the following lines:
-
-     : # -*- coding: UTF-8 -*-
-
-     These cause Emacs to have a sad and say:
-
-     : Warning (mule): Invalid coding system 'UTF-8' is specified
-
-     I don't want to change all of them, so let's just define an alias. (Thanks
-     to Lucas Sampaio for this tip!)
-
-     #+BEGIN_SRC emacs-lisp
-       (define-coding-system-alias 'UTF-8 'utf-8)
-     #+END_SRC
-**** Pipenv
-
-     #+BEGIN_SRC emacs-lisp
-     (use-package pipenv
-       :pin melpa
-       :hook (python-mode . pipenv-mode)
-       :init
-       ;; (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended)
-       )
-     #+END_SRC
 
 *** Scala
 
