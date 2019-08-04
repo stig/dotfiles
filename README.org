@@ -823,6 +823,12 @@
 	MaxMessages 500
 	Expunge Both
 
+	Channel gandi-archive
+	Master :gandi-remote:archive
+	Slave :gandi-local:archive
+	Create Slave
+	SyncState *
+
 	# ACCOUNT INFORMATION
 	IMAPAccount gmail
 	Host imap.gmail.com
@@ -844,6 +850,12 @@
 	Inbox ~/Mail/Work/INBOX
 	Trash trash
 
+	Channel gmail-inbox
+	Master :gmail-remote:
+	Slave :gmail-local:
+	Create Slave
+	SyncState *
+
 	Channel gmail-archive
 	Master :gmail-remote:"[Gmail]/All Mail"
 	Slave :gmail-local:archive
@@ -855,6 +867,8 @@
 	Slave :gmail-local:sent
 	Create Slave
 	SyncState *
+
+	Group inboxes gandi-inbox gmail-inbox
       #+END_SRC
 
 ***** Invoke mbsync
@@ -865,17 +879,11 @@
       it's less.
 
       #+BEGIN_SRC emacs-lisp
-	(defun sb/mbsync ()
+	(defun sb/mbsync (&rest group)
 	  (interactive)
-	  (let ((process (start-process "mbsync" "*mbsync*" "mbsync" "--verbose" "--all" "--quiet")))
-	    (message "mbsync: started")
-
-	    ;; Signal that mbsync finished, and clear minibuffer afterwards.
-	    (set-process-sentinel process (lambda (proc state)
-					    (message "mbsync: completed")))
-
-	    ;; Return process so we can attach additional things to it
-	    process))
+	  (let ((args (if group (mapconcat 'identity group " ") "--all")))
+	    (message "mbsync %s: starting.." args)
+	    (start-process "mbsync" "*mbsync*" "mbsync" "--verbose" "--quiet" args))))
       #+END_SRC
 
 **** Reading mail with NotMuch
@@ -958,14 +966,14 @@
 
 	;; A function to launch mbsync in the background whenever I bring up
 	;; Notmuch, and automatically refresh the current buffer when done.
-	(defun sb/notmuch ()
-	  (interactive)
-	  (notmuch)
-	  (set-process-sentinel (sb/mbsync)
-				(lambda (proc state)
-				  (message "notmuch: poll & refresh buffer...")
-				  (notmuch-poll-and-refresh-this-buffer)
-				  (message "notmuch: refreshed buffer"))))
+	;; To save time, request that mbsync only checks inboxes.
+	(defun sb/notmuch (arg)
+	  (interactive "P")
+	  (set-process-sentinel
+	   (sb/mbsync (if arg "--all" "inboxes"))
+	   (lambda (proc state)
+	     (message nil) ;; clear minibuffer
+	     (notmuch))))
 
 	(bind-key "C-x m" 'sb/notmuch)
 
