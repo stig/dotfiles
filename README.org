@@ -708,6 +708,13 @@
     (counsel-mode 1)
     #+end_src
 
+*** Direnv
+
+    #+begin_src emacs-lisp
+      (use-package direnv
+	:config
+	(direnv-mode))
+    #+end_src
 *** Editorconfig
 
     Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
@@ -1866,10 +1873,3 @@
     #+BEGIN_SRC emacs-lisp
     (use-package yaml-mode)
     #+END_SRC
-*** Direnv
-
-    #+begin_src emacs-lisp
-      (use-package direnv
-	:config
-	(direnv-mode))
-    #+end_src
