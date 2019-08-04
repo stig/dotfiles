@@ -1010,17 +1010,18 @@
 	# Tag previously unseen messages
 	+work -- path:/Work/ and tag:new
 	+sent -- path:/sent/ and tag:new
+	-inbox -- path:/archive/ and tag:new
 
-	# Add extra tags for mailing lists
-	+lists +org-mode -- path:/org-mode/ and tag:new
-	+lists +lilypond -- path:/lilypond/ and tag:new
-	+lists +clojure -- path:/clojure/ and tag:new
+	# Add specific tags for mailing lists, and remove from inbox
+	+lists +org-mode -inbox -- path:/org-mode/ and tag:new
+	+lists +lilypond -inbox -- path:/lilypond/ and tag:new
+	+lists +clojure -inbox -- path:/clojure/ and tag:new
+
+	# V. low volume lists gets to stay in inbox
 	+lists +tuls -- path:/tuls/ and tag:new
-
-	# Remove inbox tag for mailing lists
-	-inbox -- tag:lists and tag:new
 	EOF
       #+END_SRC
+
 
 ***** Reading HTML mail
 
