@@ -918,7 +918,7 @@
 
      notmuch config set user.primary_email "stig@brautaset.org"
 
-     notmuch config set user.other_email 'sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com'
+     notmuch config set user.other_email 'sbrautaset@laterpay.net'
 
      notmuch config set new.tags 'new;unread;inbox'
 
