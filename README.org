@@ -1641,8 +1641,10 @@
 **** Edit "Org-like" lists in non-Org buffers
 
      #+begin_src emacs-lisp
-     (use-package orgalist :pin gnu)
-     (add-to-list 'message-mode-hook 'orgalist-mode)
+     (use-package orgalist
+       :pin gnu
+       :config
+       (add-hook 'message-mode-hook 'orgalist-mode))
      #+end_src
 
 *** Plant UML Mode
