@@ -898,9 +898,10 @@
       #+BEGIN_SRC emacs-lisp
 	(defun sb/mbsync (&rest group)
 	  (interactive)
-	  (let ((args (if group (mapconcat 'identity group " ") "--all")))
-	    (message "mbsync %s: starting.." args)
-	    (start-process "mbsync" "*mbsync*" "mbsync" "--verbose" "--quiet" args))))
+	  (let ((group (or (and (car group) group) '("--all")))
+		(command `("mbsync" "--verbose" "--quiet" ,@group)))
+	    (message "Starting %s.." (mapconcat 'identity command " "))
+	    (apply 'start-process "mbsync" "*mbsync*" command)))
       #+END_SRC
 
 **** Reading mail with NotMuch
@@ -985,12 +986,13 @@
 	;; Notmuch, and automatically refresh the current buffer when done.
 	;; To save time, request that mbsync only checks inboxes.
 	(defun sb/notmuch (arg)
-	  (interactive "P")
+	  (interactive "p")
+	  (notmuch)
 	  (set-process-sentinel
-	   (sb/mbsync (if arg "--all" "inboxes"))
+	   (sb/mbsync (if (eq 1 arg) "inboxes" "--all"))
 	   (lambda (proc state)
 	     (message nil) ;; clear minibuffer
-	     (notmuch))))
+	     (notmuch-poll-and-refresh-this-buffer))))
 
 	(bind-key "C-x m" 'sb/notmuch)
 
