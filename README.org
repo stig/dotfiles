@@ -788,7 +788,6 @@
 	Account gandi
 
 	MaildirStore gandi-local
-	AltMap yes
 	Path ~/Mail/Gandi/
 	Inbox ~/Mail/Gandi/INBOX
 	Trash trash
@@ -862,7 +861,6 @@
 
 	# LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
 	MaildirStore gmail-local
-	AltMap yes
 	Path ~/Mail/Work/
 	Inbox ~/Mail/Work/INBOX
 	Trash trash
