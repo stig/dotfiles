@@ -923,7 +923,7 @@
 
      notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
 
-     notmuch config set search.exclude_tags 'deleted;spam;draft'
+     notmuch config set search.exclude_tags 'deleted;spam;draft;muted'
      #+end_src
 
      We can now read the config back in, to verify our change.
@@ -1032,6 +1032,9 @@
 
       #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
 	notmuch tag --batch <<EOF
+	# Mute new messages to already muted threads
+	+muted -- thread:{tag:muted} and tag:new
+
 	# Tag previously unseen messages
 	+work -- path:/Work/ and tag:new
 	+sent -- path:/sent/ and tag:new
