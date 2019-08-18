@@ -982,17 +982,19 @@
       #+BEGIN_SRC emacs-lisp
 	(require 'notmuch)
 
-	;; A function to launch mbsync in the background whenever I bring up
-	;; Notmuch, and automatically refresh the current buffer when done.
-	;; To save time, request that mbsync only checks inboxes.
 	(defun sb/notmuch (arg)
+	  "Launch notmuch. If ran with prefix arg, launch mbsync in the
+	background, and automatically refresh the current buffer when
+	done. With two prefix args, launch mbsync with `--all` rather
+	than just for inboxes."
 	  (interactive "p")
 	  (notmuch)
-	  (set-process-sentinel
-	   (sb/mbsync (if (eq 1 arg) "inboxes" "--all"))
-	   (lambda (proc state)
-	     (message nil) ;; clear minibuffer
-	     (notmuch-poll-and-refresh-this-buffer))))
+	  (if (> arg 1)
+	      (set-process-sentinel
+	       (sb/mbsync (if (eq 4 arg) "inboxes" "--all"))
+	       (lambda (proc state)
+		 (message nil) ;; clear minibuffer
+		 (notmuch-poll-and-refresh-this-buffer)))))
 
 	(bind-key "C-x m" 'sb/notmuch)
 
