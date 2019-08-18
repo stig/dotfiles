@@ -80,6 +80,8 @@
      # Let our enviroment find binaries installed by Nix
      . ~/.nix-profile/etc/profile.d/nix.sh
 
+     export PATH="$PATH:~/.pyenv/versions/$(cat ~/.pyenv/version)/bin"
+
      # Use the OS-provided Certificate file.
      export SSL_CERT_FILE=/etc/ssl/cert.pem
    #+end_src
