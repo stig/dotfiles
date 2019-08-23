@@ -1051,6 +1051,8 @@
 
 	# V. low volume lists gets to stay in inbox
 	+lists +tuls -- path:/tuls/ and tag:new
+
+	+lobsters -- tag:new and from:lobste.rs
 	EOF
       #+END_SRC
 
