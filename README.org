@@ -786,106 +786,66 @@
 	# > security delete-generic-password -s mbsync-gandi-password
 	# > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-	IMAPStore gandi-remote
+	IMAPStore remote
 	Account gandi
 
-	MaildirStore gandi-local
-	Path ~/Mail/Gandi/
-	Inbox ~/Mail/Gandi/INBOX
+	MaildirStore local
+	Path ~/Mail/
+	Inbox ~/Mail/INBOX
 	Trash trash
 
-	Channel gandi-inbox
-	Master :gandi-remote:
-	Slave :gandi-local:
+	Channel inbox
+	Master :remote:
+	Slave :local:
 	Create Slave
 	SyncState *
 
-	Channel gandi-sent
-	Master :gandi-remote:Sent
-	Slave :gandi-local:sent
+	Channel sent
+	Master :remote:Sent
+	Slave :local:sent
 	Create Slave
 	SyncState *
 
-	Channel gandi-org-mode
-	Master :gandi-remote:org-mode
-	Slave :gandi-local:org-mode
-	Create Slave
-	SyncState *
-	MaxMessages 500
-	ExpireUnread yes
-	Expunge Both
-
-	Channel gandi-lilypond
-	Master :gandi-remote:lilypond
-	Slave :gandi-local:lilypond
+	Channel org-mode
+	Master :remote:org-mode
+	Slave :local:org-mode
 	Create Slave
 	SyncState *
 	MaxMessages 500
 	ExpireUnread yes
 	Expunge Both
 
-	Channel gandi-clojure
-	Master :gandi-remote:clojure
-	Slave :gandi-local:clojure
+	Channel lilypond
+	Master :remote:lilypond
+	Slave :local:lilypond
 	Create Slave
 	SyncState *
 	MaxMessages 500
 	ExpireUnread yes
 	Expunge Both
 
-	Channel gandi-tuls
-	Master :gandi-remote:tuls
-	Slave :gandi-local:tuls
+	Channel clojure
+	Master :remote:clojure
+	Slave :local:clojure
+	Create Slave
+	SyncState *
+	MaxMessages 500
+	ExpireUnread yes
+	Expunge Both
+
+	Channel tuls
+	Master :remote:tuls
+	Slave :local:tuls
 	Create Slave
 	SyncState *
 	MaxMessages 500
 	Expunge Both
 
-	Channel gandi-archive
-	Master :gandi-remote:archive
-	Slave :gandi-local:archive
+	Channel archive
+	Master :remote:archive
+	Slave :local:archive
 	Create Slave
 	SyncState *
-
-	# ACCOUNT INFORMATION
-	IMAPAccount gmail
-	Host imap.gmail.com
-	User sbrautaset@laterpay.net
-	Timeout 60
-	PassCmd "security find-generic-password -s mbsync-gmail-password -w"
-	AuthMechs PLAIN
-	SSLType IMAPS
-	CertificateFile /etc/ssl/cert.pem
-
-	# REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
-	IMAPStore gmail-remote
-	Account gmail
-
-	# LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Mail/gmail)
-	MaildirStore gmail-local
-	Path ~/Mail/Work/
-	Inbox ~/Mail/Work/INBOX
-	Trash trash
-
-	Channel gmail-inbox
-	Master :gmail-remote:
-	Slave :gmail-local:
-	Create Slave
-	SyncState *
-
-	Channel gmail-archive
-	Master :gmail-remote:"[Gmail]/All Mail"
-	Slave :gmail-local:archive
-	Create Slave
-	SyncState *
-
-	Channel gmail-sent
-	Master :gmail-remote:"[Gmail]/Sent Mail"
-	Slave :gmail-local:sent
-	Create Slave
-	SyncState *
-
-	Group inboxes gandi-inbox gmail-inbox
       #+END_SRC
 
 ***** Invoke mbsync
@@ -913,19 +873,13 @@
      as I can do everything from this file.
 
      #+begin_src sh :results silent
-     notmuch config set database.path ~/Mail
-
-     notmuch config set user.name "Stig Brautaset"
-
-     notmuch config set user.primary_email "stig@brautaset.org"
-
-     notmuch config set user.other_email 'sbrautaset@laterpay.net'
-
-     notmuch config set new.tags 'new;unread;inbox'
-
-     notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
-
-     notmuch config set search.exclude_tags 'deleted;spam;draft;muted'
+       notmuch config set database.path ~/Mail
+       notmuch config set user.name "Stig Brautaset"
+       notmuch config set user.primary_email "stig@brautaset.org"
+       notmuch config set user.other_email "stig.brautaset@icloud.com"
+       notmuch config set new.tags 'new;unread;inbox'
+       notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
+       notmuch config set search.exclude_tags 'deleted;spam;muted'
      #+end_src
 
      We can now read the config back in, to verify our change.
@@ -939,10 +893,10 @@
      database.path=/Users/stig/Mail
      user.name=Stig Brautaset
      user.primary_email=stig@brautaset.org
-     user.other_email=sbrautaset@laterpay.net;stig.brautaset@icloud.com;stigbrau@start.no;stigbrau@online.no;stig.brautaset@me.com;S.Brautaset@westminster.ac.uk;Stig.Brautaset@MorganStanley.com;stig.brautaset@ktsplc.com
+     user.other_email=stig.brautaset@icloud.com
      new.tags=new;unread;inbox
      new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
-     search.exclude_tags=deleted;spam;draft
+     search.exclude_tags=deleted;spam;draft;muted
      maildir.synchronize_flags=true
      built_with.compact=true
      built_with.field_processor=true
@@ -991,7 +945,7 @@
 	  (notmuch)
 	  (if (> arg 1)
 	      (set-process-sentinel
-	       (sb/mbsync (if (eq 4 arg) "inboxes" "--all"))
+	       (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
 	       (lambda (proc state)
 		 (message nil) ;; clear minibuffer
 		 (notmuch-poll-and-refresh-this-buffer)))))
@@ -1013,8 +967,8 @@
 	(add-hook 'message-signature-setup-hook
 		  'sb/message-signature-setup-hook)
 
-	(setq notmuch-fcc-dirs
-	      '(("stig@brautaset.org" . "Gandi/sent +sent -unread -inbox")))
+	(setq notmuch-fcc-dirs "sent +sent -unread -inbox")
+
       #+END_SRC
 
 
@@ -1024,7 +978,7 @@
       this in a =pre-hook= so we can use the new =new= tag to optimise
       further tagging in the =post-hook= below.
 
-      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 	notmuch tag -new -- tag:new
 	notmuch search --output files tag:draft and tag:deleted | xargs rm
       #+END_SRC
@@ -1034,13 +988,12 @@
       Notmuch assigns the =new= tag when it first sees a message, so we
       can use it to limit the search space for further tagging.
 
-      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755)
+      #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 	notmuch tag --batch <<EOF
-	# Mute new messages to already muted threads
+	# Mute new messages to muted threads
 	+muted -- thread:{tag:muted} and tag:new
 
 	# Tag previously unseen messages
-	+work -- path:/Work/ and tag:new
 	+sent -- path:/sent/ and tag:new
 	-inbox -- path:/archive/ and tag:new
 
@@ -1110,13 +1063,6 @@
        from stig.brautaset@icloud.com
        host smtp.mail.me.com
        user stig.brautaset@icloud.com
-
-       ############
-       account work
-
-       from sbrautaset@laterpay.net
-       host smtp.gmail.com
-       user sbrautaset@laterpay.net
 
        #########################
        account default : private
