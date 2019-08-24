@@ -20,7 +20,12 @@
   I install (most) dependent tools using Nix:
 
   #+begin_src sh
-    nix-env -i aspell aspellDicts.en awscli clojure curl ditaa editorconfig-core-c fluidsynth freepats gnused gnutls graphviz isync jq msmtp notmuch pinentry plantuml pwgen python3 sbt silver-searcher
+    nix-env -i aspell-dict-en aspell-dict-en-computers aspell-dict-en-science aspell
+
+    # Email
+    nix-env -i isync msmtp notmuch
+
+    nix-env -i awscli clojure curl ditaa editorconfig-core-c fluidsynth freepats gnused gnutls graphviz jq pinentry plantuml pwgen python3-3.7.4 silver-searcher direnv
   #+end_src
 
 * Early Init
