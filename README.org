@@ -1054,30 +1054,20 @@
      MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
      section in the msmtp documentation for details.
 
+
+     : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
+
      #+BEGIN_SRC conf :tangle ~/.msmtprc
        defaults
-
        port 587
        tls on
        tls_trust_file /etc/ssl/cert.pem
        auth on
 
-       ###############
        account private
-
        from stig@brautaset.org
        host mail.gandi.net
        user stig@brautaset.org
-
-       #############
-       account icloud
-
-       from stig.brautaset@icloud.com
-       host smtp.mail.me.com
-       user stig.brautaset@icloud.com
-
-       #########################
-       account default : private
      #+END_SRC
 
      Finally we have to tell Emacs to use msmtp to send mail:
