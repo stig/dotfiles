@@ -668,7 +668,10 @@
     Highlight my cursor when scrolling
 
     #+begin_src emacs-lisp
-    (use-package beacon :pin gnu)
+      (use-package beacon
+	:pin gnu
+	:config
+	(beacon-mode 1))
     #+end_src
 
 *** Blog server
