@@ -582,6 +582,7 @@
 	(package-refresh-contents)
 	(package-install 'use-package))
       (require 'use-package)
+      (require 'bind-key)
     #+end_src
 
 ** Install & Configure Packages
