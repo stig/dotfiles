@@ -1647,7 +1647,7 @@
     Then we need a soundfont. Fluidsynth appears to recommend the one
     from http://www.schristiancollins.com/generaluser.php.
 
-    #+begin_src sh :tangle ~/.local/bin/download_soundfont :tangle-mode (identity #o755)
+    #+begin_src sh :tangle ~/.local/bin/download_soundfont :tangle-mode (identity #o755) :mkdirp t
       #!/bin/bash
       set -o errexit
       set -o nounset
