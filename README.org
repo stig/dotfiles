@@ -1723,17 +1723,6 @@
       (use-package counsel-projectile)
     #+END_SRC
 
-*** Scala
-
-    Then install ensime, the /ENhanced Scala Interaction Mode for Emacs/.
-
-    #+begin_src emacs-lisp
-      (use-package ensime)
-      (use-package sbt-mode)
-      (use-package scala-mode)
-      (setq ensime-search-interface 'ivy)
-    #+end_src
-
 *** Set =PATH= etc from the login shell
 
     The GUI Emacs gets exec path from the system, rather than the login
