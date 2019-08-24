@@ -544,7 +544,15 @@
 
 * Configure ELPA Packages
 ** Initialise the Package Manager
-*** Initialize ~package-archives~
+*** Add hack to make "gnu" ~package-archive~ work
+
+    #+begin_src emacs-lisp
+      ;; Required for the "gnu" elpa archive to work;
+      ;; See https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
+      (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+    #+end_src
+
+*** Add to ~package-archives~
 
     We need to add the URLs of the package archives we want to use. I
     install most packages via Melpa Stable Nix, but some from unstable.
