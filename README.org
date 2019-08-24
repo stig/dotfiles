@@ -964,9 +964,6 @@
 	(bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
 	(add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
 
-	;; Allow linking to NotMuch messages from Org mode
-	(require 'org-notmuch)
-
 	(defun sb/message-signature-setup-hook ()
 	  (setq message-signature-file
 		(if (string-match "laterpay" (mail-fetch-field "from"))
@@ -1266,7 +1263,14 @@
 
 	(setq org-hide-emphasis-markers t)
 
-	(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+	(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
+	:config
+	;; Allow linking to NotMuch messages from Org mode
+	(require 'org-notmuch))
+	
+
+
     #+END_SRC
 
 **** Agenda
