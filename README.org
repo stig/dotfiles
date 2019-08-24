@@ -1746,7 +1746,6 @@
     #+BEGIN_SRC emacs-lisp
       (use-package smartparens-config
 	:ensure smartparens
-	:diminish
 
 	;; I prefer to be explicit about the keybindings I use
 	:bind (:map smartparens-mode-map
