@@ -1084,18 +1084,6 @@
       (setq message-kill-buffer-on-exit t)
       #+END_SRC
 
-*** Gists
-
-    Viewing & editing gists in Emacs? Sure! I want that!
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package gist
-	:bind (("C-x g l" . gist-list)
-	       ("C-x g c" . gist-region-or-buffer-private))
-	:init
-	(setq gist-ask-for-description t))
-    #+END_SRC
-
 *** Git Link
 
     Link to file location on GitHub/Bitbucket/GitLab/...
