@@ -190,8 +190,7 @@
    delete the newline. Leave the cursor where the newline used to be.
 
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "M-j")
-                     (lambda ()
+     (bind-key "M-j" (lambda ()
 		       (interactive)
 		       (join-line -1)))
    #+END_SRC
@@ -280,7 +279,7 @@
    reflowing text.
 
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "s-q") nil)
+     (bind-key "s-q" nil)
    #+END_SRC
 
 ** Don't store backup files next to originals
@@ -348,7 +347,7 @@
    switches to it if it is.
 
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-c s") 'eshell)
+     (bind-key "C-c s" 'eshell)
 
      ;; This helps with aws cli commands, and nix-env --help, a bit
      (setenv "PAGER" "cat")
@@ -441,7 +440,7 @@
    Add a convenient keybinding for running tests interactively.
 
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x t") 'ert)
+     (bind-key "C-x t" 'ert)
    #+END_SRC
 
 ** Save minibuffer history
@@ -485,7 +484,7 @@
         nil 'fullscreen
         (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-     (global-set-key (kbd "M-<f11>") 'my-toggle-fullscreen)
+     (bind-key "M-<f11>" 'my-toggle-fullscreen)
    #+END_SRC
 
 ** Toggle Window Split function
