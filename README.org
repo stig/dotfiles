@@ -63,6 +63,118 @@
 	  (package-initialize)))
    #+END_SRC
 
+* Configure
+** Package System
+*** Make GNU ~package-archive~ work
+
+    #+begin_src emacs-lisp
+      ;; Required for the "gnu" elpa archive to work;
+      ;; See https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
+      (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+    #+end_src
+
+*** Add Melpa and Org ELPA to ~package-archives~
+
+    We need to add the URLs of the package archives we want to use. I
+    install most packages via Melpa Stable Nix, but some from unstable.
+    I need the =org= archive because I use some =org-contrib= stuff that
+    doesn't make it into Emacs proper.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+      (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+    #+END_SRC
+
+*** Install & configure ~use-package~
+
+    Install ~use-package~ and configure it to install packages from
+    stable MELPA archive by default.
+
+    #+begin_src emacs-lisp
+      ;; Automatically :ensure packages.
+      (setq use-package-always-ensure t)
+
+      ;; Default value for :pin in each use-package.
+      (setq use-package-always-pin "melpa-stable")
+
+      ;; Bootstrap use-package
+      (unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
+
+      (eval-when-compile
+	(require 'use-package))
+      (require 'diminish)
+      (require 'bind-key)
+    #+end_src
+
+*** Install =:ensure-system-package= extension
+
+    This allows =use-package= to install system packages.
+
+    #+begin_src emacs-lisp
+      (use-package use-package-ensure-system-package
+	:ensure t)
+    #+end_src
+
+** Add Nix's =site-lisp= directory to ~load-path~
+
+   #+begin_src emacs-lisp
+     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
+   #+end_src
+
+** Path
+
+    The GUI Emacs gets exec path from the system, rather than the
+    login shell.  We have to load PATH et. al. from the shell to get
+    access to programs installed by Nix.
+
+*** Configure the login shell
+
+    I use Zsh as my login shell.  It feels a bit weird to set it up
+    here, but it's the best way I have found so far.
+
+    Zsh reads =~/.zshenv= first, for both interactive and
+    non-interactive shells.  It's where we should set up PATH, etc.
+    Currently I only use it to source my /Nix/ profile.
+
+    #+begin_src sh :tangle ~/.zshenv
+      . ~/.nix-profile/etc/profile.d/nix.sh
+    #+end_src
+
+    =~/.zshrc= is for interactive shells.  This doesn't affect Emacs,
+    but it's useful as a fallback if I have to open a regular terminal
+    window.  (E.g. if I screw up my Emacs config.)
+
+    #+begin_src sh :tangle ~/.zshrc
+      setopt INC_APPEND_HISTORY
+      setopt HIST_IGNORE_ALL_DUPS
+
+      export HISTFILE=~/.zsh_history
+      export SAVEHIST=800
+      export HISTSIZE=1000
+
+      export EDITOR=emacsclient
+    #+end_src
+
+*** Set =PATH= etc from the login shell
+
+    Copy PATH and certain other variables from my login shell so these
+    variables are available in Eshell.  (And elsewhere in Emacs.)
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package exec-path-from-shell
+	:init
+	(setq exec-path-from-shell-variables
+	      '("PATH" "MANPATH"
+		"NIX_PATH" "NIX_SSL_CERT_FILE"
+		"LDFLAGS" "CPPFLAGS"))
+	:config
+	(exec-path-from-shell-initialize))
+    #+END_SRC
+
+* Configure the base install
 ** Introduce Myself
 
    In case something needs my name/email address.
@@ -72,43 +184,6 @@
    (setq user-mail-address "stig@brautaset.org")
    #+END_SRC
 
-** Zsh
-
-   This is how I set up Zsh. It feels weird to set it up here, but
-   it's the best way I have found so far. The config snippets here are
-   in the order Zsh reads them.
-
-   #+begin_src sh :tangle ~/.zshenv
-     # This config file is always read first by Zsh, for both interactive
-     # and non-interactive shells. It's where we should set up PATH, etc.
-
-     # Let our enviroment find binaries installed by Nix
-     . ~/.nix-profile/etc/profile.d/nix.sh
-
-     # Use the OS-provided Certificate file.
-     export SSL_CERT_FILE=/etc/ssl/cert.pem
-   #+end_src
-
-   #+begin_src sh :tangle ~/.zshrc
-     # This config file is for interactive shells.
-
-     setopt INC_APPEND_HISTORY
-     setopt HIST_IGNORE_ALL_DUPS
-
-     export HISTFILE=~/.zsh_history
-     export SAVEHIST=800
-     export HISTSIZE=1000
-
-     export EDITOR=emacsclient
-   #+end_src
-
-** Add Nix =site-lisp= directory to ~load-path~
-
-   #+begin_src emacs-lisp
-     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
-   #+end_src
-
-* Configure the base install
 ** Add keybinding to join next line to this
 
    With cursor at any point in a line, hit =M-j= to move to the end, and
@@ -546,48 +621,6 @@
     #+END_SRC
 
 * Configure ELPA Packages
-** Initialise the Package Manager
-*** Add hack to make "gnu" ~package-archive~ work
-
-    #+begin_src emacs-lisp
-      ;; Required for the "gnu" elpa archive to work;
-      ;; See https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
-      (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-    #+end_src
-
-*** Add to ~package-archives~
-
-    We need to add the URLs of the package archives we want to use. I
-    install most packages via Melpa Stable Nix, but some from unstable.
-    I need the =org= archive because I use some =org-contrib= stuff that
-    doesn't make it into Emacs proper.
-
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-      (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
-    #+END_SRC
-
-*** Install ~use-package~
-
-    Install ~use-package~ and configure it to install packages from stable
-    melpa archive by default.
-
-    #+begin_src emacs-lisp
-      ;; Automatically :ensure each use-package.
-      (setq use-package-always-ensure t)
-
-      ;; Default value for :pin in each use-package.
-      (setq use-package-always-pin "melpa-stable")
-
-      ;; Bootstrap use-package
-      (unless (package-installed-p 'use-package)
-	(package-refresh-contents)
-	(package-install 'use-package))
-      (require 'use-package)
-      (require 'bind-key)
-    #+end_src
-
 ** Install & Configure Packages
 *** Ace Window
 
@@ -1717,24 +1750,6 @@
 					:test-suffix "_spec")
 
       (use-package counsel-projectile)
-    #+END_SRC
-
-*** Set =PATH= etc from the login shell
-
-    The GUI Emacs gets exec path from the system, rather than the login
-    shell. We have to load PATH etc from Zsh to get access to programs
-    installed by Nix.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package exec-path-from-shell
-	:init
-	(setq exec-path-from-shell-variables
-	      '("PATH" "MANPATH" "SSL_CERT_FILE" "NIX_PATH"
-		"LDFLAGS" "CPPFLAGS"
-		"PYTEST_ADDOPTS"
-		"LATERPAY_DATA_DIR"))
-	:config
-	(exec-path-from-shell-initialize))
     #+END_SRC
 
 *** SmartParens
