@@ -51,7 +51,7 @@
 	  (package-initialize)))
    #+END_SRC
 
-* Configure
+* Configure critical things
 ** Package System
 *** Make GNU ~package-archive~ work
 
@@ -177,7 +177,15 @@
          (load custom-file))
    #+END_SRC
 
-* Configure the base install
+** Disable kill-emacs
+
+   Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
+   reflowing text.
+
+   #+BEGIN_SRC emacs-lisp
+     (bind-key "s-q" nil)
+   #+END_SRC
+
 ** Introduce Myself
 
    In case something needs my name/email address.
@@ -187,6 +195,16 @@
    (setq user-mail-address "stig@brautaset.org")
    #+END_SRC
 
+** Don't store backup files next to originals
+
+   I don't like backup files (those dreaded =foo~= ones) all over my disk.
+   This places them in =~/.emacs.d/backups=.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+   #+END_SRC
+
+* Configure the base install
 ** Add keybinding to join next line to this
 
    With cursor at any point in a line, hit =M-j= to move to the end, and
@@ -273,24 +291,6 @@
      (defun sb/weekday-p (date)
        "Is `date' a weekday?"
        (memq (calendar-day-of-week date) '(1 2 3 4 5)))
-   #+END_SRC
-
-** Disable kill-emacs
-
-   Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
-   reflowing text.
-
-   #+BEGIN_SRC emacs-lisp
-     (bind-key "s-q" nil)
-   #+END_SRC
-
-** Don't store backup files next to originals
-
-   I don't like backup files (those dreaded =foo~= ones) all over my disk.
-   This places them in =~/.emacs.d/backups=.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
    #+END_SRC
 
 ** Ediff
@@ -1137,7 +1137,8 @@
 
 *** Git Link
 
-    Link to file location on GitHub/Bitbucket/GitLab/...
+    Lets me link to a file location on GitHub/Bitbucket/GitLab
+    from a local git repository.
 
     #+BEGIN_SRC emacs-lisp
       (use-package git-link
