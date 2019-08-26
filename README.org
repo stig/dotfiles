@@ -215,16 +215,6 @@
      (global-auto-revert-mode 1)
    #+END_SRC
 
-** Buffer-local regex search
-
-   I like the =C-s= and =C-r= keybindings to mean "search forward/backward
-   for this regex".
-
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-     (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-   #+END_SRC
-
 ** Clipboard
 
    These settings improve pasting behaviour with programs outside Emacs.
