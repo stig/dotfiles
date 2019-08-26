@@ -98,10 +98,11 @@
       ;; Default value for :pin in each use-package.
       (setq use-package-always-pin "melpa-stable")
 
-      ;; Bootstrap use-package
-      (unless (package-installed-p 'use-package)
-	(package-refresh-contents)
-	(package-install 'use-package))
+      ;; Bootstrap use-package & dependencies
+      (seq-doseq (package '(use-package bind-key diminish))
+	(unless (package-installed-p package)
+	  (package-refresh-contents)
+	  (package-install package)))
 
       (eval-when-compile
 	(require 'use-package))
