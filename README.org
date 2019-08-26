@@ -6,27 +6,15 @@
 #+STARTUP: content
 * Introduction
 
-  This is my Emacs configuration. Because I'm prone to forget what
-  does what, my configuration is in the form of a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]]
-  document: prose, interspaced with code. The configuration snippets
-  here are not copied-and-pasted from my config; rather this is the
-  document where I edit my config, then I and /tangle/ the config into
-  [[file:init.el][init.el]] and other config files by hitting =C-c C-v C-t=.
+  This is my Emacs configuration.  Because I'm forgetful, it is a
+  [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
+  this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
+  hitting =C-c C-v C-t=.
 
-* Install Emacs & tools
+  I install Emacs from https://emacsformacosx.com/.
 
-  I install Emacs from https://emacsformacosx.com/
-
-  I install (most) dependent tools using Nix:
-
-  #+begin_src sh
-    nix-env -i aspell-dict-en aspell-dict-en-computers aspell-dict-en-science aspell
-
-    # Email
-    nix-env -i isync msmtp notmuch
-
-    nix-env -i awscli clojure curl ditaa editorconfig-core-c fluidsynth freepats gnused gnutls graphviz jq pinentry plantuml pwgen python3-3.7.4 silver-searcher direnv
-  #+end_src
+  I use [[https://github.com/jwiegley/use-package][use-package]] to install & configure modules.  I'm also using
+  its [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension to install system dependencies.
 
 * Early Init
 
@@ -116,7 +104,9 @@
 
     #+begin_src emacs-lisp
       (use-package use-package-ensure-system-package
-	:ensure t)
+	:ensure t
+	:custom
+	(system-packages-package-manager 'nix))
     #+end_src
 
 ** Add Nix's =site-lisp= directory to ~load-path~
@@ -233,11 +223,20 @@
      (setq mouse-yank-at-point t)
    #+END_SRC
 
-** Configure Aspell with British English dictionary
+** Configure Spell Checking
+
+   I use aspell, with British English dictionary.
 
    #+BEGIN_SRC emacs-lisp
-     (setq ispell-dictionary "british"
-	   ispell-extra-args '("-W" "2" "--sug-mode=ultra"))
+     (use-package ispell
+       :ensure nil
+       :ensure-system-package ((aspell . aspell)
+			       ("~/.nix-profile/lib/aspell/british.alias" . aspell-dict-en)
+			       ("~/.nix-profile/lib/aspell/en-computers.rws" . aspell-dict-en-computers)
+			       ("~/.nix-profile/lib/aspell/en_GB-science.rws" . aspell-dict-en-science))
+       :init
+       (setq ispell-dictionary "british"
+	     ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
    #+END_SRC
 
    Configure aspell and let it find dictionaries:
@@ -632,7 +631,10 @@
     delete the entire matched line by hitting =C-c C-d=.
 
     #+BEGIN_SRC emacs-lisp
-      (use-package ag :pin melpa)
+      (use-package ag
+        :pin melpa
+	:ensure-system-package (ag . silver-searcher))
+
       (use-package wgrep :pin melpa)
       (use-package wgrep-ag :pin melpa)
 
@@ -710,6 +712,11 @@
     run it as an asynchronous command tied to a buffer.
 
     #+begin_src emacs-lisp
+      (use-package python3
+	:no-require t
+	:ensure nil
+	:ensure-system-package (python3 . python3-3.7.4))
+
       (defun sb/blog-server ()
 	(interactive)
 	(start-process "Blog Server" "*blog server*"
@@ -721,7 +728,8 @@
 *** Clojure
 
     #+BEGIN_SRC emacs-lisp
-     (use-package clojure-mode)
+     (use-package clojure-mode
+       :ensure-system-package clojure)
      (use-package clojure-mode-extra-font-locking)
      (use-package cider)
      (use-package clj-refactor)
@@ -754,6 +762,7 @@
 
     #+begin_src emacs-lisp
       (use-package direnv
+        :ensure-system-package direnv
 	:config
 	(direnv-mode))
     #+end_src
@@ -764,6 +773,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package editorconfig
+        :ensure-system-package (editorconfig . editorconfig-core-c)
 	:init
 	(setq editorconfig-exclude-modes '(org-mode))
 	(setq editorconfig-mode-lighter " EC")
@@ -778,6 +788,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package elfeed
 	:bind ("C-x w" . elfeed)
+	:ensure-system-package curl
 	:config
 	(defalias 'elfeed-toggle-star
 	  (elfeed-expose #'elfeed-search-toggle-all 'star))
@@ -809,9 +820,15 @@
 
 **** Download email with mbsync
 
-     I used to use OfflineIMAP for this, but mbsync (from the isync suite) seems
-     faster and doesn't have this annoying db outside of the Maildir to keep in
-     sync.
+     I use =mbsync= (from the isync suite) to sync mail from my IMAP
+     server to my local machine.
+
+     #+begin_src emacs-lisp
+       (use-package mbsync
+         :ensure nil
+	 :no-require t
+         :ensure-system-package (mbsync . isync))
+     #+end_src
 
 ***** mbsync configuration
 
@@ -974,7 +991,9 @@
       sent folder.
 
       #+BEGIN_SRC emacs-lisp
-	(require 'notmuch)
+        (use-package notmuch
+	  :ensure nil
+	  :ensure-system-package notmuch)
 
 	(defun sb/notmuch (arg)
 	  "Launch notmuch. If ran with prefix arg, launch mbsync in the
@@ -1098,6 +1117,11 @@
      Finally we have to tell Emacs to use msmtp to send mail:
 
      #+BEGIN_SRC emacs-lisp
+       (use-package msmtp
+         :ensure nil
+	 :no-require t
+         :ensure-system-package msmtp)
+
        (setq message-send-mail-function 'message-send-mail-with-sendmail
              sendmail-program "msmtp"
 	     message-sendmail-envelope-from 'header
@@ -1128,6 +1152,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package graphviz-dot-mode
+        :ensure-system-package graphviz
 	:bind ("C-c C-p" . graphviz-dot-preview))
     #+END_SRC
 
@@ -1449,12 +1474,12 @@
      Now we look at the file system and grab the highest-versioned Jar available.
 
      #+BEGIN_SRC emacs-lisp
-       ;; Tell Org where to find ditaa jar
-       (setq org-ditaa-jar-path
-	     (expand-file-name "~/.nix-profile/lib/ditaa.jar"))
-
-       (setq org-plantuml-jar-path
-	     (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
+       (use-package ob-ditaa
+	 :ensure org-plus-contrib
+	 :ensure-system-package ("~/.nix-profile/lib/ditaa.jar" . ditaa)
+	 :init
+	 (setq org-ditaa-jar-path
+	       (expand-file-name "~/.nix-profile/lib/ditaa.jar")))
      #+END_SRC
 
      We have to specify the list of languages we want to support so Orgmode knows
@@ -1492,6 +1517,7 @@
      #+BEGIN_SRC emacs-lisp
        (use-package org-passwords
          :ensure org-plus-contrib
+	 :ensure-system-package passwd
 	 :pin org
 	 :after org
 	 :init
@@ -1656,14 +1682,23 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package plantuml-mode
+	:ensure-system-package plantuml
 	:mode "\\.puml\\'"
-	;;       :init (setq plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar"))
-	)
+	:init
+	(setq org-plantuml-jar-path
+	      (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
     #+END_SRC
 
 *** Playing Midi files
 
     We can play midi files with fluidsynth.
+
+    #+begin_src emacs-lisp
+      (use-package fluidsynth
+	:ensure nil
+	:no-require t
+	:ensure-system-package fluidsynth)
+    #+end_src
 
     Then we need a soundfont. Fluidsynth appears to recommend the one
     from http://www.schristiancollins.com/generaluser.php.
@@ -1820,3 +1855,15 @@
     #+BEGIN_SRC emacs-lisp
     (use-package yaml-mode)
     #+END_SRC
+
+*** GnuPG
+
+    Emacs will open =.gpg= files transparently, but needs some system
+    programs for that.
+
+    #+begin_src emacs-lisp
+      (use-package gnupg
+	:ensure nil
+	:ensure-system-package ((gpg2 . gnupg) pinentry)
+	:no-require t)
+    #+end_src
