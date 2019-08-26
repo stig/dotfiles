@@ -364,11 +364,13 @@
    clean it up.
 
    #+BEGIN_SRC emacs-lisp
-     (require 'whitespace)
-     (setq whitespace-style '(face empty tabs trailing))
-     (global-whitespace-mode t)
-
-     (global-set-key (kbd "C-c w") 'whitespace-cleanup)
+     (use-package whitespace
+       :ensure nil
+       :bind ("C-c w" . whitespace-cleanup)
+       :init
+       (setq whitespace-style '(face empty tabs trailing))
+       :config
+       (global-whitespace-mode t))
    #+END_SRC
 
 ** I like big fonts and I cannot lie
