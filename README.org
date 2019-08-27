@@ -639,7 +639,10 @@
 	:ensure-system-package (ag . silver-searcher))
 
       (use-package wgrep :pin melpa)
-      (use-package wgrep-ag :pin melpa)
+      (use-package wgrep-ag
+        :pin melpa
+	:hook
+	(ag-mode-hook . wgrep-ag-setup))
 
       ;; This fixes the last group not being editable until it's fixed
       ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
@@ -670,8 +673,6 @@
 	     (when (zerop (forward-line 1))
 	       (add-text-properties (point) (point-max)
 				    '(read-only t wgrep-footer t))))))
-
-      (add-hook 'ag-mode-hook 'wgrep-ag-setup)
     #+END_SRC
 
 *** Aggressive Indent
@@ -681,10 +682,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package aggressive-indent
-	:init
-	(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-	(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-	(add-hook 'css-mode-hook #'aggressive-indent-mode))
+	:hook
+	(emacs-lisp-mode-hook . aggressive-indent-mode)
+	(clojure-mode-hook . aggressive-indent-mode)
+	(css-mode-hook . aggressive-indent-mode))
     #+END_SRC
 
 *** Auto commit
@@ -994,42 +995,30 @@
       sent folder.
 
       #+BEGIN_SRC emacs-lisp
-        (use-package notmuch
+	(use-package notmuch
 	  :ensure nil
-	  :ensure-system-package notmuch)
-
-	(defun sb/notmuch (arg)
-	  "Launch notmuch. If ran with prefix arg, launch mbsync in the
+	  :ensure-system-package notmuch
+	  :hook
+	  (notmuch-message-mode-hook . turn-off-auto-fill)
+	  :bind (("C-x m" . sb/notmuch)
+		 ("M-]" . notmuch-cycle-notmuch-buffers))
+	  :init
+	  (setq notmuch-fcc-dirs "sent +sent -unread -inbox")
+	  :config
+	  (defun sb/notmuch (arg)
+	    "Launch notmuch. If ran with prefix arg, launch mbsync in the
 	background, and automatically refresh the current buffer when
 	done. With two prefix args, launch mbsync with `--all` rather
 	than just for inboxes."
-	  (interactive "p")
-	  (notmuch)
-	  (if (> arg 1)
-	      (set-process-sentinel
-	       (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
-	       (lambda (proc state)
-		 (message nil) ;; clear minibuffer
-		 (notmuch-poll-and-refresh-this-buffer)))))
-
-	(bind-key "C-x m" 'sb/notmuch)
-
-	(bind-key "M-]" 'notmuch-cycle-notmuch-buffers)
-	(add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
-
-	(defun sb/message-signature-setup-hook ()
-	  (setq message-signature-file
-		(if (string-match "laterpay" (mail-fetch-field "from"))
-		    "~/.signature.work" nil))
-	  (message "Selected %s for signature" message-signature-file))
-
-	(add-hook 'message-signature-setup-hook
-		  'sb/message-signature-setup-hook)
-
-	(setq notmuch-fcc-dirs "sent +sent -unread -inbox")
-
+	    (interactive "p")
+	    (notmuch)
+	    (if (> arg 1)
+		(set-process-sentinel
+		 (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
+		 (lambda (proc state)
+		   (message nil) ;; clear minibuffer
+		   (notmuch-poll-and-refresh-this-buffer))))))
       #+END_SRC
-
 
 ***** Remove "new" tag & obsolete drafts
 
@@ -1200,9 +1189,9 @@
 	:load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
 	:mode (("\\.ily\\'" . LilyPond-mode)
 	       ("\\.ly\\'" . LilyPond-mode))
+	:hook (LilyPond-mode-hook . (lambda () (turn-on-font-lock)))
 	:init
-	(setq LilyPond-midi-command "playmidi")
-	(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+	(setq LilyPond-midi-command "playmidi"))
     #+end_src
 
 *** Magit
@@ -1632,8 +1621,8 @@
      #+begin_src emacs-lisp
      (use-package orgalist
        :pin gnu
-       :config
-       (add-hook 'message-mode-hook 'orgalist-mode))
+       :hook
+       (message-mode-hook . orgalist-mode))
      #+end_src
 
 *** Plant UML Mode
@@ -1755,9 +1744,9 @@
 		    ("C-<left>" . sp-forward-barf-sexp)
 		    ("C-M-<left>" . sp-backward-slurp-sexp)
 		    ("C-M-<right>" . sp-backward-barf-sexp))
-	:init
-	(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-	(add-hook 'text-mode-hook 'turn-on-smartparens-mode)
+	:hook
+	(prog-mode-hook . turn-on-smartparens-strict-mode)
+	(text-mode-hook . turn-on-smartparens-mode)
 
 	:config
 	(show-smartparens-global-mode t))
@@ -1804,8 +1793,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package writegood-mode
-	:init
-	(add-hook 'text-mode-hook 'writegood-mode))
+	:hook text-mode-hook)
     #+END_SRC
 
 *** YAML
