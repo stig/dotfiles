@@ -11,37 +11,31 @@
   this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
   hitting =C-c C-v C-t=.
 
-  I install Emacs from https://emacsformacosx.com/.
+  I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].  I use [[https://github.com/jwiegley/use-package][use-package]] to
+  install & configure modules.  I install system dependencies
+  (e.g. =notmuch=, =the-silver-searcher= et. al.) using =use-package='s
+  [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension.
 
-  I use [[https://github.com/jwiegley/use-package][use-package]] to install & configure modules.  I'm also using
-  its [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension to install system dependencies.
-
-* Early Init
+* Early Init (turn off mouse interface)
 
   Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
-  initialising GUI components, so it's a great place to turn off mouse
-  interface etc to avoid flicker during startup.
+  initialising GUI components.  I turn off the mouse interface here to
+  avoid momentary display during launch.  I also don't need to see a
+  splash screen on every launch.  Finally I do /not like/ Emacs beeping
+  at me: I prefer a visual bell.
 
-** Disable splash screen, mouse interface & beeps
-
-   I like to turn off the mouse interface early to avoid momentary
-   display during launch. I also don't need to see a splash screen on
-   every launch. Finally I do not like Emacs to beep at me; I prefer a
-   visual bell.
-
-   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
-     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-     (setq inhibit-startup-message t)
-     (setq visible-bell t)
-   #+END_SRC
+  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
+    (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+    (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+    (setq inhibit-startup-message t)
+    (setq visible-bell t)
+  #+END_SRC
 
 ** Emacs <27 Compatibility
 
-   In older versions of Emacs we load ~early-init.el~ manually. Emacs 27
-   also initialises packages before loading the user config, but older
-   ones does not, requiring me to manually call =package-initialize= at
-   this point.
+   In older versions of Emacs we load ~early-init.el~ manually.  While
+   Emacs 27 initialises packages before loading the user config, older
+   ones does not: thus we also call =package-initialize= here.
 
    #+BEGIN_SRC emacs-lisp
     (if (not visible-bell)
@@ -51,8 +45,16 @@
 	  (package-initialize)))
    #+END_SRC
 
-* Configure critical things
+* Configure package system, paths, and other critical things
+  
+  I do these early because I want them to apply even if I mess up
+  later parts of my =init.el=.
+
 ** Package System
+
+   A lot of my config installs packages from GNU elpa, MELPA, and Org
+   elpa.  So we need to configure the package system now.
+
 *** Make GNU ~package-archive~ work
 
     #+begin_src emacs-lisp
@@ -63,10 +65,10 @@
 
 *** Add Melpa and Org ELPA to ~package-archives~
 
-    We need to add the URLs of the package archives we want to use. I
-    install most packages via Melpa Stable Nix, but some from unstable.
-    I need the =org= archive because I use some =org-contrib= stuff that
-    doesn't make it into Emacs proper.
+    We need to add the URLs of the package archives we want to use.  I
+    install most packages via Melpa Stable Nix, but some from
+    unstable.  I need the =org= archive because I use some =org-contrib=
+    stuff that doesn't make it into Emacs proper.
 
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
@@ -77,7 +79,8 @@
 *** Install & configure ~use-package~
 
     Install ~use-package~ and configure it to install packages from
-    stable MELPA archive by default.
+    stable MELPA archive by default.  For packages that need it I
+    override this by putting =:pin $repo= in the =use-config= stanza.
 
     #+begin_src emacs-lisp
       ;; Automatically :ensure packages.
