@@ -636,7 +636,10 @@
     #+BEGIN_SRC emacs-lisp
       (use-package ag
         :pin melpa
-	:ensure-system-package (ag . silver-searcher))
+	:ensure-system-package (ag . silver-searcher)
+	:custom
+	(ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
+	(ag-ignore-list (quote (".git"))))
 
       (use-package wgrep :pin melpa)
       (use-package wgrep-ag
@@ -732,11 +735,13 @@
 *** Clojure
 
     #+BEGIN_SRC emacs-lisp
-     (use-package clojure-mode
-       :ensure-system-package clojure)
-     (use-package clojure-mode-extra-font-locking)
-     (use-package cider)
-     (use-package clj-refactor)
+      (use-package clojure-mode
+	:ensure-system-package clojure)
+      (use-package clojure-mode-extra-font-locking)
+      (use-package cider
+	:custom
+	(cider-eldoc-display-context-dependent-info t))
+      (use-package clj-refactor)
     #+END_SRC
 
 *** Company
@@ -778,9 +783,8 @@
     #+BEGIN_SRC emacs-lisp
       (use-package editorconfig
         :ensure-system-package (editorconfig . editorconfig-core-c)
-	:init
-	(setq editorconfig-exclude-modes '(org-mode))
-	(setq editorconfig-mode-lighter " EC")
+	:custom
+	(editorconfig-exclude-modes (quote (org-mode gist)))
 	:config
 	(editorconfig-mode))
     #+END_SRC
@@ -1002,8 +1006,10 @@
 	  (notmuch-message-mode-hook . turn-off-auto-fill)
 	  :bind (("C-x m" . sb/notmuch)
 		 ("M-]" . notmuch-cycle-notmuch-buffers))
-	  :init
-	  (setq notmuch-fcc-dirs "sent +sent -unread -inbox")
+	  :custom
+	  (notmuch-hello-thousands-separator ",")
+	  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
+	  (notmuch-fcc-dirs "sent +sent -unread -inbox")
 	  :config
 	  (defun sb/notmuch (arg)
 	    "Launch notmuch. If ran with prefix arg, launch mbsync in the
@@ -1190,8 +1196,9 @@
 	:mode (("\\.ily\\'" . LilyPond-mode)
 	       ("\\.ly\\'" . LilyPond-mode))
 	:hook (LilyPond-mode-hook . (lambda () (turn-on-font-lock)))
-	:init
-	(setq LilyPond-midi-command "playmidi"))
+	:custom
+	(LilyPond-midi-command "playmidi" t)
+	(LilyPond-pdf-command "open"))
     #+end_src
 
 *** Magit
@@ -1222,7 +1229,9 @@
       (use-package markdown-mode
 	:pin melpa
 	:bind (("M-<up>" . markdown-move-list-item-up)
-	       ("M-<down>" . markdown-move-list-item-down)))
+	       ("M-<down>" . markdown-move-list-item-down))
+	:custom 
+	(markdown-asymmetric-header t))
     #+END_SRC
 *** Multiple Cursors
 
