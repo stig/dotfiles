@@ -805,16 +805,6 @@
 	  '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
     #+END_SRC
 
-*** Elpy
-
-    I'll try Elpy first because of its touted refactoring support.
-
-    #+BEGIN_SRC emacs-lisp :noweb yes
-     (use-package elpy
-       :config
-       (elpy-enable))
-    #+END_SRC
-
 *** Email
 
     Because I like to use Emacs for writing, I like to use it for email
