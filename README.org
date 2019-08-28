@@ -1369,22 +1369,19 @@
 
 * Org mode
 
-  I now use Org mode for all writing I initiate. The Emacs org mode's support
-  for tables, TOC, footnotes, TODO and agenda items makes it an easy choice.
-  Gists and GitHub READMEs support Org mode too, and I can export to other
-  formats including if I want.
+  I use Org mode for all writing I initiate.  Org mode's support for
+  tables, TOC, footnotes, TODO and Agenda items makes it an easy
+  choice.  Gists and GitHub READMEs support Org mode too, and I can
+  export to other formats including if I want.
 
-  To avoid having one gigantic section, this file uses NOWEB syntax to weave
-  together config snippets.
+  The particular version of package I use is annoying to install
+  because the installed package has a different name from what you
+  would use in your config.  However, =use-package= supports this by
+  passing the name of the package to install as the value to =:ensure=.
 
-  The particular version of package I use is annoying to install because the
-  installed package has a different name from what you would use in your
-  config. However, =use-package= supports this by passing the name of the
-  package to install as the value to =:ensure=.
-
-  The Org manual expects the =C-c {l,a,c,b}= keybindings to be
-  available in any mode, so define them globally. I prefer to follow
-  conventions. It makes reading the manual and tutorials a lot
+  The Org manual expects the =C-c {l,a,c}= keybindings to be available
+  in any mode, so define them globally.  I prefer to follow
+  conventions.  It makes reading the manual and tutorials a lot
   easier!
 
   #+BEGIN_SRC emacs-lisp
