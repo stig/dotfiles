@@ -1084,41 +1084,6 @@
 		(notmuch-poll-and-refresh-this-buffer))))))
    #+END_SRC
 
-*** Notmuch Hooks
-
-    Remove the =new= tag from any messages just before refreshing.  Do
-    this in a =pre-hook= so we can use the new =new= tag to optimise
-    further tagging in the =post-hook= below.
-
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-      notmuch tag -new -- tag:new
-      notmuch search --output files tag:draft and tag:deleted | xargs rm
-    #+END_SRC
-
-    Notmuch assigns the =new= tag when it first sees a message, so we
-    can use it to limit the search space for further tagging.
-
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-      notmuch tag --batch <<EOF
-      # Mute new messages to muted threads
-      +muted -- thread:{tag:muted} and tag:new
-
-      # Tag previously unseen messages
-      +sent -- path:/sent/ and tag:new
-      -inbox -- path:/archive/ and tag:new
-
-      # Add specific tags for mailing lists, and remove from inbox
-      +lists +org-mode -inbox -- path:/org-mode/ and tag:new
-      +lists +lilypond -inbox -- path:/lilypond/ and tag:new
-      +lists +clojure -inbox -- path:/clojure/ and tag:new
-
-      # V. low volume lists gets to stay in inbox
-      +lists +tuls -- path:/tuls/ and tag:new
-
-      +lobsters -- tag:new and from:lobste.rs
-      EOF
-    #+END_SRC
-
 *** Configuring NotMuch before first use
 
     After installing NotMuch I ran =notmuch setup= to configure it.  Then
@@ -1157,6 +1122,41 @@
     built_with.field_processor=true
     built_with.retry_lock=true
     #+end_example
+
+*** Write =pre-new= and =post-new= hook scripts
+
+    Remove the =new= tag from any messages just before refreshing.  Do
+    this in a =pre-hook= so we can use the new =new= tag to optimise
+    further tagging in the =post-hook= below.
+
+    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+      notmuch tag -new -- tag:new
+      notmuch search --output files tag:draft and tag:deleted | xargs rm
+    #+END_SRC
+
+    Notmuch assigns the =new= tag when it first sees a message, so we
+    can use it to limit the search space for further tagging.
+
+    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+      notmuch tag --batch <<EOF
+      # Mute new messages to muted threads
+      +muted -- thread:{tag:muted} and tag:new
+
+      # Tag previously unseen messages
+      +sent -- path:/sent/ and tag:new
+      -inbox -- path:/archive/ and tag:new
+
+      # Add specific tags for mailing lists, and remove from inbox
+      +lists +org-mode -inbox -- path:/org-mode/ and tag:new
+      +lists +lilypond -inbox -- path:/lilypond/ and tag:new
+      +lists +clojure -inbox -- path:/clojure/ and tag:new
+
+      # V. low volume lists gets to stay in inbox
+      +lists +tuls -- path:/tuls/ and tag:new
+
+      +lobsters -- tag:new and from:lobste.rs
+      EOF
+    #+END_SRC
 
 *** Configure mbsync to download email
 
