@@ -1389,7 +1389,6 @@
       :ensure org-plus-contrib
       :pin org
       :bind (("C-c l" . org-store-link)
-	     ("C-c c" . org-capture)
 	     ("C-x C-<return>" . org-insert-subheading)
 	     ("C-S-<return>" . org-insert-todo-subheading)
 	     :map org-mode-map
@@ -1488,61 +1487,65 @@
 
 ** Capturing
 
-   Set up capture templates. This is mainly from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]. No doubt
-   this will grow...
+   Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
+   post]] (and YouTube series).  It has grown a bit since then.
 
    #+BEGIN_SRC emacs-lisp
-     (defun capture-blog-post-file ()
-       (let* ((title (read-string "Slug: "))
-	      (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
-	 (expand-file-name
-	  (format "~/blog/articles/%s/%s.org"
-		  (format-time-string "%Y" (current-time))
-		  slug))))
+     (use-package org-capture
+       :ensure org-plus-contrib
+       :bind ("C-c c" . org-capture)
+       :custom
+       (org-default-notes-file "~/org/inbox.org")
+       (org-capture-templates
+	'(("t" "TODOs")
+	  ("tn" "Todo Right Now (clock in!)" entry (file "")
+	   "* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
+	  ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
+	   "* TODO %?\n\n  %i")
+	  ("tl" "TODO entry with link" entry (file "")
+	   "* TODO %?\n\n  %a\n\n  %i")
+	  ("tr" "Process email" entry (file "")
+	   "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
+	  ("te" "To Expense" entry (file "")
+	   "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
+	  ("tp" "New Project" entry (file "")
+	   "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
+	  ("tT" "Trip" entry (file "")
+	   (file "templates/trip.org") :empty-lines 1)
 
-     (setq org-default-notes-file "~/org/inbox.org")
+	  ("l" "Log Learning" entry (file+datetree "learning.org")
+	   "* %^{Title} %^g\n  %?")
 
-     (setq org-capture-templates
-	   '(("t" "TODOs")
-	     ("tn" "Todo Right Now (clock in!)" entry (file "")
-	      "* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
-	     ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
-	      "* TODO %?\n\n  %i")
-	     ("tl" "TODO entry with link" entry (file "")
-	      "* TODO %?\n\n  %a\n\n  %i")
-	     ("tr" "Process email" entry (file "")
-	      "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
-	     ("te" "To Expense" entry (file "")
-	      "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
-	     ("tp" "New Project" entry (file "")
-	      "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
-	     ("tT" "Trip" entry (file "")
-	      (file "templates/trip.org") :empty-lines 1)
+	  ("n" "Note" entry (file+datetree "notes.org")
+	   "* %^{Subject} %^g\n\n  %?"
+	   :empty-lines 1
+	   :clock-in t)
 
-	     ("l" "Log Learning" entry (file+datetree "learning.org")
-	      "* %^{Title} %^g\n  %?")
+	  ("m" "Meter Readings")
+	  ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
+	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.7}"
+	   :table-line-pos "II-1")
+	  ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
+	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
+	   :table-line-pos "II-1")
 
-	     ("n" "Note" entry (file+datetree "notes.org")
-	      "* %^{Subject} %^g\n\n  %?"
-	      :empty-lines 1
-	      :clock-in t)
+	  ("b" "Blog Post" plain
+	   (file capture-blog-post-file)
+	   (file "templates/blog-post.org"))
 
-	     ("m" "Meter Readings")
-	     ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
-	      "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.7}"
-	      :table-line-pos "II-1")
-	     ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
-	      "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
-	      :table-line-pos "II-1")
+	  ("r" "GTD Review" entry (file+datetree "GTDReview.org")
+	   (file "templates/gtd-review.org")
+	   :empty-lines 1
+	   :jump-to-captured t)))
 
-	     ("b" "Blog Post" plain
-	      (file capture-blog-post-file)
-	      (file "templates/blog-post.org"))
-
-	     ("r" "GTD Review" entry (file+datetree "GTDReview.org")
-	      (file "templates/gtd-review.org")
-	      :empty-lines 1
-	      :jump-to-captured t)))
+       :config
+       (defun capture-blog-post-file ()
+	 (let* ((title (read-string "Slug: "))
+		(slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
+	   (expand-file-name
+	    (format "~/blog/articles/%s/%s.org"
+		    (format-time-string "%Y" (current-time))
+		    slug)))))
    #+END_SRC
 
 ** Babel
