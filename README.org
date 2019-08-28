@@ -656,6 +656,15 @@
        (global-whitespace-mode t))
    #+END_SRC
 
+** Iedit
+
+   Edit multiple symbols in one go. Similar in some respects to
+   Multiple Cursors, but seems a little more light-weight.
+
+   #+begin_src emacs-lisp
+   (use-package iedit :pin melpa)
+   #+end_src
+
 ** Save minibuffer history
 
    This allows us to "tap up" in the minibuffer to recall previous items,
@@ -743,15 +752,6 @@
      (use-package writegood-mode
        :hook text-mode-hook)
    #+END_SRC
-
-** Iedit
-
-   Edit multiple symbols in one go. Similar in some respects to
-   Multiple Cursors, but seems a little more light-weight.
-
-   #+begin_src emacs-lisp
-   (use-package iedit :pin melpa)
-   #+end_src
 
 * Configure major modes
 ** Clojure
