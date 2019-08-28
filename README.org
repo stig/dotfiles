@@ -1384,6 +1384,12 @@
   conventions.  It makes reading the manual and tutorials a lot
   easier!
 
+  I love Org's markup so much I wrote a JIRA export backend for it.  I
+  also write in Org and export to GitHub.  GitHub unfortunately
+  doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
+  exporter, as this deletes linebreaks.  This means the rendered
+  paragraphs re-flow properly on GitHub.
+
   #+BEGIN_SRC emacs-lisp
     (use-package org
       :ensure org-plus-contrib
@@ -1397,21 +1403,13 @@
       :mode (("\\.org\\'" . org-mode)
 	     ("\\.org_archive\\'" . org-mode))
 
-      :init
-
-      (setq org-link-file-path-type 'relative)
-
-      ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
-      (setq org-log-into-drawer t)
-
-      (setq org-catch-invisible-edits 'smart)
-
-      ;; If running interactively, I want export to copy to the kill-ring
-      (setq org-export-copy-to-kill-ring 'if-interactive)
-
-      (setq org-hide-emphasis-markers t)
-
-      (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+      :custom
+      (org-link-file-path-type 'relative)
+      (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
+      (org-catch-invisible-edits 'smart)
+      (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+      (org-hide-emphasis-markers t)
+      (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
   #+END_SRC
 
 ** Agenda
