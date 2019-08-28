@@ -1298,6 +1298,20 @@
 	(org-mime-preserve-breaks nil))
     #+END_SRC
 
+*** Linking to Notmuch from Org
+
+    I don't like using my email inbox as a todo list.  When I receive
+    an email I need to act on but /can't yet/ for some reason, I link to
+    it from my Org mode agenda and archive it.  When Org agenda prompts
+    me I can click on the link and immediately get to the mail in my
+    archive, and can reply to it from there.
+
+    #+begin_src emacs-lisp
+    (use-package org-notmuch
+      :ensure org-plus-contrib
+      :after (org notmuch))
+    #+end_src
+
 ** Org drill (for learning new things)
 
    I use org-drill for drilling music theory.
@@ -1575,20 +1589,6 @@
    #+BEGIN_SRC emacs-lisp
    (setq org-attach-store-link-p t)
    #+END_SRC
-
-** Org-notmuch
-
-   I don't like using my email inbox as a todo list.  When I receive
-   an email I need to act on but /can't yet/ for some reason, I link to
-   it from my Org mode agenda and archive it.  When Org agenda prompts
-   me I can click on the link and immediately get to the mail in my
-   archive, and can reply to it from there.
-
-   #+begin_src emacs-lisp
-   (use-package org-notmuch
-     :ensure org-plus-contrib
-     :after (org notmuch))
-   #+end_src
 
 * Themes
 ** Load one theme at a time
