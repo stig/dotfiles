@@ -1389,7 +1389,6 @@
       :ensure org-plus-contrib
       :pin org
       :bind (("C-c l" . org-store-link)
-	     ("C-c a" . org-agenda)
 	     ("C-c c" . org-capture)
 	     ("C-x C-<return>" . org-insert-subheading)
 	     ("C-S-<return>" . org-insert-todo-subheading)
@@ -1421,31 +1420,36 @@
 
 ** Agenda
 
+   I use Org Agenda for keeping track of my TODOs.
+
+   I don't normally use properties, so I ignore most to help speed
+   up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]])
+
+   I configure TODO list and tag search to ignore future scheduled,
+   deadlined, and timestamped issues.  These will show in the Agenda
+   eventually anyway.
+
    #+BEGIN_SRC emacs-lisp
-     ;; Include Calendar/Diary information in Agenda
-     (setq org-agenda-include-diary t)
+     (use-package org-agenda
+       :ensure org-plus-contrib
+       :bind ("C-c a" . org-agenda)
+       :custom
+       (org-agenda-include-diary t)
+       (org-agenda-ignore-properties '(effort appt stats))
 
-     ;; I don't rely on many properties, so this should speed up my Agenda
-     ;; view, according to http://orgmode.org/worg/agenda-optimization.html
-     (setq org-agenda-ignore-properties '(effort appt stats))
+       (org-agenda-todo-ignore-scheduled 'future)
+       (org-agenda-todo-ignore-deadlines 'far)
+       (org-agenda-todo-ignore-timestamp 'future)
 
-     ;; I don't want to show these in the TODO list,
-     ;; because they'll show in the Agenda anyway.
-     (setq org-agenda-todo-ignore-scheduled 'future
-	   org-agenda-todo-ignore-deadlines 'far
-	   org-agenda-todo-ignore-timestamp 'future)
+       (org-agenda-tags-todo-honor-ignore-options t)
 
-     (setq org-agenda-skip-deadline-prewarning-if-scheduled t
-	   org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+       (org-agenda-skip-deadline-prewarning-if-scheduled t)
+       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
-     ;; Make tags-todo search ignore scheduled items too
-     (setq org-agenda-tags-todo-honor-ignore-options t)
+       (org-log-done 'time)
 
-     (setq org-log-done 'time)
-
-     (setq org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
-
-     (setq org-agenda-custom-commands
+       (org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
+       (org-agenda-custom-commands
 	   '(("d" "Day Agenda"
 	      ((agenda "" ((org-agenda-span 'day)))))
 	     ("S" "Someday"
