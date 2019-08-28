@@ -617,6 +617,16 @@
        :config
        (direnv-mode))
    #+end_src
+
+** Edit "Org-like" lists in non-Org buffers
+
+   #+begin_src emacs-lisp
+   (use-package orgalist
+     :pin gnu
+     :hook
+     (message-mode-hook . orgalist-mode))
+   #+end_src
+
 ** Editorconfig
 
    Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
@@ -1756,15 +1766,6 @@
    #+BEGIN_SRC emacs-lisp
    (setq org-attach-store-link-p t)
    #+END_SRC
-
-** Edit "Org-like" lists in non-Org buffers
-
-   #+begin_src emacs-lisp
-   (use-package orgalist
-     :pin gnu
-     :hook
-     (message-mode-hook . orgalist-mode))
-   #+end_src
 
 * Theme
 ** Load one theme at a time
