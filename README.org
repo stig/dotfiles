@@ -1408,8 +1408,13 @@
       (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
       (org-catch-invisible-edits 'smart)
       (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+      (org-export-backends '(html gfm jira latex))
       (org-hide-emphasis-markers t)
       (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+
+    ;; Install, but do not load.  They're loaded at export time.
+    (use-package ox-jira :pin melpa :no-require t)
+    (use-package ox-gfm :no-require t)
   #+END_SRC
 
 ** Agenda
@@ -1567,22 +1572,6 @@
        :ensure-system-package ("~/.nix-profile/lib/ditaa.jar" . ditaa)
        :custom
        (org-ditaa-jar-path (expand-file-name "~/.nix-profile/lib/ditaa.jar")))
-   #+END_SRC
-
-** Org Export
-
-   I hate writing JIRA markup, so I wrote a JIRA export backend for
-   Org mode. I also write in Org and export to GitHub. Regular GitHub
-   markup unfortunately doesn't properly ignore linebreaks, so the
-   regular markdown exporter is no use: I have to use the gfm
-   exporter, as it deletes linebreaks so the rendered paragraphs
-   re-flow properly on GitHub.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package ox-jira :pin melpa)
-     (use-package ox-gfm)
-     (require 'ox-latex)
-     (setq org-export-backends '(html gfm jira latex))
    #+END_SRC
 
 ** Blogging Support
