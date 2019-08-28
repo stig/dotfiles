@@ -1387,7 +1387,6 @@
   #+BEGIN_SRC emacs-lisp
     (use-package org
       :ensure org-plus-contrib
-      :pin org
       :bind (("C-c l" . org-store-link)
 	     ("C-x C-<return>" . org-insert-subheading)
 	     ("C-S-<return>" . org-insert-todo-subheading)
