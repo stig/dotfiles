@@ -46,7 +46,7 @@
    #+END_SRC
 
 * Configure package system & paths
-  
+
   I do these early because I want them to apply even if I mess up
   later parts of my =init.el=.
 
@@ -410,38 +410,6 @@
               ("s-p" . mc/mark-previous-like-this)))
    #+END_SRC
 
-** Projectile
-
-   I use Projectile to navigate my projects. Some of the things I like about
-   it are that it provides the following key bindings:
-
-   - =C-c p t= :: This switches from an implementation file to its test file,
-                  or vice versa. I use this extensively in Clojure mode. It
-                  might not make sense for all languages; YMMV.
-   - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
-   - =C-c p s s= :: Ag search for something in this project. If point is at a
-                    token, default to searching for that. (Mnemonic:
-                    "Projectile Silver Searcher".)
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :bind ("C-c p" . projectile-command-map)
-       :demand
-       :init
-       (setq projectile-completion-system 'ivy)
-       :config
-       (projectile-mode +1))
-
-
-     ;; Register project subtype used by "gilded rose" kata.
-     (projectile-register-project-type 'lein-spec '("project.clj" "spec")
-				       :compile "lein compile"
-				       :test "lein test"
-				       :test-suffix "_spec")
-
-     (use-package counsel-projectile)
-   #+END_SRC
-
 ** Running tests
 
    Add a convenient keybinding for running tests interactively.
@@ -542,17 +510,6 @@
        (interactive)
        (let ((fill-column (point-max)))
 	 (fill-region (region-beginning) (region-end) nil)))
-   #+end_src
-
-** Limiting the with of shr windows
-   
-   I mostly use shr for reading HTML mail.  I normally use a
-   fullscreen window, but I don't like reading HTML mails with lines
-   running all the way across.  Thus I prefer linebreaks roughly every
-   80 characters.
-
-   #+begin_src emacs-lisp
-   (setq shr-width 80)
    #+end_src
 
 * Configure minor modes
@@ -675,6 +632,38 @@
    #+begin_src emacs-lisp
    (use-package iedit :pin melpa)
    #+end_src
+
+** Projectile
+
+   I use Projectile to navigate my projects. Some of the things I like about
+   it are that it provides the following key bindings:
+
+   - =C-c p t= :: This switches from an implementation file to its test file,
+                  or vice versa. I use this extensively in Clojure mode. It
+                  might not make sense for all languages; YMMV.
+   - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
+   - =C-c p s s= :: Ag search for something in this project. If point is at a
+                    token, default to searching for that. (Mnemonic:
+                    "Projectile Silver Searcher".)
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :bind ("C-c p" . projectile-command-map)
+       :demand
+       :init
+       (setq projectile-completion-system 'ivy)
+       :config
+       (projectile-mode +1))
+
+
+     ;; Register project subtype used by "gilded rose" kata.
+     (projectile-register-project-type 'lein-spec '("project.clj" "spec")
+				       :compile "lein compile"
+				       :test "lein test"
+				       :test-suffix "_spec")
+
+     (use-package counsel-projectile)
+   #+END_SRC
 
 ** Save minibuffer history
 
@@ -1035,7 +1024,7 @@
        :pin melpa
        :bind (("M-<up>" . markdown-move-list-item-up)
 	      ("M-<down>" . markdown-move-list-item-down))
-       :custom 
+       :custom
        (markdown-asymmetric-header t))
    #+END_SRC
 ** Nix
@@ -1333,6 +1322,17 @@
        (setq org-plantuml-jar-path
 	     (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
    #+END_SRC
+
+** Simple HTML Renderer (HTML Email)
+
+   I mostly use shr for reading HTML mail.  I normally use a
+   fullscreen window, but I don't like reading HTML mails with lines
+   running all the way across.  Thus I prefer linebreaks roughly every
+   80 characters.
+
+   #+begin_src emacs-lisp
+   (setq shr-width 80)
+   #+end_src
 
 ** Spell Checking
 
@@ -1777,5 +1777,3 @@
 		 ("DEL" (sb/disable-all-themes))
 		 ("RET" nil "done" :color blue)))))
    #+END_SRC
-
-
