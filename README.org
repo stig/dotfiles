@@ -544,6 +544,17 @@
 	 (fill-region (region-beginning) (region-end) nil)))
    #+end_src
 
+** Limiting the with of shr windows
+   
+   I mostly use shr for reading HTML mail.  I normally use a
+   fullscreen window, but I don't like reading HTML mails with lines
+   running all the way across.  Thus I prefer linebreaks roughly every
+   80 characters.
+
+   #+begin_src emacs-lisp
+   (setq shr-width 80)
+   #+end_src
+
 * Configure minor modes
 ** Aggressive Indent
 
@@ -1094,127 +1105,96 @@
    (use-package yaml-mode)
    #+END_SRC
 
-* Email
+* Notmuch
 
-  Because I like to use Emacs for writing, I like to use it for email
-  too. I tried Gnus, but don't really read news so it felt a bit
-  overkill. I've been using [[http://www.djcbsoftware.nl/code/mu/][mu4e]] for a while, but I'm slightly
-  annoyed by some of its quirks (particularly interacting with Gmail,
-  which I have to use for work) so thought I'd try [[https://notmuchmail.org][notmuch]].
+  I like to use Emacs for /all/ writing, including email.  I don't want
+  a separate program to read and write emails, so it follows I must
+  /read/ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for this.  I find
+  it easier to configure than [[http://www.djcbsoftware.nl/code/mu/][mu4e]].
 
+  Notmuch works pretty well for me out of the box. Mainly I set up a
+  keybinding to quickly bring it up.  Its threading and MIME handling
+  appears a lot better than mu4e, from a cursory glance.
+
+  Notmuch's Emacs bindings are closely tied to the binary programs, so
+  they (strongly) recommend that you don't install Notmuch from ELPA.
   I use [[http://msmtp.sourceforge.net/][msmtp]] for sending email, and [[http://isync.sourceforge.net][mbsync]] for syncing IMAP messages
   between my local machine and upstream servers.
 
-** Download email with mbsync
+  I configure Notmuch to save a copy of outgoing mail into my sent
+  mail folder.
 
-   I use =mbsync= (from the isync suite) to sync mail from my IMAP
-   server to my local machine.
+  #+BEGIN_SRC emacs-lisp
+    (use-package notmuch
+      :ensure nil
+      :ensure-system-package (notmuch msmtp (mbsync . isync))
+      :hook
+      (notmuch-message-mode-hook . turn-off-auto-fill)
+      :bind (("C-x m" . sb/notmuch)
+	     ("M-]" . notmuch-cycle-notmuch-buffers))
+      :custom
+      (notmuch-hello-thousands-separator ",")
+      (notmuch-mua-cite-function (quote message-cite-original-without-signature))
+      (notmuch-fcc-dirs "sent +sent -unread -inbox")
 
-   #+begin_src emacs-lisp
-     (use-package mbsync
-       :ensure nil
-       :no-require t
-       :ensure-system-package (mbsync . isync))
-   #+end_src
+      :config
+      (defun sb/notmuch (arg)
+	"Launch notmuch. If ran with prefix arg, launch mbsync in the
+    background, and automatically refresh the current buffer when
+    done. With two prefix args, launch mbsync with `--all` rather
+    than just for inboxes."
+	(interactive "p")
+	(notmuch)
+	(if (> arg 1)
+	    (set-process-sentinel
+	     (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
+	     (lambda (proc state)
+	       (message nil) ;; clear minibuffer
+	       (notmuch-poll-and-refresh-this-buffer))))))
+  #+END_SRC
 
-*** mbsync configuration
+** Notmuch Hooks
 
-    #+BEGIN_SRC conf :tangle ~/.mbsyncrc
-      IMAPAccount gandi
-      Host mail.gandi.net
-      User stig@brautaset.org
-      SSLType IMAPS
-      AuthMechs LOGIN
-      PassCmd "security find-generic-password -s mbsync-gandi-password -w"
-      # To rotate:
-      # > security delete-generic-password -s mbsync-gandi-password
-      # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
+   Remove the =new= tag from any messages just before refreshing.  Do
+   this in a =pre-hook= so we can use the new =new= tag to optimise
+   further tagging in the =post-hook= below.
 
-      IMAPStore remote
-      Account gandi
+   #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+     notmuch tag -new -- tag:new
+     notmuch search --output files tag:draft and tag:deleted | xargs rm
+   #+END_SRC
 
-      MaildirStore local
-      Path ~/Mail/
-      Inbox ~/Mail/INBOX
-      Trash trash
+   Notmuch assigns the =new= tag when it first sees a message, so we
+   can use it to limit the search space for further tagging.
 
-      Channel inbox
-      Master :remote:
-      Slave :local:
-      Create Slave
-      SyncState *
+   #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+     notmuch tag --batch <<EOF
+     # Mute new messages to muted threads
+     +muted -- thread:{tag:muted} and tag:new
 
-      Channel sent
-      Master :remote:Sent
-      Slave :local:sent
-      Create Slave
-      SyncState *
+     # Tag previously unseen messages
+     +sent -- path:/sent/ and tag:new
+     -inbox -- path:/archive/ and tag:new
 
-      Channel org-mode
-      Master :remote:org-mode
-      Slave :local:org-mode
-      Create Slave
-      SyncState *
-      MaxMessages 500
-      ExpireUnread yes
-      Expunge Both
+     # Add specific tags for mailing lists, and remove from inbox
+     +lists +org-mode -inbox -- path:/org-mode/ and tag:new
+     +lists +lilypond -inbox -- path:/lilypond/ and tag:new
+     +lists +clojure -inbox -- path:/clojure/ and tag:new
 
-      Channel lilypond
-      Master :remote:lilypond
-      Slave :local:lilypond
-      Create Slave
-      SyncState *
-      MaxMessages 500
-      ExpireUnread yes
-      Expunge Both
+     # V. low volume lists gets to stay in inbox
+     +lists +tuls -- path:/tuls/ and tag:new
 
-      Channel clojure
-      Master :remote:clojure
-      Slave :local:clojure
-      Create Slave
-      SyncState *
-      MaxMessages 500
-      ExpireUnread yes
-      Expunge Both
+     +lobsters -- tag:new and from:lobste.rs
+     EOF
+   #+END_SRC
 
-      Channel tuls
-      Master :remote:tuls
-      Slave :local:tuls
-      Create Slave
-      SyncState *
-      MaxMessages 500
-      Expunge Both
+** Configuring NotMuch before first use
 
-      Channel archive
-      Master :remote:archive
-      Slave :local:archive
-      Create Slave
-      SyncState *
-    #+END_SRC
-
-*** Invoke mbsync
-
-    I used to run this periodically, but I've noticed I usually run
-    it interactively just before checking mail, so let's just go with
-    that. It's not abnormal for this to take 30 seconds, but usually
-    it's less.
-
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/mbsync (&rest group)
-	(interactive)
-	(let ((group (or (and (car group) group) '("--all")))
-	      (command `("mbsync" "--verbose" "--quiet" ,@group)))
-	  (message "Starting %s.." (mapconcat 'identity command " "))
-	  (apply 'start-process "mbsync" "*mbsync*" command)))
-    #+END_SRC
-
-** Reading mail with NotMuch
-
-   After installing NotMuch I ran =notmuch setup= to configure it.
-   Then I ran =notmuch new= to index my existing mail. (This was
-   already in =~/Maildir/= since I've been using mu4e before.) You can
-   also set config values independently. That is my preference now,
-   as I can do everything from this file.
+   After installing NotMuch I ran =notmuch setup= to configure it.  Then
+   I ran =notmuch new= to index my existing mail.  (This was already in
+   =~/Maildir/= since I've been using mu4e before.)  You can also set
+   config values independently.  That is my preference now, as I can
+   do everything from this file.
 
    #+begin_src sh :results silent
      notmuch config set database.path ~/Mail
@@ -1237,143 +1217,113 @@
    database.path=/Users/stig/Mail
    user.name=Stig Brautaset
    user.primary_email=stig@brautaset.org
-   user.other_email=stig.brautaset@icloud.com
-   new.tags=new;unread;inbox
-   new.ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
-   search.exclude_tags=deleted;spam;draft;muted
+   user.other_email=stig.brautaset@icloud.com;
+   new.tags=new;unread;inbox;
+   new.ignore=
+   search.exclude_tags=deleted;spam;muted;
    maildir.synchronize_flags=true
    built_with.compact=true
    built_with.field_processor=true
    built_with.retry_lock=true
    #+end_example
 
-*** Configuring Notmuch inside Emacs
+** Configure mbsync to download email
 
-    Installing Notmuch (with brew/nix/apt/yum) should also install
-    the =notmuch.el= Emacs package into somewhere Emacs can find it.
-    (If not you might need to add its directory to your ~load-path~.) I
-    then launched it with =M-x notmuch=.
+   I use =mbsync= (from the isync suite) to sync mail from my IMAP
+   server to my local machine.
 
-    With that out of the way Notmuch works pretty well for me out of
-    the box. Mainly I set up a keybinding to quickly bring it up.
-    Its threading and MIME handling appears a lot better than mu4e,
-    from a cursory glance.
+   #+BEGIN_SRC conf :tangle ~/.mbsyncrc
+     IMAPAccount gandi
+     Host mail.gandi.net
+     User stig@brautaset.org
+     SSLType IMAPS
+     AuthMechs LOGIN
+     PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+     # To rotate:
+     # > security delete-generic-password -s mbsync-gandi-password
+     # > security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-    I don't like using my email inbox as a todo list, so when I
-    receive an email I need to act on but /can't yet/ for some reason,
-    I link to it from my Org mode agenda and archive it. When Org
-    agenda prompts me I can click on the link and immediately get to
-    the mail in my archive, and can reply to it from there.
+     IMAPStore remote
+     Account gandi
 
-    NotMuch doesn't have built-in support for multiple profiles.
-    (Mu4e does, but configuring it was difficult, IMO.) I tried
-    using "gnus-alias" with Notmuch, but couldn't get it to work
-    either. (I'm perhaps just not smart enough to deal with multiple
-    identities!) Thus I'm going with a simpler scheme now: reply to
-    the address they write to, and base my signature on the from
-    address.
+     MaildirStore local
+     Path ~/Mail/
+     Inbox ~/Mail/INBOX
+     Trash trash
 
-    For personal mail I save a copy into my sent mail folder. For
-    work I rely on Gmail to automatically copy outgoing mail to my
-    sent folder.
+     Channel inbox
+     Master :remote:
+     Slave :local:
+     Create Slave
+     SyncState *
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package notmuch
-	:ensure nil
-	:ensure-system-package notmuch
-	:hook
-	(notmuch-message-mode-hook . turn-off-auto-fill)
-	:bind (("C-x m" . sb/notmuch)
-	       ("M-]" . notmuch-cycle-notmuch-buffers))
-	:custom
-	(notmuch-hello-thousands-separator ",")
-	(notmuch-mua-cite-function (quote message-cite-original-without-signature))
-	(notmuch-fcc-dirs "sent +sent -unread -inbox")
-	:config
-	(defun sb/notmuch (arg)
-	  "Launch notmuch. If ran with prefix arg, launch mbsync in the
-      background, and automatically refresh the current buffer when
-      done. With two prefix args, launch mbsync with `--all` rather
-      than just for inboxes."
-	  (interactive "p")
-	  (notmuch)
-	  (if (> arg 1)
-	      (set-process-sentinel
-	       (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
-	       (lambda (proc state)
-		 (message nil) ;; clear minibuffer
-		 (notmuch-poll-and-refresh-this-buffer))))))
-    #+END_SRC
+     Channel sent
+     Master :remote:Sent
+     Slave :local:sent
+     Create Slave
+     SyncState *
 
-*** Remove "new" tag & obsolete drafts
+     Channel org-mode
+     Master :remote:org-mode
+     Slave :local:org-mode
+     Create Slave
+     SyncState *
+     MaxMessages 500
+     ExpireUnread yes
+     Expunge Both
 
-    Remove the =new= tag from any messages just before refreshing.  Do
-    this in a =pre-hook= so we can use the new =new= tag to optimise
-    further tagging in the =post-hook= below.
+     Channel lilypond
+     Master :remote:lilypond
+     Slave :local:lilypond
+     Create Slave
+     SyncState *
+     MaxMessages 500
+     ExpireUnread yes
+     Expunge Both
 
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-      notmuch tag -new -- tag:new
-      notmuch search --output files tag:draft and tag:deleted | xargs rm
-    #+END_SRC
+     Channel clojure
+     Master :remote:clojure
+     Slave :local:clojure
+     Create Slave
+     SyncState *
+     MaxMessages 500
+     ExpireUnread yes
+     Expunge Both
 
-*** Tag new messages
+     Channel tuls
+     Master :remote:tuls
+     Slave :local:tuls
+     Create Slave
+     SyncState *
+     MaxMessages 500
+     Expunge Both
 
-    Notmuch assigns the =new= tag when it first sees a message, so we
-    can use it to limit the search space for further tagging.
+     Channel archive
+     Master :remote:archive
+     Slave :local:archive
+     Create Slave
+     SyncState *
+   #+END_SRC
 
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-      notmuch tag --batch <<EOF
-      # Mute new messages to muted threads
-      +muted -- thread:{tag:muted} and tag:new
-
-      # Tag previously unseen messages
-      +sent -- path:/sent/ and tag:new
-      -inbox -- path:/archive/ and tag:new
-
-      # Add specific tags for mailing lists, and remove from inbox
-      +lists +org-mode -inbox -- path:/org-mode/ and tag:new
-      +lists +lilypond -inbox -- path:/lilypond/ and tag:new
-      +lists +clojure -inbox -- path:/clojure/ and tag:new
-
-      # V. low volume lists gets to stay in inbox
-      +lists +tuls -- path:/tuls/ and tag:new
-
-      +lobsters -- tag:new and from:lobste.rs
-      EOF
-    #+END_SRC
-
-*** Reading HTML mail
-
-    I normally use a fullscreen window, but I don't like reading
-    HTML mails with lines running all the way across. Thus I prefer
-    linebreaks roughly every 80 characters.
-
-    #+begin_src emacs-lisp
-    (setq shr-width 80)
-    #+end_src
-
-** Compose Emails with Org mode
-
-   Very occasionally I want to create HTML mail. (For tables, for
-   example.) I then write my message using Org mode syntax and use
-   org-mime-htmlize.
+   I don't like to leave Emacs.  Thus I create a function to call
+   mbsync as an async shell process.  I run /this/ from the function I
+   use to launch Notmuch.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package org-mime
-       :bind (:map message-mode-map
-		   ("C-c h" . org-mime-htmlize))
-       :init
-       (setq org-mime-preserve-breaks nil))
+     (defun sb/mbsync (&rest group)
+       (interactive)
+       (let ((group (or (and (car group) group) '("--all")))
+	     (command `("mbsync" "--verbose" "--quiet" ,@group)))
+	 (message "Starting %s.." (mapconcat 'identity command " "))
+	 (apply 'start-process "mbsync" "*mbsync*" command)))
    #+END_SRC
 
 ** Sending mail with MSMTP
 
-   MSMTP's configuration is really simple, and it will detect the account to
-   use from the "from" address. Let's go!
-
-   MSMTP obtains passwords from the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
-   section in the msmtp documentation for details.
-
+   MSMTP's configuration is really simple, and it will detect the
+   account to use from the "from" address.  Passwords are stored in
+   the system Keychain.  See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]] section in the msmtp
+   documentation for details.
 
    : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
 
@@ -1390,26 +1340,32 @@
      user stig@brautaset.org
    #+END_SRC
 
-   Finally we have to tell Emacs to use msmtp to send mail:
+   Finally we have to tell Emacs to use msmtp to send mail.  (And to
+   kill the message buffer on exit.)
 
    #+BEGIN_SRC emacs-lisp
-     (use-package msmtp
-       :ensure nil
-       :no-require t
-       :ensure-system-package msmtp)
-
      (setq message-send-mail-function 'message-send-mail-with-sendmail
-           sendmail-program "msmtp"
+	   sendmail-program "msmtp"
 	   message-sendmail-envelope-from 'header
 	   mail-envelope-from 'header
 	   mail-specify-envelope-from t)
+
+     (setq message-kill-buffer-on-exit t)
    #+END_SRC
 
-*** Don't keep buffer for sent messages
+** Compose Emails with Org mode
 
-    #+BEGIN_SRC emacs-lisp
-    (setq message-kill-buffer-on-exit t)
-    #+END_SRC
+   Very occasionally I want to create HTML mail. (For tables, for
+   example.) I then write my message using Org mode syntax and use
+   org-mime-htmlize.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-mime
+       :bind (:map message-mode-map
+		   ("C-c h" . org-mime-htmlize))
+       :custom
+       (org-mime-preserve-breaks nil))
+   #+END_SRC
 
 * Org mode
 
@@ -1465,14 +1421,7 @@
 
       (setq org-hide-emphasis-markers t)
 
-      (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
-      :config
-      ;; Allow linking to NotMuch messages from Org mode
-      (require 'org-notmuch))
-	
-
-
+      (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
   #+END_SRC
 
 ** Agenda
@@ -1766,6 +1715,20 @@
    #+BEGIN_SRC emacs-lisp
    (setq org-attach-store-link-p t)
    #+END_SRC
+
+** Org-notmuch
+
+   I don't like using my email inbox as a todo list.  When I receive
+   an email I need to act on but /can't yet/ for some reason, I link to
+   it from my Org mode agenda and archive it.  When Org agenda prompts
+   me I can click on the link and immediately get to the mail in my
+   archive, and can reply to it from there.
+
+   #+begin_src emacs-lisp
+   (use-package org-notmuch
+     :ensure org-plus-contrib
+     :after (org notmuch))
+   #+end_src
 
 * Theme
 ** Load one theme at a time
