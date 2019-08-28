@@ -254,6 +254,18 @@
      (setq ns-function-modifier 'hyper)
    #+END_SRC
 
+** Put =Customize= settings in a separate file
+
+   I prefer to code my configuration, but sometimes Custom settings are good
+   enough. I prefer that such settings live in a separate file though. Load
+   that file if it exists.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+     (if (file-exists-p custom-file)
+         (load custom-file))
+   #+END_SRC
+
 ** Save my place in each file
 
    It's nice if Emacs knows where I was last time I opened a file.
@@ -428,18 +440,6 @@
 				       :test-suffix "_spec")
 
      (use-package counsel-projectile)
-   #+END_SRC
-
-** Put =Customize= settings in a separate file
-
-   I prefer to code my configuration, but sometimes Custom settings are good
-   enough. I prefer that such settings live in a separate file though. Load
-   that file if it exists.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-     (if (file-exists-p custom-file)
-         (load custom-file))
    #+END_SRC
 
 ** Running tests
