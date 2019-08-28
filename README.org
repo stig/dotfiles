@@ -1548,26 +1548,12 @@
 
 ** Babel
 
-   Some initialisation settings for Org Babel is in order.
-   I don't want export to execute babel stuff: I like to execute them manually
-   before exporting. This is a security feature, as sometimes I have documents
-   that log in to servers and does things.
+   Org Babel is magical: execute code from many different languages in
+   the same file, and capture the output!  I list the languages I want
+   to support.
 
-   Ditaa requires a path to the installed Jar; this recently stopped working
-   because I had upgraded Ditaa, and the Jar has a version number in its name.
-   Now we look at the file system and grab the highest-versioned Jar available.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package ob-ditaa
-       :ensure org-plus-contrib
-       :ensure-system-package ("~/.nix-profile/lib/ditaa.jar" . ditaa)
-       :init
-       (setq org-ditaa-jar-path
-	     (expand-file-name "~/.nix-profile/lib/ditaa.jar")))
-   #+END_SRC
-
-   We have to specify the list of languages we want to support so Orgmode knows
-   to look out for them:
+   Some Babel backends (like ditaa) require specific configuration.  I
+   set that here too.
 
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
@@ -1578,6 +1564,12 @@
 	(dot . t)
 	(sql . t)
 	(shell . t)))
+
+     (use-package ob-ditaa
+       :ensure org-plus-contrib
+       :ensure-system-package ("~/.nix-profile/lib/ditaa.jar" . ditaa)
+       :custom
+       (org-ditaa-jar-path (expand-file-name "~/.nix-profile/lib/ditaa.jar")))
    #+END_SRC
 
 ** Org Export
