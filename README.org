@@ -1590,7 +1590,7 @@
      :after (org notmuch))
    #+end_src
 
-* Theme
+* Themes
 ** Load one theme at a time
 
    For years I thought that theme switching in Emacs was broken---until
