@@ -1394,7 +1394,6 @@
       :bind (("C-c l" . org-store-link)
 	     ("C-c a" . org-agenda)
 	     ("C-c c" . org-capture)
-	     ("C-c b" . org-iswitchb)
 	     ("C-x C-<return>" . org-insert-subheading)
 	     ("C-S-<return>" . org-insert-todo-subheading)
 	     :map org-mode-map
