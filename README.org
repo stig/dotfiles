@@ -1405,9 +1405,7 @@
       ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
       (setq org-log-into-drawer t)
 
-      ;; Sometimes I accidentally edit non-visible parts of org document. This
-      ;; helps, apparently.
-      (setq org-catch-invisible-edits 'show-and-error)
+      (setq org-catch-invisible-edits 'smart)
 
       ;; If running interactively, I want export to copy to the kill-ring
       (setq org-export-copy-to-kill-ring 'if-interactive)
