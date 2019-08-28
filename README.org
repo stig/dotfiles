@@ -754,6 +754,62 @@
    #+END_SRC
 
 * Configure major modes
+** Ag (The Silver Searcher)
+
+   I use =ag= for searching a lot in Emacs. Its "writable grep"
+   companion mode is pretty close to magic. When in a buffer showing
+   ag results, try hitting =C-c C-p=--this lets you /edit the results of
+   the search right from the ag results buffer!/ Just hit =C-x C-s= to
+   save the results.
+
+   If you hit =C-c C-p= while already in writable grep mode you can
+   delete the entire matched line by hitting =C-c C-d=.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package ag
+       :pin melpa
+       :ensure-system-package (ag . silver-searcher)
+       :custom
+       (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
+       (ag-ignore-list (quote (".git"))))
+
+     (use-package wgrep :pin melpa)
+     (use-package wgrep-ag
+       :pin melpa
+       :hook
+       (ag-mode-hook . wgrep-ag-setup))
+
+     ;; This fixes the last group not being editable until it's fixed
+     ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
+     (eval-after-load "wgrep-ag"
+       '(defun wgrep-ag-prepare-header/footer ()
+	  (save-excursion
+	    (goto-char (point-min))
+	    ;; Look for the first useful result line.
+	    (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
+					   "\\|"
+					   wgrep-ag-ungrouped-result-regexp))
+		(add-text-properties (point-min) (line-beginning-position)
+				     '(read-only t wgrep-header t))
+	      ;; No results in this buffer, let's mark the whole thing as
+	      ;; header.
+	      (add-text-properties (point-min) (point-max)
+				   '(read-only t wgrep-header t)))
+
+	    ;; OK, header dealt with. Now let's try find the footer.
+	    (goto-char (point-max))
+	    (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
+	    ;; Point is now at the beginning of the result nearest the end
+	    ;; of the buffer, AKA the last result.  Move to the start of
+	    ;; the line after the last result, and mark everything from
+	    ;; that line forward as wgrep-footer.  If we can't move to the
+	    ;; line after the last line then there apparently is no
+	    ;; footer.
+	    (when (zerop (forward-line 1))
+	      (add-text-properties (point) (point-max)
+				   '(read-only t wgrep-footer t))))))
+   #+END_SRC
+
 ** Clojure
 
    #+BEGIN_SRC emacs-lisp
@@ -980,6 +1036,18 @@
      (use-package nix-sandbox :pin melpa)
    #+END_SRC
 
+** Org drill (for learning new things)
+
+   I use org-drill for drilling music theory.
+
+   #+begin_src emacs-lisp
+     (use-package org-drill
+       :pin melpa
+       :init
+       (setq org-drill-add-random-noise-to-intervals-p t)
+       (setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+   #+end_src
+
 ** Plant UML Mode
 
    I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
@@ -993,15 +1061,7 @@
 	     (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
    #+END_SRC
 
-** YAML
-
-   CircleCI and CloudFormation loves YAML.
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package yaml-mode)
-   #+END_SRC
-
-** Configure Spell Checking
+** Spell Checking
 
    I use aspell, with British English dictionary.
 
@@ -1026,73 +1086,13 @@
    data-dir /Users/stig/.nix-profile/lib/aspell
    #+end_src
 
-** Ag (The Silver Searcher)
+** YAML
 
-   I use =ag= for searching a lot in Emacs. Its "writable grep"
-   companion mode is pretty close to magic. When in a buffer showing
-   ag results, try hitting =C-c C-p=--this lets you /edit the results of
-   the search right from the ag results buffer!/ Just hit =C-x C-s= to
-   save the results.
-
-   If you hit =C-c C-p= while already in writable grep mode you can
-   delete the entire matched line by hitting =C-c C-d=.
+   CircleCI and CloudFormation loves YAML.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package ag
-       :pin melpa
-       :ensure-system-package (ag . silver-searcher)
-       :custom
-       (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
-       (ag-ignore-list (quote (".git"))))
-
-     (use-package wgrep :pin melpa)
-     (use-package wgrep-ag
-       :pin melpa
-       :hook
-       (ag-mode-hook . wgrep-ag-setup))
-
-     ;; This fixes the last group not being editable until it's fixed
-     ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
-     (eval-after-load "wgrep-ag"
-       '(defun wgrep-ag-prepare-header/footer ()
-	  (save-excursion
-	    (goto-char (point-min))
-	    ;; Look for the first useful result line.
-	    (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
-					   "\\|"
-					   wgrep-ag-ungrouped-result-regexp))
-		(add-text-properties (point-min) (line-beginning-position)
-				     '(read-only t wgrep-header t))
-	      ;; No results in this buffer, let's mark the whole thing as
-	      ;; header.
-	      (add-text-properties (point-min) (point-max)
-				   '(read-only t wgrep-header t)))
-
-	    ;; OK, header dealt with. Now let's try find the footer.
-	    (goto-char (point-max))
-	    (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
-	    ;; Point is now at the beginning of the result nearest the end
-	    ;; of the buffer, AKA the last result.  Move to the start of
-	    ;; the line after the last result, and mark everything from
-	    ;; that line forward as wgrep-footer.  If we can't move to the
-	    ;; line after the last line then there apparently is no
-	    ;; footer.
-	    (when (zerop (forward-line 1))
-	      (add-text-properties (point) (point-max)
-				   '(read-only t wgrep-footer t))))))
+   (use-package yaml-mode)
    #+END_SRC
-
-** Drilling
-
-   I use org-drill for drilling music theory.
-
-   #+begin_src emacs-lisp
-     (use-package org-drill
-       :pin melpa
-       :init
-       (setq org-drill-add-random-noise-to-intervals-p t)
-       (setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
-   #+end_src
 
 * Email
 
