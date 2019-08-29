@@ -310,28 +310,6 @@
 		       (join-line -1)))
    #+END_SRC
 
-** Blog server
-
-   While noodling around with my blog locally I publish to
-   =~/public_html= and use a simple Python server to host it.
-   Previously I launched it in an Eshell buffer, but it's nicer to
-   run it as an asynchronous command tied to a buffer.
-
-   #+begin_src emacs-lisp
-     (use-package python3
-       :no-require t
-       :ensure nil
-       :ensure-system-package (python3 . python3-3.7.4))
-
-     (defun sb/blog-server ()
-       (interactive)
-       (start-process "Blog Server" "*blog server*"
-		      "python3"
-		      "-m" "http.server"
-		      "--directory" (expand-file-name "~/public_html/"))
-       (message "Blog Server started"))
-   #+end_src
-
 ** Diary (Calendar) Functions
 
    Prefer YMD to the /crazy/ american MDY order.
@@ -1747,3 +1725,25 @@
 	       (get-buffer-window buffer-name)))
 	  (message "No drafts could be found!"))))
   #+END_SRC
+
+** Blog server
+
+   While noodling around with my blog locally I publish to
+   =~/public_html= and use a simple Python server to host it.
+   Previously I launched it in an Eshell buffer, but it's nicer to
+   run it as an asynchronous command tied to a buffer.
+
+   #+begin_src emacs-lisp
+     (use-package python3
+       :no-require t
+       :ensure nil
+       :ensure-system-package (python3 . python3-3.7.4))
+
+     (defun sb/blog-server ()
+       (interactive)
+       (start-process "Blog Server" "*blog server*"
+		      "python3"
+		      "-m" "http.server"
+		      "--directory" (expand-file-name "~/public_html/"))
+       (message "Blog Server started"))
+   #+end_src
