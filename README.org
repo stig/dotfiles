@@ -171,18 +171,13 @@
 * Configure the basics (affecting all modes etc)
 ** Clipboard
 
-   These settings improve pasting behaviour with programs outside Emacs.
-
-   Save clipboard text into kill ring before replacing them.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq save-interprogram-paste-before-kill t)
-   #+END_SRC
-
-   Copying ("yanking") with the mouse copies at point, rather than where you
+   These settings improve pasting behaviour with programs outside
+   Emacs.  Save clipboard text into kill ring before replacing them.
+   Copying with the mouse copies at point, rather than where you
    click.
 
    #+BEGIN_SRC emacs-lisp
+     (setq save-interprogram-paste-before-kill t)
      (setq mouse-yank-at-point t)
    #+END_SRC
 
