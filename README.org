@@ -166,11 +166,10 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package exec-path-from-shell
-	:init
-	(setq exec-path-from-shell-variables
-	      '("PATH" "MANPATH"
-		"NIX_PATH" "NIX_SSL_CERT_FILE"
-		"LDFLAGS" "CPPFLAGS"))
+	:custom
+	(exec-path-from-shell-variables '("PATH" "MANPATH"
+					  "NIX_PATH" "NIX_SSL_CERT_FILE"
+					  "LDFLAGS" "CPPFLAGS"))
 	:config
 	(exec-path-from-shell-initialize))
     #+END_SRC
