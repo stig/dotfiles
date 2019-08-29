@@ -11,10 +11,17 @@
   this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
   hitting =C-c C-v C-t=.
 
-  I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].  I use [[https://github.com/jwiegley/use-package][use-package]] to
-  install & configure modules.  I install system dependencies
-  (e.g. =notmuch=, =the-silver-searcher= et. al.) using =use-package='s
-  [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension.
+* Installing
+
+  I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
+
+  I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
+  et. al.) using [[https://nixos.org/nix/][Nix]]. (Via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
+  extension.)  How I install Nix:
+
+  #+begin_src sh
+    curl https://nixos.org/nix/install | sh
+  #+end_src
 
 * Early Init (turn off mouse interface)
 
