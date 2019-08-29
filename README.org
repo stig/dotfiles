@@ -1484,50 +1484,35 @@
        :custom
        (org-default-notes-file "~/org/inbox.org")
        (org-capture-templates
-	'(("t" "TODOs")
-	  ("tn" "Todo Right Now (clock in!)" entry (file "")
-	   "* NEXT %?\n\n  %i" :clock-in t :clock-keep t)
-	  ("tt" "Plain TODO entry (with initial content if marked)" entry (file "")
-	   "* TODO %?\n\n  %i")
-	  ("tl" "TODO entry with link" entry (file "")
-	   "* TODO %?\n\n  %a\n\n  %i")
-	  ("tr" "Process email" entry (file "")
-	   "* TODO %:subject\n  SCHEDULED: %^t\n  %a\n\n  %?")
-	  ("te" "To Expense" entry (file "")
-	   "* TODO %:subject  :EXPENSE:\n  SCHEDULED: %^t\n\n  %a\n")
-	  ("tp" "New Project" entry (file "")
-	   "* PROJ %^{Project Name}\n  :LOGBOOK:\n  - Added: %U\n  :END:")
-	  ("tT" "Trip" entry (file "")
-	   (file "templates/trip.org") :empty-lines 1)
+	'(("t" "New TODO" entry (file "")
+	   (file "templates/todo.org"))
 
-	  ("l" "Log Learning" entry (file+datetree "learning.org")
-	   "* %^{Title} %^g\n  %?")
+	  ("p" "New Project" entry (file "")
+	   (file "templates/todo.org"))
 
-	  ("n" "Note" entry (file+datetree "notes.org")
-	   "* %^{Subject} %^g\n\n  %?"
-	   :empty-lines 1
-	   :clock-in t)
+	  ("T" "New Trip" entry (file "")
+	   (file "templates/trip.org"))
 
-	  ("m" "Meter Readings")
-	  ("mg" "Gas Meter" table-line (file "notes/gas-consumption.org")
+	  ("l" "New activity log entry (for reporting)" entry (file+olp+datetree "log.org")
+	   "* %^{What did you do?}\n\n %?" :tree-type 'week)
+     
+	  ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
 	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.7}"
 	   :table-line-pos "II-1")
-	  ("me" "Electricity Meter" table-line (file "notes/electricity-consumption.org")
+
+	  ("e" "New Electricity Meter Reading" table-line (file "notes/electricity-consumption.org")
 	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}"
 	   :table-line-pos "II-1")
 
-	  ("b" "Blog Post" plain
-	   (file capture-blog-post-file)
+	  ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
 	   (file "templates/blog-post.org"))
 
-	  ("r" "GTD Review" entry (file+datetree "GTDReview.org")
-	   (file "templates/gtd-review.org")
-	   :empty-lines 1
-	   :jump-to-captured t)))
+	  ("r" "New GTD Review" entry (file+olp+datetree "GTDReview.org")
+	   (file "templates/gtd-review.org"))))
 
        :config
-       (defun capture-blog-post-file ()
-	 (let* ((title (read-string "Slug: "))
+       (defun sb/capture-blog-post-file ()
+	 (let* ((title (read-string "Title: "))
 		(slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
 	   (expand-file-name
 	    (format "~/blog/articles/%s/%s.org"
