@@ -543,9 +543,8 @@
 
    #+BEGIN_SRC emacs-lisp
    (use-package company
-     :init
-     ;; https://emacs.stackexchange.com/a/10838
-     (setq company-dabbrev-downcase nil)
+     :custom
+     (company-dabbrev-downcase nil "See https://emacs.stackexchange.com/a/10838")
      :config
      (global-company-mode))
    #+END_SRC
@@ -601,8 +600,8 @@
      (use-package whitespace
        :ensure nil
        :bind ("C-c w" . whitespace-cleanup)
-       :init
-       (setq whitespace-style '(face empty tabs trailing))
+       :custom
+       (whitespace-style '(face empty tabs trailing))
        :config
        (global-whitespace-mode t))
    #+END_SRC
@@ -633,8 +632,8 @@
      (use-package projectile
        :bind ("C-c p" . projectile-command-map)
        :demand
-       :init
-       (setq projectile-completion-system 'ivy)
+       :custom
+       (projectile-completion-system 'ivy)
        :config
        (projectile-mode +1))
 
@@ -1302,9 +1301,9 @@
    #+begin_src emacs-lisp
      (use-package org-drill
        :pin melpa
-       :init
-       (setq org-drill-add-random-noise-to-intervals-p t)
-       (setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+       :custom
+       (org-drill-add-random-noise-to-intervals-p t)
+       (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
    #+end_src
 
 ** Plant UML Mode
@@ -1315,9 +1314,8 @@
      (use-package plantuml-mode
        :ensure-system-package plantuml
        :mode "\\.puml\\'"
-       :init
-       (setq org-plantuml-jar-path
-	     (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
+       :custom
+       (org-plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
    #+END_SRC
 
 ** Simple HTML Renderer (HTML Email)
@@ -1342,9 +1340,9 @@
 			       ("~/.nix-profile/lib/aspell/british.alias" . aspell-dict-en)
 			       ("~/.nix-profile/lib/aspell/en-computers.rws" . aspell-dict-en-computers)
 			       ("~/.nix-profile/lib/aspell/en_GB-science.rws" . aspell-dict-en-science))
-       :init
-       (setq ispell-dictionary "british"
-	     ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
+       :custom
+       (ispell-dictionary "british")
+       (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
    #+END_SRC
 
    Configure aspell and let it find dictionaries:
