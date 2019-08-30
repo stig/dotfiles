@@ -1073,26 +1073,6 @@
       notmuch config set search.exclude_tags 'deleted;spam;muted'
     #+end_src
 
-    We can now read the config back in, to verify our change.
-
-    #+BEGIN_SRC sh :results output replace :exports results :tangle no
-      notmuch config list
-    #+END_SRC
-
-    #+RESULTS:
-    #+begin_example
-    database.path=/Users/stig/Mail
-    user.name=Stig Brautaset
-    user.primary_email=stig@brautaset.org
-    new.tags=new;unread;inbox;
-    new.ignore=
-    search.exclude_tags=deleted;spam;muted;
-    maildir.synchronize_flags=true
-    built_with.compact=true
-    built_with.field_processor=true
-    built_with.retry_lock=true
-    #+end_example
-
 *** Write =pre-new= and =post-new= hook scripts
 
     Remove the =new= tag from any messages just before refreshing.  Do
