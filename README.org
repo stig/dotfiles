@@ -1722,8 +1722,6 @@
 
    While noodling around with my blog locally I publish to
    =~/public_html= and use a simple Python server to host it.
-   Previously I launched it in an Eshell buffer, but it's nicer to
-   run it as an asynchronous command tied to a buffer.
 
    #+begin_src emacs-lisp
      (use-package python3
