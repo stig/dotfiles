@@ -1058,11 +1058,10 @@
 
 *** Configuring NotMuch before first use
 
-    After installing NotMuch I ran =notmuch setup= to configure it.  Then
-    I ran =notmuch new= to index my existing mail.  (This was already in
-    =~/Maildir/= since I've been using mu4e before.)  You can also set
-    config values independently.  That is my preference now, as I can
-    do everything from this file.
+    After installing NotMuch I ran =notmuch setup= to create an initial
+    configuration.  After that you can set config values
+    independently.  That is my preference now, as I can do everything
+    from this file.
 
     #+begin_src sh :results silent
       notmuch config set database.path ~/Mail
