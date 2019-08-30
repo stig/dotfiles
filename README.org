@@ -1068,7 +1068,6 @@
       notmuch config set database.path ~/Mail
       notmuch config set user.name "Stig Brautaset"
       notmuch config set user.primary_email "stig@brautaset.org"
-      notmuch config set user.other_email "stig.brautaset@icloud.com"
       notmuch config set new.tags 'new;unread;inbox'
       notmuch config set new.ignore '.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db'
       notmuch config set search.exclude_tags 'deleted;spam;muted'
@@ -1077,7 +1076,7 @@
     We can now read the config back in, to verify our change.
 
     #+BEGIN_SRC sh :results output replace :exports results :tangle no
-    notmuch config list
+      notmuch config list
     #+END_SRC
 
     #+RESULTS:
@@ -1085,7 +1084,6 @@
     database.path=/Users/stig/Mail
     user.name=Stig Brautaset
     user.primary_email=stig@brautaset.org
-    user.other_email=stig.brautaset@icloud.com;
     new.tags=new;unread;inbox;
     new.ignore=
     search.exclude_tags=deleted;spam;muted;
