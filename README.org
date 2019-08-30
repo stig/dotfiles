@@ -891,16 +891,6 @@
        :bind ("C-c C-p" . graphviz-dot-preview))
    #+END_SRC
 
-** IRC
-
-   But /of course/ Emacs has a built-in IRC client. In fact it has two! But I
-   digress. Let's use the oldest one, and configure it slightly.
-
-   #+BEGIN_SRC emacs-lisp
-   (setq rcirc-default-nick "stigbra")
-   (setq rcirc-default-full-name "Stig Brautaset")
-   #+END_SRC
-
 ** LilyPond
 
    With Nix I am not able to install LilyPond, but I can install it
