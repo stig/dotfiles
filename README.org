@@ -1410,6 +1410,9 @@
       (org-hide-emphasis-markers t)
       (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+      (org-log-done 'time)
+      (org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
+
       (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
       (org-refile-allow-creating-parent-nodes 'confirm)
       (org-refile-targets '((nil . (:level . 1))
@@ -1457,10 +1460,6 @@
 
        (org-agenda-skip-deadline-prewarning-if-scheduled t)
        (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
-
-       (org-log-done 'time)
-
-       (org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
        (org-agenda-custom-commands
 	   '(("d" "Day Agenda"
 	      ((agenda "" ((org-agenda-span 'day)))))
