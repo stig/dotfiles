@@ -1030,6 +1030,30 @@
        (notmuch-hello-thousands-separator ",")
        (notmuch-mua-cite-function (quote message-cite-original-without-signature))
        (notmuch-fcc-dirs "sent +sent -unread -inbox")
+       (notmuch-saved-searches
+	(quote
+	 ((:name "Inbox" :query "tag:inbox" :key "i")
+	  (:name "Flagged" :query "tag:flagged" :key "f")
+	  (:name "Drafts" :query "tag:draft" :key "d")
+	  (:name "My Threads" :query "thread:\"{from:stig}\" and tag:new" :key "t" :sort-order newest-first :search-type tree)
+	  (:name "List Messages" :query "tag:lists and tag:new" :key "l" :search-type tree)
+	  (:name "Recent-ish" :query "date:-4d..today and not tag:lists" :key "r" :count-query "tag:no-match" :sort-order newest-first))))
+       (notmuch-tagging-keys
+	(quote
+	 (("a" notmuch-archive-tags "Archive")
+	  ("u" notmuch-show-mark-read-tags "Mark read")
+	  ("f"
+	   ("+flagged")
+	   "Flag")
+	  ("s"
+	   ("+spam" "-inbox")
+	   "Mark as spam")
+	  ("d"
+	   ("+deleted" "-inbox")
+	   "Delete")
+	  ("m"
+	   ("+muted")
+	   "Mute Thread"))))
 
        :config
        (defun sb/notmuch (arg)
