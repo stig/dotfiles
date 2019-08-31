@@ -184,22 +184,12 @@
    (setq user-mail-address "stig@brautaset.org")
    #+END_SRC
 
-** Modifier keys on OS X
-
-   Set up the modifier keys the way that best fits my keyboard.
+** Configure Meta/super/hyper keys
 
    #+BEGIN_SRC emacs-lisp
-     ;; Both Command keys are 'Meta'
-     (setq mac-right-command-modifier 'meta
-	   mac-command-modifier 'meta)
-
-     ;; Option or Alt is 'Super'
+     (setq mac-command-modifier 'meta)
      (setq mac-option-modifier 'super)
-
-     ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
-     (setq mac-right-option-modifier nil)
-
-     (setq ns-function-modifier 'hyper)
+     (setq mac-function-modifier 'hyper)
    #+END_SRC
 
 ** Disable kill-emacs
