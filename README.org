@@ -127,9 +127,9 @@
 
 ** Path
 
-    The GUI Emacs gets exec path from the system, rather than the
-    login shell.  We have to load PATH et. al. from the shell to get
-    access to programs installed by Nix.
+   The GUI Emacs gets exec path from the system, rather than the
+   login shell.  We have to load PATH et. al. from the shell to get
+   access to programs installed by Nix.
 
 *** Configure the login shell
 
