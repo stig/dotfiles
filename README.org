@@ -144,19 +144,8 @@
       . ~/.nix-profile/etc/profile.d/nix.sh
     #+end_src
 
-    =~/.zshrc= is for interactive shells.  This doesn't affect Emacs,
-    but it's useful as a fallback if I have to open a regular terminal
-    window.  (E.g. if I screw up my Emacs config.)
-
-    #+begin_src sh :tangle ~/.zshrc
-      setopt INC_APPEND_HISTORY
-      setopt HIST_IGNORE_ALL_DUPS
-
-      export HISTFILE=~/.zsh_history
-      export SAVEHIST=800
-      export HISTSIZE=1000
-
-      export EDITOR=emacsclient
+    #+begin_src sh :tangle ~/.bashenv
+      . ~/.nix-profile/etc/profile.d/nix.sh
     #+end_src
 
 *** Set =PATH= etc from the login shell
