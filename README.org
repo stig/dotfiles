@@ -140,6 +140,18 @@
    login shell.  We have to load PATH et. al. from the shell to get
    access to programs installed by Homebrew.
 
+*** Configure the login shell
+
+    I use Zsh as my login shell.  It feels a bit weird to set it up
+    here, but it's the best way I have found so far.
+
+    Zsh reads =~/.zshenv= first, for both interactive and
+    non-interactive shells.  It's where we should set up PATH, etc.
+
+    #+begin_src sh :tangle ~/.zshenv
+      export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+    #+end_src
+
 *** Set =PATH= etc from the login shell
 
     Copy PATH and certain other variables from my login shell so these
@@ -149,7 +161,8 @@
       (use-package exec-path-from-shell
 	:custom
 	(exec-path-from-shell-variables '("PATH" "MANPATH"
-					  "LDFLAGS" "CPPFLAGS"))
+					  "LDFLAGS" "CPPFLAGS"
+					  "JAVA_HOME"))
 	:config
 	(exec-path-from-shell-initialize))
     #+END_SRC
