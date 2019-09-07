@@ -627,6 +627,16 @@
      (use-package counsel-projectile)
    #+END_SRC
 
+** Rainbow Delimiters
+
+   This makes it slightly easier to discern matching parens when the
+   nesting goes deep.
+
+   #+begin_src emacs-lisp
+   (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+   #+end_src
+
 ** Save minibuffer history
 
    This allows us to "tap up" in the minibuffer to recall previous items,
