@@ -688,6 +688,16 @@
        :bind (("C-x /" . swiper)))
    #+END_SRC
 
+** Subword
+
+   Treats CapitalizedWords as separate, so we can move forward by
+   their components.  Useful in anything that looks like Java.
+
+   #+begin_src emacs-lisp
+   (use-package subword
+    :hook (prog-mode . subword-mode))
+   #+end_src
+
 ** Transparently open compressed files
 
    I *do* like it when Emacs transparently opens compressed files. It gives
