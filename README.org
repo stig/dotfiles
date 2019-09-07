@@ -203,13 +203,13 @@
      (setq mac-function-modifier 'hyper)
    #+END_SRC
 
-** Disable kill-emacs
+** Confirm kill emacs
 
-   Disable =s-q= (=kill-emacs=) as it is too close to =M-q= which I use for
+   The default keybinding for this is close to =M-q= which I use for
    reflowing text.
 
    #+BEGIN_SRC emacs-lisp
-     (bind-key "s-q" nil)
+     (setq confirm-kill-emacs 'yes-or-no-p)
    #+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
