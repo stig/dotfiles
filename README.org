@@ -346,18 +346,6 @@
      (bind-key "M-<f11>" 'my-toggle-fullscreen)
    #+END_SRC
 
-* Configure misc things that don't fit elsewhere
-** Ace Window
-
-   This lets me rapidly switch to a different frame/window.  I use
-   this mainly when resolving conflicts in ediff merge, since I need
-   to swap between two frames there.
-
-   #+begin_src emacs-lisp
-   (use-package ace-window
-     :bind ("M-`" . ace-window))
-   #+end_src
-
 ** Toggle Window Split function
 
    Sometimes a window is split horizontally, and you would prefer
@@ -429,42 +417,6 @@
        :ensure-system-package ((gpg2 . gnupg) pinentry)
        :no-require t)
    #+end_src
-
-** Ivy
-
-   I've long been a happy Helm user, but it confuses me (and is slow!)
-   in some situations so I thought I'd try again to see if Ivy fares
-   any better.
-
-   #+begin_src emacs-lisp
-     (use-package ivy
-       :pin melpa
-       :demand
-       :config
-       (setq ivy-use-virtual-buffers t
-	     ivy-count-format "%d/%d "))
-     (ivy-mode 1)
-
-     ;; This should apparently allow opening multiple files from
-     ;; ivy-find-file.
-     (use-package ivy-hydra
-       :pin melpa)
-   #+end_src
-
-** Multiple Cursors
-
-   This package is another one of those near-magical ones. It allows me to do
-   multiple edits in the same buffer, using several cursors. You can think of
-   it as an interactive macro, where you can constantly see what's being done.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package multiple-cursors
-
-       :bind (("C-c M-e" . mc/edit-lines)
-              ("C-c M-a" . mc/mark-all-dwim)
-              ("s-n" . mc/mark-next-like-this)
-              ("s-p" . mc/mark-previous-like-this)))
-   #+END_SRC
 
 ** Running tests
 
@@ -734,6 +686,53 @@
      (use-package writegood-mode
        :hook text-mode)
    #+END_SRC
+
+** Multiple Cursors
+
+   This package is another one of those near-magical ones. It allows me to do
+   multiple edits in the same buffer, using several cursors. You can think of
+   it as an interactive macro, where you can constantly see what's being done.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+
+       :bind (("C-c M-e" . mc/edit-lines)
+              ("C-c M-a" . mc/mark-all-dwim)
+              ("s-n" . mc/mark-next-like-this)
+              ("s-p" . mc/mark-previous-like-this)))
+   #+END_SRC
+
+** Ivy
+
+   I've long been a happy Helm user, but it confuses me (and is slow!)
+   in some situations so I thought I'd try again to see if Ivy fares
+   any better.
+
+   #+begin_src emacs-lisp
+     (use-package ivy
+       :pin melpa
+       :demand
+       :config
+       (setq ivy-use-virtual-buffers t
+	     ivy-count-format "%d/%d "))
+     (ivy-mode 1)
+
+     ;; This should apparently allow opening multiple files from
+     ;; ivy-find-file.
+     (use-package ivy-hydra
+       :pin melpa)
+   #+end_src
+
+** Ace Window
+
+   This lets me rapidly switch to a different frame/window.  I use
+   this mainly when resolving conflicts in ediff merge, since I need
+   to swap between two frames there.
+
+   #+begin_src emacs-lisp
+   (use-package ace-window
+     :bind ("M-`" . ace-window))
+   #+end_src
 
 * Configure major modes
 ** Ag (The Silver Searcher)
