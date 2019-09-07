@@ -569,12 +569,10 @@
        :config
        (projectile-mode +1))
 
-
-     ;; Register project subtype used by "gilded rose" kata.
-     (projectile-register-project-type 'lein-spec '("project.clj" "spec")
+     (projectile-register-project-type 'lein-test-prefix '("project.clj")
 				       :compile "lein compile"
 				       :test "lein test"
-				       :test-suffix "_spec")
+				       :test-prefix "test_")
 
      (use-package counsel-projectile)
    #+END_SRC
