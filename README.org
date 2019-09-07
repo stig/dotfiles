@@ -634,9 +634,7 @@
        :hook
        (prog-mode . turn-on-smartparens-strict-mode)
        (text-mode . turn-on-smartparens-mode)
-
-       :config
-       (show-smartparens-global-mode t))
+       (after-init . show-smartparens-global-mode))
    #+END_SRC
 
 ** Swiper
@@ -679,8 +677,8 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package which-key
-       :config
-       (which-key-mode))
+       :hook
+       (after-init . which-key-mode))
    #+END_SRC
 
 ** Writegood Mode
