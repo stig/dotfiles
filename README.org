@@ -797,11 +797,20 @@
    #+BEGIN_SRC emacs-lisp
      (use-package clojure-mode
        :ensure-system-package clojure)
+
      (use-package clojure-mode-extra-font-locking)
+
      (use-package cider
        :custom
        (cider-eldoc-display-context-dependent-info t))
+
      (use-package clj-refactor)
+
+     (use-package ivy-clojuredocs
+       :pin melpa
+       :bind (:map clojure-mode-map
+		   (("C-c s" . ivy-clojuredocs)
+		    ("C-c d" . ivy-clojuredocs-at-point))))
    #+END_SRC
 
 ** Ediff
