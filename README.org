@@ -483,9 +483,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package aggressive-indent
        :hook
-       (emacs-lisp-mode-hook . aggressive-indent-mode)
-       (clojure-mode-hook . aggressive-indent-mode)
-       (css-mode-hook . aggressive-indent-mode))
+       (emacs-lisp-mode . aggressive-indent-mode)
+       (clojure-mode . aggressive-indent-mode)
+       (css-mode . aggressive-indent-mode))
    #+END_SRC
 
 ** Auto commit
@@ -553,7 +553,7 @@
    (use-package orgalist
      :pin gnu
      :hook
-     (message-mode-hook . orgalist-mode))
+     (message-mode . orgalist-mode))
    #+end_src
 
 ** Editorconfig
@@ -662,8 +662,8 @@
 		   ("C-M-<left>" . sp-backward-slurp-sexp)
 		   ("C-M-<right>" . sp-backward-barf-sexp))
        :hook
-       (prog-mode-hook . turn-on-smartparens-strict-mode)
-       (text-mode-hook . turn-on-smartparens-mode)
+       (prog-mode . turn-on-smartparens-strict-mode)
+       (text-mode . turn-on-smartparens-mode)
 
        :config
        (show-smartparens-global-mode t))
@@ -712,7 +712,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package writegood-mode
-       :hook text-mode-hook)
+       :hook text-mode)
    #+END_SRC
 
 * Configure major modes
@@ -739,7 +739,7 @@
      (use-package wgrep-ag
        :pin melpa
        :hook
-       (ag-mode-hook . wgrep-ag-setup))
+       (ag-mode . wgrep-ag-setup))
 
      ;; This fixes the last group not being editable until it's fixed
      ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
@@ -881,7 +881,7 @@
        :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
        :mode (("\\.ily\\'" . LilyPond-mode)
 	      ("\\.ly\\'" . LilyPond-mode))
-       :hook (LilyPond-mode-hook . (lambda () (turn-on-font-lock)))
+       :hook (LilyPond-mode . (lambda () (turn-on-font-lock)))
        :custom
        (LilyPond-midi-command "playmidi" t)
        (LilyPond-pdf-command "open"))
@@ -1012,7 +1012,7 @@
        :ensure nil
        :ensure-system-package (notmuch msmtp (mbsync . isync))
        :hook
-       (notmuch-message-mode-hook . turn-off-auto-fill)
+       (notmuch-message-mode . turn-off-auto-fill)
        :bind (("C-x m" . sb/notmuch)
 	      ("M-]" . notmuch-cycle-notmuch-buffers))
        :custom
