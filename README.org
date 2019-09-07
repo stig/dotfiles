@@ -23,6 +23,15 @@
     curl https://nixos.org/nix/install | sh
   #+end_src
 
+* Use lexical bindings
+
+  Make sure the resulting =~/.emacs.d/init.el= uses lexical binding for
+  performance reasons.
+
+  #+begin_src emacs-lisp
+    ;; -*- lexical-binding: t; -*-
+  #+end_src
+
 * Early Init (turn off mouse interface)
 
   Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
@@ -32,6 +41,7 @@
   at me: I prefer a visual bell.
 
   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
+    ;; -*- lexical-binding: t; -*-
     (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
     (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
     (setq inhibit-startup-message t)
