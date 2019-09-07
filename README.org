@@ -617,6 +617,11 @@
 
 ** SmartParens
 
+   Structural editing is a must when editing lisp, and it has bled
+   into other aspects of programming for me.  In particular the
+   ability to remove surrounding parens / quotes with ~sp-splice-sexp~
+   is incredibly useful even when writing prose.
+
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens-config
        :ensure smartparens
