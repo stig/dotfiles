@@ -80,6 +80,12 @@
       (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
     #+end_src
 
+*** Ensure we don't use unencrypted auth sources
+
+    #+begin_src emacs-lisp
+      (setq auth-sources (quote ("~/.authinfo.gpg")))
+    #+end_src
+
 *** Add Melpa and Org ELPA to ~package-archives~
 
     We need to add the URLs of the package archives we want to use.  I
