@@ -1474,14 +1474,14 @@
        (org-agenda-skip-deadline-prewarning-if-scheduled t)
        (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
        (org-agenda-custom-commands
-	   '(("d" "Day Agenda"
-	      ((agenda "" ((org-agenda-span 'day)))))
-	     ("S" "Someday"
-	      ((todo "PROJ"
-		     ((org-agenda-files '("~/org/Someday.org"))))
-	       (todo "TODO"
-		     ((org-agenda-todo-list-sublevels nil)
-		      (org-agenda-files '("~/org/Someday.org")))))))))
+	'(("d" "Day Agenda"
+	   ((agenda "" ((org-agenda-span 'day)))))
+	  ("S" "Someday"
+	   ((todo "PROJ"
+		  ((org-agenda-files '("~/org/Someday.org"))))
+	    (todo "TODO"
+		  ((org-agenda-todo-list-sublevels nil)
+		   (org-agenda-files '("~/org/Someday.org")))))))))
    #+END_SRC
 
 ** Capturing
