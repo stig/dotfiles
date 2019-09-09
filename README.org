@@ -1465,6 +1465,8 @@
        (org-agenda-include-diary t)
        (org-agenda-ignore-properties '(effort appt stats))
 
+       (org-agenda-files "~/.emacs.d/org-agenda-files.txt")
+
        (org-agenda-todo-ignore-scheduled 'future)
        (org-agenda-todo-ignore-deadlines 'far)
        (org-agenda-todo-ignore-timestamp 'future)
