@@ -193,6 +193,8 @@
    #+BEGIN_SRC emacs-lisp
    (setq user-full-name "Stig Brautaset")
    (setq user-mail-address "stig@brautaset.org")
+   (setq sb/personal-setup-p t)
+   (setq sb/work-setup-p nil)
    #+END_SRC
 
 ** Configure Meta/super/hyper keys
@@ -915,7 +917,7 @@
    With Nix I am not able to install LilyPond, but I can install it
    via a download from https://lilypond.org.
 
-   #+begin_src emacs-lisp
+   #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
      (use-package lilypond-mode
        :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
        :mode (("\\.ily\\'" . LilyPond-mode)
@@ -932,7 +934,7 @@
     the nicest.  I wrap it in a shell script.  First I have to install
     it, however.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
       (use-package fluidsynth
 	:ensure nil
 	:no-require t
@@ -942,7 +944,7 @@
     Then we need a soundfont. Fluidsynth appears to recommend the one
     from http://www.schristiancollins.com/generaluser.php.
 
-    #+begin_src sh :tangle ~/.local/bin/download_soundfont :tangle-mode (identity #o755) :mkdirp t
+    #+begin_src sh :tangle (when sb/personal-setup-p "~/.local/bin/download_soundfont") :tangle-mode (identity #o755) :mkdirp t
       #!/bin/bash
       set -o errexit
       set -o nounset
@@ -972,7 +974,7 @@
 
     Finally let's install a wrapper to more easily play stuff.
 
-    #+begin_src sh :tangle  ~/.local/bin/playmidi :tangle-mode (identity #o755)
+    #+begin_src sh :tangle (when sb/personal-setup-p "~/.local/bin/playmidi") :tangle-mode (identity #o755)
       #!/bin/bash
       set -o errexit
       set -o nounset
@@ -1046,7 +1048,7 @@
    I configure Notmuch to save a copy of outgoing mail into my sent
    mail folder.
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
      (use-package notmuch
        :ensure nil
        :ensure-system-package (notmuch msmtp (mbsync . isync))
@@ -1121,7 +1123,7 @@
     this in a =pre-hook= so we can use the new =new= tag to optimise
     further tagging in the =post-hook= below.
 
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+    #+BEGIN_SRC sh :tangle (when sb/personal-setup-p "~/Mail/.notmuch/hooks/pre-new") :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
       notmuch tag -new -- tag:new
       notmuch search --output files tag:draft and tag:deleted | xargs rm
     #+END_SRC
@@ -1129,7 +1131,7 @@
     Notmuch assigns the =new= tag when it first sees a message, so we
     can use it to limit the search space for further tagging.
 
-    #+BEGIN_SRC sh :tangle ~/Mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+    #+BEGIN_SRC sh :tangle (when sb/personal-setup-p "~/Mail/.notmuch/hooks/post-new") :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
       notmuch tag --batch <<EOF
       # Mute new messages to muted threads
       +muted -- thread:{tag:muted} and tag:new
@@ -1155,7 +1157,7 @@
     I use =mbsync= (from the isync suite) to sync mail from my IMAP
     server to my local machine.
 
-    #+BEGIN_SRC conf :tangle ~/.mbsyncrc
+    #+BEGIN_SRC conf :tangle (when sb/personal-setup-p "~/.mbsyncrc")
       IMAPAccount gandi
       Host mail.gandi.net
       User stig@brautaset.org
@@ -1232,7 +1234,7 @@
     mbsync as an async shell process.  I run /this/ from the function I
     use to launch Notmuch.
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
       (defun sb/mbsync (&rest group)
 	(interactive)
 	(let ((group (or (and (car group) group) '("--all")))
@@ -1250,7 +1252,7 @@
 
     : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
 
-    #+BEGIN_SRC conf :tangle ~/.msmtprc
+    #+BEGIN_SRC conf :tangle (when sb/personal-setup-p "~/.msmtprc")
       defaults
       port 587
       tls on
@@ -1266,7 +1268,7 @@
     Finally we have to tell Emacs to use msmtp to send mail.  (And to
     kill the message buffer on exit.)
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
       (setq message-send-mail-function 'message-send-mail-with-sendmail
 	    sendmail-program "msmtp"
 	    message-sendmail-envelope-from 'header
@@ -1282,7 +1284,7 @@
     example.) I then write my message using Org mode syntax and use
     org-mime-htmlize.
 
-    #+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp (when sb/personal-setup-p "~/.emacs.d/init.el")
       (use-package org-mime
 	:bind (:map message-mode-map
 		    ("C-c h" . org-mime-htmlize))
@@ -1298,7 +1300,7 @@
     me I can click on the link and immediately get to the mail in my
     archive, and can reply to it from there.
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
     (use-package org-notmuch
       :ensure org-plus-contrib
       :after (org notmuch))
