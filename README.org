@@ -1065,7 +1065,8 @@
 	 ((:name "Inbox" :query "tag:inbox" :key "i")
 	  (:name "Flagged" :query "tag:flagged" :key "f")
 	  (:name "Drafts" :query "tag:draft" :key "d")
-	  (:name "My Threads" :query "thread:\"{from:stig}\" and tag:new" :key "t" :sort-order newest-first :search-type tree)
+	  (:name "New in Threads" :query "thread:\"{from:stig}\" and tag:new" :key "t" :sort-order newest-first :search-type tree)
+	  (:name "All in Threads" :query "thread:\"{from:stig}\"" :key "T" :sort-order newest-first :search-type tree :count-query "tag:no-match")
 	  (:name "List Messages" :query "tag:lists and tag:new" :key "l" :search-type tree)
 	  (:name "Recent-ish" :query "date:-4d..today and not tag:lists" :key "r" :count-query "tag:no-match" :sort-order newest-first))))
        (notmuch-tagging-keys
