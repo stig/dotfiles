@@ -179,16 +179,12 @@
 	(exec-path-from-shell-initialize))
     #+END_SRC
 
-** Put =Customize= settings in a separate file
+** Make =Customize= settings transient
 
-   I prefer to code my configuration, but sometimes Custom settings are good
-   enough. I prefer that such settings live in a separate file though. Load
-   that file if it exists.
+   I prefer to code my configuration.
 
    #+BEGIN_SRC emacs-lisp
-     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-     (if (file-exists-p custom-file)
-         (load custom-file))
+     (setq custom-file (make-temp-file ""))
    #+END_SRC
 
 * Configure the basics
@@ -827,7 +823,7 @@
      (use-package ivy-clojuredocs
        :pin melpa
        :bind (:map clojure-mode-map
-		   (("C-c s" . ivy-clojuredocs)
+		   (("C-c D" . ivy-clojuredocs)
 		    ("C-c d" . ivy-clojuredocs-at-point))))
    #+END_SRC
 
