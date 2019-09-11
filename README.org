@@ -873,18 +873,23 @@
 
 ** Elfeed
 
-   I use custom.el for the actual feeds.
+   ~org-elfeed~ stores the feed in =~/.emacs.d/elfeed.org= rather than =custom.el=.
 
    #+BEGIN_SRC emacs-lisp
+     (use-package elfeed-org
+       :pin melpa
+       :config
+       (elfeed-org))
+
      (use-package elfeed
-       :bind ("C-x w" . elfeed)
+       :pin melpa
+       :bind (("C-x w" . elfeed)
+	      :map elfeed-search-mode-map
+	      ("m" . elfeed-toggle-star) )
        :ensure-system-package curl
        :config
        (defalias 'elfeed-toggle-star
-	 (elfeed-expose #'elfeed-search-toggle-all 'star))
-
-       (eval-after-load 'elfeed-search
-	 '(define-key elfeed-search-mode-map (kbd "m") 'elfeed-toggle-star)))
+	 (elfeed-expose #'elfeed-search-toggle-all 'star)))
    #+END_SRC
 
 ** Eshell
