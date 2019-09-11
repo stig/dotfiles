@@ -1007,6 +1007,13 @@
      (use-package forge :pin melpa)
      (use-package magit-org-todos :pin melpa)
      (use-package magit-todos :pin melpa)
+
+     (use-package magit-circleci
+       :pin melpa
+       :init
+       (setq magit-circleci-token
+	     (plist-get (car (auth-source-search :host "circleci.com" :max 1))
+			:user)))
    #+END_SRC
 
 ** Markdown
