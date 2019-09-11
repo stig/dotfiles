@@ -818,7 +818,12 @@
        :custom
        (cider-eldoc-display-context-dependent-info t))
 
-     (use-package clj-refactor)
+     (use-package clj-refactor
+       :config
+       (defun sb/clojure-mode-hook ()
+	 (clj-refactor-mode 1)
+	 (yas-minor-mode 1)) ; for adding require/use/import statements
+       :hook (clojure-mode . sb/clojure-mode-hook))
 
      (use-package ivy-clojuredocs
        :pin melpa
