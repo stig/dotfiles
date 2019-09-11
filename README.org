@@ -196,7 +196,6 @@
    (setq user-full-name "Stig Brautaset")
    (setq user-mail-address "stig@brautaset.org")
    (setq sb/personal-setup-p t)
-   (setq sb/work-setup-p nil)
    #+END_SRC
 
 ** Configure Meta/super/hyper keys
