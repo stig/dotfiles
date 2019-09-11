@@ -1002,7 +1002,7 @@
      (use-package transient :pin melpa)
      (use-package magit
        :pin melpa
-       :bind ("M-m" . magit-status))
+       :bind ("C-c m" . magit-status))
 
      (use-package forge :pin melpa)
      (use-package magit-org-todos :pin melpa)
