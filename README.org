@@ -821,25 +821,35 @@
      (use-package clojure-mode
        :ensure-system-package clojure)
 
-     (use-package clojure-mode-extra-font-locking)
-
      (use-package cider
        :custom
-       (cider-eldoc-display-context-dependent-info t))
+       (cider-auto-mode t)
+       (cider-auto-track-ns-form-changes t)
+       (cider-eldoc-display-context-dependent-info t)
+       (cider-repl-display-help-banner nil))
 
      (use-package clj-refactor
+       :custom
+       (cljr-suppress-middleware-warnings t)
        :config
        (defun sb/clojure-mode-hook ()
 	 (clj-refactor-mode 1)
 	 (yas-minor-mode 1)) ; for adding require/use/import statements
        :hook (clojure-mode . sb/clojure-mode-hook))
-
-     (use-package ivy-clojuredocs
-       :pin melpa
-       :bind (:map clojure-mode-map
-		   ("C-c D" . ivy-clojuredocs)
-		   ("C-c d" . ivy-clojuredocs-at-point)))
    #+END_SRC
+
+
+   I want to use some lein plugins across all projects.
+
+   #+begin_src clojure :tangle ~/.lein/profiles.clj
+     {:user {:plugins [[lein-ancient "0.6.15"]
+		       [refactor-nrepl "2.4.0"]
+		       [nrepl "0.6.0"]
+		       [cider/cider-nrepl "0.22.1"]]
+	     :middleware [cider-nrepl.plugin/middleware
+			  refactor-nrepl.plugin/middleware]
+	     :dependencies [[nrepl "0.6.0"]]}}
+   #+end_src
 
 ** Ediff
 
