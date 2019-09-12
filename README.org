@@ -827,8 +827,8 @@
      (use-package ivy-clojuredocs
        :pin melpa
        :bind (:map clojure-mode-map
-		   (("C-c D" . ivy-clojuredocs)
-		    ("C-c d" . ivy-clojuredocs-at-point))))
+		   ("C-c D" . ivy-clojuredocs)
+		   ("C-c d" . ivy-clojuredocs-at-point)))
    #+END_SRC
 
 ** Ediff
