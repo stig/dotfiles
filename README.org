@@ -626,8 +626,6 @@
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens-config
        :ensure smartparens
-
-       ;; I prefer to be explicit about the keybindings I use
        :bind (:map smartparens-mode-map
 		   ("C-M-f" . sp-forward-sexp)
 		   ("C-M-b" . sp-backward-sexp)
@@ -640,7 +638,8 @@
        :hook
        (prog-mode . turn-on-smartparens-strict-mode)
        (text-mode . turn-on-smartparens-mode)
-       (after-init . show-smartparens-global-mode))
+       :config
+       (show-smartparens-global-mode))
    #+END_SRC
 
 ** Swiper
