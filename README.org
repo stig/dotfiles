@@ -748,6 +748,19 @@
      :bind ("M-`" . ace-window))
    #+end_src
 
+** Dumb Jump
+
+   For finding my way around codebases.
+
+   #+begin_src emacs-lisp
+     (use-package dumb-jump
+       :bind (:map prog-mode-map
+		   ("M-. " . dumb-jump-go)
+		   ("M-," . dumb-jump-back))
+       :custom
+       (dumb-jump-selector 'ivy))
+   #+end_src
+
 * Configure major modes
 ** Ag (The Silver Searcher)
 
