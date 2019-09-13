@@ -574,18 +574,16 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
-       :bind ("C-c p" . projectile-command-map)
-       :demand
+       :bind-keymap ("C-c p" . projectile-command-map)
        :custom
        (projectile-completion-system 'ivy)
        (projectile-create-missing-test-files t)
        :config
-       (projectile-mode +1))
-
-     (projectile-register-project-type 'lein-test-prefix '("project.clj")
-				       :compile "lein compile"
-				       :test "lein test"
-				       :test-prefix "test_")
+       (projectile-register-project-type 'lein-test-prefix '("project.clj" "cassettes")
+					 :compile "lein compile"
+					 :test "lein test"
+					 :test-prefix "test_")
+       (projectile-mode))
 
      (use-package counsel-projectile)
    #+END_SRC
