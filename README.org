@@ -841,7 +841,7 @@
 
    I want to use some lein plugins across all projects.
 
-   #+begin_src clojure :tangle ~/.lein/profiles.clj
+   #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
      {:user {:plugins [[lein-ancient "0.6.15"]
 		       [refactor-nrepl "2.4.0"]
 		       [nrepl "0.6.0"]
