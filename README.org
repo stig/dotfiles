@@ -1028,21 +1028,31 @@
    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package transient :pin melpa)
+     (use-package transient
+       :pin melpa)
+
      (use-package magit
        :pin melpa
        :bind ("C-c m" . magit-status))
 
-     (use-package forge :pin melpa)
-     (use-package magit-org-todos :pin melpa)
-     (use-package magit-todos :pin melpa)
+     (use-package forge
+       :pin melpa)
+
+     (use-package magit-org-todos
+       :pin melpa)
+
+     (use-package magit-todos
+       :pin melpa)
 
      (use-package magit-circleci
        :pin melpa
-       :init
+       :config
        (setq magit-circleci-token
-	     (plist-get (car (auth-source-search :host "circleci.com" :max 1))
-			:user)))
+	     (plist-get (car (auth-source-search :host "circleci.com"
+						 :max 1))
+			:user))
+       :hook
+       (magit-status-mode . magit-circleci-mode))
    #+END_SRC
 
 ** Markdown
