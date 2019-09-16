@@ -806,7 +806,9 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package clojure-mode
-       :ensure-system-package clojure)
+       :ensure-system-package clojure
+       :config
+       (put-clojure-indent 'as-> t))
 
      (use-package cider
        :custom
