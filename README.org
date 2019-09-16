@@ -1081,8 +1081,7 @@
 
    I like to use Emacs for /all/ writing, including email.  I don't want
    a separate program to read and write emails, so it follows I must
-   /read/ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for this.  I find
-   it easier to configure than [[http://www.djcbsoftware.nl/code/mu/][mu4e]].
+   /read/ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for this.
 
    Notmuch works pretty well for me out of the box. Mainly I set up a
    keybinding to quickly bring it up.  Its threading and MIME handling
