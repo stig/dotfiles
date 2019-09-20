@@ -734,6 +734,15 @@
        (dumb-jump-selector 'ivy))
    #+end_src
 
+** YAS
+
+   A templating engine for Emacs.
+
+   #+begin_src emacs-lisp
+     (use-package yasnippet
+       :hook (after-init . yas-global-mode))
+   #+end_src
+
 * Configure major modes
 ** Ag (The Silver Searcher)
 
@@ -805,15 +814,10 @@
        (cider-repl-display-help-banner nil))
 
      (use-package clj-refactor
+       :hook ((cider-mode clojure-mode) . clj-refactor-mode)
        :custom
-       (cljr-suppress-middleware-warnings t)
-       :config
-       (defun sb/clojure-mode-hook ()
-	 (clj-refactor-mode 1)
-	 (yas-minor-mode 1)) ; for adding require/use/import statements
-       :hook (clojure-mode . sb/clojure-mode-hook))
+       (cljr-suppress-middleware-warnings t))
    #+END_SRC
-
 
    I want to use some lein plugins across all projects.
 
