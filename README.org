@@ -481,18 +481,6 @@
        (beacon-mode 1))
    #+end_src
 
-** Company
-
-   Auto-complete of code and prose.
-
-   #+BEGIN_SRC emacs-lisp
-   (use-package company
-     :custom
-     (company-dabbrev-downcase nil "See https://emacs.stackexchange.com/a/10838")
-     :config
-     (global-company-mode))
-   #+END_SRC
-
 ** Counsel
 
    This provides =counsel-find-file=, among others.
@@ -501,15 +489,6 @@
    (use-package amx) ;; make counsel-M-x work the way I like
    (use-package counsel)
    (counsel-mode 1)
-   #+end_src
-
-** Direnv
-
-   #+begin_src emacs-lisp
-     (use-package direnv
-       :ensure-system-package direnv
-       :config
-       (direnv-mode))
    #+end_src
 
 ** Edit "Org-like" lists in non-Org buffers
