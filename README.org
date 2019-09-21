@@ -610,20 +610,14 @@
    #+BEGIN_SRC emacs-lisp
      (use-package smartparens-config
        :ensure smartparens
-       :bind (:map smartparens-mode-map
-		   ("C-M-f" . sp-forward-sexp)
-		   ("C-M-b" . sp-backward-sexp)
-		   ("C-M-<SPC>" . sp-splice-sexp)
-		   ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
-		   ("C-<right>" . sp-forward-slurp-sexp)
-		   ("C-<left>" . sp-forward-barf-sexp)
-		   ("C-M-<left>" . sp-backward-slurp-sexp)
-		   ("C-M-<right>" . sp-backward-barf-sexp))
+       :demand
+       :custom
+       (sp-base-key-bindings 'sp)
        :hook
-       (prog-mode . turn-on-smartparens-strict-mode)
-       (text-mode . turn-on-smartparens-mode)
+       (sp-lisp-modes . turn-on-smartparens-strict-mode)
+       (after-init . smartparens-global-mode)
        :config
-       (show-smartparens-global-mode))
+       (sp-local-pair 'text-mode "'" nil :actions :rem))
    #+END_SRC
 
 ** Swiper
