@@ -201,9 +201,9 @@
 ** Configure Meta/super/hyper keys
 
    #+BEGIN_SRC emacs-lisp
-     (setq mac-command-modifier 'meta)
-     (setq mac-option-modifier 'super)
-     (setq mac-function-modifier 'hyper)
+     (setq mac-command-modifier 'meta
+	   mac-option-modifier 'super
+	   mac-function-modifier 'hyper)
    #+END_SRC
 
 ** Confirm kill emacs
