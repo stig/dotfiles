@@ -907,18 +907,6 @@
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
-** Graphviz
-
-   I sometimes use Graphviz to create diagrams.
-
-   I also have to tell Emacs how to launch GraphViz.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package graphviz-dot-mode
-       :ensure-system-package graphviz
-       :bind ("C-c C-p" . graphviz-dot-preview))
-   #+END_SRC
-
 ** LilyPond
 
    With Nix I am not able to install LilyPond, but I can install it
