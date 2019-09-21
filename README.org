@@ -1320,18 +1320,6 @@
        (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
    #+end_src
 
-** Plant UML Mode
-
-   I use this for [[http://plantuml.com/sequence.html][sequence diagrams]] etc.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package plantuml-mode
-       :ensure-system-package plantuml
-       :mode "\\.puml\\'"
-       :custom
-       (org-plantuml-jar-path (expand-file-name "~/.nix-profile/lib/plantuml.jar")))
-   #+END_SRC
-
 ** Simple HTML Renderer (HTML Email)
 
    I mostly use shr for reading HTML mail.  I normally use a
