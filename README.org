@@ -819,8 +819,26 @@
 
      (use-package clj-refactor
        :hook ((cider-mode clojure-mode) . clj-refactor-mode)
+       :bind ("C-x C-r" . cljr-ivy)
        :custom
-       (cljr-suppress-middleware-warnings t))
+       (cljr-suppress-middleware-warnings t)
+       :config
+       (defun cljr-ivy-candidates ()
+	 (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
+		 cljr--all-helpers))
+
+       (defun cljr-ivy ()
+	 "Ivy interface to cljr-refactor"
+	 (interactive)
+	 (ivy-read "clj-refactor: "
+		   (cljr-ivy-candidates)
+		   :action
+		   (lambda (candidate)
+		     (string-match "^\\(.+?\\): " candidate)
+		     (call-interactively
+		      (cadr (assoc (match-string 1 candidate)
+				   cljr--all-helpers)))))))
+
    #+END_SRC
 
    I want to use some lein plugins across all projects.
