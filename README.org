@@ -1596,20 +1596,21 @@
      (setq sb/hydra-selectors
 	   "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-     (defun sb/sort-themes (themes)
-       (sort themes (lambda (a b) (string< (symbol-name a) (symbol-name b)))))
-
      (defun sb/load-theme-heads (themes)
-       (mapcar* (lambda (a b)
-		  (list (char-to-string a) `(sb/load-theme ',b) (symbol-name b)))
-		sb/hydra-selectors themes))
+       (cl-map 'list
+	       (lambda (a b)
+		 (list (char-to-string a)
+		       `(sb/load-theme ',b)
+		       (symbol-name b)))
+	       sb/hydra-selectors
+	       themes))
 
      (defun sb/switch-theme ()
        (interactive)
        (call-interactively
-	(eval `(defhydra sb/select-themes (:hint nil :color pink)
+	(eval `(defhydra sb/select-theme (:hint nil :color pink)
 		 "Select Theme"
-		 ,@(sb/load-theme-heads (sb/sort-themes (custom-available-themes)))
+		 ,@(sb/load-theme-heads (custom-available-themes))
 		 ("DEL" (sb/disable-all-themes))
 		 ("RET" nil "done" :color blue)))))
    #+END_SRC
