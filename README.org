@@ -1539,28 +1539,16 @@
 
 ** Babel
 
-   Org Babel is magical: execute code from many different languages in
+   Org Babel is magical: execute code from different languages in
    the same file, and capture the output!  I list the languages I want
    to support.
-
-   Some Babel backends (like ditaa) require specific configuration.  I
-   set that here too.
 
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
       'org-babel-load-languages
       '((emacs-lisp . t)
-	(ditaa . t)
-	(plantuml . t)
-	(dot . t)
-	(sql . t)
+        (sql . t)
 	(shell . t)))
-
-     (use-package ob-ditaa
-       :ensure org-plus-contrib
-       :ensure-system-package ("~/.nix-profile/lib/ditaa.jar" . ditaa)
-       :custom
-       (org-ditaa-jar-path (expand-file-name "~/.nix-profile/lib/ditaa.jar")))
    #+END_SRC
 
 ** Attachments
