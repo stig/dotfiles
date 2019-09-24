@@ -567,7 +567,15 @@
        (projectile-completion-system 'ivy)
        (projectile-create-missing-test-files t)
        :config
-       (projectile-mode))
+       (projectile-mode)
+
+       ;; Some projects use a prefix for test files rather than the default
+       ;; suffix.  By putting a `.lein-test-prefix` file in the root I can
+       ;; override the behaviour for those projects.
+       (projectile-register-project-type 'lein-test-prefix '("project.clj" ".lein-test-prefix")
+				  :compile "lein compile"
+				  :test "lein test"
+				  :test-prefix "test_"))
 
      (use-package counsel-projectile)
    #+END_SRC
@@ -811,11 +819,30 @@
        (put-clojure-indent 'as-> t))
 
      (use-package cider
+       :config
+       (defun sb/cider-test-infer-ns-fn (ns)
+	 "Infer `test-' prefixed namespaces for test files.
+     Some projects use a `test-' prefix rather than `-test' suffix for
+     test files.  This detects those and runs the correct test.  It
+     falls back to Cider's default function if the project type is not
+     one known to use test- prefixes."
+	 (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
+							    'test-prefix))
+	     (let* ((prefix "test-")
+		    (ns-parts (split-string ns "\\."))
+		    (last-component (car (last ns-parts))))
+	       (if (string-prefix-p prefix last-component)
+		   ns
+		 (string-join (append (butlast ns-parts)
+				      (list (concat prefix last-component)))
+			      ".")))
+	   (cider-test-default-test-ns-fn ns)))
        :custom
        (cider-auto-mode t)
        (cider-auto-track-ns-form-changes t)
        (cider-eldoc-display-context-dependent-info t)
-       (cider-repl-display-help-banner nil))
+       (cider-repl-display-help-banner nil)
+       (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
 
      (use-package clj-refactor
        :hook ((cider-mode clojure-mode) . clj-refactor-mode)
