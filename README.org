@@ -1000,9 +1000,9 @@
 
 ** Magit
 
-   I use [[http://magit.vc][Magit]] all day. If you use git a lot it's possibly worth switching to
-   Emacs just for it. It is excellent. I bind =M-m= to =magit-status=, which is
-   the main entry point for the mode.
+   I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
+   git cli any more.  I've seen someone suggest learning Emacs just to
+   run Magit.
 
    Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
