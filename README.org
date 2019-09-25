@@ -1524,7 +1524,7 @@
 	  ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
 	   (file "templates/blog-post.org"))
 
-	  ("r" "New GTD Review" entry (file+olp+datetree "GTDReview.org")
+	  ("r" "New GTD Review" entry (file+olp+datetree "gtd_review.org")
 	   (file "templates/gtd-review.org"))))
 
        :config
