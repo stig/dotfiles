@@ -1012,7 +1012,7 @@
 
      (use-package magit
        :pin melpa
-       :bind (("C-c m" . magit-status)
+       :bind (("C-x C-m C-s" . magit-status)
 	      ("C-x C-m C-b" . magit-blame)))
 
      (use-package forge
