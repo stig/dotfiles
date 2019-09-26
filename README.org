@@ -850,20 +850,29 @@
 		     (call-interactively
 		      (cadr (assoc (match-string 1 candidate)
 				   cljr--all-helpers)))))))
-
    #+END_SRC
 
    I want to use some lein plugins across all projects.
 
+   We use ~:pedantic? true~ in our project.clj files, as well as lein
+   sub-project inheritance.  I think that plays merry hell with also
+   loading ~~refactor-nrepl~ (lots of complaints about duplications), so
+   I add the ~~:pedantic? :ranges~~.  Not sure why it works, but it
+   seems to.
+ 
    #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
      {:user {:plugins [[lein-ancient "0.6.15"]
 		       [refactor-nrepl "2.4.0"]
 		       [nrepl "0.6.0"]
-		       [cider/cider-nrepl "0.22.1"]]
+		       [cider/cider-nrepl "0.22.1"]
+		       [jonase/eastwood "0.3.5"]
+		       [lein-kibit "0.1.7"]
+		       [lein-environ "1.0.0"]]
 	     :middleware [cider-nrepl.plugin/middleware
 			  refactor-nrepl.plugin/middleware]
 	     :dependencies [[nrepl "0.6.0"]
-			    [zprint "0.4.16"]]}}
+			    [zprint "0.4.16"]]
+	     :pedantic? :ranges}}
    #+end_src
 
 ** Ediff
