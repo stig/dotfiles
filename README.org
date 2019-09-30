@@ -886,6 +886,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package elfeed-org
        :pin melpa
+       :custom
+       (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"
+			       "~/org/elfeed.org"))
        :config
        (elfeed-org))
 
