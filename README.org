@@ -823,6 +823,8 @@
        :custom
        (cljr-suppress-middleware-warnings t)
        :config
+       (cljr-add-keybindings-with-prefix "C-c C-m")
+
        (defun cljr-ivy-candidates ()
 	 (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
 		 cljr--all-helpers))
