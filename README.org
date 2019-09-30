@@ -439,6 +439,14 @@
      (bind-key "C-x t" 'ert)
    #+END_SRC
 
+** Remove ANSI colours
+
+   #+begin_src emacs-lisp
+   (defun sb/remove-ansi-colours-from-buffer ()
+     (interactive)
+     (ansi-color-filter-region (point-min) (point-max)))
+   #+end_src
+
 * Configure minor modes
 ** Aggressive Indent
 
