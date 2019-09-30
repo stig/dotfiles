@@ -862,7 +862,8 @@
 		       [cider/cider-nrepl "0.22.1"]]
 	     :middleware [cider-nrepl.plugin/middleware
 			  refactor-nrepl.plugin/middleware]
-	     :dependencies [[nrepl "0.6.0"]]}}
+	     :dependencies [[nrepl "0.6.0"]
+			    [zprint "0.4.16"]]}}
    #+end_src
 
 ** Ediff
