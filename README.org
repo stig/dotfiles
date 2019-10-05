@@ -425,17 +425,15 @@
    #+end_src
 
 * Configure minor modes
-** Aggressive Indent
+** Aggressive Indent Mode
 
    I like to keep my code indented properly at all times. Aggressive-indent
    helps ensure this. Turn it on for lisp modes.
 
    #+BEGIN_SRC emacs-lisp
      (use-package aggressive-indent
-       :hook
-       (emacs-lisp-mode . aggressive-indent-mode)
-       (clojure-mode . aggressive-indent-mode)
-       (css-mode . aggressive-indent-mode))
+       :config
+       (global-aggressive-indent-mode 1))
    #+END_SRC
 
 ** Auto commit
