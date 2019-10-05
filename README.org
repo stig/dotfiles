@@ -734,6 +734,14 @@
        :hook (after-init . yas-global-mode))
    #+end_src
 
+** Flycheck
+
+   #+begin_src emacs-lisp
+     (use-package flycheck-mode
+       :ensure flycheck
+       :hook clojure-mode)
+   #+end_src
+
 * Configure major modes
 ** Ag (The Silver Searcher)
 
@@ -794,12 +802,18 @@
 ** Clojure
 
    #+BEGIN_SRC emacs-lisp
+     (use-package flycheck-clj-kondo
+       :ensure-system-package (clj-kondo)
+       :pin melpa)
+
      (use-package clojure-mode
        :ensure-system-package ((java . homebrew/cask/java)
                                (lein . leiningen)
 			       (clj . clojure))
        :config
-       (put-clojure-indent 'as-> t))
+       (require 'flycheck-clj-kondo)
+       (put-clojure-indent 'as-> t)
+       (put-clojure-indent 'run t))
 
      (use-package cider
        :config
