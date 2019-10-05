@@ -806,6 +806,31 @@
        :ensure-system-package (clj-kondo)
        :pin melpa)
 
+     (use-package clj-refactor
+       :hook (clojure-mode . clj-refactor-mode)
+       :bind ("C-x C-r" . cljr-ivy)
+       :custom
+       (cljr-suppress-middleware-warnings t)
+       :config
+       (cljr-add-keybindings-with-prefix "C-c C-m")
+
+       (defun cljr-ivy-candidates ()
+	 (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
+		 cljr--all-helpers))
+
+       (defun cljr-ivy ()
+	 "Ivy interface to cljr-refactor"
+	 (interactive)
+	 (ivy-read "clj-refactor: "
+		   (cljr-ivy-candidates)
+		   :action
+		   (lambda (candidate)
+		     (string-match "^\\(.+?\\): " candidate)
+		     (call-interactively
+		      (cadr (assoc (match-string 1 candidate)
+				   cljr--all-helpers)))))))
+
+
      (use-package clojure-mode
        :ensure-system-package ((java . homebrew/cask/java)
                                (lein . leiningen)
@@ -840,30 +865,6 @@
        (cider-eldoc-display-context-dependent-info t)
        (cider-repl-display-help-banner nil)
        (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
-
-     (use-package clj-refactor
-       :hook ((cider-mode clojure-mode) . clj-refactor-mode)
-       :bind ("C-x C-r" . cljr-ivy)
-       :custom
-       (cljr-suppress-middleware-warnings t)
-       :config
-       (cljr-add-keybindings-with-prefix "C-c C-m")
-
-       (defun cljr-ivy-candidates ()
-	 (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
-		 cljr--all-helpers))
-
-       (defun cljr-ivy ()
-	 "Ivy interface to cljr-refactor"
-	 (interactive)
-	 (ivy-read "clj-refactor: "
-		   (cljr-ivy-candidates)
-		   :action
-		   (lambda (candidate)
-		     (string-match "^\\(.+?\\): " candidate)
-		     (call-interactively
-		      (cadr (assoc (match-string 1 candidate)
-				   cljr--all-helpers)))))))
    #+END_SRC
 
    I want to use some lein plugins across all projects.
