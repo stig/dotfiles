@@ -801,10 +801,10 @@
        :config
        (defun sb/cider-test-infer-ns-fn (ns)
 	 "Infer `test-' prefixed namespaces for test files.
-     Some projects use a `test-' prefix rather than `-test' suffix for
-     test files.  This detects those and runs the correct test.  It
-     falls back to Cider's default function if the project type is not
-     one known to use test- prefixes."
+	  Some projects use a `test-' prefix rather than `-test'
+	  suffix for test files.  This detects those and runs the
+	  correct test.  It falls back to Cider's default function if
+	  the project type is not one known to use test- prefixes."
 	 (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
 							    'test-prefix))
 	     (let* ((prefix "test-")
