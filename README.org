@@ -1516,6 +1516,11 @@
 	'(("t" "New TODO" entry (file "")
 	   (file "templates/todo.org"))
 
+	  ("a" "New Achievement" entry
+	   (file+olp+datetree "achievements.org")
+	   "* %?"
+	   :tree-type week)
+
 	  ("p" "New Project" entry (file "")
 	   (file "templates/todo.org"))
 
