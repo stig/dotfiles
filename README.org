@@ -1737,11 +1737,6 @@
    =~/public_html= and use a simple Python server to host it.
 
    #+begin_src emacs-lisp
-     (use-package python3
-       :no-require t
-       :ensure nil
-       :ensure-system-package (python3 . python3-3.7.4))
-
      (defun sb/blog-server ()
        (interactive)
        (start-process "Blog Server" "*blog server*"
