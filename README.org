@@ -16,11 +16,11 @@
   I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
 
   I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
-  et. al.) using [[https://nixos.org/nix/][Nix]]. (Via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
-  extension.)
+  et. al.) using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
+  extension.
 
   #+begin_src sh
-    curl https://nixos.org/nix/install | sh
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   #+end_src
 
 * Use lexical bindings
@@ -89,9 +89,9 @@
 *** Add Melpa and Org ELPA to ~package-archives~
 
     We need to add the URLs of the package archives we want to use.  I
-    install most packages via Melpa Stable Nix, but some from
-    unstable.  I need the =org= archive because I use some =org-contrib=
-    stuff that doesn't make it into Emacs proper.
+    install most packages via Melpa stable, but some from unstable.  I
+    need the =org= archive because I use some =org-contrib= stuff that
+    doesn't make it into Emacs proper.
 
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
@@ -132,37 +132,15 @@
       (use-package use-package-ensure-system-package
 	:ensure t
 	:custom
-	(system-packages-package-manager 'nix))
+	(system-packages-package-manager 'brew)
+	(system-packages-use-sudo nil))
     #+end_src
-
-** Add Nix's =site-lisp= directory to ~load-path~
-
-   #+begin_src emacs-lisp
-     (add-to-list 'load-path (expand-file-name "~/.nix-profile/share/emacs/site-lisp/"))
-   #+end_src
 
 ** Path
 
    The GUI Emacs gets exec path from the system, rather than the
    login shell.  We have to load PATH et. al. from the shell to get
-   access to programs installed by Nix.
-
-*** Configure the login shell
-
-    I use Zsh as my login shell.  It feels a bit weird to set it up
-    here, but it's the best way I have found so far.
-
-    Zsh reads =~/.zshenv= first, for both interactive and
-    non-interactive shells.  It's where we should set up PATH, etc.
-    Currently I only use it to source my /Nix/ profile.
-
-    #+begin_src sh :tangle ~/.zshenv
-      . ~/.nix-profile/etc/profile.d/nix.sh
-    #+end_src
-
-    #+begin_src sh :tangle ~/.bashenv
-      . ~/.nix-profile/etc/profile.d/nix.sh
-    #+end_src
+   access to programs installed by Homebrew.
 
 *** Set =PATH= etc from the login shell
 
@@ -173,7 +151,6 @@
       (use-package exec-path-from-shell
 	:custom
 	(exec-path-from-shell-variables '("PATH" "MANPATH"
-					  "NIX_PATH" "NIX_SSL_CERT_FILE"
 					  "LDFLAGS" "CPPFLAGS"))
 	:config
 	(exec-path-from-shell-initialize))
@@ -427,7 +404,7 @@
    #+begin_src emacs-lisp
      (use-package gnupg
        :ensure nil
-       :ensure-system-package ((gpg2 . gnupg) pinentry)
+       :ensure-system-package ((gpg . gnupg) pinentry)
        :no-require t)
    #+end_src
 
@@ -515,7 +492,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package editorconfig
-       :ensure-system-package (editorconfig . editorconfig-core-c)
+       :ensure-system-package editorconfig
        :custom
        (editorconfig-exclude-modes (quote (org-mode gist)))
        :config
@@ -768,7 +745,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ag
        :pin melpa
-       :ensure-system-package (ag . silver-searcher)
+       :ensure-system-package (ag . the_silver_searcher)
        :custom
        (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
        (ag-ignore-list (quote (".git"))))
@@ -814,7 +791,9 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package clojure-mode
-       :ensure-system-package clojure
+       :ensure-system-package ((java . homebrew/cask/java)
+                               (lein . leiningen)
+			       (clj . clojure))
        :config
        (put-clojure-indent 'as-> t))
 
@@ -955,9 +934,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (bind-key "C-c s" 'eshell)
-
-     ;; This helps with aws cli commands, and nix-env --help, a bit
-     (setenv "PAGER" "cat")
    #+END_SRC
 
    Eshell is great, and its Tramp integration allows me to open remote files
@@ -967,8 +943,7 @@
 
 ** LilyPond
 
-   With Nix I am not able to install LilyPond, but I can install it
-   via a download from https://lilypond.org.
+   I install LilyPond via a download from https://lilypond.org.
 
    #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
      (use-package lilypond-mode
@@ -1081,15 +1056,6 @@
        :custom
        (markdown-asymmetric-header t))
    #+END_SRC
-** Nix
-
-   Some modules useful for Nix.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package nix-mode :pin melpa)
-     (use-package nix-sandbox :pin melpa)
-   #+END_SRC
-
 ** Notmuch
 
    I like to use Emacs for /all/ writing, including email.  I don't want
@@ -1110,6 +1076,7 @@
 
    #+BEGIN_SRC emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
      (use-package notmuch
+       :load-path "/usr/local/opt/notmuch/share/emacs/site-lisp/notmuch/"
        :ensure nil
        :ensure-system-package (notmuch msmtp (mbsync . isync))
        :hook
@@ -1397,10 +1364,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ispell
        :ensure nil
-       :ensure-system-package ((aspell . aspell)
-			       ("~/.nix-profile/lib/aspell/british.alias" . aspell-dict-en)
-			       ("~/.nix-profile/lib/aspell/en-computers.rws" . aspell-dict-en-computers)
-			       ("~/.nix-profile/lib/aspell/en_GB-science.rws" . aspell-dict-en-science))
+       :ensure-system-package aspell
        :custom
        (ispell-dictionary "british")
        (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
@@ -1412,7 +1376,6 @@
    master british
    extra-dicts en-computers.rws
    add-extra-dicts en_GB-science.rws
-   data-dir /Users/stig/.nix-profile/lib/aspell
    #+end_src
 
 ** YAML
