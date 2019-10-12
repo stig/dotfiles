@@ -424,6 +424,12 @@
      (ansi-color-filter-region (point-min) (point-max)))
    #+end_src
 
+** Add explicit keybinding for opening file at point
+
+   #+begin_src emacs-lisp
+   (bind-key "C-c C-x C-f" #'find-file-at-point)
+   #+end_src
+
 * Configure minor modes
 ** Aggressive Indent Mode
 
