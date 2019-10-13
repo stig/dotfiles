@@ -803,7 +803,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck-clj-kondo
-       :ensure-system-package (clj-kondo)
+       :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
        :pin melpa)
 
      (use-package clj-refactor
