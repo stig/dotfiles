@@ -474,8 +474,11 @@
 
    #+begin_src emacs-lisp
    (use-package amx) ;; make counsel-M-x work the way I like
-   (use-package counsel)
-   (counsel-mode 1)
+
+   (use-package counsel
+     :demand
+     :config
+     (counsel-mode 1))
    #+end_src
 
 ** Edit "Org-like" lists in non-Org buffers
@@ -613,7 +616,8 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package swiper
-       :bind (("C-x /" . swiper)))
+       :bind (("C-s" . swiper-isearch)
+	      ("C-x /" . swiper)))
    #+END_SRC
 
 ** Subword
@@ -686,12 +690,17 @@
 
    #+begin_src emacs-lisp
      (use-package ivy
-       :pin melpa
        :demand
+       :pin melpa
+       :bind (("C-c C-r" . ivy-resume)
+	      ("C-x b" . ivy-switch-buffer)
+	      ("C-c v" . ivy-push-view)
+	      ("C-c V" . ivy-pop-view))
+       :custom
+       (ivy-use-virtual-buffers t)
+       (ivy-count-format "%d/%d ")
        :config
-       (setq ivy-use-virtual-buffers t
-	     ivy-count-format "%d/%d "))
-     (ivy-mode 1)
+       (ivy-mode 1))
 
      ;; This should apparently allow opening multiple files from
      ;; ivy-find-file.
