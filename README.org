@@ -833,7 +833,7 @@
 
      (use-package clojure-mode
        :ensure-system-package ((java . homebrew/cask/java)
-                               (lein . leiningen)
+			       (lein . leiningen)
 			       (clj . clojure))
        :config
        (require 'flycheck-clj-kondo)
