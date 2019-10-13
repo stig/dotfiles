@@ -86,17 +86,15 @@
       (setq auth-sources (quote ("~/.authinfo.gpg")))
     #+end_src
 
-*** Add Melpa and Org ELPA to ~package-archives~
+*** Add Melpa to ~package-archives~
 
-    We need to add the URLs of the package archives we want to use.  I
-    install most packages via Melpa stable, but some from unstable.  I
-    need the =org= archive because I use some =org-contrib= stuff that
-    doesn't make it into Emacs proper.
+    I install most packages via Melpa stable, but some from unstable,
+    so I add both those to the package archives.  (The default
+    contains only GNU ELPA.)
 
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
       (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-      (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
     #+END_SRC
 
 *** Install & configure ~use-package~
@@ -1359,7 +1357,7 @@
 
     #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
     (use-package org-notmuch
-      :ensure org-plus-contrib
+      :disabled
       :after (org notmuch))
     #+end_src
 
@@ -1443,7 +1441,6 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package org
-      :ensure org-plus-contrib
       :bind (("C-c l" . org-store-link)
 	     ("C-x C-<return>" . org-insert-subheading)
 	     ("C-S-<return>" . org-insert-todo-subheading)
@@ -1498,8 +1495,7 @@
    eventually anyway.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package org-agenda
-       :ensure org-plus-contrib
+     (use-package org
        :bind ("C-c a" . org-agenda)
        :custom
        (org-agenda-include-diary t)
@@ -1532,8 +1528,7 @@
    post]] (and YouTube series).  It has grown a bit since then.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package org-capture
-       :ensure org-plus-contrib
+     (use-package org
        :bind ("C-c c" . org-capture)
        :custom
        (org-default-notes-file "~/org/inbox.org")
