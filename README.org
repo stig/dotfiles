@@ -876,8 +876,10 @@
 			       (clj . clojure))
        :config
        (require 'flycheck-clj-kondo)
-       (put-clojure-indent 'as-> t)
-       (put-clojure-indent 'run t))
+       (put-clojure-indent 'as-> ':defn)
+       (put-clojure-indent 'run ':defn)
+       (put-clojure-indent 'dosync ':defn)
+       (put-clojure-indent 'doseq ':defn))
 
      (use-package cider
        :config
