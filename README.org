@@ -1078,8 +1078,8 @@
 
      (use-package magit
        :pin melpa
-       :bind (("C-x C-m C-s" . magit-status)
-	      ("C-x C-m C-b" . magit-blame)))
+       :bind (("C-x g s" . magit-status)
+	      ("C-x g b" . magit-blame-addition)))
 
      (use-package forge
        :pin melpa)
