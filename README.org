@@ -1352,10 +1352,10 @@
        (interactive)
        (mapc #'disable-theme custom-enabled-themes))
 
-     (defun sb/load-theme (theme)
+     (defun sb/load-theme (the-theme)
        "Enhance `load-theme' by first disabling enabled themes."
        (sb/disable-all-themes)
-       (load-theme theme))
+       (load-theme the-theme t))
    #+END_SRC
 
 ** Hydra Theme Switching
