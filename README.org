@@ -438,15 +438,15 @@
    #+end_src
 
 * Configure minor modes
-** Aggressive Indent Mode
+** Auto Indent Mode
 
-   I like to keep my code indented properly at all times. Aggressive-indent
-   helps ensure this. Turn it on for lisp modes.
+   I like to make sure any code I changed is properly indented.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package aggressive-indent
+     (use-package auto-indent-mode
+       :pin melpa
        :config
-       (global-aggressive-indent-mode 1))
+       (auto-indent-global-mode))
    #+END_SRC
 
 ** Auto commit
