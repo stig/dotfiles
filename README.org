@@ -1276,43 +1276,46 @@
        :custom
        (org-default-notes-file "~/org/inbox.org")
        (org-capture-templates
-	'(("t" "New TODO" entry (file "")
-	   (file "templates/todo.org"))
+        '(("t" "New TODO" entry (file "")
+           (file "templates/todo.org"))
 
-	  ("a" "New Achievement" entry
-	   (file+olp+datetree "achievements.org")
-	   "* %?"
-	   :tree-type week)
+          ("a" "New Achievement" entry
+           (file+olp+datetree "achievements.org")
+           "* %?"
+           :tree-type week)
 
-	  ("p" "New Project" entry (file "")
-	   (file "templates/todo.org"))
+          ("p" "New Project" entry (file "")
+           (file "templates/todo.org"))
 
-	  ("T" "New Trip" entry (file "")
-	   (file "templates/trip.org"))
+          ("T" "New Trip" entry (file "")
+           (file "templates/trip.org"))
 
-	  ("l" "New activity log entry (for reporting)" entry (file+olp+datetree "log.org")
-	   "* %^{What did you do?}\n\n %?" :tree-type 'week)
+          ("n" "New Note (for reference)" entry (file "notes.org")
+           (file "templates/note.org"))
 
-	  ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
-	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.65}|")
+          ("l" "New activity log entry (for reporting)" entry (file+olp+datetree "log.org")
+           "* %^{What did you do?}\n\n %?" :tree-type 'week)
 
-	  ("e" "New Electricity Meter Reading" table-line (file "notes/electricity-consumption.org")
-	   "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}|")
+          ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
+           "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.65}|")
 
-	  ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
-	   (file "templates/blog-post.org"))
+          ("e" "New Electricity Meter Reading" table-line (file "notes/electricity-consumption.org")
+           "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}|")
 
-	  ("r" "New GTD Review" entry (file+olp+datetree "gtd_review.org")
-	   (file "templates/gtd-review.org"))))
+          ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
+           (file "templates/blog-post.org"))
+
+          ("r" "New GTD Review" entry (file+olp+datetree "gtd_review.org")
+           (file "templates/gtd-review.org"))))
 
        :config
        (defun sb/capture-blog-post-file ()
-	 (let* ((title (read-string "Title: "))
-		(slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
-	   (expand-file-name
-	    (format "~/blog/articles/%s/%s.org"
-		    (format-time-string "%Y" (current-time))
-		    slug)))))
+         (let* ((title (read-string "Title: "))
+                (slug (replace-regexp-in-string "[^a-z0-9]+" "-" (downcase title))))
+           (expand-file-name
+            (format "~/blog/articles/%s/%s.org"
+                    (format-time-string "%Y" (current-time))
+                    slug)))))
    #+END_SRC
 
 ** Babel
