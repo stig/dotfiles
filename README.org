@@ -1337,6 +1337,7 @@
    #+END_SRC
 
 * Themes
+
 ** Load one theme at a time
 
    For years I thought that theme switching in Emacs was broken---until
@@ -1389,6 +1390,19 @@
 		 ("DEL" (sb/disable-all-themes))
 		 ("RET" nil "done" :color blue)))))
    #+END_SRC
+
+** Default Theme: Leuven
+
+   I keep coming back to Leuven as my default theme. In general I like
+   white / light backgrounds, and I like how it has special styles to
+   make Org mode documents a pleasure to look at.
+
+   #+begin_src emacs-lisp
+   (use-package leuven-theme
+     :pin melpa
+     :config
+     (sb/load-theme 'leuven))
+   #+end_src
 
 * Blogging
 
