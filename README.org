@@ -428,6 +428,15 @@
    (bind-key "C-c C-x C-f" #'find-file-at-point)
    #+end_src
 
+** Don't require two spaces to end a sentence
+
+   Having this enabled makes it harder to collaborate with others, and
+   move sentences around in texts I haven't written.
+
+   #+begin_src emacs-lisp
+   (setq sentence-end-double-space nil)
+   #+end_src
+
 * Configure minor modes
 ** Aggressive Indent Mode
 
