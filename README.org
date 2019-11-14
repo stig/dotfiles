@@ -1091,6 +1091,19 @@
        :pin melpa)
    #+END_SRC
 
+** Gist
+Working with GitHub Gists.
+
+#+begin_src emacs-lisp
+  (use-package gist
+    :pin melpa
+    :custom
+    (max-specpdl-size 1800)    ; For loading Org mode gists
+    (max-lisp-eval-depth 1200) ; For saving Org mode gists
+    :bind (("C-x g c" . gist-buffer-private)
+           ("C-x g l" . gist-list)))
+#+end_src
+
 ** Markdown
 
    I'm a sucker for lists, and I want to be able to reorder list items
