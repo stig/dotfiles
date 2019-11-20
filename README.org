@@ -898,7 +898,7 @@
      {:user {:plugins [[lein-ancient "0.6.15"]
 		       [refactor-nrepl "2.4.0"]
 		       [nrepl "0.6.0"]
-		       [cider/cider-nrepl "0.22.1"]
+		       [cider/cider-nrepl "0.22.4"]
 		       [jonase/eastwood "0.3.5"]
 		       [lein-kibit "0.1.7"]
 		       [lein-environ "1.0.0"]]
