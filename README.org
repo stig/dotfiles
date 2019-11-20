@@ -633,8 +633,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package swiper
-       :bind (("C-s" . swiper-isearch)
-	      ("C-x /" . swiper)))
+       :bind (("C-x /" . swiper)))
    #+END_SRC
 
 ** Subword
