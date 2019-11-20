@@ -929,8 +929,8 @@
 
     #+BEGIN_SRC emacs-lisp
       (defun sb/ediff-prepare-buffer ()
-	(when (memq major-mode '(org-mode emacs-lisp-mode))
-	  (outline-show-all)))
+        (when (memq major-mode '(org-mode emacs-lisp-mode))
+          (outline-show-all)))
 
       (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
     #+END_SRC
