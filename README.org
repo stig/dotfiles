@@ -490,6 +490,14 @@
      (counsel-mode 1))
    #+end_src
 
+** Diff Highlight
+
+#+begin_src emacs-lisp
+  (use-package diff-hl
+    :config
+    (global-diff-hl-mode))
+#+end_src
+
 ** Edit "Org-like" lists in non-Org buffers
 
    #+begin_src emacs-lisp
