@@ -1165,9 +1165,7 @@ Working with GitHub Gists.
    Configure aspell and let it find dictionaries:
 
    #+begin_src conf :tangle ~/.aspell.conf
-   master british
-   extra-dicts en-computers.rws
-   add-extra-dicts en_GB-science.rws
+     master british
    #+end_src
 
 ** YAML
