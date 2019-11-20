@@ -1078,8 +1078,10 @@
 
      (use-package magit
        :pin melpa
-       :bind (("C-x g s" . magit-status)
-	      ("C-x g b" . magit-blame-addition)))
+       :bind (("C-x C-g C-s" . magit-status)
+              ("C-x C-g s" . magit-status)
+              ("C-x C-g C-b" . magit-blame-addition)
+              ("C-x C-g b" . magit-blame-addition)))
 
      (use-package forge
        :pin melpa)
@@ -1100,8 +1102,8 @@ Working with GitHub Gists.
     :custom
     (max-specpdl-size 1800)    ; For loading Org mode gists
     (max-lisp-eval-depth 1200) ; For saving Org mode gists
-    :bind (("C-x g c" . gist-buffer-private)
-           ("C-x g l" . gist-list)))
+    :bind (("C-x C-g c" . gist-buffer-private)
+           ("C-x C-g l" . gist-list)))
 #+end_src
 
 ** Markdown
