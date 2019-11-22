@@ -1306,9 +1306,6 @@ Working with GitHub Gists.
           ("n" "New Note (for reference)" entry (file "notes.org")
            (file "templates/note.org"))
 
-          ("l" "New activity log entry (for reporting)" entry (file+olp+datetree "log.org")
-           "* %^{What did you do?}\n\n %?" :tree-type 'week)
-
           ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
            "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.65}|")
 
