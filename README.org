@@ -1225,14 +1225,14 @@ Working with GitHub Gists.
   #+BEGIN_SRC emacs-lisp
     (use-package org
       :bind (("C-c l" . org-store-link)
-	     ("C-x C-<return>" . org-insert-subheading)
-	     ("C-S-<return>" . org-insert-todo-subheading)
-	     :map org-mode-map
-	     ("C-n" . org-next-link)
-	     ("C-p" . org-previous-link))
+             ("C-x C-<return>" . org-insert-subheading)
+             ("C-S-<return>" . org-insert-todo-subheading)
+             :map org-mode-map
+             ("C-n" . org-next-link)
+             ("C-p" . org-previous-link))
 
       :mode (("\\.org\\'" . org-mode)
-	     ("\\.org_archive\\'" . org-mode))
+             ("\\.org_archive\\'" . org-mode))
 
       :custom
       (org-link-file-path-type 'relative)
@@ -1244,20 +1244,13 @@ Working with GitHub Gists.
       (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
       (org-log-done 'time)
-      (org-stuck-projects '("/PROJ" ("TODO" "NEXT" "WAITING") nil ""))
+      (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
 
       (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
       (org-refile-allow-creating-parent-nodes 'confirm)
       (org-refile-targets '((nil . (:level . 1))
-			    (org-agenda-files . (:maxlevel . 2))
-			    (org-agenda-files . (:tag . "PROJ"))
-
-			    ;; Add special rule for refiling to
-			    ;; Someday.org & Leisure so we can omit
-			    ;; them from org-agenda-files but still
-			    ;; refile there
-			    ("~/org/Someday.org" . (:maxlevel . 2))
-			    ("~/org/Leisure.org" . (:maxlevel . 2))))
+                            (org-agenda-files . (:maxlevel . 2))
+                            (org-agenda-files . (:tag . "PROJ"))))
       (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
       (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy"))
 
@@ -1283,8 +1276,8 @@ Working with GitHub Gists.
        :custom
        (org-agenda-include-diary t)
        (org-agenda-ignore-properties '(effort appt stats))
-
-       (org-agenda-files "~/.emacs.d/org-agenda-files.txt")
+       (org-agenda-todo-list-sublevels nil)
+       (org-agenda-files "~/org/agenda/agenda-files.txt")
 
        (org-agenda-todo-ignore-scheduled 'future)
        (org-agenda-todo-ignore-deadlines 'far)
@@ -1294,15 +1287,17 @@ Working with GitHub Gists.
 
        (org-agenda-skip-deadline-prewarning-if-scheduled t)
        (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+
        (org-agenda-custom-commands
-	'(("d" "Day Agenda"
-	   ((agenda "" ((org-agenda-span 'day)))))
-	  ("S" "Someday"
-	   ((todo "PROJ"
-		  ((org-agenda-files '("~/org/Someday.org"))))
-	    (todo "TODO"
-		  ((org-agenda-todo-list-sublevels nil)
-		   (org-agenda-files '("~/org/Someday.org")))))))))
+        '(("w" "Work Agenda" 
+           ((agenda "" ((org-agenda-span 'day)))
+            (tags-todo "-@home-MAYBE/TODO")))
+          ("h" "Home Agenda" 
+           ((agenda "")
+           (tags-todo "-@work-MAYBE/TODO")))  
+          ("m" "Maybe"
+           ((tags-todo "MAYBE/PROJ")
+            (tags-todo "MAYBE-PROJ/TODO"))))))
    #+END_SRC
 
 ** Capturing
@@ -1314,35 +1309,41 @@ Working with GitHub Gists.
      (use-package org
        :bind ("C-c c" . org-capture)
        :custom
-       (org-default-notes-file "~/org/inbox.org")
        (org-capture-templates
-        '(("t" "New TODO" entry (file "")
+        '(("t" "New TODO" entry 
+           (file "agenda/inbox.org")
            (file "templates/todo.org"))
 
           ("a" "New Achievement" entry
-           (file+olp+datetree "achievements.org")
-           "* %?"
-           :tree-type week)
+           (file+olp+datetree "~/org/cci/achievements.org")
+           "* %?" :tree-type week)
 
-          ("p" "New Project" entry (file "")
+          ("p" "New Project" entry
+           (file "agenda/inbox.org")
            (file "templates/proj.org"))
 
-          ("T" "New Trip" entry (file "")
+          ("T" "New Trip" entry
+           (file "agenda/inbox.org")
            (file "templates/trip.org"))
 
-          ("n" "New Note (for reference)" entry (file "notes.org")
+          ("n" "New Note (for reference)" entry
+           (file "~/org/cci/notes.org")
            (file "templates/note.org"))
 
-          ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
+          ("g" "New Gas Meter Reading" table-line
+           (file "~/org/notes/gas-consumption.org")
            (file "template/gas-consumption.org"))
 
-          ("e" "New Electricity Meter Reading" table-line (file "notes/electricity-consumption.org")
+          ("e" "New Electricity Meter Reading" table-line
+           (file "~/org/notes/electricity-consumption.org")
            (file "template/electricity-consumption.org"))
 
-          ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
+          ("b" "New Blog Post" plain
+           (file sb/capture-blog-post-file)
            (file "templates/blog-post.org"))
 
-          ("r" "New GTD Review" entry (file+olp+datetree "gtd_review.org")
+          ("r" "New GTD Review" entry
+           (file+olp+datetree "gtd_review.org")
            (file "templates/gtd-review.org"))))
 
        :config
