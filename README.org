@@ -1306,7 +1306,7 @@ Working with GitHub Gists.
            :tree-type week)
 
           ("p" "New Project" entry (file "")
-           (file "templates/todo.org"))
+           (file "templates/proj.org"))
 
           ("T" "New Trip" entry (file "")
            (file "templates/trip.org"))
