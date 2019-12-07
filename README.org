@@ -1315,10 +1315,10 @@ Working with GitHub Gists.
            (file "templates/note.org"))
 
           ("g" "New Gas Meter Reading" table-line (file "notes/gas-consumption.org")
-           "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Litre|0.65}|")
+           (file "template/gas-consumption.org"))
 
           ("e" "New Electricity Meter Reading" table-line (file "notes/electricity-consumption.org")
-           "|%^{Reading Time}u|%^{Reading Value}|%^{Price Per Unit|0.1412}|")
+           (file "template/electricity-consumption.org"))
 
           ("b" "New Blog Post" plain (file sb/capture-blog-post-file)
            (file "templates/blog-post.org"))
