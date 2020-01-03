@@ -651,7 +651,7 @@
      (use-package projectile
        :bind-keymap ("C-c p" . projectile-command-map)
        :custom
-       (projectile-project-search-path '("~/proj/"))
+       (projectile-project-search-path '("~/src"))
        (projectile-completion-system 'ivy)
        (projectile-create-missing-test-files t)
        :config
