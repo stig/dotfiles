@@ -451,6 +451,26 @@
    #+end_src
 
 * Configure minor modes
+** Ace Window
+
+   This lets me rapidly switch to a different frame/window.  I use
+   this mainly when resolving conflicts in ediff merge, since I need
+   to swap between two frames there.
+
+   #+begin_src emacs-lisp
+   (use-package ace-window
+     :bind ("M-`" . ace-window))
+   #+end_src
+
+** Auto commit
+
+   In some projects (notably, my Org/Agenda setup) I want to
+   automatically commit when editing files.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-auto-commit-mode)
+   #+END_SRC
+
 ** Auto Indent Mode
 
    I like to make sure any code I changed is properly indented.
@@ -460,15 +480,6 @@
        :pin melpa
        :config
        (auto-indent-global-mode))
-   #+END_SRC
-
-** Auto commit
-
-   In some projects (notably, my Org/Agenda setup) I want to
-   automatically commit when editing files.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-auto-commit-mode)
    #+END_SRC
 
 ** Auto revert mode
@@ -511,6 +522,22 @@
     (global-diff-hl-mode))
 #+end_src
 
+** Dumb Jump
+
+   For finding my way around codebases.
+
+   #+begin_src emacs-lisp
+     (use-package dumb-jump
+       :bind (("M-g o" . dumb-jump-go-other-window)
+	      ("M-g j" . dumb-jump-go)
+	      ("M-g b" . dumb-jump-back)
+	      ("M-g i" . dumb-jump-go-prompt)
+	      ("M-g x" . dumb-jump-go-prefer-external)
+	      ("M-g z" . dumb-jump-go-prefer-external-other-window))
+       :custom
+       (dumb-jump-selector 'ivy))
+   #+end_src
+
 ** Edit "Org-like" lists in non-Org buffers
 
    #+begin_src emacs-lisp
@@ -533,6 +560,14 @@
        :config
        (editorconfig-mode))
    #+END_SRC
+
+** Flycheck
+
+   #+begin_src emacs-lisp
+     (use-package flycheck-mode
+       :ensure flycheck
+       :hook clojure-mode)
+   #+end_src
 
 ** Highlight & deal with whitespace annoyances
 
@@ -557,6 +592,47 @@
    #+begin_src emacs-lisp
    (use-package iedit :pin melpa)
    #+end_src
+
+** Ivy
+
+   I've long been a happy Helm user, but it confuses me (and is slow!)
+   in some situations so I thought I'd try again to see if Ivy fares
+   any better.
+
+   #+begin_src emacs-lisp
+     (use-package ivy
+       :demand
+       :pin melpa
+       :bind (("C-c C-r" . ivy-resume)
+	      ("C-x b" . ivy-switch-buffer)
+	      ("C-c v" . ivy-push-view)
+	      ("C-c V" . ivy-pop-view))
+       :custom
+       (ivy-use-virtual-buffers t)
+       (ivy-count-format "%d/%d ")
+       :config
+       (ivy-mode 1))
+
+     ;; This should apparently allow opening multiple files from
+     ;; ivy-find-file.
+     (use-package ivy-hydra
+       :pin melpa)
+   #+end_src
+
+** Multiple Cursors
+
+   This package is another one of those near-magical ones. It allows me to do
+   multiple edits in the same buffer, using several cursors. You can think of
+   it as an interactive macro, where you can constantly see what's being done.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+
+       :bind (("C-c M-e" . mc/edit-lines)
+              ("C-c M-a" . mc/mark-all-dwim)
+              ("s-n" . mc/mark-next-like-this)
+              ("s-p" . mc/mark-previous-like-this)))
+   #+END_SRC
 
 ** Projectile
 
@@ -640,15 +716,6 @@
        (sp-local-pair 'text-mode "'" nil :actions :rem))
    #+END_SRC
 
-** Swiper
-
-   Invoke swiper (find in current buffer).
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package swiper
-       :bind (("C-x /" . swiper)))
-   #+END_SRC
-
 ** Subword
 
    Treats CapitalizedWords as separate, so we can move forward by
@@ -658,6 +725,15 @@
    (use-package subword
     :hook (prog-mode . subword-mode))
    #+end_src
+
+** Swiper
+
+   Invoke swiper (find in current buffer).
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package swiper
+       :bind (("C-x /" . swiper)))
+   #+END_SRC
 
 ** Transparently open compressed files
 
@@ -696,74 +772,6 @@
        :hook text-mode)
    #+END_SRC
 
-** Multiple Cursors
-
-   This package is another one of those near-magical ones. It allows me to do
-   multiple edits in the same buffer, using several cursors. You can think of
-   it as an interactive macro, where you can constantly see what's being done.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package multiple-cursors
-
-       :bind (("C-c M-e" . mc/edit-lines)
-              ("C-c M-a" . mc/mark-all-dwim)
-              ("s-n" . mc/mark-next-like-this)
-              ("s-p" . mc/mark-previous-like-this)))
-   #+END_SRC
-
-** Ivy
-
-   I've long been a happy Helm user, but it confuses me (and is slow!)
-   in some situations so I thought I'd try again to see if Ivy fares
-   any better.
-
-   #+begin_src emacs-lisp
-     (use-package ivy
-       :demand
-       :pin melpa
-       :bind (("C-c C-r" . ivy-resume)
-	      ("C-x b" . ivy-switch-buffer)
-	      ("C-c v" . ivy-push-view)
-	      ("C-c V" . ivy-pop-view))
-       :custom
-       (ivy-use-virtual-buffers t)
-       (ivy-count-format "%d/%d ")
-       :config
-       (ivy-mode 1))
-
-     ;; This should apparently allow opening multiple files from
-     ;; ivy-find-file.
-     (use-package ivy-hydra
-       :pin melpa)
-   #+end_src
-
-** Ace Window
-
-   This lets me rapidly switch to a different frame/window.  I use
-   this mainly when resolving conflicts in ediff merge, since I need
-   to swap between two frames there.
-
-   #+begin_src emacs-lisp
-   (use-package ace-window
-     :bind ("M-`" . ace-window))
-   #+end_src
-
-** Dumb Jump
-
-   For finding my way around codebases.
-
-   #+begin_src emacs-lisp
-     (use-package dumb-jump
-       :bind (("M-g o" . dumb-jump-go-other-window)
-	      ("M-g j" . dumb-jump-go)
-	      ("M-g b" . dumb-jump-back)
-	      ("M-g i" . dumb-jump-go-prompt)
-	      ("M-g x" . dumb-jump-go-prefer-external)
-	      ("M-g z" . dumb-jump-go-prefer-external-other-window))
-       :custom
-       (dumb-jump-selector 'ivy))
-   #+end_src
-
 ** YAS
 
    A templating engine for Emacs.
@@ -771,14 +779,6 @@
    #+begin_src emacs-lisp
      (use-package yasnippet
        :hook (after-init . yas-global-mode))
-   #+end_src
-
-** Flycheck
-
-   #+begin_src emacs-lisp
-     (use-package flycheck-mode
-       :ensure flycheck
-       :hook clojure-mode)
    #+end_src
 
 * Configure major modes
