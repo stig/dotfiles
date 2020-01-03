@@ -522,22 +522,6 @@
     (global-diff-hl-mode))
 #+end_src
 
-** Dumb Jump
-
-   For finding my way around codebases.
-
-   #+begin_src emacs-lisp
-     (use-package dumb-jump
-       :bind (("M-g o" . dumb-jump-go-other-window)
-	      ("M-g j" . dumb-jump-go)
-	      ("M-g b" . dumb-jump-back)
-	      ("M-g i" . dumb-jump-go-prompt)
-	      ("M-g x" . dumb-jump-go-prefer-external)
-	      ("M-g z" . dumb-jump-go-prefer-external-other-window))
-       :custom
-       (dumb-jump-selector 'ivy))
-   #+end_src
-
 ** Edit "Org-like" lists in non-Org buffers
 
    #+begin_src emacs-lisp
@@ -618,6 +602,31 @@
      (use-package ivy-hydra
        :pin melpa)
    #+end_src
+
+** LSP (Language Server Protocol)
+
+I use this primarily for:
+
+- =M-.= :: find definition
+- M-? :: Find references
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+      :ensure-system-package clojure-lsp
+      :ensure t
+      :commands lsp
+      :config
+      (dolist (m '(clojure-mode
+                   clojurec-mode
+                   clojurescript-mode
+                   clojurex-mode))
+        (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+      :init
+      (setq lsp-enable-indentation nil)
+      (add-hook 'clojure-mode-hook #'lsp)
+      (add-hook 'clojurec-mode-hook #'lsp)
+      (add-hook 'clojurescript-mode-hook #'lsp))
+#+end_src
 
 ** Multiple Cursors
 
