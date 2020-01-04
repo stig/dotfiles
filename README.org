@@ -1015,7 +1015,7 @@ I use this primarily for:
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
-** Magit
+** Magit & Friends
 
    I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
    git cli any more.  I've seen someone suggest learning Emacs just to
@@ -1498,7 +1498,7 @@ Working with GitHub Gists.
 		      "--directory" (expand-file-name "~/public_html/"))
        (message "Blog Server started"))
    #+end_src
-* Email
+* Load Optional Configuration
 
   Check if we have additional tangled config files to load.
 
