@@ -178,13 +178,12 @@
 * Configure the basics
 ** Introduce Myself
 
-   In case something needs my name/email address.
+In case something needs my name/email address.
 
-   #+BEGIN_SRC emacs-lisp
-   (setq user-full-name "Stig Brautaset")
-   (setq user-mail-address "stig@brautaset.org")
-   (setq sb/personal-setup-p t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "Stig Brautaset")
+  (setq user-mail-address "stig@brautaset.org")
+#+END_SRC
 
 ** Configure Meta/super/hyper keys
 
@@ -1016,81 +1015,6 @@ I use this primarily for:
    aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
    and has the same config, whether I am on a local machine or a remote one.
 
-** LilyPond
-
-   I install LilyPond via a download from https://lilypond.org.
-
-   #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
-     (use-package lilypond-mode
-       :load-path "/Applications/LilyPond.app/Contents/Resources/share/emacs/site-lisp"
-       :mode (("\\.ily\\'" . LilyPond-mode)
-	      ("\\.ly\\'" . LilyPond-mode))
-       :hook (LilyPond-mode . (lambda () (turn-on-font-lock)))
-       :custom
-       (LilyPond-midi-command "playmidi" t)
-       (LilyPond-pdf-command "open"))
-   #+end_src
-
-*** Creating the =playmidi= shell script
-
-    We can play midi files with fluidsynth, but the invocation isn't
-    the nicest.  I wrap it in a shell script.  First I have to install
-    it, however.
-
-    #+begin_src emacs-lisp :tangle (when sb/personal-setup-p "~/.emacs.d/init.el")
-      (use-package fluidsynth
-	:ensure nil
-	:no-require t
-	:ensure-system-package fluidsynth)
-    #+end_src
-
-    Then we need a soundfont. Fluidsynth appears to recommend the one
-    from http://www.schristiancollins.com/generaluser.php.
-
-    #+begin_src sh :tangle (when sb/personal-setup-p "~/.local/bin/download_soundfont") :tangle-mode (identity #o755) :mkdirp t
-      #!/bin/bash
-      set -o errexit
-      set -o nounset
-      set -o pipefail
-
-      tempfoo=`basename $0`
-      TMPDIR=`mktemp -d -t ${tempfoo}`
-
-      VERSION="1.471"
-
-      mkdir -p ~/.local/share
-      TARGET=~/.local/share/GeneralUserGS
-      if test -d $TARGET ; then
-          mv $TARGET $TARGET.$(date +%Y-%m-%d).$RANDOM
-      fi
-
-      DL=GeneralUser_GS_$VERSION
-      curl -L https://www.dropbox.com/s/4x27l49kxcwamp5/GeneralUser_GS_$VERSION.zip?dl=1 -o ~/Downloads/$DL.zip
-      cd $TMPDIR
-      unzip ~/Downloads/$DL.zip
-
-      mv "$(find $TMPDIR -mindepth 1 -maxdepth 1 -type d)" "$TARGET"
-
-      rmdir $TMPDIR
-    #+end_src
-
-
-    Finally let's install a wrapper to more easily play stuff.
-
-    #+begin_src sh :tangle (when sb/personal-setup-p "~/.local/bin/playmidi") :tangle-mode (identity #o755)
-      #!/bin/bash
-      set -o errexit
-      set -o nounset
-      set -o pipefail
-
-      if ! test -d ~/.local/share/GeneralUserGS ; then
-	echo "No soundfonts found, attempting to download..."
-	download_soundfont
-      fi
-
-      fluidsynth -a coreaudio -m coremidi -ni ~/.local/share/GeneralUserGS/GeneralUser\ GS\ v1.471.sf2 "$@"
-    #+end_src
-
 ** Magit
 
    I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
@@ -1574,11 +1498,11 @@ Working with GitHub Gists.
    #+end_src
 * Email
 
-  Check if we have tangled an ~email.el~ (created in [[file:Email.org][Email.org]]) and
-  include it if so.
+  Check if we have additional tangled config files to load.
 
   #+begin_src emacs-lisp
-    (let ((email-config (expand-file-name "~/.emacs.d/email.el")))
-      (when (file-exists-p email-config)
-	(load email-config)))
+    (dolist (cfg '("email.el" "lilypond.el"))
+      (let ((config-file (expand-file-name cfg "~/.emacs.d")))
+        (when (file-exists-p config-file)
+          (load config-file))))
   #+end_src
