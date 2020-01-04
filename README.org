@@ -1215,10 +1215,12 @@ Working with GitHub Gists.
        (org-agenda-custom-commands
         '(("w" "Work Agenda" 
            ((agenda "" ((org-agenda-span 'day)))
-            (tags-todo "-@home-MAYBE/TODO")))
+            (tags-todo "-@home-MAYBE/TODO"
+                       ((org-agenda-max-entries 5)))))
           ("h" "Home Agenda" 
            ((agenda "")
-           (tags-todo "-@work-MAYBE/TODO")))  
+            (tags-todo "-@work-MAYBE/TODO"
+                       ((org-agenda-max-entries 5)))))
           ("m" "Maybe"
            ((tags-todo "MAYBE/PROJ")
             (tags-todo "MAYBE-PROJ/TODO"))))))
