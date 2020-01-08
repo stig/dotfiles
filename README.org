@@ -467,7 +467,11 @@ In case something needs my name/email address.
    automatically commit when editing files.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package git-auto-commit-mode)
+     (use-package git-auto-commit-mode
+       :custom
+       (gac-automatically-add-new-files-p t)
+       (gac-automatically-push-p t)
+       (gac-debounce-interval 60))
    #+END_SRC
 
 ** Auto Indent Mode
