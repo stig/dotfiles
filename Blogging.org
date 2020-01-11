@@ -1,0 +1,138 @@
+#+title: Blogging Support
+#+Author: Stig Brautaset
+#+PROPERTY: header-args:              :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/blogging.el :results silent
+#+STARTUP: content
+
+This file contains config I use for working on my blog. I create blog
+entries in a directory under =~/blog= and link to them from the main
+index page. It has so far been a manual job, but I have finally
+managed to create a function to automate it a bit.
+
+* Helper function to get a value from Org keyword element
+
+#+begin_src emacs-lisp
+  (defun sb/org-kw-get (key)
+    "Return a lambda that takes an Org keyword element and returns
+  its :value property if its :key property matches `key'."
+    `(lambda (kw)
+       (if (equal ,key (org-element-property :key kw))
+           (org-element-property :value kw))))
+#+end_src
+
+* Create blog post index entry
+
+  #+BEGIN_SRC emacs-lisp
+    (defun sb/blog-post-index-entry ()
+      "Call in a blog post to get an entry suitable for linking to this
+    post from the index page."
+      (interactive)
+      (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+             (tree (org-element-parse-buffer))
+             (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+             (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
+             (abstract
+              (org-element-interpret-data
+               (org-element-map tree 'special-block
+                 (lambda (sb)
+                   (if (equal "abstract" (org-element-property :type sb))
+                       (org-element-contents sb)))))))
+        (with-temp-buffer
+          (org-mode)
+          (org-insert-heading)
+          ;; Would have loved to use `org-insert-link' here but
+          ;; I can't stop it from presenting a prompt.
+          (insert "[[file:" path "][" title "]]\n\n"
+                  abstract
+                  "\n\n")
+          ;; Need to go back to the first line to set tags, as
+          ;; org-set-tags assumes point is on a headline.
+          (goto-char (point-min))
+          (org-set-tags categories)
+          ;; Return the contents temporary buffer as a string *without properties*
+          (copy-region-as-kill
+           (point-min) (point-max)))))
+  #+END_SRC
+
+* Create RSS entry
+
+Creating an entry in the RSS feed is another manual step. This way I
+can "soft publish" and publish to RSS separately from the index page.
+
+#+begin_src emacs-lisp
+  (defun sb/blog-post-rss-entry ()
+    "Call in a blog post to get an entry suitable for linking to this
+  post from the index page."
+    (interactive)
+    (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+           (tree (org-element-parse-buffer))
+           (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+           (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY")))
+           (abstract
+            (org-element-interpret-data
+             (org-element-map tree 'special-block
+               (lambda (sb)
+                 (if (equal "abstract" (org-element-property :type sb))
+                     (org-element-contents sb)))))))
+      (with-temp-buffer
+        (org-mode)
+        (org-insert-heading)
+        (insert title "\n\n" abstract)
+        (org-set-property "RSS_PERMALINK"
+                          (format "%s.html"
+                                  (file-name-sans-extension path)))
+        (copy-region-as-kill
+         (point-min) (point-max)))))
+#+end_src
+
+* Find drafts
+
+#+begin_src emacs-lisp
+  (defun sb/find-drafts ()
+    "Find org files in `~/blog/articles' not already linked from
+                `~/blog/index.org'."
+    (interactive)
+    (let* ((prefix (expand-file-name "~/blog/"))
+           (posts
+            (directory-files-recursively
+             (concat prefix "articles") ".org"))
+           (index-contents (get-string-from-file (concat prefix "index.org")))
+           (drafts (cl-remove-if (lambda (needle)
+                                   (string-match
+                                    (string-remove-prefix prefix needle)
+                                    index-contents))
+                                 posts))
+           (buffer-name "*blog drafts*"))
+      (if drafts
+          (progn
+            (with-current-buffer (get-buffer-create buffer-name)
+              (erase-buffer)
+              (org-mode)
+              (insert
+               (mapconcat
+                (lambda (entry)
+                  (format "- file:%s" entry))
+                drafts
+                "\n"))
+              (buffer-string))
+            (unless (get-buffer-window buffer-name t)
+              (pop-to-buffer buffer-name nil t))
+            (shrink-window-if-larger-than-buffer
+             (get-buffer-window buffer-name)))
+        (message "No drafts could be found!"))))
+#+end_src
+
+* Blog server
+
+While noodling around with my blog locally I publish to =~/public_html=
+and use a simple Python server to host it.
+
+#+begin_src emacs-lisp
+  (defun sb/blog-server ()
+    (interactive)
+    (start-process "Blog Server" "*blog server*"
+                   "python3"
+                   "-m" "http.server"
+                   "--directory" (expand-file-name "~/public_html/"))
+    (message "Blog Server started"))
+#+end_src
