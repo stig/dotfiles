@@ -136,3 +136,10 @@ and use a simple Python server to host it.
                    "--directory" (expand-file-name "~/public_html/"))
     (message "Blog Server started"))
 #+end_src
+
+* Load Blog Publish Configuration for local development
+
+#+begin_src emacs-lisp
+(load "~/blog/.circleci/config.el")
+#+end_src
+
