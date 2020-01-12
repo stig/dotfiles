@@ -408,15 +408,22 @@ In case something needs my name/email address.
 
 ** GnuPG
 
-   Emacs will open =.gpg= files transparently, but I need to install
-   gnupg for that to work.
+Emacs will open =.gpg= files transparently, but I need to install gnupg
+& pinentry for that to work.
 
-   #+begin_src emacs-lisp
-     (use-package gnupg
-       :ensure nil
-       :ensure-system-package ((gpg . gnupg) pinentry)
-       :no-require t)
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package gnupg
+    :ensure nil
+    :ensure-system-package ((gpg . gnupg) pinentry)
+    :no-require t
+    :custom
+    (epa-pinentry-mode 'loopback))
+#+end_src
+
+#+begin_src conf :mkdirp t :tangle ~/.gnupg/gpg-agent.conf
+  allow-emacs-pinentry
+  allow-loopback-pinentry
+#+end_src
 
 ** Running tests
 
