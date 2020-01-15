@@ -622,20 +622,22 @@ I use this primarily for:
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-      :ensure-system-package clojure-lsp
-      :ensure t
-      :commands lsp
-      :config
-      (dolist (m '(clojure-mode
-                   clojurec-mode
-                   clojurescript-mode
-                   clojurex-mode))
-        (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
-      :init
-      (setq lsp-enable-indentation nil)
-      (add-hook 'clojure-mode-hook #'lsp)
-      (add-hook 'clojurec-mode-hook #'lsp)
-      (add-hook 'clojurescript-mode-hook #'lsp))
+    :ensure-system-package clojure-lsp
+    :bind ("M-." . lsp-find-definition)
+    :ensure t
+    :commands lsp
+    :config
+    (dolist (m '(clojure-mode
+                 clojurec-mode
+                 clojurescript-mode
+                 clojurex-mode))
+      (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+    :init
+    (setq lsp-prefer-flymake nil)
+    (setq lsp-enable-indentation nil)
+    (add-hook 'clojure-mode-hook #'lsp)
+    (add-hook 'clojurec-mode-hook #'lsp)
+    (add-hook 'clojurescript-mode-hook #'lsp))
 #+end_src
 
 ** Multiple Cursors
