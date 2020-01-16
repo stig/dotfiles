@@ -6,174 +6,174 @@
 #+STARTUP: content
 * Introduction
 
-  This is my Emacs configuration.  Because I'm forgetful, it is a
-  [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
-  this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
-  hitting =C-c C-v C-t=.
+This is my Emacs configuration.  Because I'm forgetful, it is a
+[[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
+this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
+hitting =C-c C-v C-t=.
 
 * Installing
 
-  I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
+I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
 
-  I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
-  et. al.) using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
-  extension.
+I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
+et. al.) using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
+extension.
 
-  #+begin_src sh
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  #+end_src
+#+begin_src sh
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#+end_src
 
 * Use lexical bindings
 
-  Make sure the resulting =~/.emacs.d/init.el= uses lexical binding for
-  performance reasons.
+Make sure the resulting =~/.emacs.d/init.el= uses lexical binding for
+performance reasons.
 
-  #+begin_src emacs-lisp
-    ;; -*- lexical-binding: t; -*-
-  #+end_src
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+#+end_src
 
 * Early Init (turn off mouse interface)
 
-  Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
-  initialising GUI components.  I turn off the mouse interface here to
-  avoid momentary display during launch.  I also don't need to see a
-  splash screen on every launch.  Finally I do /not like/ Emacs beeping
-  at me: I prefer a visual bell.
+Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
+initialising GUI components.  I turn off the mouse interface here to
+avoid momentary display during launch.  I also don't need to see a
+splash screen on every launch.  Finally I do /not like/ Emacs beeping
+at me: I prefer a visual bell.
 
-  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
-    ;; -*- lexical-binding: t; -*-
-    (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-    (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-    (setq inhibit-startup-message t)
-    (setq visible-bell t)
-  #+END_SRC
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
+  ;; -*- lexical-binding: t; -*-
+  (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+  (setq inhibit-startup-message t)
+  (setq visible-bell t)
+#+END_SRC
 
 ** Emacs <27 Compatibility
 
-   In older versions of Emacs we load ~early-init.el~ manually.  While
-   Emacs 27 initialises packages before loading the user config, older
-   ones does not: thus we also call =package-initialize= here.
+In older versions of Emacs we load ~early-init.el~ manually.  While
+Emacs 27 initialises packages before loading the user config, older
+ones does not: thus we also call =package-initialize= here.
 
-   #+BEGIN_SRC emacs-lisp
-    (if (not visible-bell)
-	(progn
-	  (load (expand-file-name "~/.emacs.d/early-init.el") t)
-	  (require 'package)
-	  (package-initialize)))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (if (not visible-bell)
+      (progn
+        (load (expand-file-name "~/.emacs.d/early-init.el") t)
+        (require 'package)
+        (package-initialize)))
+#+END_SRC
 
 * Initialize package system, paths, and /Customize/ settings
 
-  I do these early because I want them to apply even if I mess up
-  later parts of my =init.el=.
+I do these early because I want them to apply even if I mess up
+later parts of my =init.el=.
 
 ** Package System
 
-   A lot of my config installs packages from GNU elpa, MELPA, and Org
-   elpa.  So we need to configure the package system now.
+A lot of my config installs packages from GNU elpa, MELPA, and Org
+elpa.  So we need to configure the package system now.
 
 *** Make GNU ~package-archive~ work
 
-    #+begin_src emacs-lisp
-      ;; Required for the "gnu" elpa archive to work;
-      ;; See https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
-      (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-    #+end_src
+#+begin_src emacs-lisp
+  ;; Required for the "gnu" elpa archive to work; See
+  ;; https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+#+end_src
 
 *** Ensure we don't use unencrypted auth sources
 
-    #+begin_src emacs-lisp
-      (setq auth-sources (quote ("~/.authinfo.gpg")))
-    #+end_src
+#+begin_src emacs-lisp
+  (setq auth-sources (quote ("~/.authinfo.gpg")))
+#+end_src
 
 *** Add Melpa to ~package-archives~
 
-    I install most packages via Melpa stable, but some from unstable,
-    so I add both those to the package archives.  (The default
-    contains only GNU ELPA.)
+I install most packages via Melpa stable, but some from unstable,
+so I add both those to the package archives.  (The default
+contains only GNU ELPA.)
 
-    #+BEGIN_SRC emacs-lisp
-      (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+#+END_SRC
 
 *** Install & configure ~use-package~
 
-    Install ~use-package~ and configure it to install packages from
-    stable MELPA archive by default.  For packages that need it I
-    override this by putting =:pin $repo= in the =use-config= stanza.
+Install ~use-package~ and configure it to install packages from
+stable MELPA archive by default.  For packages that need it I
+override this by putting =:pin $repo= in the =use-config= stanza.
 
-    #+begin_src emacs-lisp
-      ;; Automatically :ensure packages.
-      (setq use-package-always-ensure t)
+#+begin_src emacs-lisp
+  ;; Automatically :ensure packages.
+  (setq use-package-always-ensure t)
 
-      ;; Default value for :pin in each use-package.
-      (setq use-package-always-pin "melpa-stable")
+  ;; Default value for :pin in each use-package.
+  (setq use-package-always-pin "melpa-stable")
 
-      ;; Bootstrap use-package & dependencies
-      (seq-doseq (package '(use-package bind-key diminish))
-	(unless (package-installed-p package)
-	  (package-refresh-contents)
-	  (package-install package)))
+  ;; Bootstrap use-package & dependencies
+  (seq-doseq (package '(use-package bind-key diminish))
+    (unless (package-installed-p package)
+      (package-refresh-contents)
+      (package-install package)))
 
-      (eval-when-compile
-	(require 'use-package))
-      (require 'diminish)
-      (require 'bind-key)
-    #+end_src
+  (eval-when-compile
+    (require 'use-package))
+  (require 'diminish)
+  (require 'bind-key)
+#+end_src
 
 *** Install =:ensure-system-package= extension
 
-    This allows =use-package= to install system packages.
+This allows =use-package= to install system packages.
 
-    #+begin_src emacs-lisp
-      (use-package use-package-ensure-system-package
-	:ensure t
-	:custom
-	(system-packages-package-manager 'brew)
-	(system-packages-use-sudo nil))
-    #+end_src
+#+begin_src emacs-lisp
+  (use-package use-package-ensure-system-package
+    :ensure t
+    :custom
+    (system-packages-package-manager 'brew)
+    (system-packages-use-sudo nil))
+#+end_src
 
 ** Path
 
-   The GUI Emacs gets exec path from the system, rather than the
-   login shell.  We have to load PATH et. al. from the shell to get
-   access to programs installed by Homebrew.
+The GUI Emacs gets exec path from the system, rather than the
+login shell.  We have to load PATH et. al. from the shell to get
+access to programs installed by Homebrew.
 
 *** Configure the login shell
 
-    I use Zsh as my login shell.  It feels a bit weird to set it up
-    here, but it's the best way I have found so far.
+I use Zsh as my login shell.  It feels a bit weird to set it up
+here, but it's the best way I have found so far.
 
-    Zsh reads =~/.zshenv= first, for both interactive and
-    non-interactive shells.  It's where we should set up PATH, etc.
+Zsh reads =~/.zshenv= first, for both interactive and
+non-interactive shells.  It's where we should set up PATH, etc.
 
-    #+begin_src sh :tangle ~/.zshenv
-      export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-    #+end_src
+#+begin_src sh :tangle ~/.zshenv
+  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+#+end_src
 
 *** Set =PATH= etc from the login shell
 
-    Copy PATH and certain other variables from my login shell so these
-    variables are available in Eshell.  (And elsewhere in Emacs.)
+Copy PATH and certain other variables from my login shell so these
+variables are available in Eshell.  (And elsewhere in Emacs.)
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package exec-path-from-shell
-        :custom
-        (exec-path-from-shell-variables '("PATH" "MANPATH"
-                                          "LDFLAGS" "CPPFLAGS"
-                                          "JAVA_HOME"))
-        :config
-        (exec-path-from-shell-initialize))
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :custom
+    (exec-path-from-shell-variables '("PATH" "MANPATH"
+                                      "LDFLAGS" "CPPFLAGS"
+                                      "JAVA_HOME"))
+    :config
+    (exec-path-from-shell-initialize))
+#+END_SRC
 
 ** Make =Customize= settings transient
 
-   I prefer to code my configuration.
+I prefer to code my configuration.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq custom-file (make-temp-file ""))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq custom-file (make-temp-file ""))
+#+END_SRC
 
 * Configure the basics
 ** Introduce Myself
@@ -187,224 +187,224 @@ In case something needs my name/email address.
 
 ** Configure Meta/super/hyper keys
 
-   #+BEGIN_SRC emacs-lisp
-     (setq mac-command-modifier 'meta
-	   mac-option-modifier 'super
-	   mac-function-modifier 'hyper)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq mac-command-modifier 'meta 
+        mac-option-modifier 'super
+        mac-function-modifier 'hyper)
+#+END_SRC
 
 ** Confirm kill emacs
 
-   The default keybinding for this is close to =M-q= which I use for
-   reflowing text.
+The default keybinding for this is close to =M-q= which I use for
+reflowing text.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq confirm-kill-emacs 'yes-or-no-p)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq confirm-kill-emacs 'yes-or-no-p)
+#+END_SRC
 
 ** Make 'y' and 'n' satisfy prompts
 
-   Answering just 'y' or 'n' will do, rather than having to spell out "yes"
-   or "no".
+Answering just 'y' or 'n' will do, rather than having to spell out "yes"
+or "no".
 
-   #+BEGIN_SRC emacs-lisp
-     (defalias 'yes-or-no-p 'y-or-n-p)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
 
 ** Make mouse scrolling smoother
 
-   The adaptive mouse scrolling is far, far too quick so let's turn that off.
+The adaptive mouse scrolling is far, far too quick so let's turn that off.
 
-   #+BEGIN_SRC emacs-lisp
-   (setq mouse-wheel-progressive-speed nil)
-   (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+#+END_SRC
 
 ** Store backup files in =~/.emacs.d/backups=
 
-   I don't like backup files (those dreaded =foo~= ones) all over my disk.
-   This places them in =~/.emacs.d/backups=.
+I don't like backup files (those dreaded =foo~= ones) all over my disk.
+This places them in =~/.emacs.d/backups=.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+#+END_SRC
 
 ** Clipboard
 
-   These settings improve pasting behaviour with programs outside
-   Emacs.  Save clipboard text into kill ring before replacing them.
-   Copying with the mouse copies at point, rather than where you
-   click.
+These settings improve pasting behaviour with programs outside
+Emacs.  Save clipboard text into kill ring before replacing them.
+Copying with the mouse copies at point, rather than where you
+click.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq save-interprogram-paste-before-kill t)
-     (setq mouse-yank-at-point t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq save-interprogram-paste-before-kill t)
+  (setq mouse-yank-at-point t)
+#+END_SRC
 
 ** Make the fonts bigger
 
-   #+BEGIN_SRC emacs-lisp
-     (set-face-attribute 'default nil :height 150)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :height 150)
+#+END_SRC
 
 ** UTF-8: everywhere, always
 
-   Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
+Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq locale-coding-system 'utf-8)
-     (set-terminal-coding-system 'utf-8)
-     (set-keyboard-coding-system 'utf-8)
-     (set-selection-coding-system 'utf-8)
-     (prefer-coding-system 'utf-8)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+#+END_SRC
 
 ** End all files in a newline
 
-   All files should end in a newline. Insert one if there isn't one already.
+All files should end in a newline. Insert one if there isn't one already.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq require-final-newline t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq require-final-newline t)
+#+END_SRC
 
 ** Save my place in each file
 
-   It's nice if Emacs knows where I was last time I opened a file.
+It's nice if Emacs knows where I was last time I opened a file.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq-default save-place t)
-     (setq save-place-file (concat user-emacs-directory "places"))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq-default save-place t)
+  (setq save-place-file (concat user-emacs-directory "places"))
+#+END_SRC
 
 ** Add keybinding to join next line to this
 
-   With cursor at any point in a line, hit =M-j= to move to the end, and
-   delete the newline. Leave the cursor where the newline used to be.
+With cursor at any point in a line, hit =M-j= to move to the end, and
+delete the newline. Leave the cursor where the newline used to be.
 
-   #+BEGIN_SRC emacs-lisp
-     (bind-key "M-j" (lambda ()
-		       (interactive)
-		       (join-line -1)))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (bind-key "M-j" (lambda ()
+                    (interactive)
+                    (join-line -1)))
+#+END_SRC
 
 ** String Inflection
 
-   Sometimes I need to swap between CamelCase and snake_case, or even
-   SNAKE_CASE.
+Sometimes I need to swap between CamelCase and snake_case, or even
+SNAKE_CASE.
 
-   #+begin_src emacs-lisp
-     (use-package string-inflection
-       :bind (("C-c C-x C-s" . string-inflection-all-cycle)
-	      ("C-c C-x C-c" . string-inflection-camelcase)
-	      ("C-c C-x C-k" . string-inflection-kebab-case)
-	      ("C-c C-x C-u" . string-inflection-upcase)))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package string-inflection
+    :bind (("C-c C-x C-s" . string-inflection-all-cycle)
+           ("C-c C-x C-c" . string-inflection-camelcase)
+           ("C-c C-x C-k" . string-inflection-kebab-case)
+           ("C-c C-x C-u" . string-inflection-upcase)))
+#+end_src
 
 ** Unfill paragraphs and regions
 
-   The default binding for =M-q= fills a paragraph. Very good. But
-   sometimes I want to /unfill/[fn:: Particularly when editing markdown
-   that is going to end up on GitHub, as otherwise the result has lots
-   of hard linebreaks. This happens every time I edit a PR description
-   in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
+The default binding for =M-q= fills a paragraph. Very good. But
+sometimes I want to /unfill/[fn:: Particularly when editing markdown
+that is going to end up on GitHub, as otherwise the result has lots
+of hard linebreaks. This happens every time I edit a PR description
+in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
 
-   #+begin_src emacs-lisp
-     (defun sb/unfill-paragraph ()
-       (interactive)
-       (let ((fill-column (point-max)))
-	 (fill-paragraph nil)))
+#+begin_src emacs-lisp
+  (defun sb/unfill-paragraph ()
+    (interactive)
+    (let ((fill-column (point-max)))
+      (fill-paragraph nil)))
 
-     (defun sb/fill-or-unfill-paragraph (arg)
-       "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
-       (interactive "P")
-       (if arg
-	   (sb/unfill-paragraph)
-	 (fill-paragraph)))
+  (defun sb/fill-or-unfill-paragraph (arg)
+    "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
+    (interactive "P")
+    (if arg
+        (sb/unfill-paragraph)
+      (fill-paragraph)))
 
-     (bind-key "M-q" 'sb/fill-or-unfill-paragraph)
+  (bind-key "M-q" 'sb/fill-or-unfill-paragraph)
 
-     (defun sb/unfill-region ()
-       (interactive)
-       (let ((fill-column (point-max)))
-	 (fill-region (region-beginning) (region-end) nil)))
-   #+end_src
+  (defun sb/unfill-region ()
+    (interactive)
+    (let ((fill-column (point-max)))
+      (fill-region (region-beginning) (region-end) nil)))
+#+end_src
 
 ** Support for fullscreen
 
-   I like to run apps in fullscreen mode. Sometimes it's useful to be
-   able to toggle it on or off, which this function does. I found it
-   at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
+I like to run apps in fullscreen mode. Sometimes it's useful to be
+able to toggle it on or off, which this function does. I found it
+at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
 
-   #+BEGIN_SRC emacs-lisp
-     (defun my-toggle-fullscreen ()
-       "Toggle full screen"
-       (interactive)
-       (set-frame-parameter
-        nil 'fullscreen
-        (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+#+BEGIN_SRC emacs-lisp
+  (defun my-toggle-fullscreen ()
+    "Toggle full screen"
+    (interactive)
+    (set-frame-parameter
+     nil 'fullscreen
+     (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-     (bind-key "M-<f11>" 'my-toggle-fullscreen)
-   #+END_SRC
+  (bind-key "M-<f11>" 'my-toggle-fullscreen)
+#+END_SRC
 
 ** Toggle Window Split function
 
-   Sometimes a window is split horizontally, and you would prefer
-   vertically. Or vice versa. This function can help! Just don't ask me how
-   it works: I found it on StackOverflow. (I think. Again.)
+Sometimes a window is split horizontally, and you would prefer
+vertically. Or vice versa. This function can help! Just don't ask me how
+it works: I found it on StackOverflow. (I think. Again.)
 
-   #+BEGIN_SRC emacs-lisp
-     (defun toggle-window-split ()
-       (interactive)
-       (if (= (count-windows) 2)
-           (let* ((this-win-buffer (window-buffer))
-                  (next-win-buffer (window-buffer (next-window)))
-                  (this-win-edges (window-edges (selected-window)))
-                  (next-win-edges (window-edges (next-window)))
-                  (this-win-2nd (not (and (<= (car this-win-edges)
-                                              (car next-win-edges))
-                                          (<= (cadr this-win-edges)
-                                              (cadr next-win-edges)))))
-                  (splitter
-                   (if (= (car this-win-edges)
-                          (car (window-edges (next-window))))
-		       'split-window-horizontally
-                     'split-window-vertically)))
-             (delete-other-windows)
-             (let ((first-win (selected-window)))
-	       (funcall splitter)
-	       (if this-win-2nd (other-window 1))
-	       (set-window-buffer (selected-window) this-win-buffer)
-	       (set-window-buffer (next-window) next-win-buffer)
-	       (select-window first-win)
-	       (if this-win-2nd (other-window 1))))))
+#+BEGIN_SRC emacs-lisp
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
 
-     (define-key ctl-x-4-map "t" 'toggle-window-split)
-   #+END_SRC
+  (define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
 
 ** Diary (Calendar) Functions
 
-   Prefer YMD to the /crazy/ american MDY order.
+Prefer YMD to the /crazy/ american MDY order.
 
-   I schedule some things every weekday,
-   so add a convenience function for that.
+I schedule some things every weekday,
+so add a convenience function for that.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq calendar-date-style 'iso)
+#+BEGIN_SRC emacs-lisp
+  (setq calendar-date-style 'iso)
 
-     (defun sb/weekday-p (date)
-       "Is `date' a weekday?"
-       (memq (calendar-day-of-week date) '(1 2 3 4 5)))
-   #+END_SRC
+  (defun sb/weekday-p (date)
+    "Is `date' a weekday?"
+    (memq (calendar-day-of-week date) '(1 2 3 4 5)))
+#+END_SRC
 
 ** Git Link
 
-   Lets me link to a file location on GitHub/Bitbucket/GitLab
-   from a local git repository.
+Lets me link to a file location on GitHub/Bitbucket/GitLab
+from a local git repository.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-link
-       :bind ("C-c g l" . git-link))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package git-link
+    :bind ("C-c g l" . git-link))
+#+END_SRC
 
 ** GnuPG
 
@@ -427,102 +427,102 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 
 ** Running tests
 
-   Add a convenient keybinding for running tests interactively.
+Add a convenient keybinding for running tests interactively.
 
-   #+BEGIN_SRC emacs-lisp
-     (bind-key "C-x t" 'ert)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-x t" 'ert)
+#+END_SRC
 
 ** Remove ANSI colours
 
-   #+begin_src emacs-lisp
-   (defun sb/remove-ansi-colours-from-buffer ()
-     (interactive)
-     (ansi-color-filter-region (point-min) (point-max)))
-   #+end_src
+#+begin_src emacs-lisp
+  (defun sb/remove-ansi-colours-from-buffer ()
+    (interactive)
+    (ansi-color-filter-region (point-min) (point-max)))
+#+end_src
 
 ** Add explicit keybinding for opening file at point
 
-   #+begin_src emacs-lisp
-   (bind-key "C-c C-x C-f" #'find-file-at-point)
-   #+end_src
+#+begin_src emacs-lisp
+  (bind-key "C-c C-x C-f" #'find-file-at-point)
+#+end_src
 
 ** Don't require two spaces to end a sentence
 
-   Having this enabled makes it harder to collaborate with others, and
-   move sentences around in texts I haven't written.
+Having this enabled makes it harder to collaborate with others, and
+move sentences around in texts I haven't written.
 
-   #+begin_src emacs-lisp
-   (setq sentence-end-double-space nil)
-   #+end_src
+#+begin_src emacs-lisp
+  (setq sentence-end-double-space nil)
+#+end_src
 
 * Configure minor modes
 ** Ace Window
 
-   This lets me rapidly switch to a different frame/window.  I use
-   this mainly when resolving conflicts in ediff merge, since I need
-   to swap between two frames there.
+This lets me rapidly switch to a different frame/window.  I use
+this mainly when resolving conflicts in ediff merge, since I need
+to swap between two frames there.
 
-   #+begin_src emacs-lisp
-   (use-package ace-window
-     :bind ("M-`" . ace-window))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind ("M-`" . ace-window))
+#+end_src
 
 ** Auto commit
 
-   In some projects (notably, my Org/Agenda setup) I want to
-   automatically commit when editing files.
+In some projects (notably, my Org/Agenda setup) I want to
+automatically commit when editing files.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package git-auto-commit-mode
-       :custom
-       (gac-automatically-add-new-files-p t)
-       (gac-automatically-push-p t)
-       (gac-debounce-interval 60))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package git-auto-commit-mode
+    :custom
+    (gac-automatically-add-new-files-p t)
+    (gac-automatically-push-p t)
+    (gac-debounce-interval 60))
+#+END_SRC
 
 ** Auto Indent Mode
 
-   I like to make sure any code I changed is properly indented.
+I like to make sure any code I changed is properly indented.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package auto-indent-mode
-       :pin melpa
-       :config
-       (auto-indent-global-mode))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-indent-mode
+    :pin melpa
+    :config
+    (auto-indent-global-mode))
+#+END_SRC
 
 ** Auto revert mode
 
-   When files change on disk, revert the buffer automatically.
+When files change on disk, revert the buffer automatically.
 
-   #+BEGIN_SRC emacs-lisp
-     (global-auto-revert-mode 1)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode 1)
+#+END_SRC
 
 ** Beacon
 
-   Highlight my cursor when scrolling
+Highlight my cursor when scrolling
 
-   #+begin_src emacs-lisp
-     (use-package beacon
-       :pin gnu
-       :config
-       (beacon-mode 1))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package beacon
+    :pin gnu
+    :config
+    (beacon-mode 1))
+#+end_src
 
 ** Counsel
 
-   This provides =counsel-find-file=, among others.
+This provides =counsel-find-file=, among others.
 
-   #+begin_src emacs-lisp
-   (use-package amx) ;; make counsel-M-x work the way I like
+#+begin_src emacs-lisp
+  (use-package amx) ;; make counsel-M-x work the way I like
 
-   (use-package counsel
-     :demand
-     :config
-     (counsel-mode 1))
-   #+end_src
+  (use-package counsel
+    :demand
+    :config
+    (counsel-mode 1))
+#+end_src
 
 ** Diff Highlight
 
@@ -534,84 +534,84 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 
 ** Edit "Org-like" lists in non-Org buffers
 
-   #+begin_src emacs-lisp
-   (use-package orgalist
-     :pin gnu
-     :hook
-     (message-mode . orgalist-mode))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package orgalist
+    :pin gnu
+    :hook
+    (message-mode . orgalist-mode))
+#+end_src
 
 ** Editorconfig
 
-   Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
-   their indentation and file format preferences.
+Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
+their indentation and file format preferences.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package editorconfig
-       :ensure-system-package editorconfig
-       :custom
-       (editorconfig-exclude-modes (quote (org-mode gist)))
-       :config
-       (editorconfig-mode))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package editorconfig
+    :ensure-system-package editorconfig
+    :custom
+    (editorconfig-exclude-modes (quote (org-mode gist)))
+    :config
+    (editorconfig-mode))
+#+END_SRC
 
 ** Flycheck
 
-   #+begin_src emacs-lisp
-     (use-package flycheck-mode
-       :ensure flycheck
-       :hook clojure-mode)
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package flycheck-mode
+    :ensure flycheck
+    :hook clojure-mode)
+#+end_src
 
 ** Highlight & deal with whitespace annoyances
 
-   This highlights certain whitespace annoyances, and adds a key binding to
-   clean it up.
+This highlights certain whitespace annoyances, and adds a key binding to
+clean it up.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package whitespace
-       :ensure nil
-       :bind ("C-c w" . whitespace-cleanup)
-       :custom
-       (whitespace-style '(face empty tabs trailing))
-       :config
-       (global-whitespace-mode t))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace
+    :ensure nil
+    :bind ("C-c w" . whitespace-cleanup)
+    :custom
+    (whitespace-style '(face empty tabs trailing))
+    :config
+    (global-whitespace-mode t))
+#+END_SRC
 
 ** Iedit
 
-   Edit multiple symbols in one go. Similar in some respects to
-   Multiple Cursors, but seems a little more light-weight.
+Edit multiple symbols in one go. Similar in some respects to
+Multiple Cursors, but seems a little more light-weight.
 
-   #+begin_src emacs-lisp
-   (use-package iedit :pin melpa)
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package iedit :pin melpa)
+#+end_src
 
 ** Ivy
 
-   I've long been a happy Helm user, but it confuses me (and is slow!)
-   in some situations so I thought I'd try again to see if Ivy fares
-   any better.
+I've long been a happy Helm user, but it confuses me (and is slow!)
+in some situations so I thought I'd try again to see if Ivy fares
+any better.
 
-   #+begin_src emacs-lisp
-     (use-package ivy
-       :demand
-       :pin melpa
-       :bind (("C-c C-r" . ivy-resume)
-	      ("C-x b" . ivy-switch-buffer)
-	      ("C-c v" . ivy-push-view)
-	      ("C-c V" . ivy-pop-view))
-       :custom
-       (ivy-use-virtual-buffers t)
-       (ivy-count-format "%d/%d ")
-       :config
-       (ivy-mode 1))
+#+begin_src emacs-lisp
+  (use-package ivy
+    :demand
+    :pin melpa
+    :bind (("C-c C-r" . ivy-resume)
+           ("C-x b" . ivy-switch-buffer)
+           ("C-c v" . ivy-push-view)
+           ("C-c V" . ivy-pop-view))
+    :custom
+    (ivy-use-virtual-buffers t)
+    (ivy-count-format "%d/%d ")
+    :config
+    (ivy-mode 1))
 
-     ;; This should apparently allow opening multiple files from
-     ;; ivy-find-file.
-     (use-package ivy-hydra
-       :pin melpa)
-   #+end_src
+  ;; This should apparently allow opening multiple files from
+  ;; ivy-find-file.
+  (use-package ivy-hydra
+    :pin melpa)
+#+end_src
 
 ** LSP (Language Server Protocol)
 
@@ -639,428 +639,429 @@ container. LSP's versions work out of the box.
 
 ** Multiple Cursors
 
-   This package is another one of those near-magical ones. It allows me to do
-   multiple edits in the same buffer, using several cursors. You can think of
-   it as an interactive macro, where you can constantly see what's being done.
+This package is another one of those near-magical ones. It allows me to do
+multiple edits in the same buffer, using several cursors. You can think of
+it as an interactive macro, where you can constantly see what's being done.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package multiple-cursors
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
 
-       :bind (("C-c M-e" . mc/edit-lines)
-              ("C-c M-a" . mc/mark-all-dwim)
-              ("s-n" . mc/mark-next-like-this)
-              ("s-p" . mc/mark-previous-like-this)))
-   #+END_SRC
+    :bind (("C-c M-e" . mc/edit-lines)
+           ("C-c M-a" . mc/mark-all-dwim)
+           ("s-n" . mc/mark-next-like-this)
+           ("s-p" . mc/mark-previous-like-this)))
+#+END_SRC
 
 ** Projectile
 
-   I use Projectile to navigate my projects. Some of the things I like about
-   it are that it provides the following key bindings:
+I use Projectile to navigate my projects. Some of the things I like about
+it are that it provides the following key bindings:
 
-   - =C-c p t= :: This switches from an implementation file to its test file,
-                  or vice versa. I use this extensively in Clojure mode. It
-                  might not make sense for all languages; YMMV.
-   - =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
-   - =C-c p s s= :: Ag search for something in this project. If point is at a
-                    token, default to searching for that. (Mnemonic:
-                    "Projectile Silver Searcher".)
+- =C-c p t= :: This switches from an implementation file to its test file,
+               or vice versa. I use this extensively in Clojure mode. It
+               might not make sense for all languages; YMMV.
+- =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
+- =C-c p s s= :: Ag search for something in this project. If point is at a
+                 token, default to searching for that. (Mnemonic:
+                 "Projectile Silver Searcher".)
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :bind-keymap ("C-c p" . projectile-command-map)
-       :custom
-       (projectile-project-search-path '("~/src"))
-       (projectile-completion-system 'ivy)
-       (projectile-create-missing-test-files t)
-       :config
-       (projectile-mode)
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :bind-keymap ("C-c p" . projectile-command-map)
+    :custom
+    (projectile-project-search-path '("~/src"))
+    (projectile-completion-system 'ivy)
+    (projectile-create-missing-test-files t)
+    :config
+    (projectile-mode)
 
-       ;; Some projects use a prefix for test files rather than the default
-       ;; suffix.  By putting a `.lein-test-prefix` file in the root I can
-       ;; override the behaviour for those projects.
-       (projectile-register-project-type 'lein-test-prefix '("project.clj" ".lein-test-prefix")
-				  :compile "lein compile"
-				  :test "lein test"
-				  :test-prefix "test_"))
+    ;; Some projects use a prefix for test files rather than the default
+    ;; suffix.  By putting a `.lein-test-prefix` file in the root I can
+    ;; override the behaviour for those projects.
+    (projectile-register-project-type 'lein-test-prefix '("project.clj" ".lein-test-prefix")
+                               :compile "lein compile"
+                               :test "lein test"
+                               :test-prefix "test_"))
 
-     (use-package counsel-projectile)
-   #+END_SRC
+  (use-package counsel-projectile)
+#+END_SRC
 
 ** Rainbow Delimiters
 
-   This makes it slightly easier to discern matching parens when the
-   nesting goes deep.
+This makes it slightly easier to discern matching parens when the
+nesting goes deep.
 
-   #+begin_src emacs-lisp
-   (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+   :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
 
 ** Save minibuffer history
 
-   This allows us to "tap up" in the minibuffer to recall previous items,
-   even from a previous session.
+This allows us to "tap up" in the minibuffer to recall previous items,
+even from a previous session.
 
-   #+BEGIN_SRC emacs-lisp
-     (savehist-mode 1)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (savehist-mode 1)
+#+END_SRC
 
 ** Show Matching parens
 
-   This is extremely useful. Put the mark on a paren (any of =()[]{}=,
-   actually) and Emacs shows the matching closing/opening one.
+This is extremely useful. Put the mark on a paren (any of =()[]{}=,
+actually) and Emacs shows the matching closing/opening one.
 
-   #+BEGIN_SRC emacs-lisp
-     (show-paren-mode 1)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+#+END_SRC
 
 ** SmartParens
 
-   Structural editing is a must when editing lisp, and it has bled
-   into other aspects of programming for me.  In particular the
-   ability to remove surrounding parens / quotes with ~sp-splice-sexp~
-   is incredibly useful even when writing prose.
+Structural editing is a must when editing lisp, and it has bled
+into other aspects of programming for me.  In particular the
+ability to remove surrounding parens / quotes with ~sp-splice-sexp~
+is incredibly useful even when writing prose.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package smartparens-config
-       :ensure smartparens
-       :demand
-       :custom
-       (sp-base-key-bindings 'sp)
-       :hook
-       (sp-lisp-modes . turn-on-smartparens-strict-mode)
-       (after-init . smartparens-global-mode)
-       :config
-       (sp-local-pair 'text-mode "'" nil :actions :rem))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens-config
+    :ensure smartparens
+    :demand
+    :custom
+    (sp-base-key-bindings 'sp)
+    :hook
+    (sp-lisp-modes . turn-on-smartparens-strict-mode)
+    (after-init . smartparens-global-mode)
+    :config
+    (sp-local-pair 'text-mode "'" nil :actions :rem))
+#+END_SRC
 
 ** Subword
 
-   Treats CapitalizedWords as separate, so we can move forward by
-   their components.  Useful in anything that looks like Java.
+Treats CapitalizedWords as separate, so we can move forward by
+their components.  Useful in anything that looks like Java.
 
-   #+begin_src emacs-lisp
-   (use-package subword
-    :hook (prog-mode . subword-mode))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package subword
+   :hook (prog-mode . subword-mode))
+#+end_src
 
 ** Swiper
 
-   Invoke swiper (find in current buffer).
+Invoke swiper (find in current buffer).
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package swiper
-       :bind (("C-x /" . swiper)))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :bind (("C-x /" . swiper)))
+#+END_SRC
 
 ** Transparently open compressed files
 
-   I *do* like it when Emacs transparently opens compressed files. It gives
-   me the warm fuzzies.
+I *do* like it when Emacs transparently opens compressed files. It gives
+me the warm fuzzies.
 
-   #+BEGIN_SRC emacs-lisp
-     (auto-compression-mode t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (auto-compression-mode t)
+#+END_SRC
 
 ** Visual line mode / word wrapping
 
-   #+BEGIN_SRC emacs-lisp
-   (add-hook 'text-mode-hook 'visual-line-mode)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook 'visual-line-mode)
+#+END_SRC
 
 ** Which Key Mode
 
-   Show incomplete key cheatsheet.
+Show incomplete key cheatsheet.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package which-key
-       :hook
-       (after-init . which-key-mode))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :hook
+    (after-init . which-key-mode))
+#+END_SRC
 
 ** Writegood Mode
 
-   I'm not a great writer. I need all the crutches I can get. Lucklily,
-   Emacs has them.
+I'm not a great writer. I need all the crutches I can get. Lucklily,
+Emacs has them.
 
-   This helps highlight passive voice, weasel words, etc in writing.
+This helps highlight passive voice, weasel words, etc in writing.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package writegood-mode
-       :hook text-mode)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package writegood-mode
+    :hook text-mode)
+#+END_SRC
 
 ** YAS
 
-   A templating engine for Emacs.
+A templating engine for Emacs.
 
-   #+begin_src emacs-lisp
-     (use-package yasnippet
-       :hook (after-init . yas-global-mode))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :hook (after-init . yas-global-mode))
+#+end_src
 
 * Configure major modes
 ** Ag (The Silver Searcher)
 
-   I use =ag= for searching a lot in Emacs. Its "writable grep"
-   companion mode is pretty close to magic. When in a buffer showing
-   ag results, try hitting =C-c C-p=--this lets you /edit the results of
-   the search right from the ag results buffer!/ Just hit =C-x C-s= to
-   save the results.
+I use =ag= for searching a lot in Emacs. Its "writable grep"
+companion mode is pretty close to magic. When in a buffer showing
+ag results, try hitting =C-c C-p=--this lets you /edit the results of
+the search right from the ag results buffer!/ Just hit =C-x C-s= to
+save the results.
 
-   If you hit =C-c C-p= while already in writable grep mode you can
-   delete the entire matched line by hitting =C-c C-d=.
+If you hit =C-c C-p= while already in writable grep mode you can
+delete the entire matched line by hitting =C-c C-d=.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package ag
-       :pin melpa
-       :ensure-system-package (ag . the_silver_searcher)
-       :custom
-       (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
-       (ag-ignore-list (quote (".git"))))
+#+BEGIN_SRC emacs-lisp
+  (use-package ag
+    :pin melpa
+    :ensure-system-package (ag . the_silver_searcher)
+    :custom
+    (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
+    (ag-ignore-list (quote (".git"))))
 
-     (use-package wgrep :pin melpa)
-     (use-package wgrep-ag
-       :pin melpa
-       :hook
-       (ag-mode . wgrep-ag-setup))
+  (use-package wgrep :pin melpa)
+  (use-package wgrep-ag
+    :pin melpa
+    :hook
+    (ag-mode . wgrep-ag-setup))
 
-     ;; This fixes the last group not being editable until it's fixed
-     ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
-     (eval-after-load "wgrep-ag"
-       '(defun wgrep-ag-prepare-header/footer ()
-	  (save-excursion
-	    (goto-char (point-min))
-	    ;; Look for the first useful result line.
-	    (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
-					   "\\|"
-					   wgrep-ag-ungrouped-result-regexp))
-		(add-text-properties (point-min) (line-beginning-position)
-				     '(read-only t wgrep-header t))
-	      ;; No results in this buffer, let's mark the whole thing as
-	      ;; header.
-	      (add-text-properties (point-min) (point-max)
-				   '(read-only t wgrep-header t)))
+  ;; This fixes the last group not being editable until it's fixed
+  ;; upstream, cf https://github.com/mhayashi1120/Emacs-wgrep/pull/61
+  (eval-after-load "wgrep-ag"
+    '(defun wgrep-ag-prepare-header/footer ()
+       (save-excursion
+         (goto-char (point-min))
+         ;; Look for the first useful result line.
+         (if (re-search-forward (concat wgrep-ag-grouped-result-file-regexp
+                                        "\\|"
+                                        wgrep-ag-ungrouped-result-regexp))
+             (add-text-properties (point-min) (line-beginning-position)
+                                  '(read-only t wgrep-header t))
+           ;; No results in this buffer, let's mark the whole thing as
+           ;; header.
+           (add-text-properties (point-min) (point-max)
+                                '(read-only t wgrep-header t)))
 
-	    ;; OK, header dealt with. Now let's try find the footer.
-	    (goto-char (point-max))
-	    (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
-	    ;; Point is now at the beginning of the result nearest the end
-	    ;; of the buffer, AKA the last result.  Move to the start of
-	    ;; the line after the last result, and mark everything from
-	    ;; that line forward as wgrep-footer.  If we can't move to the
-	    ;; line after the last line then there apparently is no
-	    ;; footer.
-	    (when (zerop (forward-line 1))
-	      (add-text-properties (point) (point-max)
-				   '(read-only t wgrep-footer t))))))
-   #+END_SRC
+         ;; OK, header dealt with. Now let's try find the footer.
+         (goto-char (point-max))
+         (re-search-backward "^\\(?:-[^:]+?:[[:digit:]]+:[[:digit:]]+:\\)" nil t)
+         ;; Point is now at the beginning of the result nearest the end
+         ;; of the buffer, AKA the last result.  Move to the start of
+         ;; the line after the last result, and mark everything from
+         ;; that line forward as wgrep-footer.  If we can't move to the
+         ;; line after the last line then there apparently is no
+         ;; footer.
+         (when (zerop (forward-line 1))
+           (add-text-properties (point) (point-max)
+                                '(read-only t wgrep-footer t))))))
+#+END_SRC
 
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-clj-kondo
-             :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
-             :pin melpa)
+    :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
+    :pin melpa)
 
-           (use-package clj-refactor
-             :hook (clojure-mode . clj-refactor-mode)
-             :bind (:map clojure-mode-map
-                         ("C-x C-r" . cljr-ivy))
-             :custom
-             (cljr-suppress-middleware-warnings t)
-             :config
-             (cljr-add-keybindings-with-prefix "C-c C-m")
+  (use-package clj-refactor
+    :hook (clojure-mode . clj-refactor-mode)
+    :bind (:map clojure-mode-map
+                ("C-x C-r" . cljr-ivy))
+    :custom
+    (cljr-suppress-middleware-warnings t)
+    :config
+    (cljr-add-keybindings-with-prefix "C-c C-m")
 
-             (defun cljr-ivy-candidates ()
-               (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
-                       cljr--all-helpers))
+    (defun cljr-ivy-candidates ()
+      (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
+              cljr--all-helpers))
 
-             (defun cljr-ivy ()
-               "Ivy interface to cljr-refactor"
-               (interactive)
-               (ivy-read "clj-refactor: "
-                         (cljr-ivy-candidates)
-                         :action
-                         (lambda (candidate)
-                           (string-match "^\\(.+?\\): " candidate)
-                           (call-interactively
-                            (cadr (assoc (match-string 1 candidate)
-                                         cljr--all-helpers)))))))
+    (defun cljr-ivy ()
+      "Ivy interface to cljr-refactor"
+      (interactive)
+      (ivy-read "clj-refactor: "
+                (cljr-ivy-candidates)
+                :action
+                (lambda (candidate)
+                  (string-match "^\\(.+?\\): " candidate)
+                  (call-interactively
+                   (cadr (assoc (match-string 1 candidate)
+                                cljr--all-helpers)))))))
 
 
-           (use-package clojure-mode
-             :ensure-system-package ((java . homebrew/cask/java)
-                                     (lein . leiningen)
-                                     (clj . clojure))
-             :config
-             (require 'flycheck-clj-kondo)
-             (put-clojure-indent 'as-> ':defn)
-             (put-clojure-indent 'run ':defn)
-             (put-clojure-indent 'dosync ':defn)
-             (put-clojure-indent 'speculate 1)
-             (put-clojure-indent 'doseq ':defn))
+  (use-package clojure-mode
+    :ensure-system-package ((java . homebrew/cask/java)
+                            (lein . leiningen)
+                            (clj . clojure))
+    :config
+    (require 'flycheck-clj-kondo)
+    (put-clojure-indent 'as-> ':defn)
+    (put-clojure-indent 'run ':defn)
+    (put-clojure-indent 'dosync ':defn)
+    (put-clojure-indent 'speculate 1)
+    (put-clojure-indent 'doseq ':defn))
 
-           (use-package cider
-             :bind (:map clojure-mode-map
-                         ("C-c ," . cider-test-commands-map)
-                         ("C-c C-k" . cider-load-buffer)
-                         ("C-c M-n" . cider-ns-map)
-                             ("C-c C-z" . cider-switch-to-repl-buffer)
-                         ("C-c M-z" . cider-load-buffer-and-switch-to-repl-buffer))
-             :config
-             (defun sb/cider-test-infer-ns-fn (ns)
-               "Infer `test-' prefixed namespaces for test files.
-                Some projects use a `test-' prefix rather than `-test'
-                suffix for test files.  This detects those and runs the
-                correct test.  It falls back to Cider's default function if
-                the project type is not one known to use test- prefixes."
-               (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
-                                                                  'test-prefix))
-                   (let* ((prefix "test-")
-                          (ns-parts (split-string ns "\\."))
-                          (last-component (car (last ns-parts))))
-                     (if (string-prefix-p prefix last-component)
-                         ns
-                       (string-join (append (butlast ns-parts)
-                                            (list (concat prefix last-component)))
-                                    ".")))
-                 (cider-test-default-test-ns-fn ns)))
-             :custom
-             (cider-auto-mode nil)
-             (cider-auto-track-ns-form-changes t)
-             (cider-eldoc-display-context-dependent-info t)
-             (cider-repl-display-help-banner nil)
-             (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
-  #+END_SRC
+  (use-package cider
+    :bind (:map clojure-mode-map
+                ("C-c ," . cider-test-commands-map)
+                ("C-c C-k" . cider-load-buffer)
+                ("C-c M-n" . cider-ns-map)
+                ("C-c C-z" . cider-switch-to-repl-buffer)
+                ("C-c M-z" . cider-load-buffer-and-switch-to-repl-buffer))
+    :config
+    (defun sb/cider-test-infer-ns-fn (ns)
+      "Infer `test-' prefixed namespaces for test files.
+                  Some projects use a `test-' prefix rather than `-test'
+                  suffix for test files.  This detects those and runs the
+                  correct test.  It falls back to Cider's default function if
+                  the project type is not one known to use test- prefixes."
+      (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
+                                                         'test-prefix))
+          (let* ((prefix "test-")
+                 (ns-parts (split-string ns "\\."))
+                 (last-component (car (last ns-parts))))
+            (if (string-prefix-p prefix last-component)
+                ns
+              (string-join (append (butlast ns-parts)
+                                   (list (concat prefix last-component)))
+                           ".")))
+        (cider-test-default-test-ns-fn ns)))
+    :custom
+    (cider-auto-mode nil)
+    (cider-auto-track-ns-form-changes t)
+    (cider-eldoc-display-context-dependent-info t)
+    (cider-repl-display-help-banner nil)
+    (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
+#+END_SRC
 
-   I want to use some lein plugins across all projects.
+I want to use some lein plugins across all projects.
 
-   We use ~:pedantic? true~ in our project.clj files, as well as lein
-   sub-project inheritance.  I think that plays merry hell with also
-   loading ~~refactor-nrepl~ (lots of complaints about duplications), so
-   I add the ~~:pedantic? :ranges~~.  Not sure why it works, but it
-   seems to.
+We use ~:pedantic? true~ in our project.clj files, as well as lein
+sub-project inheritance.  I think that plays merry hell with also
+loading ~~refactor-nrepl~ (lots of complaints about duplications), so
+I add the ~~:pedantic? :ranges~~.  Not sure why it works, but it
+seems to.
  
-   #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
-     {:user {:plugins [[lein-ancient "0.6.15"]
-                       [jonase/eastwood "0.3.5"]
-                       [lein-kibit "0.1.7"]
-                       [lein-environ "1.0.0"]]
-             :pedantic? :ranges}
-      :repl {:plugins [[cider/cider-nrepl "0.22.4"]
-                       [refactor-nrepl "2.4.0"]]}}
-
-   #+end_src
+#+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
+  {:user {:plugins [[lein-ancient "0.6.15"]
+                    [jonase/eastwood "0.3.5"]
+                    [lein-kibit "0.1.7"]
+                    [lein-environ "1.0.0"]]
+          :pedantic? :ranges}
+   :repl {:plugins [[cider/cider-nrepl "0.22.4"]
+                    [refactor-nrepl "2.4.0"]]}}
+#+end_src
 
 ** Ediff
 
-   Sometimes I have to resolve conflicts. I use Ediff, which I
-   (usually) launch from Magit.
+Sometimes I have to resolve conflicts. I use Ediff, which I
+(usually) launch from Magit.
 
 *** Automatically Unfold Org files
 
-    This snippet makes sure that Org buffers don't start folded, as
-    ediff is rather useless in that case. (Credit: Oleh Krehel on
-    emacs-orgmode mailing list.)
+This snippet makes sure that Org buffers don't start folded, as
+ediff is rather useless in that case. (Credit: Oleh Krehel on
+emacs-orgmode mailing list.)
 
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/ediff-prepare-buffer ()
-        (when (memq major-mode '(org-mode emacs-lisp-mode))
-          (outline-show-all)))
+#+BEGIN_SRC emacs-lisp
+  (defun sb/ediff-prepare-buffer ()
+    (when (memq major-mode '(org-mode emacs-lisp-mode))
+      (outline-show-all)))
 
-      (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
-    #+END_SRC
+  (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+#+END_SRC
 
 *** Picking /both/ sides in a conflict
 
-    If both branches add an entry to a list I may want to pick *both*
-    sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
-    =~= to swap the A and B buffers, which lets me choose A then B, /or/ B
-    then A.
+If both branches add an entry to a list I may want to pick *both*
+sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
+=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
+then A.
 
-    #+BEGIN_SRC emacs-lisp
-      (defun sb/ediff-copy-both-to-C ()
-	(interactive)
-	(ediff-copy-diff ediff-current-difference nil 'C nil
-			 (concat
-			  (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-			  (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+#+BEGIN_SRC emacs-lisp
+  (defun sb/ediff-copy-both-to-C ()
+    (interactive)
+    (ediff-copy-diff ediff-current-difference nil 'C nil
+                     (concat
+                      (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                      (ediff-get-region-contents
+                      ediff-current-difference 'B
+                      ediff-control-buffer))))
 
-      (defun sb/add-d-to-ediff-mode-map ()
-	(define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+  (defun sb/add-d-to-ediff-mode-map ()
+    (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
 
-      (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
-    #+END_SRC
+  (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
+#+END_SRC
 
 ** Elfeed
 
-   ~org-elfeed~ stores the feed in =~/.emacs.d/elfeed.org= rather than =custom.el=.
+~org-elfeed~ stores the feed in =~/.emacs.d/elfeed.org= rather than =custom.el=.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package elfeed-org
-       :pin melpa
-       :custom
-       (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"
-			       "~/org/elfeed.org"))
-       :config
-       (elfeed-org))
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed-org
+    :pin melpa
+    :custom
+    (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"
+                            "~/org/elfeed.org"))
+    :config
+    (elfeed-org))
 
-     (use-package elfeed
-       :pin melpa
-       :bind (("C-x w" . elfeed)
-	      :map elfeed-search-mode-map
-	      ("m" . elfeed-toggle-star) )
-       :ensure-system-package curl
-       :config
-       (defalias 'elfeed-toggle-star
-	 (elfeed-expose #'elfeed-search-toggle-all 'star)))
-   #+END_SRC
+  (use-package elfeed
+    :pin melpa
+    :bind (("C-x w" . elfeed)
+           :map elfeed-search-mode-map
+           ("m" . elfeed-toggle-star) )
+    :ensure-system-package curl
+    :config
+    (defalias 'elfeed-toggle-star
+      (elfeed-expose #'elfeed-search-toggle-all 'star)))
+#+END_SRC
 
 ** Eshell
 
-   I have started using /Eshell/. It is close to magic. There's not a lot of
-   setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
-   eshell quickly. This launches eshell if it is not already running, or
-   switches to it if it is.
+I have started using /Eshell/. It is close to magic. There's not a lot of
+setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
+eshell quickly. This launches eshell if it is not already running, or
+switches to it if it is.
 
-   #+BEGIN_SRC emacs-lisp
-     (bind-key "C-c s" 'eshell)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-c s" 'eshell)
+#+END_SRC
 
-   Eshell is great, and its Tramp integration allows me to open remote files
-   in local Emacs seamlessly with the =find-file= command. (Which I have
-   aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
-   and has the same config, whether I am on a local machine or a remote one.
+Eshell is great, and its Tramp integration allows me to open remote files
+in local Emacs seamlessly with the =find-file= command. (Which I have
+aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
+and has the same config, whether I am on a local machine or a remote one.
 
 ** Magit & Friends
 
-   I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
-   git cli any more.  I've seen someone suggest learning Emacs just to
-   run Magit.
+I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
+git cli any more.  I've seen someone suggest learning Emacs just to
+run Magit.
 
-   Forge is an extension to Magit that interacts with GitHub / GitLab etc.
+Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package transient
-       :pin melpa)
+#+BEGIN_SRC emacs-lisp
+  (use-package transient
+    :pin melpa)
 
-     (use-package magit
-       :pin melpa
-       :bind (("C-x C-g C-s" . magit-status)
-              ("C-x C-g s" . magit-status)
-              ("C-x C-g C-b" . magit-blame-addition)
-              ("C-x C-g b" . magit-blame-addition)))
+  (use-package magit
+    :pin melpa
+    :bind (("C-x C-g C-s" . magit-status)
+           ("C-x C-g s" . magit-status)
+           ("C-x C-g C-b" . magit-blame-addition)
+           ("C-x C-g b" . magit-blame-addition)))
 
-     (use-package forge
-       :pin melpa)
+  (use-package forge
+    :pin melpa)
 
-     (use-package magit-org-todos
-       :pin melpa)
+  (use-package magit-org-todos
+    :pin melpa)
 
-     (use-package magit-todos
-       :pin melpa)
-   #+END_SRC
+  (use-package magit-todos
+    :pin melpa)
+#+END_SRC
 
 ** Gist
 Working with GitHub Gists.
@@ -1077,319 +1078,318 @@ Working with GitHub Gists.
 
 ** Markdown
 
-   I'm a sucker for lists, and I want to be able to reorder list items
-   easily and have them renumbered automatically.
+I'm a sucker for lists, and I want to be able to reorder list items
+easily and have them renumbered automatically.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package markdown-mode
-       :pin melpa
-       :bind (("M-<up>" . markdown-move-list-item-up)
-	      ("M-<down>" . markdown-move-list-item-down))
-       :custom
-       (markdown-asymmetric-header t))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :pin melpa
+    :bind (("M-<up>" . markdown-move-list-item-up)
+           ("M-<down>" . markdown-move-list-item-down))
+    :custom
+    (markdown-asymmetric-header t))
+#+END_SRC
 ** Org drill (for learning new things)
 
-   I use org-drill for drilling music theory.
+I use org-drill for drilling music theory.
 
-   #+begin_src emacs-lisp
-     (use-package org-drill
-       :pin melpa
-       :custom
-       (org-drill-add-random-noise-to-intervals-p t)
-       (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package org-drill
+    :pin melpa
+    :custom
+    (org-drill-add-random-noise-to-intervals-p t)
+    (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+#+end_src
 
 ** Simple HTML Renderer (HTML Email)
 
-   I mostly use shr for reading HTML mail.  I normally use a
-   fullscreen window, but I don't like reading HTML mails with lines
-   running all the way across.  Thus I prefer linebreaks roughly every
-   80 characters.
+I mostly use shr for reading HTML mail.  I normally use a
+fullscreen window, but I don't like reading HTML mails with lines
+running all the way across.  Thus I prefer linebreaks roughly every
+80 characters.
 
-   #+begin_src emacs-lisp
-   (setq shr-width 80)
-   #+end_src
+#+begin_src emacs-lisp
+  (setq shr-width 80)
+#+end_src
 
 ** Spell Checking
 
-   I use aspell, with British English dictionary.
+I use aspell, with British English dictionary.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package ispell
-       :ensure nil
-       :ensure-system-package aspell
-       :custom
-       (ispell-dictionary "british")
-       (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package ispell
+    :ensure nil
+    :ensure-system-package aspell
+    :custom
+    (ispell-dictionary "british")
+    (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
+#+END_SRC
 
-   Configure aspell and let it find dictionaries:
+Configure aspell and let it find dictionaries:
 
-   #+begin_src conf :tangle ~/.aspell.conf
-     master british
-   #+end_src
+#+begin_src conf :tangle ~/.aspell.conf
+  master british
+#+end_src
 
 ** YAML
 
-   CircleCI and CloudFormation loves YAML.
+CircleCI and CloudFormation loves YAML.
 
-   #+BEGIN_SRC emacs-lisp
-   (use-package yaml-mode)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode)
+#+END_SRC
 
 * Org mode
 
-  I use Org mode for all writing I initiate.  Org mode's support for
-  tables, TOC, footnotes, TODO and Agenda items makes it an easy
-  choice.  Gists and GitHub READMEs support Org mode too, and I can
-  export to other formats including if I want.
+I use Org mode for all writing I initiate.  Org mode's support for
+tables, TOC, footnotes, TODO and Agenda items makes it an easy
+choice.  Gists and GitHub READMEs support Org mode too, and I can
+export to other formats including if I want.
 
-  The particular version of package I use is annoying to install
-  because the installed package has a different name from what you
-  would use in your config.  However, =use-package= supports this by
-  passing the name of the package to install as the value to =:ensure=.
+The particular version of package I use is annoying to install
+because the installed package has a different name from what you
+would use in your config.  However, =use-package= supports this by
+passing the name of the package to install as the value to =:ensure=.
 
-  The Org manual expects the =C-c {l,a,c}= keybindings to be available
-  in any mode, so define them globally.  I prefer to follow
-  conventions.  It makes reading the manual and tutorials a lot
-  easier!
+The Org manual expects the =C-c {l,a,c}= keybindings to be available
+in any mode, so define them globally.  I prefer to follow
+conventions.  It makes reading the manual and tutorials a lot
+easier!
 
-  I love Org's markup so much I wrote a JIRA export backend for it.  I
-  also write in Org and export to GitHub.  GitHub unfortunately
-  doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
-  exporter, as this deletes linebreaks.  This means the rendered
-  paragraphs re-flow properly on GitHub.
+I love Org's markup so much I wrote a JIRA export backend for it.  I
+also write in Org and export to GitHub.  GitHub unfortunately
+doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
+exporter, as this deletes linebreaks.  This means the rendered
+paragraphs re-flow properly on GitHub.
 
-  I use Org's refiling when "refactoring" documents such as this one.
-  I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+I use Org's refiling when "refactoring" documents such as this one.
+I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package org
-      :bind (("C-c l" . org-store-link)
-             ("C-x C-<return>" . org-insert-subheading)
-             ("C-S-<return>" . org-insert-todo-subheading)
-             :map org-mode-map
-             ("C-n" . org-next-link)
-             ("C-p" . org-previous-link))
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :bind (("C-c l" . org-store-link)
+           ("C-x C-<return>" . org-insert-subheading)
+           ("C-S-<return>" . org-insert-todo-subheading)
+           :map org-mode-map
+           ("C-n" . org-next-link)
+           ("C-p" . org-previous-link))
 
-      :mode (("\\.org\\'" . org-mode)
-             ("\\.org_archive\\'" . org-mode))
+    :mode (("\\.org\\'" . org-mode)
+           ("\\.org_archive\\'" . org-mode))
 
-      :custom
-      (org-link-file-path-type 'relative)
-      (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
-      (org-catch-invisible-edits 'smart)
-      (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
-      (org-export-backends '(html gfm jira latex))
-      (org-hide-emphasis-markers t)
-      (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+    :custom
+    (org-link-file-path-type 'relative)
+    (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
+    (org-catch-invisible-edits 'smart)
+    (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+    (org-export-backends '(html gfm jira latex))
+    (org-hide-emphasis-markers t)
+    (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-      (org-log-done 'time)
-      (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
+    (org-log-done 'time)
+    (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
 
-      (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
-      (org-refile-allow-creating-parent-nodes 'confirm)
-      (org-refile-targets '((nil . (:level . 1))
-                            (org-agenda-files . (:maxlevel . 2))
-                            (org-agenda-files . (:tag . "PROJ"))))
-      (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
-      (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy"))
+    (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
+    (org-refile-allow-creating-parent-nodes 'confirm)
+    (org-refile-targets '((nil . (:level . 1))
+                          (org-agenda-files . (:maxlevel . 2))
+                          (org-agenda-files . (:tag . "PROJ"))))
+    (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
+    (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy"))
 
-    ;; Install, but do not load.  They're loaded at export time.
-    (use-package ox-jira :pin melpa :no-require t)
-    (use-package ox-gfm :no-require t)
-  #+END_SRC
+  ;; Install, but do not load.  They're loaded at export time.
+  (use-package ox-jira :pin melpa :no-require t)
+  (use-package ox-gfm :no-require t)
+#+END_SRC
 
 ** Agenda
 
-   I use Org Agenda for keeping track of my TODOs.
+I use Org Agenda for keeping track of my TODOs.
 
-   I don't normally use properties, so I ignore most to help speed
-   up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]])
+I don't normally use properties, so I ignore most to help speed
+up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]])
 
-   I configure TODO list and tag search to ignore future scheduled,
-   deadlined, and timestamped issues.  These will show in the Agenda
-   eventually anyway.
+I configure TODO list and tag search to ignore future scheduled,
+deadlined, and timestamped issues.  These will show in the Agenda
+eventually anyway.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :bind ("C-c a" . org-agenda)
-       :custom
-       (org-agenda-include-diary t)
-       (org-agenda-ignore-properties '(effort appt stats))
-       (org-agenda-todo-list-sublevels nil)
-       (org-agenda-files "~/org/agenda/agenda-files.txt")
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :bind ("C-c a" . org-agenda)
+    :custom
+    (org-agenda-include-diary t)
+    (org-agenda-ignore-properties '(effort appt stats))
+    (org-agenda-todo-list-sublevels nil)
+    (org-agenda-files "~/org/agenda/agenda-files.txt")
 
-       (org-agenda-todo-ignore-scheduled 'future)
-       (org-agenda-todo-ignore-deadlines 'far)
-       (org-agenda-todo-ignore-timestamp 'future)
+    (org-agenda-todo-ignore-scheduled 'future)
+    (org-agenda-todo-ignore-deadlines 'far)
+    (org-agenda-todo-ignore-timestamp 'future)
 
-       (org-agenda-tags-todo-honor-ignore-options t)
+    (org-agenda-tags-todo-honor-ignore-options t)
 
-       (org-agenda-skip-deadline-prewarning-if-scheduled t)
-       (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+    (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
-       (org-agenda-custom-commands
-        '(("w" "Work Agenda" 
-           ((agenda "" ((org-agenda-span 'day)))
-            (tags-todo "-@home-MAYBE/TODO"
-                       ((org-agenda-max-entries 5)))))
-          ("h" "Home Agenda" 
-           ((agenda "")
-            (tags-todo "-@work-MAYBE/TODO"
-                       ((org-agenda-max-entries 5)))))
-          ("m" "Maybe"
-           ((tags-todo "MAYBE/PROJ")
-            (tags-todo "MAYBE-PROJ/TODO"))))))
-   #+END_SRC
+    (org-agenda-custom-commands
+     '(("w" "Work Agenda" 
+        ((agenda "" ((org-agenda-span 'day)))
+         (tags-todo "-@home-MAYBE/TODO"
+                    ((org-agenda-max-entries 5)))))
+       ("h" "Home Agenda" 
+        ((agenda "")
+         (tags-todo "-@work-MAYBE/TODO"
+                    ((org-agenda-max-entries 5)))))
+       ("m" "Maybe"
+        ((tags-todo "MAYBE/PROJ")
+         (tags-todo "MAYBE-PROJ/TODO"))))))
+#+END_SRC
 
 ** Capturing
 
-   Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
-   post]] (and YouTube series).  It has grown a bit since then.
+Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
+post]] (and YouTube series).  It has grown a bit since then.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package org
-       :bind ("C-c c" . org-capture)
-       :custom
-       (org-capture-templates
-        '(("t" "New TODO" entry
-           (file "agenda/inbox.org")
-           (file "templates/todo.org"))
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :bind ("C-c c" . org-capture)
+    :custom
+    (org-capture-templates
+     '(("t" "New TODO" entry
+        (file "agenda/inbox.org")
+        (file "templates/todo.org"))
 
-          ("a" "New Achievement" entry
-           (file+olp+datetree "~/org/cci/achievements.org")
-           "* %?" :tree-type week)
+       ("a" "New Achievement" entry
+        (file+olp+datetree "~/org/cci/achievements.org")
+        "* %?" :tree-type week)
 
-          ("p" "New Project" entry
-           (file "agenda/inbox.org")
-           (file "templates/proj.org"))
+       ("p" "New Project" entry
+        (file "agenda/inbox.org")
+        (file "templates/proj.org"))
 
-          ("T" "New Trip" entry
-           (file "agenda/inbox.org")
-           (file "templates/trip.org"))
+       ("T" "New Trip" entry
+        (file "agenda/inbox.org")
+        (file "templates/trip.org"))
 
-          ("n" "New Note (for reference)" entry
-           (file "~/org/cci/notes.org")
-           (file "templates/note.org"))
+       ("n" "New Note (for reference)" entry
+        (file "~/org/cci/notes.org")
+        (file "templates/note.org"))
 
-          ("g" "New Gas Meter Reading" table-line
-           (file "~/org/notes/gas-consumption.org")
-           (file "template/gas-consumption.org"))
+       ("g" "New Gas Meter Reading" table-line
+        (file "~/org/notes/gas-consumption.org")
+        (file "template/gas-consumption.org"))
 
-          ("e" "New Electricity Meter Reading" table-line
-           (file "~/org/notes/electricity-consumption.org")
-           (file "template/electricity-consumption.org"))
+       ("e" "New Electricity Meter Reading" table-line
+        (file "~/org/notes/electricity-consumption.org")
+        (file "template/electricity-consumption.org"))
 
-          ("b" "New Blog Idea" plain
-           (file "~/org/agenda/blog-ideas.org")
-           (file "templates/blog-post.org"))
+       ("b" "New Blog Idea" plain
+        (file "~/org/agenda/blog-ideas.org")
+        (file "templates/blog-post.org"))
 
-          ("r" "New GTD Review" entry
-           (file+olp+datetree "gtd_review.org")
-           (file "templates/gtd-review.org")))))
-   #+END_SRC
+       ("r" "New GTD Review" entry
+        (file+olp+datetree "gtd_review.org")
+        (file "templates/gtd-review.org")))))
+#+END_SRC
 
 ** Babel
 
-   Org Babel is magical: execute code from different languages in
-   the same file, and capture the output!  I list the languages I want
-   to support.
+Org Babel is magical: execute code from different languages in
+the same file, and capture the output!  I list the languages I want
+to support.
 
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((emacs-lisp . t)
-        (sql . t)
-	(shell . t)))
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages 'org-babel-load-languages
+   '((emacs-lisp . t)
+     (sql . t)
+     (shell . t)))
+#+END_SRC
 
 ** Attachments
 
-   One annoying thing is not being able to find attachments once
-   you've attached files. Luckily, it turns out you can ask Org to
-   create links to attachments.
+One annoying thing is not being able to find attachments once
+you've attached files. Luckily, it turns out you can ask Org to
+create links to attachments.
 
-   #+BEGIN_SRC emacs-lisp
-   (setq org-attach-store-link-p t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (setq org-attach-store-link-p t)
+#+END_SRC
 
 * Themes
 
 ** Load one theme at a time
 
-   For years I thought that theme switching in Emacs was broken---until
-   I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
-   supports /multiple themes being active at the same time/, which I'm
-   sure is convenient sometimes but becomes a right nuisance when
-   attempting to switch themes IMO. Add a utility function to disable
-   all currently enabled themes first.
+For years I thought that theme switching in Emacs was broken---until
+I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
+supports /multiple themes being active at the same time/, which I'm
+sure is convenient sometimes but becomes a right nuisance when
+attempting to switch themes IMO. Add a utility function to disable
+all currently enabled themes first.
 
-   #+BEGIN_SRC emacs-lisp
-     (defun sb/disable-all-themes ()
-       (interactive)
-       (mapc #'disable-theme custom-enabled-themes))
+#+BEGIN_SRC emacs-lisp
+  (defun sb/disable-all-themes ()
+    (interactive)
+    (mapc #'disable-theme custom-enabled-themes))
 
-     (defun sb/load-theme (the-theme)
-       "Enhance `load-theme' by first disabling enabled themes."
-       (sb/disable-all-themes)
-       (load-theme the-theme t))
-   #+END_SRC
+  (defun sb/load-theme (the-theme)
+    "Enhance `load-theme' by first disabling enabled themes."
+    (sb/disable-all-themes)
+    (load-theme the-theme t))
+#+END_SRC
 
 ** Hydra Theme Switching
 
-   Switch themes with Hydra! This loads all available themes and
-   presents a menu to let you switch between them. The theme switcher
-   is bound to =C-c w t=.
+Switch themes with Hydra! This loads all available themes and
+presents a menu to let you switch between them. The theme switcher
+is bound to =C-c w t=.
 
-   The switcher is, regretfully, not automatically updated when
-   installing new themes from the package selector menu, so you need to
-   evaluate this block again manually.
+The switcher is, regretfully, not automatically updated when
+installing new themes from the package selector menu, so you need to
+evaluate this block again manually.
 
-   #+BEGIN_SRC emacs-lisp
-     (setq sb/hydra-selectors
-	   "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+#+BEGIN_SRC emacs-lisp
+  (setq sb/hydra-selectors
+        "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-     (defun sb/load-theme-heads (themes)
-       (cl-map 'list
-	       (lambda (a b)
-		 (list (char-to-string a)
-		       `(sb/load-theme ',b)
-		       (symbol-name b)))
-	       sb/hydra-selectors
-	       themes))
+  (defun sb/load-theme-heads (themes)
+    (cl-map 'list
+            (lambda (a b)
+              (list (char-to-string a)
+                    `(sb/load-theme ',b)
+                    (symbol-name b)))
+            sb/hydra-selectors
+            themes))
 
-     (defun sb/switch-theme ()
-       (interactive)
-       (call-interactively
-	(eval `(defhydra sb/select-theme (:hint nil :color pink)
-		 "Select Theme"
-		 ,@(sb/load-theme-heads (custom-available-themes))
-		 ("DEL" (sb/disable-all-themes))
-		 ("RET" nil "done" :color blue)))))
-   #+END_SRC
+  (defun sb/switch-theme ()
+    (interactive)
+    (call-interactively
+     (eval `(defhydra sb/select-theme (:hint nil :color pink)
+              "Select Theme"
+              ,@(sb/load-theme-heads (custom-available-themes))
+              ("DEL" (sb/disable-all-themes))
+              ("RET" nil "done" :color blue)))))
+#+END_SRC
 
 ** Default Theme: Leuven
 
-   I keep coming back to Leuven as my default theme. In general I like
-   white / light backgrounds, and I like how it has special styles to
-   make Org mode documents a pleasure to look at.
+I keep coming back to Leuven as my default theme. In general I like
+white / light backgrounds, and I like how it has special styles to
+make Org mode documents a pleasure to look at.
 
-   #+begin_src emacs-lisp
-   (use-package leuven-theme
-     :pin melpa
-     :config
-     (sb/load-theme 'leuven))
-   #+end_src
+#+begin_src emacs-lisp
+  (use-package leuven-theme
+    :pin melpa
+    :config
+    (sb/load-theme 'leuven))
+#+end_src
 
 * Load Optional Configuration
 
-  Check if we have additional tangled config files to load.
+Check if we have additional tangled config files to load.
 
-  #+begin_src emacs-lisp
-    (dolist (cfg '("email.el" "lilypond.el" "blogging.el"))
-      (let ((config-file (expand-file-name cfg "~/.emacs.d")))
-        (when (file-exists-p config-file)
-          (load config-file))))
-  #+end_src
+#+begin_src emacs-lisp
+  (dolist (cfg '("email.el" "lilypond.el" "blogging.el"))
+    (let ((config-file (expand-file-name cfg "~/.emacs.d")))
+      (when (file-exists-p config-file)
+        (load config-file))))
+#+end_src
