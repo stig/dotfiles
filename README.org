@@ -628,6 +628,13 @@ container. LSP's versions work out of the box.
     (add-hook 'clojurescript-mode-hook #'lsp))
 #+end_src
 
+Use LSP-UI to present errors, etc.
+
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook lsp-mode)
+#+end_src
+
 ** Multiple Cursors
 
 This package is another one of those near-magical ones. It allows me to do
