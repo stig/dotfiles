@@ -865,7 +865,8 @@ container. LSP's versions work out of the box.
 
      (use-package clj-refactor
        :hook (clojure-mode . clj-refactor-mode)
-       :bind ("C-x C-r" . cljr-ivy)
+             :bind (:map clojure-mode-map
+                         ("C-x C-r" . cljr-ivy))
        :custom
        (cljr-suppress-middleware-warnings t)
        :config
