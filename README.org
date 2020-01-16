@@ -615,15 +615,13 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 
 ** LSP (Language Server Protocol)
 
-I use this primarily for:
-
-- =M-.= :: find definition
-- M-? :: Find references
+I have never been able to get CIDER's ~find-references~ to work, nor get
+CIDER's ~find-definition~ to work when running the REPL in a docker
+container. LSP's versions work out of the box.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure-system-package clojure-lsp
-    :bind ("M-." . lsp-find-definition)
     :ensure t
     :commands lsp
     :config
@@ -633,7 +631,6 @@ I use this primarily for:
                  clojurex-mode))
       (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
     :init
-    (setq lsp-prefer-flymake nil)
     (setq lsp-enable-indentation nil)
     (add-hook 'clojure-mode-hook #'lsp)
     (add-hook 'clojurec-mode-hook #'lsp)
