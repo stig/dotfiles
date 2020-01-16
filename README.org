@@ -898,6 +898,7 @@ container. LSP's versions work out of the box.
        (put-clojure-indent 'as-> ':defn)
        (put-clojure-indent 'run ':defn)
        (put-clojure-indent 'dosync ':defn)
+             (put-clojure-indent 'speculate 1)
        (put-clojure-indent 'doseq ':defn))
 
      (use-package cider
