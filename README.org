@@ -858,75 +858,81 @@ container. LSP's versions work out of the box.
 
 ** Clojure
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package flycheck-clj-kondo
-       :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
-       :pin melpa)
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-clj-kondo
+             :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
+             :pin melpa)
 
-     (use-package clj-refactor
-       :hook (clojure-mode . clj-refactor-mode)
+           (use-package clj-refactor
+             :hook (clojure-mode . clj-refactor-mode)
              :bind (:map clojure-mode-map
                          ("C-x C-r" . cljr-ivy))
-       :custom
-       (cljr-suppress-middleware-warnings t)
-       :config
-       (cljr-add-keybindings-with-prefix "C-c C-m")
+             :custom
+             (cljr-suppress-middleware-warnings t)
+             :config
+             (cljr-add-keybindings-with-prefix "C-c C-m")
 
-       (defun cljr-ivy-candidates ()
-         (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
-                 cljr--all-helpers))
+             (defun cljr-ivy-candidates ()
+               (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
+                       cljr--all-helpers))
 
-       (defun cljr-ivy ()
-         "Ivy interface to cljr-refactor"
-         (interactive)
-         (ivy-read "clj-refactor: "
-                   (cljr-ivy-candidates)
-                   :action
-                   (lambda (candidate)
-                     (string-match "^\\(.+?\\): " candidate)
-                     (call-interactively
-                      (cadr (assoc (match-string 1 candidate)
-                                   cljr--all-helpers)))))))
+             (defun cljr-ivy ()
+               "Ivy interface to cljr-refactor"
+               (interactive)
+               (ivy-read "clj-refactor: "
+                         (cljr-ivy-candidates)
+                         :action
+                         (lambda (candidate)
+                           (string-match "^\\(.+?\\): " candidate)
+                           (call-interactively
+                            (cadr (assoc (match-string 1 candidate)
+                                         cljr--all-helpers)))))))
 
 
-     (use-package clojure-mode
-       :ensure-system-package ((java . homebrew/cask/java)
-                               (lein . leiningen)
-                               (clj . clojure))
-       :config
-       (require 'flycheck-clj-kondo)
-       (put-clojure-indent 'as-> ':defn)
-       (put-clojure-indent 'run ':defn)
-       (put-clojure-indent 'dosync ':defn)
+           (use-package clojure-mode
+             :ensure-system-package ((java . homebrew/cask/java)
+                                     (lein . leiningen)
+                                     (clj . clojure))
+             :config
+             (require 'flycheck-clj-kondo)
+             (put-clojure-indent 'as-> ':defn)
+             (put-clojure-indent 'run ':defn)
+             (put-clojure-indent 'dosync ':defn)
              (put-clojure-indent 'speculate 1)
-       (put-clojure-indent 'doseq ':defn))
+             (put-clojure-indent 'doseq ':defn))
 
-     (use-package cider
-       :config
-       (defun sb/cider-test-infer-ns-fn (ns)
-         "Infer `test-' prefixed namespaces for test files.
-          Some projects use a `test-' prefix rather than `-test'
-          suffix for test files.  This detects those and runs the
-          correct test.  It falls back to Cider's default function if
-          the project type is not one known to use test- prefixes."
-         (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
-                                                            'test-prefix))
-             (let* ((prefix "test-")
-                    (ns-parts (split-string ns "\\."))
-                    (last-component (car (last ns-parts))))
-               (if (string-prefix-p prefix last-component)
-                   ns
-                 (string-join (append (butlast ns-parts)
-                                      (list (concat prefix last-component)))
-                              ".")))
-           (cider-test-default-test-ns-fn ns)))
-       :custom
-       (cider-auto-mode t)
-       (cider-auto-track-ns-form-changes t)
-       (cider-eldoc-display-context-dependent-info t)
-       (cider-repl-display-help-banner nil)
-       (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
-   #+END_SRC
+           (use-package cider
+             :bind (:map clojure-mode-map
+                         ("C-c ," . cider-test-commands-map)
+                         ("C-c C-k" . cider-load-buffer)
+                         ("C-c M-n" . cider-ns-map)
+                             ("C-c C-z" . cider-switch-to-repl-buffer)
+                         ("C-c M-z" . cider-load-buffer-and-switch-to-repl-buffer))
+             :config
+             (defun sb/cider-test-infer-ns-fn (ns)
+               "Infer `test-' prefixed namespaces for test files.
+                Some projects use a `test-' prefix rather than `-test'
+                suffix for test files.  This detects those and runs the
+                correct test.  It falls back to Cider's default function if
+                the project type is not one known to use test- prefixes."
+               (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
+                                                                  'test-prefix))
+                   (let* ((prefix "test-")
+                          (ns-parts (split-string ns "\\."))
+                          (last-component (car (last ns-parts))))
+                     (if (string-prefix-p prefix last-component)
+                         ns
+                       (string-join (append (butlast ns-parts)
+                                            (list (concat prefix last-component)))
+                                    ".")))
+                 (cider-test-default-test-ns-fn ns)))
+             :custom
+             (cider-auto-mode nil)
+             (cider-auto-track-ns-form-changes t)
+             (cider-eldoc-display-context-dependent-info t)
+             (cider-repl-display-help-banner nil)
+             (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
+  #+END_SRC
 
    I want to use some lein plugins across all projects.
 
