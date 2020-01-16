@@ -425,14 +425,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
   allow-loopback-pinentry
 #+end_src
 
-** Running tests
-
-Add a convenient keybinding for running tests interactively.
-
-#+BEGIN_SRC emacs-lisp
-  (bind-key "C-x t" 'ert)
-#+END_SRC
-
 ** Remove ANSI colours
 
 #+begin_src emacs-lisp
