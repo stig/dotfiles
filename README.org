@@ -614,7 +614,6 @@ container. LSP's versions work out of the box.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure-system-package clojure-lsp
-    :ensure t
     :commands lsp
     :config
     (dolist (m '(clojure-mode
