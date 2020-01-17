@@ -188,7 +188,7 @@ In case something needs my name/email address.
 ** Configure Meta/super/hyper keys
 
 #+BEGIN_SRC emacs-lisp
-  (setq mac-command-modifier 'meta 
+  (setq mac-command-modifier 'meta
         mac-option-modifier 'super
         mac-function-modifier 'hyper)
 #+END_SRC
@@ -939,7 +939,7 @@ sub-project inheritance.  I think that plays merry hell with also
 loading ~~refactor-nrepl~ (lots of complaints about duplications), so
 I add the ~~:pedantic? :ranges~~.  Not sure why it works, but it
 seems to.
- 
+
 #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
   {:user {:plugins [[lein-ancient "0.6.15"]
                     [jonase/eastwood "0.3.5"]
