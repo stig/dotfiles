@@ -1230,14 +1230,21 @@ eventually anyway.
     (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
     (org-agenda-custom-commands
-     '(("w" "Work Agenda" 
+     '(("w" "Work Agenda"
         ((agenda "" ((org-agenda-span 'day)))
          (tags-todo "-@home-MAYBE/TODO"
-                    ((org-agenda-max-entries 5)))))
-       ("h" "Home Agenda" 
+                    ((org-agenda-max-entries 5)
+                     (org-agenda-todo-ignore-scheduled 'all)
+                     (org-agenda-todo-ignore-deadlines 'all)
+                     (org-agenda-todo-ignore-timestamp 'all)))))
+       ("h" "Home Agenda"
         ((agenda "")
          (tags-todo "-@work-MAYBE/TODO"
-                    ((org-agenda-max-entries 5)))))
+                    ((org-agenda-max-entries 5)
+                     (org-agenda-todo-ignore-scheduled 'all)
+
+                     (org-agenda-todo-ignore-deadlines 'all)
+                     (org-agenda-todo-ignore-timestamp 'all)))))
        ("m" "Maybe"
         ((tags-todo "MAYBE/PROJ")
          (tags-todo "MAYBE-PROJ/TODO"))))))
