@@ -114,7 +114,7 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
 
     # Tag previously unseen messages
     +sent -- path:/sent/ and tag:new
-    -inbox -- path:/archive/ and tag:new
+    -inbox -- path:/Archive/ and tag:new
 
     # Add specific tags for mailing lists, and remove from inbox
     +lists +org-mode -inbox -- path:/org-mode/ and tag:new
@@ -200,7 +200,7 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
     Expunge Both
 
     Channel archive
-    Master :remote:archive
+    Master :remote:Archive
     Slave :local:archive
     Create Slave
     SyncState *
