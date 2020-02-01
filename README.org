@@ -1281,11 +1281,11 @@ post]] (and YouTube series).  It has grown a bit since then.
 
        ("g" "New Gas Meter Reading" table-line
         (file "~/org/notes/gas-consumption.org")
-        (file "template/gas-consumption.org"))
+        (file "templates/gas-consumption.org"))
 
        ("e" "New Electricity Meter Reading" table-line
         (file "~/org/notes/electricity-consumption.org")
-        (file "template/electricity-consumption.org"))
+        (file "templates/electricity-consumption.org"))
 
        ("b" "New Blog Idea" plain
         (file "~/org/agenda/blog-ideas.org")
