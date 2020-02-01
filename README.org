@@ -1246,7 +1246,8 @@ eventually anyway.
                      (org-agenda-todo-ignore-timestamp 'all)))))
        ("m" "Maybe"
         ((tags-todo "MAYBE/PROJ")
-         (tags-todo "MAYBE-PROJ/TODO"))))))
+         (tags-todo "MAYBE-PROJ/TODO")))
+       ("P" "Projects" tags-todo "-MAYBE/PROJ"))))
 #+END_SRC
 
 ** Capturing
