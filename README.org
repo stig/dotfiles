@@ -607,9 +607,9 @@ any better.
 
 ** LSP (Language Server Protocol)
 
-I have never been able to get CIDER's ~find-references~ to work, nor get
-CIDER's ~find-definition~ to work when running the REPL in a docker
-container. LSP's versions work out of the box.
+LSP is useful for =M-.= when I have no CIDER session (i.e.). It also is
+useful for =M-?= (~find-references~) which doesn't appear to exist in
+CIDER.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -632,6 +632,7 @@ Use LSP-UI to present errors, etc.
 
 #+begin_src emacs-lisp
   (use-package lsp-ui
+    :pin melpa
     :hook lsp-mode)
 #+end_src
 
@@ -862,6 +863,7 @@ delete the entire matched line by hitting =C-c C-d=.
     :pin melpa)
 
   (use-package clj-refactor
+    :pin melpa
     :hook (clojure-mode . clj-refactor-mode)
     :bind (:map clojure-mode-map
                 ("C-x C-r" . cljr-ivy))
@@ -888,6 +890,7 @@ delete the entire matched line by hitting =C-c C-d=.
 
 
   (use-package clojure-mode
+    :pin melpa
     :ensure-system-package ((java . homebrew/cask/java)
                             (lein . leiningen)
                             (clj . clojure))
@@ -900,12 +903,7 @@ delete the entire matched line by hitting =C-c C-d=.
     (put-clojure-indent 'doseq ':defn))
 
   (use-package cider
-    :bind (:map clojure-mode-map
-                ("C-c ," . cider-test-commands-map)
-                ("C-c C-k" . cider-load-buffer)
-                ("C-c M-n" . cider-ns-map)
-                ("C-c C-z" . cider-switch-to-repl-buffer)
-                ("C-c M-z" . cider-load-buffer-and-switch-to-repl-buffer))
+    :pin melpa
     :config
     (defun sb/cider-test-infer-ns-fn (ns)
       "Infer `test-' prefixed namespaces for test files.
@@ -925,9 +923,12 @@ delete the entire matched line by hitting =C-c C-d=.
                            ".")))
         (cider-test-default-test-ns-fn ns)))
     :custom
-    (cider-auto-mode nil)
+    (cider-prompt-for-symbol nil)
+    (cider-prefer-local-resources t)
+    (cider-repl-display-in-current-window t)
     (cider-auto-track-ns-form-changes t)
     (cider-eldoc-display-context-dependent-info t)
+    (cider-font-lock-dynamically '(macro core function var))
     (cider-repl-display-help-banner nil)
     (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
 #+END_SRC
