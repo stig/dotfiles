@@ -86,7 +86,7 @@ elpa.  So we need to configure the package system now.
   (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
 
-*** Add Melpa to ~package-archives~
+*** Add Melpa & Org mode to ~package-archives~
 
 I install most packages via Melpa stable, but some from unstable,
 so I add both those to the package archives.  (The default
@@ -95,6 +95,7 @@ contains only GNU ELPA.)
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
 *** Install & configure ~use-package~
@@ -1167,6 +1168,8 @@ I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :pin org
+    :ensure org-plus-contrib
     :bind (("C-c l" . org-store-link)
            ("C-x C-<return>" . org-insert-subheading)
            ("C-S-<return>" . org-insert-todo-subheading)
@@ -1214,6 +1217,8 @@ eventually anyway.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :pin org
+    :ensure org-plus-contrib
     :bind ("C-c a" . org-agenda)
     :custom
     (org-agenda-include-diary t)
@@ -1259,6 +1264,8 @@ post]] (and YouTube series).  It has grown a bit since then.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :pin org
+    :ensure org-plus-contrib
     :bind ("C-c c" . org-capture)
     :custom
     (org-capture-templates
