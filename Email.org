@@ -173,14 +173,14 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
     ExpireUnread yes
     Expunge Both
 
-    Channel lilypond
-    Master :remote:lilypond
-    Slave :local:lilypond
-    Create Slave
-    SyncState *
-    MaxMessages 500
-    ExpireUnread yes
-    Expunge Both
+    # Channel lilypond
+    # Master :remote:lilypond
+    # Slave :local:lilypond
+    # Create Slave
+    # SyncState *
+    # MaxMessages 500
+    # ExpireUnread yes
+    # Expunge Both
 
     Channel clojure
     Master :remote:clojure
@@ -191,13 +191,13 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
     ExpireUnread yes
     Expunge Both
 
-    Channel tuls
-    Master :remote:tuls
-    Slave :local:tuls
-    Create Slave
-    SyncState *
-    MaxMessages 500
-    Expunge Both
+    # Channel tuls
+    # Master :remote:tuls
+    # Slave :local:tuls
+    # Create Slave
+    # SyncState *
+    # MaxMessages 500
+    # Expunge Both
 
     Channel archive
     Master :remote:Archive
