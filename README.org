@@ -1086,6 +1086,7 @@ easily and have them renumbered automatically.
     :bind (("M-<up>" . markdown-move-list-item-up)
            ("M-<down>" . markdown-move-list-item-down))
     :custom
+    (markdown-fontify-code-blocks-natively t)
     (markdown-asymmetric-header t))
 #+END_SRC
 ** Org drill (for learning new things)
