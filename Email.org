@@ -277,8 +277,7 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
   archive, and can reply to it from there.
 
   #+begin_src emacs-lisp
-  (use-package org-notmuch
-    :disabled
-    :after (org notmuch))
+    (use-package ol-notmuch
+      :ensure org-plus-contrib
+      :after (org notmuch))
   #+end_src
-
