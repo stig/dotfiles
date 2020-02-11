@@ -85,6 +85,13 @@ can "soft publish" and publish to RSS separately from the index page.
          (point-min) (point-max)))))
 #+end_src
 
+=org-rss= requires these to do its thing:
+
+#+begin_src emacs-lisp
+  (require 'ox-icalendar)
+  (require 'ox-rss)
+#+end_src
+
 * Find drafts
 
 #+begin_src emacs-lisp
