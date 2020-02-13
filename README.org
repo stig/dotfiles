@@ -1238,22 +1238,24 @@ eventually anyway.
     (org-agenda-custom-commands
      '(("w" "Work Agenda"
         ((agenda "" ((org-agenda-span 'day)))
-         (tags-todo "-@home-MAYBE/TODO"
-                    ((org-agenda-max-entries 5)
-                     (org-agenda-todo-ignore-scheduled 'all)
-                     (org-agenda-todo-ignore-deadlines 'all)
-                     (org-agenda-todo-ignore-timestamp 'all)))))
+         (todo "TODO"
+               ((org-agenda-max-entries 5)
+                (org-agenda-todo-ignore-scheduled 'all)
+                (org-agenda-todo-ignore-deadlines 'all)
+                (org-agenda-todo-ignore-timestamp 'all))))
+        ((org-agenda-tag-filter '("-@home" "-MAYBE"))))
        ("h" "Home Agenda"
         ((agenda "")
-         (tags-todo "-@work-MAYBE/TODO"
-                    ((org-agenda-max-entries 5)
-                     (org-agenda-todo-ignore-scheduled 'all)
-
-                     (org-agenda-todo-ignore-deadlines 'all)
-                     (org-agenda-todo-ignore-timestamp 'all)))))
+         (todo "TODO"
+               ((org-agenda-max-entries 5)
+                (org-agenda-todo-ignore-scheduled 'all)
+                (org-agenda-todo-ignore-deadlines 'all)
+                (org-agenda-todo-ignore-timestamp 'all))))
+        ((org-agenda-tag-filter '("-@work" "-MAYBE"))))
        ("m" "Maybe"
-        ((tags-todo "MAYBE/PROJ")
-         (tags-todo "MAYBE-PROJ/TODO")))
+        ((todo "PROJ")
+         (tags-todo "-PROJ/TODO"))
+        ((org-agenda-tag-filter '("MAYBE"))))
        ("P" "Projects" tags-todo "-MAYBE/PROJ"))))
 #+END_SRC
 
