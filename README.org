@@ -1083,6 +1083,9 @@ easily and have them renumbered automatically.
 
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
+    ;; I essentially don't use Markdown
+    ;; outside GitHub any more
+    :mode ("\\.md\\'" . gfm-mode)
     :pin melpa
     :bind (("M-<up>" . markdown-move-list-item-up)
            ("M-<down>" . markdown-move-list-item-down))
