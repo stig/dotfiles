@@ -1426,7 +1426,7 @@ make Org mode documents a pleasure to look at.
 Check if we have additional tangled config files to load.
 
 #+begin_src emacs-lisp
-  (dolist (cfg '("email.el" "lilypond.el" "blogging.el"))
+  (dolist (cfg '("email.el" "blogging.el"))
     (let ((config-file (expand-file-name cfg "~/.emacs.d")))
       (when (file-exists-p config-file)
         (load config-file))))

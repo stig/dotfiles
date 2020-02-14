@@ -118,7 +118,6 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
 
     # Add specific tags for mailing lists, and remove from inbox
     +lists +org-mode -inbox -- path:/org-mode/ and tag:new
-    +lists +lilypond -inbox -- path:/lilypond/ and tag:new
     +lists +clojure -inbox -- path:/clojure/ and tag:new
 
     # V. low volume lists gets to stay in inbox
@@ -172,15 +171,6 @@ email in Emacs too.  I currently use [[https://notmuchmail.org][Notmuch]] for th
     MaxMessages 500
     ExpireUnread yes
     Expunge Both
-
-    # Channel lilypond
-    # Master :remote:lilypond
-    # Slave :local:lilypond
-    # Create Slave
-    # SyncState *
-    # MaxMessages 500
-    # ExpireUnread yes
-    # Expunge Both
 
     Channel clojure
     Master :remote:clojure
