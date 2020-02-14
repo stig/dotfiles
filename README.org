@@ -672,6 +672,7 @@ it are that it provides the following key bindings:
     (projectile-project-search-path '("~/src"))
     (projectile-completion-system 'ivy)
     (projectile-create-missing-test-files t)
+    (projectile-mode-line-function (lambda () "Projectile"))
     :config
     (projectile-mode)
 
@@ -1133,6 +1134,24 @@ Configure aspell and let it find dictionaries:
 
 #+begin_src conf :tangle ~/.aspell.conf
   master british
+#+end_src
+
+** Tramp
+
+Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]].
+
+#+begin_src emacs-lisp
+  ;; Remote files are not independently updated beyond TRAMP's control (a white lie)
+  (setq remote-file-name-inhibit-cache nil)
+
+  ;; Speed up completions
+  (setq tramp-completion-reread-directory-timeout nil)
+
+  ;; Ignore remote version control
+  (setq vc-ignore-dir-regexp
+        (format "\\(%s\\)\\|\\(%s\\)"
+                vc-ignore-dir-regexp
+                tramp-file-name-regexp))
 #+end_src
 
 ** YAML
