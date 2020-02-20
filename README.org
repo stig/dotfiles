@@ -471,8 +471,7 @@ automatically commit when editing files.
   (use-package git-auto-commit-mode
     :custom
     (gac-automatically-add-new-files-p t)
-    (gac-automatically-push-p t)
-    (gac-debounce-interval 60))
+    (gac-automatically-push-p t))
 #+END_SRC
 
 ** Auto Indent Mode
