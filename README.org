@@ -1249,7 +1249,11 @@ eventually anyway.
         ((todo "PROJ")
          (tags-todo "-PROJ/TODO"))
         ((org-agenda-tag-filter '("+MAYBE"))))
-       ("P" "Projects" tags-todo "-MAYBE/PROJ"))))
+       ("P" "Projects" tags-todo "-MAYBE/PROJ")
+       ("A" "Archivable" ((todo "COMPLETE")
+                          (tags-todo "-PROJ/DONE")
+                          (tags-todo "-PROJ/CANCELLED")))
+       ("c" "Tasks Complete?" tags-todo "/-DONE-CANCELLED-PROJ"))))
 #+END_SRC
 
 ** Capturing
