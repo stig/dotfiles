@@ -471,8 +471,7 @@ automatically commit when editing files.
 (use-package git-auto-commit-mode
   :custom
   (gac-automatically-add-new-files-p t)
-  (gac-automatically-push-p t)
-  (gac-debounce-interval 60))
+  (gac-automatically-push-p t))
 #+END_SRC
 
 ** Auto Indent Mode
@@ -1181,7 +1180,6 @@ I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][
   (org-catch-invisible-edits 'smart)
   (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
   (org-export-backends '(html gfm jira latex))
-  (org-hide-emphasis-markers t)
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
   (org-log-done 'time)
