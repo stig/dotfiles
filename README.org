@@ -1111,12 +1111,6 @@ master british
 Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]].
 
 #+begin_src emacs-lisp
-;; Remote files are not independently updated beyond TRAMP's control (a white lie)
-(setq remote-file-name-inhibit-cache nil)
-
-;; Speed up completions
-(setq tramp-completion-reread-directory-timeout nil)
-
 ;; Ignore remote version control
 (setq vc-ignore-dir-regexp
       (format "\\(%s\\)\\|\\(%s\\)"
