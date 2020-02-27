@@ -1257,27 +1257,27 @@ Set up capture templates.  I learnt about these from [[http://koenig-haunstetten
 post]] (and YouTube series).  It has grown a bit since then.
 
 #+BEGIN_SRC emacs-lisp
+(setq org-default-notes-file (expand-file-name
+			      (concat
+			       (car (split-string (system-name) "\\."))
+			       ".org")
+			      "~/org/agenda"))
+
 (use-package org
   :pin org
   :ensure org-plus-contrib
   :bind ("C-c c" . org-capture)
   :custom
   (org-capture-templates
-   '(("t" "New TODO" entry
-      (file "agenda/inbox.org")
-      (file "templates/todo.org"))
+   '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
 
      ("a" "New Achievement" entry
       (file+olp+datetree "~/org/cci/achievements.org")
       "* %?" :tree-type week)
 
-     ("p" "New Project" entry
-      (file "agenda/inbox.org")
-      (file "templates/proj.org"))
+     ("p" "New Project" entry (file "") (file "templates/proj.org"))
 
-     ("T" "New Trip" entry
-      (file "agenda/inbox.org")
-      (file "templates/trip.org"))
+     ("T" "New Trip" entry (file "") (file "templates/trip.org"))
 
      ("n" "New Note (for reference)" entry
       (file "~/org/cci/notes.org")
