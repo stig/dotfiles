@@ -628,14 +628,6 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?=
   (add-hook 'clojurescript-mode-hook #'lsp))
 #+end_src
 
-Use LSP-UI to present errors, etc.
-
-#+begin_src emacs-lisp
-(use-package lsp-ui
-  :pin melpa
-  :hook lsp-mode)
-#+end_src
-
 ** Multiple Cursors
 
 This package is another one of those near-magical ones. It allows me to do
