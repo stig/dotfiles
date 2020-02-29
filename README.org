@@ -608,9 +608,8 @@ any better.
 
 ** LSP (Language Server Protocol)
 
-LSP is useful for =M-.= when I have no CIDER session (i.e.). It also is
-useful for =M-?= (~find-references~) which doesn't appear to exist in
-CIDER.
+LSP is useful for =M-.= (~find-definitions~) and =M-?=
+(~find-references~).
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
