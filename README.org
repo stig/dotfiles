@@ -663,7 +663,8 @@ it are that it provides the following key bindings:
   (projectile-project-search-path '("~/src"))
   (projectile-completion-system 'ivy)
   (projectile-create-missing-test-files t)
-  (projectile-mode-line-function (lambda () "Projectile"))
+  (projectile-dynamic-mode-line nil)
+  (projectile-switch-project-action 'magit-status)
   :config
   (projectile-mode)
 
