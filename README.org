@@ -1259,47 +1259,47 @@ Set up capture templates.  I learnt about these from [[http://koenig-haunstetten
 post]] (and YouTube series).  It has grown a bit since then.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-default-notes-file (expand-file-name
-			      (concat
-			       (car (split-string (system-name) "\\."))
-			       ".org")
-			      "~/org/agenda"))
+  (setq org-default-notes-file (expand-file-name
+                                (concat
+                                 (car (split-string (system-name) "\\."))
+                                 ".org")
+                                "~/org/agenda"))
 
-(use-package org
-  :pin org
-  :ensure org-plus-contrib
-  :bind ("C-c c" . org-capture)
-  :custom
-  (org-capture-templates
-   '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
+  (use-package org
+    :pin org
+    :ensure org-plus-contrib
+    :bind ("C-c c" . org-capture)
+    :custom
+    (org-capture-templates
+     '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
 
-     ("a" "New Achievement" entry
-      (file+olp+datetree "~/org/cci/achievements.org")
-      "* %?" :tree-type week)
+       ("a" "New Achievement" entry
+        (file+olp+datetree "~/org/cci/achievements.org")
+        "* %?" :tree-type week)
 
-     ("p" "New Project" entry (file "") (file "templates/proj.org"))
+       ("p" "New Project" entry (file "") (file "templates/proj.org"))
 
-     ("T" "New Trip" entry (file "") (file "templates/trip.org"))
+       ("T" "New Trip" entry (file "") (file "templates/trip.org"))
 
-     ("n" "New Note (for reference)" entry
-      (file "~/org/cci/notes.org")
-      (file "templates/note.org"))
+       ("n" "New Note (for reference)" entry
+        (file "~/org/cci/notes.org")
+        (file "templates/note.org"))
 
-     ("g" "New Gas Meter Reading" table-line
-      (file "~/org/notes/gas-consumption.org")
-      (file "templates/gas-consumption.org"))
+       ("g" "New Gas Meter Reading" table-line
+        (file "~/org/notes/gas-consumption.org")
+        (file "templates/gas-consumption.org"))
 
-     ("e" "New Electricity Meter Reading" table-line
-      (file "~/org/notes/electricity-consumption.org")
-      (file "templates/electricity-consumption.org"))
+       ("e" "New Electricity Meter Reading" table-line
+        (file "~/org/notes/electricity-consumption.org")
+        (file "templates/electricity-consumption.org"))
 
-     ("b" "New Blog Idea" plain
-      (file "~/org/agenda/blog-ideas.org")
-      (file "templates/blog-post.org"))
+       ("b" "New Blog Idea" plain
+        (file "~/org/agenda/blog-ideas.org")
+        (file "templates/blog-post.org"))
 
-     ("r" "New GTD Review" entry
-      (file+olp+datetree "gtd_review.org")
-      (file "templates/gtd-review.org")))))
+       ("r" "New GTD Review" entry
+        (file+olp+datetree "gtd_review.org")
+        (file "templates/gtd-review.org")))))
 #+END_SRC
 
 ** Babel
