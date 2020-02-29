@@ -1136,15 +1136,19 @@ tables, TOC, footnotes, TODO and Agenda items makes it an easy
 choice.  Gists and GitHub READMEs support Org mode too, and I can
 export to other formats including if I want.
 
-The particular version of package I use is annoying to install
-because the installed package has a different name from what you
-would use in your config.  However, =use-package= supports this by
-passing the name of the package to install as the value to =:ensure=.
-
 The Org manual expects the =C-c {l,a,c}= keybindings to be available
 in any mode, so define them globally.  I prefer to follow
 conventions.  It makes reading the manual and tutorials a lot
 easier!
+
+I use Org's refiling when "refactoring" documents such as this one.
+I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+
+I use Org Agenda for keeping track of my TODOs. I don't normally use
+properties, so I ignore most to help speed up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]]) I
+configure TODO list and tag search to ignore future scheduled,
+deadlined, and timestamped issues. These will show in the Agenda
+eventually anyway.
 
 I love Org's markup so much I wrote a JIRA export backend for it.  I
 also write in Org and export to GitHub.  GitHub unfortunately
@@ -1152,23 +1156,35 @@ doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
 exporter, as this deletes linebreaks.  This means the rendered
 paragraphs re-flow properly on GitHub.
 
-I use Org's refiling when "refactoring" documents such as this one.
-I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
+post]] (and YouTube series).  It has grown a bit since then.
+
+Org Babel is magical: execute code from different languages in
+the same file, and capture the output!  I list the languages I want
+to support.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :pin org
   :ensure org-plus-contrib
   :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         :map org-mode-map
          ("C-x C-<return>" . org-insert-subheading)
          ("C-S-<return>" . org-insert-todo-subheading)
-         :map org-mode-map
          ("C-n" . org-next-link)
          ("C-p" . org-previous-link))
 
   :mode (("\\.org\\'" . org-mode)
          ("\\.org_archive\\'" . org-mode))
 
+  :init
+  (setq org-default-notes-file (expand-file-name
+                                (concat
+                                 (car (split-string (system-name) "\\."))
+                                 ".org")
+                                "~/org/agenda"))
   :custom
   (org-src-preserve-indentation nil)
   (org-edit-src-content-indentation 0)
@@ -1187,30 +1203,7 @@ I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][
   (org-refile-targets '((org-agenda-files . (:tag . "RECURRING"))
                         (org-agenda-files . (:todo . "PROJ"))))
   (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
-  (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy"))
-
-;; Install, but do not load.  They're loaded at export time.
-(use-package ox-jira :pin melpa :no-require t)
-(use-package ox-gfm :no-require t)
-#+END_SRC
-
-** Agenda
-
-I use Org Agenda for keeping track of my TODOs.
-
-I don't normally use properties, so I ignore most to help speed
-up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]])
-
-I configure TODO list and tag search to ignore future scheduled,
-deadlined, and timestamped issues.  These will show in the Agenda
-eventually anyway.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org
-  :pin org
-  :ensure org-plus-contrib
-  :bind ("C-c a" . org-agenda)
-  :custom
+  (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
   (org-agenda-include-diary t)
   (org-agenda-ignore-properties '(effort appt stats))
   (org-agenda-todo-list-sublevels nil)
@@ -1225,22 +1218,53 @@ eventually anyway.
   (org-agenda-skip-deadline-prewarning-if-scheduled t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
+  (org-capture-templates
+   '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
+
+     ("a" "New Achievement" entry
+      (file+olp+datetree "~/org/cci/achievements.org")
+      "* %?" :tree-type week)
+
+     ("p" "New Project" entry (file "") (file "templates/proj.org"))
+
+     ("T" "New Trip" entry (file "") (file "templates/trip.org"))
+
+     ("n" "New Note (for reference)" entry
+      (file "~/org/cci/notes.org")
+      (file "templates/note.org"))
+
+     ("g" "New Gas Meter Reading" table-line
+      (file "~/org/notes/gas-consumption.org")
+      (file "templates/gas-consumption.org"))
+
+     ("e" "New Electricity Meter Reading" table-line
+      (file "~/org/notes/electricity-consumption.org")
+      (file "templates/electricity-consumption.org"))
+
+     ("b" "New Blog Idea" plain
+      (file "~/org/agenda/blog-ideas.org")
+      (file "templates/blog-post.org"))
+
+     ("r" "New GTD Review" entry
+      (file+olp+datetree "gtd_review.org")
+      (file "templates/gtd-review.org"))))
+
   (org-agenda-custom-commands
    '(("w" "Work Agenda"
       ((agenda "" ((org-agenda-span 'day)))
        (tags-todo "-@home-MAYBE/TODO"
-		  ((org-agenda-max-entries 5)
-		   (org-agenda-todo-ignore-scheduled 'all)
-		   (org-agenda-todo-ignore-deadlines 'all)
-		   (org-agenda-todo-ignore-timestamp 'all))))
+                  ((org-agenda-max-entries 5)
+                   (org-agenda-todo-ignore-scheduled 'all)
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-timestamp 'all))))
       ((org-agenda-tag-filter '("-@home" "-MAYBE"))))
      ("h" "Home Agenda"
       ((agenda "")
        (tags-todo "-@work-MAYBE/TODO"
-		  ((org-agenda-max-entries 5)
-		   (org-agenda-todo-ignore-scheduled 'all)
-		   (org-agenda-todo-ignore-deadlines 'all)
-		   (org-agenda-todo-ignore-timestamp 'all))))
+                  ((org-agenda-max-entries 5)
+                   (org-agenda-todo-ignore-scheduled 'all)
+                   (org-agenda-todo-ignore-deadlines 'all)
+                   (org-agenda-todo-ignore-timestamp 'all))))
       ((org-agenda-tag-filter '("-@work" "-MAYBE"))))
      ("m" "Maybe"
       ((todo "PROJ")
@@ -1250,79 +1274,18 @@ eventually anyway.
      ("A" "Archivable" ((todo "COMPLETE")
                         (tags-todo "-PROJ/DONE")
                         (tags-todo "-PROJ/CANCELLED")))
-     ("c" "Tasks Complete?" tags-todo "/-DONE-CANCELLED-PROJ"))))
-#+END_SRC
+     ("c" "Tasks Complete?" tags-todo "/-DONE-CANCELLED-PROJ")))
 
-** Capturing
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((emacs-lisp . t)
+                                 (sql . t)
+                                 (shell . t))))
 
-Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
-post]] (and YouTube series).  It has grown a bit since then.
 
-#+BEGIN_SRC emacs-lisp
-  (setq org-default-notes-file (expand-file-name
-                                (concat
-                                 (car (split-string (system-name) "\\."))
-                                 ".org")
-                                "~/org/agenda"))
-
-  (use-package org
-    :pin org
-    :ensure org-plus-contrib
-    :bind ("C-c c" . org-capture)
-    :custom
-    (org-capture-templates
-     '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
-
-       ("a" "New Achievement" entry
-        (file+olp+datetree "~/org/cci/achievements.org")
-        "* %?" :tree-type week)
-
-       ("p" "New Project" entry (file "") (file "templates/proj.org"))
-
-       ("T" "New Trip" entry (file "") (file "templates/trip.org"))
-
-       ("n" "New Note (for reference)" entry
-        (file "~/org/cci/notes.org")
-        (file "templates/note.org"))
-
-       ("g" "New Gas Meter Reading" table-line
-        (file "~/org/notes/gas-consumption.org")
-        (file "templates/gas-consumption.org"))
-
-       ("e" "New Electricity Meter Reading" table-line
-        (file "~/org/notes/electricity-consumption.org")
-        (file "templates/electricity-consumption.org"))
-
-       ("b" "New Blog Idea" plain
-        (file "~/org/agenda/blog-ideas.org")
-        (file "templates/blog-post.org"))
-
-       ("r" "New GTD Review" entry
-        (file+olp+datetree "gtd_review.org")
-        (file "templates/gtd-review.org")))))
-#+END_SRC
-
-** Babel
-
-Org Babel is magical: execute code from different languages in
-the same file, and capture the output!  I list the languages I want
-to support.
-
-#+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages 'org-babel-load-languages
- '((emacs-lisp . t)
-   (sql . t)
-   (shell . t)))
-#+END_SRC
-
-** Attachments
-
-One annoying thing is not being able to find attachments once
-you've attached files. Luckily, it turns out you can ask Org to
-create links to attachments.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-attach-store-link-p t)
+;; Install, but do not load.  They're loaded at export time.
+(use-package ox-jira :pin melpa :no-require t)
+(use-package ox-gfm :no-require t)
 #+END_SRC
 
 * Themes
