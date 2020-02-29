@@ -671,10 +671,11 @@ it are that it provides the following key bindings:
   ;; Some projects use a prefix for test files rather than the default
   ;; suffix.  By putting a `.lein-test-prefix` file in the root I can
   ;; override the behaviour for those projects.
-  (projectile-register-project-type 'lein-test-prefix '("project.clj" ".lein-test-prefix")
-                             :compile "lein compile"
-                             :test "lein test"
-                             :test-prefix "test_"))
+  (projectile-register-project-type 'lein-test-prefix
+				    '("project.clj" ".lein-test-prefix")
+				    :compile "lein compile"
+				    :test "lein test"
+				    :test-prefix "test_"))
 
 (use-package counsel-projectile)
 #+END_SRC
