@@ -823,6 +823,16 @@ delete the entire matched line by hitting =C-c C-d=.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
+(use-package monroe
+  :pin melpa
+  :hook ((clojure-mode . clojure-enable-monroe)
+	 (monroe-interaction-mode . sb/unload-monroe-jumps))
+  :config
+  (defun sb/unload-monroe-jumps ()
+    ;; I prefer lsp's jumps, so kindly don't steal them
+    (define-key monroe-interaction-mode-map (kbd "M-.") nil)
+    (define-key monroe-interaction-mode-map (kbd "M-,") nil)))
+
 (use-package flycheck-clj-kondo
   :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
   :pin melpa)
