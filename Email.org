@@ -124,6 +124,8 @@ notmuch tag --batch <<EOF
 +lists +tuls -- path:/tuls/ and tag:new
 
 +lobsters -- tag:new and from:lobste.rs
+
++spam -inbox -- tag:new and from:alexandre@les-caves.fr
 EOF
 #+END_SRC
 
