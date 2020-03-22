@@ -1291,6 +1291,8 @@ to support.
                                  (sql . t)
                                  (shell . t))))
 
+(use-package org-inlinetask
+  :ensure org-plus-contrib)
 
 ;; Install, but do not load.  They're loaded at export time.
 (use-package ox-jira :pin melpa :no-require t)
