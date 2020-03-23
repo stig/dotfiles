@@ -794,6 +794,15 @@ A templating engine for Emacs.
 #+end_src
 
 * Configure major modes
+
+** Protobuf Mode
+We use protobufs for service-to-service communication at work.
+
+#+begin_src emacs-lisp
+(use-package protobuf-mode
+  :pin melpa)
+#+end_src
+
 ** Ag (The Silver Searcher)
 
 I use =ag= for searching a lot in Emacs. Its "writable grep"
