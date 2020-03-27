@@ -721,11 +721,10 @@ is incredibly useful even when writing prose.
   :demand
   :custom
   (sp-base-key-bindings 'sp)
-  :hook
-  (sp-lisp-modes . turn-on-smartparens-strict-mode)
-  (after-init . smartparens-global-mode)
+  (sp-show-pair-from-inside t)
   :config
-  (sp-local-pair 'text-mode "'" nil :actions :rem))
+  (sp-local-pair 'text-mode "'" nil :actions :rem)
+  (smartparens-global-mode))
 #+END_SRC
 
 ** Subword
@@ -874,10 +873,12 @@ delete the entire matched line by hitting =C-c C-d=.
 
 
 (use-package clojure-mode
+  :after (smartparens)
   :pin melpa
   :ensure-system-package ((java . homebrew/cask/java)
                           (lein . leiningen)
                           (clj . clojure))
+  :hook (clojure-mode . turn-on-smartparens-strict-mode)
   :config
   (require 'flycheck-clj-kondo)
   (put-clojure-indent 'as-> ':defn)
