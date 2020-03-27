@@ -1222,7 +1222,7 @@ to support.
   (org-agenda-include-diary t)
   (org-agenda-ignore-properties '(effort appt stats))
   (org-agenda-todo-list-sublevels nil)
-  (org-agenda-files "~/org/agenda/agenda-files.txt")
+  (org-agenda-files (expand-file-name "~/.emacs.d/org-agenda-files.txt"))
 
   (org-agenda-todo-ignore-scheduled 'future)
   (org-agenda-todo-ignore-deadlines 'far)
