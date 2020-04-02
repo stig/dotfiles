@@ -513,6 +513,9 @@ This provides =counsel-find-file=, among others.
 
 (use-package counsel
   :demand
+  :bind (("C-c i" . counsel-semantic-or-imenu)
+	 :map org-mode-map
+	 ("C-c i" . counsel-org-goto))
   :config
   (counsel-mode 1))
 #+end_src
