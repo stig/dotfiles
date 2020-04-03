@@ -512,6 +512,7 @@ This provides =counsel-find-file=, among others.
 (use-package amx) ;; make counsel-M-x work the way I like
 
 (use-package counsel
+  :after org
   :demand
   :bind (("C-c i" . counsel-semantic-or-imenu)
 	 :map org-mode-map
