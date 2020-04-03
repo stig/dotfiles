@@ -1291,7 +1291,8 @@ to support.
      ("m" "Maybe"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
-      ((org-agenda-tag-filter '("+MAYBE"))))
+      ((org-agenda-tag-filter '("+MAYBE"))
+       (org-agenda-files '"~/org/agenda/agenda-files.txt")))
      ("n" "Now" ((tags-todo "-MAYBE/PROJ")
 		 (tags-todo "-MAYBE/TODO")))
      ("l" "Low Energy Tasks" tags-todo "LOW_ENERGY")
