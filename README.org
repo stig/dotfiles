@@ -1189,8 +1189,8 @@ to support.
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-	   ;; I try to track time...
-	   ("C-c C-x C-j" . org-clock-goto)
+	 ;; I try to track time...
+	 ("C-c C-x C-j" . org-clock-goto)
          :map org-mode-map
          ("C-x C-<return>" . org-insert-subheading)
          ("C-S-<return>" . org-insert-todo-subheading)
