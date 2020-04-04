@@ -849,33 +849,6 @@ delete the entire matched line by hitting =C-c C-d=.
   :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
   :pin melpa)
 
-(use-package clj-refactor
-  :pin melpa
-  :hook (clojure-mode . clj-refactor-mode)
-  :bind (:map clojure-mode-map
-              ("C-x C-r" . cljr-ivy))
-  :custom
-  (cljr-suppress-middleware-warnings t)
-  :config
-  (cljr-add-keybindings-with-prefix "C-c C-m")
-
-  (defun cljr-ivy-candidates ()
-    (mapcar (lambda (c) (concat (nth 0 c) ": " (nth 2 c)))
-            cljr--all-helpers))
-
-  (defun cljr-ivy ()
-    "Ivy interface to cljr-refactor"
-    (interactive)
-    (ivy-read "clj-refactor: "
-              (cljr-ivy-candidates)
-              :action
-              (lambda (candidate)
-                (string-match "^\\(.+?\\): " candidate)
-                (call-interactively
-                 (cadr (assoc (match-string 1 candidate)
-                              cljr--all-helpers)))))))
-
-
 (use-package clojure-mode
   :after (smartparens)
   :pin melpa
