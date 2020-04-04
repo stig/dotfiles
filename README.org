@@ -1274,7 +1274,10 @@ to support.
   (org-agenda-custom-commands
    '(("d" "Day Agenda & Important tasks"
       ((agenda "" ((org-agenda-span 'day)))
+       (todo "PROJ")
        (todo "TODO" ((org-agenda-max-entries 5)
+		     ;; Ignore all scheduled items as they should show
+		     ;; up in Agenda view above this.
 		     (org-agenda-todo-ignore-scheduled 'all)
 		     (org-agenda-todo-ignore-deadlines 'all)
 		     (org-agenda-todo-ignore-timestamp 'all)))))
