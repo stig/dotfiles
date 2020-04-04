@@ -1272,35 +1272,27 @@ to support.
       (file "templates/gtd-review.org"))))
 
   (org-agenda-custom-commands
-   '(("w" "Work Agenda"
+   '(("d" "Day Agenda & Important tasks"
       ((agenda "" ((org-agenda-span 'day)))
-       (tags-todo "-@home-MAYBE/TODO"
-                  ((org-agenda-max-entries 5)
-                   (org-agenda-todo-ignore-scheduled 'all)
-                   (org-agenda-todo-ignore-deadlines 'all)
-                   (org-agenda-todo-ignore-timestamp 'all))))
-      ((org-agenda-tag-filter '("-@home" "-MAYBE"))))
-     ("h" "Home Agenda"
-      ((agenda "")
-       (tags-todo "-@work-MAYBE/TODO"
-                  ((org-agenda-max-entries 5)
-                   (org-agenda-todo-ignore-scheduled 'all)
-                   (org-agenda-todo-ignore-deadlines 'all)
-                   (org-agenda-todo-ignore-timestamp 'all))))
-      ((org-agenda-tag-filter '("-@work" "-MAYBE"))))
+       (todo "TODO" ((org-agenda-max-entries 5)
+		     (org-agenda-todo-ignore-scheduled 'all)
+		     (org-agenda-todo-ignore-deadlines 'all)
+		     (org-agenda-todo-ignore-timestamp 'all)))))
      ("m" "Maybe"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
       ((org-agenda-tag-filter '("+MAYBE"))
-       (org-agenda-files '"~/org/agenda/agenda-files.txt")))
-     ("n" "Now" ((tags-todo "-MAYBE/PROJ")
-		 (tags-todo "-MAYBE/TODO")))
+       (org-agenda-files '("~/org/agenda"))))
+     ("n" "Now" ((todo "PROJ")
+		 (todo "TODO")))
      ("l" "Low Energy Tasks" tags-todo "LOW_ENERGY")
-     ("P" "Projects" tags-todo "-MAYBE/PROJ")
+     ("P" "Projects" todo "PROJ")
      ("A" "Archivable" ((todo "COMPLETE")
                         (tags-todo "-PROJ/DONE")
                         (tags-todo "-PROJ/CANCELLED")))
-     ("c" "Tasks Complete?" tags-todo "/-DONE-CANCELLED-PROJ")))
+     ("c" "Tasks Complete?" ((tags-todo "-PROJ/DONE")
+			     (tags-todo "-PROJ/CANCELLED")
+			     (todo "COMPLETE")))))
 
   :config
   (org-babel-do-load-languages 'org-babel-load-languages
