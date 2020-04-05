@@ -22,39 +22,34 @@ extension.
 #+begin_src sh
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 #+end_src
+* Early Init
 
-* Use lexical bindings
+Emacs 27 loads =~/.emacs.d/early-init.el= before loading GUI
+components. This makes it a great place to disable the mouse
+interface, etc.
 
-Make sure the resulting =~/.emacs.d/init.el= uses lexical binding for
-performance reasons.
-
-#+begin_src emacs-lisp
-;; -*- lexical-binding: t; -*-
-#+end_src
-
-* Early Init (turn off mouse interface)
-
-Emacs 27 automatically loads =~/.emacs.d/early-init.el= before
-initialising GUI components.  I turn off the mouse interface here to
-avoid momentary display during launch.  I also don't need to see a
-splash screen on every launch.  Finally I do /not like/ Emacs beeping
-at me: I prefer a visual bell.
+First make sure it uses lexial binding for performance. Next I turn
+off the mouse interface here to avoid momentary display during launch.
+I also don't need to see a splash screen on every launch. Finally I do
+/not like/ Emacs beeping at me: I prefer a visual bell.
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
 ;; -*- lexical-binding: t; -*-
+
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
 (setq inhibit-startup-message t)
 (setq visible-bell t)
-#+END_SRC
+#+end_src
 
-** Emacs <27 Compatibility
-
-In older versions of Emacs we load ~early-init.el~ manually.  While
-Emacs 27 initialises packages before loading the user config, older
-ones does not: thus we also call =package-initialize= here.
+** Emacs < 27 compatibility
+In older versions of Emacs we have to load ~early-init.el~ manually.
+While Emacs 27 initialises packages before loading the user config,
+older ones does not: thus we also call =package-initialize= here.
 
 #+BEGIN_SRC emacs-lisp
+;; -*- lexical-binding: t; -*-
 (if (not visible-bell)
     (progn
       (load (expand-file-name "~/.emacs.d/early-init.el") t)
@@ -62,35 +57,21 @@ ones does not: thus we also call =package-initialize= here.
       (package-initialize)))
 #+END_SRC
 
-* Initialize package system, paths, and /Customize/ settings
-
-I do these early because I want them to apply even if I mess up
-later parts of my =init.el=.
-
-** Package System
+* Initialize package system
 
 A lot of my config installs packages from GNU elpa, MELPA, and Org
-elpa.  So we need to configure the package system now.
+elpa. So we need to configure the package system before the rest of
+the config.
 
-*** Make GNU ~package-archive~ work
+Firstly we have to configure gnutls [[https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025][for the "gnu" elpa archive to
+work]].
 
 #+begin_src emacs-lisp
-;; Required for the "gnu" elpa archive to work; See
-;; https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 #+end_src
 
-*** Ensure we don't use unencrypted auth sources
-
-#+begin_src emacs-lisp
-(setq auth-sources (quote ("~/.authinfo.gpg")))
-#+end_src
-
-*** Add Melpa & Org mode to ~package-archives~
-
-I install most packages via Melpa stable, but some from unstable,
-so I add both those to the package archives.  (The default
-contains only GNU ELPA.)
+I install most packages via Melpa stable, but some from unstable, so I
+add them to ~package-archives~. By default it contains only GNU ELPA.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
@@ -98,17 +79,17 @@ contains only GNU ELPA.)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
-*** Install & configure ~use-package~
+** Install & configure ~use-package~
 
-Install ~use-package~ and configure it to install packages from
-stable MELPA archive by default.  For packages that need it I
-override this by putting =:pin $repo= in the =use-config= stanza.
+Install ~use-package~ and configure it to install packages from stable
+MELPA archive by default. For packages that need it I override this by
+putting =:pin $repo= in the =use-config= stanza.
+
+In addition use-package itself, I also install the
+~:ensure-system-package~ extension to install system packages.
 
 #+begin_src emacs-lisp
-;; Automatically :ensure packages.
 (setq use-package-always-ensure t)
-
-;; Default value for :pin in each use-package.
 (setq use-package-always-pin "melpa-stable")
 
 ;; Bootstrap use-package & dependencies
@@ -121,27 +102,16 @@ override this by putting =:pin $repo= in the =use-config= stanza.
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
+
+(use-package use-package-ensure-system-package)
 #+end_src
-
-*** Install =:ensure-system-package= extension
-
-This allows =use-package= to install system packages.
-
-#+begin_src emacs-lisp
-(use-package use-package-ensure-system-package
-  :ensure t
-  :custom
-  (system-packages-package-manager 'brew)
-  (system-packages-use-sudo nil))
-#+end_src
-
-** Path
+* Configure PATH
 
 The GUI Emacs gets exec path from the system, rather than the
 login shell.  We have to load PATH et. al. from the shell to get
 access to programs installed by Homebrew.
 
-*** Configure the login shell
+** Configure the login shell
 
 I use Zsh as my login shell.  It feels a bit weird to set it up
 here, but it's the best way I have found so far.
@@ -154,7 +124,7 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH=~/.local/bin:/usr/local/texlive/2019/bin/x86_64-darwin:$PATH
 #+end_src
 
-*** Set =PATH= etc from the login shell
+** Set =PATH= etc from the login shell
 
 Copy PATH and certain other variables from my login shell so these
 variables are available in Eshell.  (And elsewhere in Emacs.)
@@ -169,15 +139,26 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
   (exec-path-from-shell-initialize))
 #+END_SRC
 
-** Make =Customize= settings transient
-
-I prefer to code my configuration.
+* Make Customize settings transient
+I prefer to code my configuration. This makes sure we store the custom
+settings in a temporary file, so they don't persist across restarts of
+Emacs. Credit to Robin Schroer for this trick.
 
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (make-temp-file ""))
 #+END_SRC
 
 * Configure the basics
+
+** Ensure we don't use unencrypted auth sources
+
+This could take the form of e.g. saving auth info to =~/.authinfo=, or
+=~/.netrc= rather than =~/.authinfo.gpg=, for example.
+
+#+begin_src emacs-lisp
+(setq auth-sources (quote ("~/.authinfo.gpg")))
+#+end_src
+
 ** Introduce Myself
 
 In case something needs my name/email address.
