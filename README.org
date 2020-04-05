@@ -550,6 +550,7 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?=
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
+  :ensure t
   :ensure-system-package clojure-lsp
   :commands lsp
   :config
