@@ -73,7 +73,7 @@ I install most packages via Melpa and Org, so I add them to
 
 ** Install & configure ~use-package~
 
-Install ~use-package~ and configure it to install packages by default. 
+Install ~use-package~ and configure it to install packages by default.
 
 In addition use-package itself, I also install the
 ~:ensure-system-package~ extension to install system packages.
@@ -765,7 +765,7 @@ delete the entire matched line by hitting =C-c C-d=.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-(use-package monroe 
+(use-package monroe
   :hook ((clojure-mode . clojure-enable-monroe)
 	 (monroe-interaction-mode . sb/unload-monroe-jumps))
   :config
