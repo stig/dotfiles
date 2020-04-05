@@ -493,6 +493,7 @@ This provides =counsel-find-file=, among others.
 
 #+begin_src emacs-lisp
 (use-package orgalist
+  :after org
   :pin gnu
   :hook
   (message-mode . orgalist-mode))
