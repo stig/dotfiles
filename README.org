@@ -375,6 +375,7 @@ from a local git repository.
 
 #+BEGIN_SRC emacs-lisp
 (use-package git-link
+  :after magit
   :bind ("C-c g l" . git-link))
 #+END_SRC
 
