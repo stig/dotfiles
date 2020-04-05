@@ -6,6 +6,8 @@ jobs:
       - image: silex/emacs:26.3-dev
     steps:
       - checkout
+      # Avoid errors from projectile
+      - run: mkdir src
       - run:
           name: "Tangle primary config file"
           command: >
