@@ -442,14 +442,6 @@ automatically commit when editing files.
   (gac-automatically-push-p t))
 #+END_SRC
 
-** Auto revert mode
-
-When files change on disk, revert the buffer automatically.
-
-#+BEGIN_SRC emacs-lisp
-(global-auto-revert-mode 1)
-#+END_SRC
-
 ** Beacon
 
 Highlight my cursor when scrolling
