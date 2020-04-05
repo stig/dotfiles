@@ -959,10 +959,6 @@ Forge is an extension to Magit that interacts with GitHub / GitLab etc.
          ("C-x C-g b" . magit-blame-addition)))
 
 (use-package forge)
-
-(use-package magit-org-todos)
-
-(use-package magit-todos)
 #+END_SRC
 
 ** Gist
