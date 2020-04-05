@@ -63,13 +63,6 @@ A lot of my config installs packages from GNU elpa, MELPA, and Org
 elpa. So we need to configure the package system before the rest of
 the config.
 
-Firstly we have to configure gnutls [[https://github.com/bbatsov/prelude/issues/1225#issuecomment-511266025][for the "gnu" elpa archive to
-work]].
-
-#+begin_src emacs-lisp
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-#+end_src
-
 I install most packages via Melpa and Org, so I add them to
 ~package-archives~. By default it contains only GNU ELPA.
 
