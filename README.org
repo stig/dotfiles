@@ -716,6 +716,7 @@ This helps highlight passive voice, weasel words, etc in writing.
 
 #+BEGIN_SRC emacs-lisp
 (use-package writegood-mode
+  :ensure t
   :hook text-mode)
 #+END_SRC
 
