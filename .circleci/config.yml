@@ -1,0 +1,35 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: silex/emacs:26.3-dev
+    steps:
+      - checkout
+      - run:
+          name: "Tangle primary config file"
+          command: >
+            emacs --batch
+            --eval "(require 'ob-tangle)"
+            --eval '(org-babel-tangle-file "README.org")'
+      - run:
+          name: "Byte-compile emacs config"
+          command: emacs --batch --load ~/.emacs.d/init.el
+      - run:
+          name: "Tangle Blogging config file"
+          command: >
+            emacs --batch
+            --eval "(require 'ob-tangle)"
+            --eval '(org-babel-tangle-file "Blogging.org")'
+      - run:
+          name: "Byte-compile emacs config"
+          command: emacs --batch --load ~/.emacs.d/init.el
+      - run:
+          name: "Tangle Email config file"
+          command: >
+            emacs --batch
+            --eval "(require 'ob-tangle)"
+            --eval '(org-babel-tangle-file "Email.org")'
+      - run:
+          name: "Byte-compile emacs config"
+          command: emacs --batch --load ~/.emacs.d/init.el
