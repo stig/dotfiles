@@ -550,7 +550,6 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?=
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure t
   :ensure-system-package clojure-lsp
   :commands lsp
   :config
@@ -625,7 +624,6 @@ nesting goes deep.
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
-  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
@@ -672,7 +670,6 @@ their components.  Useful in anything that looks like Java.
 
 #+begin_src emacs-lisp
 (use-package subword
-  :ensure t
   :hook (prog-mode . subword-mode))
 #+end_src
 
@@ -719,7 +716,6 @@ This helps highlight passive voice, weasel words, etc in writing.
 
 #+BEGIN_SRC emacs-lisp
 (use-package writegood-mode
-  :ensure t
   :hook text-mode)
 #+END_SRC
 
