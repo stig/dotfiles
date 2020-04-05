@@ -624,7 +624,8 @@ nesting goes deep.
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
- :hook (prog-mode . rainbow-delimiters-mode))
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
 ** Save minibuffer history
@@ -670,7 +671,8 @@ their components.  Useful in anything that looks like Java.
 
 #+begin_src emacs-lisp
 (use-package subword
- :hook (prog-mode . subword-mode))
+  :ensure t
+  :hook (prog-mode . subword-mode))
 #+end_src
 
 ** Swiper
@@ -703,8 +705,8 @@ Show incomplete key cheatsheet.
 
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
-  :hook
-  (after-init . which-key-mode))
+  :config
+  (which-key-mode))
 #+END_SRC
 
 ** Writegood Mode
@@ -726,7 +728,8 @@ A templating engine for Emacs.
 
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :hook (after-init . yas-global-mode))
+  :config
+  (yas-global-mode))
 #+end_src
 
 * Configure major modes
