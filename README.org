@@ -553,10 +553,6 @@ any better.
   (ivy-count-format "%d/%d ")
   :config
   (ivy-mode 1))
-
-;; This should apparently allow opening multiple files from
-;; ivy-find-file.
-(use-package ivy-hydra)
 #+end_src
 
 ** LSP (Language Server Protocol)
