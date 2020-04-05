@@ -445,16 +445,6 @@ automatically commit when editing files.
   (gac-automatically-push-p t))
 #+END_SRC
 
-** Auto Indent Mode
-
-I like to make sure any code I changed is properly indented.
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-indent-mode
-  :config
-  (auto-indent-global-mode))
-#+END_SRC
-
 ** Auto revert mode
 
 When files change on disk, revert the buffer automatically.
@@ -544,15 +534,6 @@ clean it up.
   :config
   (global-whitespace-mode t))
 #+END_SRC
-
-** Iedit
-
-Edit multiple symbols in one go. Similar in some respects to
-Multiple Cursors, but seems a little more light-weight.
-
-#+begin_src emacs-lisp
-(use-package iedit)
-#+end_src
 
 ** Ivy
 
