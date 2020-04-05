@@ -246,6 +246,12 @@ This needs clearing up.
 (use-package clojure-mode :ensure t)
 (use-package clojure-mode-extra-font-locking :ensure t)
 (use-package scala-mode :ensure t)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (ditaa . t)
+   (shell . t)))
 #+end_src
 
 * Turn off annoying ~python-indent-offset~ during publication
