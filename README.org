@@ -70,27 +70,23 @@ work]].
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 #+end_src
 
-I install most packages via Melpa stable, but some from unstable, so I
-add them to ~package-archives~. By default it contains only GNU ELPA.
+I install most packages via Melpa and Org, so I add them to
+~package-archives~. By default it contains only GNU ELPA.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
 ** Install & configure ~use-package~
 
-Install ~use-package~ and configure it to install packages from stable
-MELPA archive by default. For packages that need it I override this by
-putting =:pin $repo= in the =use-config= stanza.
+Install ~use-package~ and configure it to install packages by default. 
 
 In addition use-package itself, I also install the
 ~:ensure-system-package~ extension to install system packages.
 
 #+begin_src emacs-lisp
 (setq use-package-always-ensure t)
-(setq use-package-always-pin "melpa-stable")
 
 ;; Bootstrap use-package & dependencies
 (seq-doseq (package '(use-package bind-key diminish))
@@ -461,7 +457,6 @@ I like to make sure any code I changed is properly indented.
 
 #+BEGIN_SRC emacs-lisp
 (use-package auto-indent-mode
-  :pin melpa
   :config
   (auto-indent-global-mode))
 #+END_SRC
@@ -562,7 +557,7 @@ Edit multiple symbols in one go. Similar in some respects to
 Multiple Cursors, but seems a little more light-weight.
 
 #+begin_src emacs-lisp
-(use-package iedit :pin melpa)
+(use-package iedit)
 #+end_src
 
 ** Ivy
@@ -574,7 +569,6 @@ any better.
 #+begin_src emacs-lisp
 (use-package ivy
   :demand
-  :pin melpa
   :bind (("C-c C-r" . ivy-resume)
          ("C-x b" . ivy-switch-buffer)
          ("C-c v" . ivy-push-view)
@@ -587,8 +581,7 @@ any better.
 
 ;; This should apparently allow opening multiple files from
 ;; ivy-find-file.
-(use-package ivy-hydra
-  :pin melpa)
+(use-package ivy-hydra)
 #+end_src
 
 ** LSP (Language Server Protocol)
@@ -783,8 +776,7 @@ A templating engine for Emacs.
 We use protobufs for service-to-service communication at work.
 
 #+begin_src emacs-lisp
-(use-package protobuf-mode
-  :pin melpa)
+(use-package protobuf-mode)
 #+end_src
 
 ** Ag (The Silver Searcher)
@@ -800,15 +792,13 @@ delete the entire matched line by hitting =C-c C-d=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ag
-  :pin melpa
   :ensure-system-package (ag . the_silver_searcher)
   :custom
   (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
   (ag-ignore-list (quote (".git"))))
 
-(use-package wgrep :pin melpa)
+(use-package wgrep)
 (use-package wgrep-ag
-  :pin melpa
   :hook
   (ag-mode . wgrep-ag-setup))
 #+END_SRC
@@ -816,8 +806,7 @@ delete the entire matched line by hitting =C-c C-d=.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-(use-package monroe
-  :pin melpa
+(use-package monroe 
   :hook ((clojure-mode . clojure-enable-monroe)
 	 (monroe-interaction-mode . sb/unload-monroe-jumps))
   :config
@@ -827,12 +816,10 @@ delete the entire matched line by hitting =C-c C-d=.
     (define-key monroe-interaction-mode-map (kbd "M-,") nil)))
 
 (use-package flycheck-clj-kondo
-  :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo")
-  :pin melpa)
+  :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo"))
 
 (use-package clojure-mode
   :after (smartparens)
-  :pin melpa
   :ensure-system-package ((java . homebrew/cask/java)
                           (lein . leiningen)
                           (clj . clojure))
@@ -846,7 +833,6 @@ delete the entire matched line by hitting =C-c C-d=.
   (put-clojure-indent 'doseq ':defn))
 
 (use-package cider
-  :pin melpa
   :hook (cider-repl-mode . sb/unload-cider-jumps)
   :config
   (defun sb/unload-cider-jumps ()
@@ -948,7 +934,6 @@ then A.
 
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed-org
-  :pin melpa
   :custom
   (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"
                           "~/org/elfeed.org"))
@@ -956,7 +941,6 @@ then A.
   (elfeed-org))
 
 (use-package elfeed
-  :pin melpa
   :bind (("C-x w" . elfeed)
          :map elfeed-search-mode-map
          ("m" . elfeed-toggle-star) )
@@ -991,24 +975,19 @@ run Magit.
 Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
 #+BEGIN_SRC emacs-lisp
-(use-package transient
-  :pin melpa)
+(use-package transient)
 
 (use-package magit
-  :pin melpa
   :bind (("C-x C-g C-s" . magit-status)
          ("C-x C-g s" . magit-status)
          ("C-x C-g C-b" . magit-blame-addition)
          ("C-x C-g b" . magit-blame-addition)))
 
-(use-package forge
-  :pin melpa)
+(use-package forge)
 
-(use-package magit-org-todos
-  :pin melpa)
+(use-package magit-org-todos)
 
-(use-package magit-todos
-  :pin melpa)
+(use-package magit-todos)
 #+END_SRC
 
 ** Gist
@@ -1016,7 +995,6 @@ Working with GitHub Gists.
 
 #+begin_src emacs-lisp
 (use-package gist
-  :pin melpa
   :custom
   (max-specpdl-size 1800)    ; For loading Org mode gists
   (max-lisp-eval-depth 1200) ; For saving Org mode gists
@@ -1034,7 +1012,6 @@ easily and have them renumbered automatically.
   ;; I essentially don't use Markdown
   ;; outside GitHub any more
   :mode ("\\.md\\'" . gfm-mode)
-  :pin melpa
   :bind (("M-<up>" . markdown-move-list-item-up)
          ("M-<down>" . markdown-move-list-item-down))
   :custom
@@ -1047,7 +1024,6 @@ I use org-drill for drilling music theory.
 
 #+begin_src emacs-lisp
 (use-package org-drill
-  :pin melpa
   :custom
   (org-drill-add-random-noise-to-intervals-p t)
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
@@ -1261,7 +1237,7 @@ to support.
   :ensure org-plus-contrib)
 
 ;; Install, but do not load.  They're loaded at export time.
-(use-package ox-jira :pin melpa :no-require t)
+(use-package ox-jira :no-require t)
 (use-package ox-gfm :no-require t)
 #+END_SRC
 
@@ -1328,7 +1304,6 @@ make Org mode documents a pleasure to look at.
 
 #+begin_src emacs-lisp
 (use-package leuven-theme
-  :pin melpa
   :config
   (sb/load-theme 'leuven))
 #+end_src
