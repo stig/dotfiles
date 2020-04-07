@@ -599,7 +599,6 @@ it are that it provides the following key bindings:
   :custom
   (projectile-project-search-path '("~/src"))
   (projectile-completion-system 'ivy)
-  (projectile-create-missing-test-files t)
   (projectile-dynamic-mode-line nil)
   (projectile-switch-project-action 'magit-status)
   :config
