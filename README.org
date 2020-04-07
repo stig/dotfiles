@@ -602,16 +602,7 @@ it are that it provides the following key bindings:
   (projectile-dynamic-mode-line nil)
   (projectile-switch-project-action 'magit-status)
   :config
-  (projectile-mode)
-
-  ;; Some projects use a prefix for test files rather than the default
-  ;; suffix.  By putting a `.lein-test-prefix` file in the root I can
-  ;; override the behaviour for those projects.
-  (projectile-register-project-type 'lein-test-prefix
-				    '("project.clj" ".lein-test-prefix")
-				    :compile "lein compile"
-				    :test "lein test"
-				    :test-prefix "test_"))
+  (projectile-mode))
 
 (use-package counsel-projectile)
 #+END_SRC
@@ -785,15 +776,6 @@ delete the entire matched line by hitting =C-c C-d=.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-(use-package monroe
-  :hook ((clojure-mode-hook . clojure-enable-monroe)
-	 (monroe-interaction-mode . sb/unload-monroe-jumps))
-  :config
-  (defun sb/unload-monroe-jumps ()
-    ;; I prefer lsp's jumps, so kindly don't steal them
-    (define-key monroe-interaction-mode-map (kbd "M-.") nil)
-    (define-key monroe-interaction-mode-map (kbd "M-,") nil)))
-
 (use-package flycheck-clj-kondo
   :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo"))
 
@@ -810,39 +792,24 @@ delete the entire matched line by hitting =C-c C-d=.
   (put-clojure-indent 'doseq ':defn))
 
 (use-package cider
-  :hook (cider-repl-mode . sb/unload-cider-jumps)
+  :hook ((cider-mode . sb/unload-cider-jumps)
+	 (cider-repl-mode . sb/unload-cider-jumps))
   :config
   (defun sb/unload-cider-jumps ()
     ;; I prefer lsp's jumps, so kindly don't steal them
     (define-key cider-mode-map (kbd "M-.") nil)
     (define-key cider-mode-map (kbd "M-,") nil))
-
-  (defun sb/cider-test-infer-ns-fn (ns)
-    "Infer `test-' prefixed namespaces for test files.
-                Some projects use a `test-' prefix rather than `-test'
-                suffix for test files.  This detects those and runs the
-                correct test.  It falls back to Cider's default function if
-                the project type is not one known to use test- prefixes."
-    (if (eq "test_" (projectile-project-type-attribute (projectile-project-type)
-                                                       'test-prefix))
-        (let* ((prefix "test-")
-               (ns-parts (split-string ns "\\."))
-               (last-component (car (last ns-parts))))
-          (if (string-prefix-p prefix last-component)
-              ns
-            (string-join (append (butlast ns-parts)
-                                 (list (concat prefix last-component)))
-                         ".")))
-      (cider-test-default-test-ns-fn ns)))
   :custom
   (cider-prompt-for-symbol nil)
   (cider-prefer-local-resources t)
-  (cider-repl-display-in-current-window t)
   (cider-auto-track-ns-form-changes t)
+  (cider-repl-pop-to-buffer-on-connect nil)
   (cider-eldoc-display-context-dependent-info t)
-  (cider-font-lock-dynamically '(macro core function var))
-  (cider-repl-display-help-banner nil)
-  (cider-test-infer-test-ns #'sb/cider-test-infer-ns-fn))
+  (cider-font-lock-dynamically '(macro core function var)))
+
+(use-package clj-refactor
+  :custom
+  (cljr-suppress-middleware-warnings t))
 #+END_SRC
 
 I want to use some lein plugins across all projects.
