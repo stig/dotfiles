@@ -816,8 +816,8 @@ I want to use some lein plugins across all projects.
 
 We use ~:pedantic? true~ in our project.clj files, as well as lein
 sub-project inheritance.  I think that plays merry hell with also
-loading ~~refactor-nrepl~ (lots of complaints about duplications), so
-I add the ~~:pedantic? :ranges~~.  Not sure why it works, but it
+loading ~refactor-nrepl~ (lots of complaints about duplications), so
+I add the ~:pedantic? :ranges~.  Not sure why it works, but it
 seems to.
 
 #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
