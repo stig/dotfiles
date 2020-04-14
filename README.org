@@ -780,8 +780,7 @@ delete the entire matched line by hitting =C-c C-d=.
   :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo"))
 
 (use-package clojure-mode
-  :ensure-system-package ((java . homebrew/cask/java)
-                          (lein . leiningen)
+  :ensure-system-package ((lein . leiningen)
                           (clj . clojure))
   :config
   (require 'flycheck-clj-kondo)
