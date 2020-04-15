@@ -697,6 +697,13 @@ me the warm fuzzies.
 (add-hook 'text-mode-hook 'visual-line-mode)
 #+END_SRC
 
+** Walkman mode
+
+   #+begin_src emacs-lisp
+   (use-package walkman
+     :after org)
+   #+end_src
+
 ** Which Key Mode
 
 Show incomplete key cheatsheet.
