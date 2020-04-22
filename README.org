@@ -107,7 +107,6 @@ Zsh reads =~/.zshenv= first, for both interactive and
 non-interactive shells.  It's where we should set up PATH, etc.
 
 #+begin_src sh :tangle ~/.zshenv
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH=~/.local/bin:/usr/local/texlive/2019/bin/x86_64-darwin:$PATH
 #+end_src
 
