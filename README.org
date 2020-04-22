@@ -1158,20 +1158,16 @@ to support.
        (org-agenda-todo-ignore-scheduled 'all)
        (org-agenda-todo-ignore-deadlines 'all)
        (org-agenda-todo-ignore-timestamp 'all))
-     ("m" "Maybe"
+     ("g" . "Getting Things Done")
+     ("gm" "Maybe"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
-      ((org-agenda-tag-filter '("+MAYBE"))
-       (org-agenda-files '("~/org/agenda"))))
-     ("n" "Now" ((todo "PROJ")
-		 (todo "TODO")))
-     ("l" "Low Energy Tasks" tags-todo "LOW_ENERGY")
-     ("P" "Projects" todo "PROJ")
-     ("A" "Archivable" ((todo "COMPLETE")
-                        (tags-todo "-PROJ/DONE")
-                        (tags-todo "-PROJ/CANCELLED")))
-     ;; This is handy as it ignores TODOs scheduled far in the future
-     ("R" "Review for Tasks Complete" todo "TODO")))
+      ((org-agenda-filter '("+MAYBE"))))
+     ("gt" "Review for Tasks Complete" todo "TODO")
+     ("ga" "Archivable" ((todo "COMPLETE")
+			 (todo "DONE")
+                         (tags "CANCELLED")))
+     ("gp" "Projects" todo "PROJ")))
 
   :config
   (org-babel-do-load-languages 'org-babel-load-languages
