@@ -748,29 +748,29 @@ We use protobufs for service-to-service communication at work.
 (use-package protobuf-mode)
 #+end_src
 
-** Ag (The Silver Searcher)
+** Ripgrep
 
-I use =ag= for searching a lot in Emacs. Its "writable grep"
-companion mode is pretty close to magic. When in a buffer showing
-ag results, try hitting =C-c C-p=--this lets you /edit the results of
-the search right from the ag results buffer!/ Just hit =C-x C-s= to
-save the results.
+   Even faster than The Silver Searcher, apparently.
 
-If you hit =C-c C-p= while already in writable grep mode you can
-delete the entire matched line by hitting =C-c C-d=.
+   #+begin_src emacs-lisp
+   (use-package ripgrep
+     :ensure-system-package (rg . ripgrep))
+   #+end_src
 
-#+BEGIN_SRC emacs-lisp
-(use-package ag
-  :ensure-system-package (ag . the_silver_searcher)
-  :custom
-  (ag-arguments (quote ("--smart-case" "--stats" "--hidden")))
-  (ag-ignore-list (quote (".git"))))
+** Wgrep (aka "writable grep")
 
-(use-package wgrep)
-(use-package wgrep-ag
-  :hook
-  (ag-mode . wgrep-ag-setup))
-#+END_SRC
+   ~wgrep~ mode is pretty close to magic. When in a buffer showing
+   grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
+   results of the search right from the results buffer!/ I can then
+   hit =C-x C-s= to save the results.
+
+   Hitting =C-c C-p= while already in writable grep mode I can delete
+   the entire matched line by hitting =C-c C-d=.
+
+   #+begin_src emacs-lisp
+   (use-package wgrep)
+
+   #+end_src
 
 ** Clojure
 
