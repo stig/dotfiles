@@ -727,51 +727,6 @@ A templating engine for Emacs.
 
 * Configure major modes
 
-** HugSQL
-
-#+begin_src emacs-lisp
-(use-package hugsql
-  :defer t
-  :init
-  (defun sulami/init-hugsql-imenu ()
-    (when (string-suffix-p ".hug.sql" (buffer-file-name))
-      (setq
-       imenu-generic-expression
-       '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
-  :hook
-  (sql-mode . sulami/init-hugsql-imenu))
-#+end_src
-** Protobuf Mode
-We use protobufs for service-to-service communication at work.
-
-#+begin_src emacs-lisp
-(use-package protobuf-mode)
-#+end_src
-
-** Ripgrep
-
-   Even faster than The Silver Searcher, apparently.
-
-   #+begin_src emacs-lisp
-   (use-package ripgrep
-     :ensure-system-package (rg . ripgrep))
-   #+end_src
-
-** Wgrep (aka "writable grep")
-
-   ~wgrep~ mode is pretty close to magic. When in a buffer showing
-   grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
-   results of the search right from the results buffer!/ I can then
-   hit =C-x C-s= to save the results.
-
-   Hitting =C-c C-p= while already in writable grep mode I can delete
-   the entire matched line by hitting =C-c C-d=.
-
-   #+begin_src emacs-lisp
-   (use-package wgrep)
-
-   #+end_src
-
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
@@ -908,6 +863,32 @@ in local Emacs seamlessly with the =find-file= command. (Which I have
 aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
 and has the same config, whether I am on a local machine or a remote one.
 
+** Gist
+Working with GitHub Gists.
+
+#+begin_src emacs-lisp
+(use-package gist
+  :custom
+  (max-specpdl-size 1800)    ; For loading Org mode gists
+  (max-lisp-eval-depth 1200) ; For saving Org mode gists
+  :bind (("C-x C-g c" . gist-buffer-private)
+         ("C-x C-g l" . gist-list)))
+#+end_src
+
+** HugSQL
+
+#+begin_src emacs-lisp
+(use-package hugsql
+  :defer t
+  :init
+  (defun sulami/init-hugsql-imenu ()
+    (when (string-suffix-p ".hug.sql" (buffer-file-name))
+      (setq
+       imenu-generic-expression
+       '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
+  :hook
+  (sql-mode . sulami/init-hugsql-imenu))
+#+end_src
 ** Magit & Friends
 
 I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
@@ -927,18 +908,6 @@ Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
 (use-package forge)
 #+END_SRC
-
-** Gist
-Working with GitHub Gists.
-
-#+begin_src emacs-lisp
-(use-package gist
-  :custom
-  (max-specpdl-size 1800)    ; For loading Org mode gists
-  (max-lisp-eval-depth 1200) ; For saving Org mode gists
-  :bind (("C-x C-g c" . gist-buffer-private)
-         ("C-x C-g l" . gist-list)))
-#+end_src
 
 ** Markdown
 
@@ -966,6 +935,22 @@ I use org-drill for drilling music theory.
   (org-drill-add-random-noise-to-intervals-p t)
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
+
+** Protobuf Mode
+We use protobufs for service-to-service communication at work.
+
+#+begin_src emacs-lisp
+(use-package protobuf-mode)
+#+end_src
+
+** Ripgrep
+
+   Even faster than The Silver Searcher, apparently.
+
+   #+begin_src emacs-lisp
+   (use-package ripgrep
+     :ensure-system-package (rg . ripgrep))
+   #+end_src
 
 ** Simple HTML Renderer (HTML Email)
 
@@ -1007,6 +992,21 @@ Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
 #+end_src
+
+** Wgrep (aka "writable grep")
+
+   ~wgrep~ mode is pretty close to magic. When in a buffer showing
+   grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
+   results of the search right from the results buffer!/ I can then
+   hit =C-x C-s= to save the results.
+
+   Hitting =C-c C-p= while already in writable grep mode I can delete
+   the entire matched line by hitting =C-c C-d=.
+
+   #+begin_src emacs-lisp
+   (use-package wgrep)
+
+   #+end_src
 
 ** YAML
 
