@@ -1140,23 +1140,25 @@ to support.
       (file "templates/gtd-review.org"))))
 
   (org-agenda-custom-commands
-   '(("d" "Day Agenda & Important tasks"
-      ((agenda "" ((org-agenda-span 'day)))
-       (tags-todo "-PROJ/TODO" ((org-agenda-max-entries 3)
-				;; Ignore all scheduled items as they should show
-				;; up in Agenda view above this.
-				(org-agenda-todo-ignore-scheduled 'all)
-				(org-agenda-todo-ignore-deadlines 'all)
-				(org-agenda-todo-ignore-timestamp 'all)))
-       ;; Projects aren't actionable; project tasks are. Present tasks
-       ;; at the top, as it's easier to get to. (My cursor is left at
-       ;; the top of agenda when invoking the command.)
-       (tags-todo "PROJ/TODO" ((org-agenda-max-entries 3)
-			       ;; Ignore all scheduled items as they should show
-			       ;; up in Agenda view above this.
-			       (org-agenda-todo-ignore-scheduled 'all)
-			       (org-agenda-todo-ignore-deadlines 'all)
-			       (org-agenda-todo-ignore-timestamp 'all)))))
+   '(("d" . "Day Agenda & Top Tasks")
+     ("dw" "Work"
+      ((agenda "")
+       (tags-todo "-@home-MAYBE/TODO"))
+      ((org-agenda-span 'day)
+       (org-agenda-filter '("-@home" "-MAYBE"))
+       (org-agenda-max-entries 3)
+       (org-agenda-todo-ignore-scheduled 'all)
+       (org-agenda-todo-ignore-deadlines 'all)
+       (org-agenda-todo-ignore-timestamp 'all)))
+     ("dh" "Home"
+      ((agenda "")
+       (tags-todo "-@work-MAYBE/TODO"))
+      ((org-agenda-span 'day)
+       (org-agenda-filter '("-@work" "-MAYBE")))
+       (org-agenda-max-entries 3)
+       (org-agenda-todo-ignore-scheduled 'all)
+       (org-agenda-todo-ignore-deadlines 'all)
+       (org-agenda-todo-ignore-timestamp 'all))
      ("m" "Maybe"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
