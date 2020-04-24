@@ -1183,6 +1183,35 @@ to support.
 (use-package ox-gfm :no-require t)
 #+END_SRC
 
+** Org-Jira
+
+#+begin_src emacs-lisp
+(use-package org-jira
+  :defer t
+  :custom
+  (jiralib-url "https://circleci.atlassian.net")
+  ;; FIXME haven't confirmed these yet, probably wrong.
+  ;; (org-jira-pross-issue-flow '(("Ready for Dev" . "In Progress")
+  ;;                              ("In Progress" . "Code Review")
+  ;;                              ("Code Review" . "Production Testing")
+  ;;                              ("Production Testing" . "Done")
+  ;;                              ("Done" . "In Progress")))
+  (org-jira-custom-jqls
+   '(;; Ready for dev
+     (:jql " issuetype != Epic and \"Dev Team\" = Pipelines and status in (\"Ready for Dev\")"
+           :limit 10
+           :filename "jira-ready-for-dev")
+     ;; My tickets
+     (:jql " issuetype != Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
+           :limit 10
+           :filename "jira-my-tickets")
+     ;; My epics
+     (:jql " issuetype = Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
+           :limit 10
+           :filename "jira-my-epics"))))
+
+#+end_src
+
 * Themes
 
 ** Load one theme at a time
