@@ -1135,7 +1135,7 @@ to support.
       (file "templates/blog-post.org"))
 
      ("r" "New GTD Review" entry
-      (file+olp+datetree "gtd_review.org")
+      (file+olp+datetree "archive/gtd_review.org")
       (file "templates/gtd-review.org"))))
 
   (org-agenda-custom-commands
