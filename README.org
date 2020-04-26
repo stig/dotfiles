@@ -1098,6 +1098,7 @@ to support.
   (org-agenda-todo-list-sublevels nil)
   (org-agenda-files '("~/org/agenda"))
 
+  (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
   (org-agenda-todo-ignore-scheduled 'future)
   (org-agenda-todo-ignore-deadlines 'far)
   (org-agenda-todo-ignore-timestamp 'future)
