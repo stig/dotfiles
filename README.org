@@ -871,9 +871,8 @@ and has the same config, whether I am on a local machine or a remote one.
   :init
   (defun sulami/init-hugsql-imenu ()
     (when (string-suffix-p ".hug.sql" (buffer-file-name))
-      (setq
-       imenu-generic-expression
-       '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
+      (setq imenu-generic-expression
+	    '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
   :hook
   (sql-mode . sulami/init-hugsql-imenu))
 #+end_src
