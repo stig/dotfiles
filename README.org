@@ -686,13 +686,6 @@ me the warm fuzzies.
 (add-hook 'text-mode-hook 'visual-line-mode)
 #+END_SRC
 
-** Walkman mode
-
-   #+begin_src emacs-lisp
-   (use-package walkman
-     :after org)
-   #+end_src
-
 ** Which Key Mode
 
 Show incomplete key cheatsheet.
@@ -1161,14 +1154,13 @@ to support.
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (sql . t)
-                                 (shell . t))))
+                                 (shell . t)
+				 (http . t))) )
+
+(use-package ob-http)
 
 (use-package org-inlinetask
   :ensure org-plus-contrib)
-
-;; Install, but do not load.  They're loaded at export time.
-(use-package ox-jira :no-require t)
-(use-package ox-gfm :no-require t)
 #+END_SRC
 
 ** Org-Jira
