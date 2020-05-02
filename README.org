@@ -963,15 +963,31 @@ master british
 
 ** Tramp
 
-Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]].
+   Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]],
+   and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
 
-#+begin_src emacs-lisp
-;; Ignore remote version control
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
-#+end_src
+   #+begin_src emacs-lisp
+   (setq tramp-default-method "ssh"
+	 tramp-ssh-controlmaster-options
+	 "-o ControlMaster=auto -o ControlPath='tramp.%%C'")
+
+   ;; Various speedups
+   ;; from https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
+   (setq remote-file-name-inhibit-cache 3600
+	 tramp-completion-reread-directory-timeout nil
+	 vc-ignore-dir-regexp (format "%s\\|%s"
+				      vc-ignore-dir-regexp
+				      tramp-file-name-regexp)
+	 tramp-verbose 0)
+
+   ;; Disable the history file on remote hosts
+   (setq tramp-histfile-override t)
+
+   ;; Save backup files locally
+   ;; from https://stackoverflow.com/a/47021266
+   (add-to-list 'backup-directory-alist
+		(cons tramp-file-name-regexp "/tmp/emacs-backup/"))
+   #+end_src
 
 ** Wgrep (aka "writable grep")
 
