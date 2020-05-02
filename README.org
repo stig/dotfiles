@@ -863,18 +863,6 @@ in local Emacs seamlessly with the =find-file= command. (Which I have
 aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
 and has the same config, whether I am on a local machine or a remote one.
 
-** Gist
-Working with GitHub Gists.
-
-#+begin_src emacs-lisp
-(use-package gist
-  :custom
-  (max-specpdl-size 1800)    ; For loading Org mode gists
-  (max-lisp-eval-depth 1200) ; For saving Org mode gists
-  :bind (("C-x C-g c" . gist-buffer-private)
-         ("C-x C-g l" . gist-list)))
-#+end_src
-
 ** HugSQL
 
 #+begin_src emacs-lisp
