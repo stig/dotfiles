@@ -1140,8 +1140,7 @@ to support.
       (file "templates/gtd-review.org"))))
 
   (org-agenda-custom-commands
-   '(("d" . "Day Agenda & Top Tasks")
-     ("dw" "Work"
+   '(("w" "Work: Day Agenda & Top Tasks"
       ((agenda "")
        (tags-todo "-@home-MAYBE/TODO"
 		  ((org-agenda-max-entries 3)
@@ -1150,7 +1149,7 @@ to support.
 		   (org-agenda-todo-ignore-timestamp 'all))))
       ((org-agenda-span 'day)
        (org-agenda-filter '("-@home" "-MAYBE"))))
-     ("dh" "Home"
+     ("h" "Home: Day Agenda & Top Tasks"
       ((agenda "")
        (tags-todo "-@work-MAYBE/TODO"
 		  ((org-agenda-max-entries 3)
