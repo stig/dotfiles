@@ -1105,31 +1105,31 @@ to support.
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
   (org-capture-templates
-   '(("t" "New TODO" entry (file "") (file "templates/todo.org"))
+   '(("t" "TODOs")
+     ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
+     ("tc" "Plain TODO & Clock in" entry (file "") (file "templates/todo.org") :clock-in t)
+     ("tl" "TODO with link to here" entry (file "") (file "templates/todo.org"))
+     ("tp" "Project" entry (file "") (file "templates/proj.org"))
+     ("tT" "Trip" entry (file "") (file "templates/trip.org"))
+     ("tb" "Blog Idea" plain
+      (file "~/org/agenda/blog-ideas.org")
+      (file "templates/blog-post.org"))
 
      ("a" "New Achievement" entry
       (file+olp+datetree "~/org/cci/achievements.org")
       "* %?" :tree-type week)
 
-     ("p" "New Project" entry (file "") (file "templates/proj.org"))
-
-     ("T" "New Trip" entry (file "") (file "templates/trip.org"))
-
      ("n" "New Note (for reference)" entry
       (file "~/org/cci/notes.org")
       (file "templates/note.org"))
 
-     ("g" "New Gas Meter Reading" table-line
+     ("R" "Metre Readings")
+     ("Rg" "New Gas Meter Reading" table-line
       (file "~/org/notes/gas-consumption.org")
       (file "templates/gas-consumption.org"))
-
-     ("e" "New Electricity Meter Reading" table-line
+     ("Re" "New Electricity Meter Reading" table-line
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
-
-     ("b" "New Blog Idea" plain
-      (file "~/org/agenda/blog-ideas.org")
-      (file "templates/blog-post.org"))
 
      ("r" "New GTD Review" entry
       (file+olp+datetree "archive/gtd_review.org")
