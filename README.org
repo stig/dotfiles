@@ -1158,8 +1158,8 @@ to support.
      ("gt" "Review for Tasks Complete" tags-todo "-MAYBE-RECURRING/TODO")
      ("gw" "Waiting tasks" tags-todo "-MAYBE/WAITING")
      ("ga" "Archivable" ((todo "COMPLETE")
-			 (todo "DONE")
-                         (tags "CANCELLED")))
+			 (tags "-PROJ/DONE")
+                         (tags "-PROJ/CANCELLED")))
      ("gp" "Projects" todo "PROJ")))
 
   :config
