@@ -1090,16 +1090,12 @@ to support.
   (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
   (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
   (org-agenda-include-diary t)
-  (org-agenda-ignore-properties '(effort appt stats))
-  (org-agenda-todo-list-sublevels nil)
   (org-agenda-files '("~/org/agenda"))
 
   (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
   (org-agenda-todo-ignore-scheduled 'future)
   (org-agenda-todo-ignore-deadlines 'far)
   (org-agenda-todo-ignore-timestamp 'future)
-
-  (org-agenda-tags-todo-honor-ignore-options t)
 
   (org-agenda-skip-deadline-prewarning-if-scheduled t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
