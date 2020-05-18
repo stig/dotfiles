@@ -136,6 +136,13 @@ Emacs. Credit to Robin Schroer for this trick.
 
 * Configure the basics
 
+** Support recursive minibuffers
+
+   I like to be able to use my kill-ring in the minibuffer.
+
+   #+begin_src emacs-lisp
+   (setq enable-recursive-minibuffers t)
+   #+end_src
 ** Ensure we don't use unencrypted auth sources
 
 This could take the form of e.g. saving auth info to =~/.authinfo=, or
