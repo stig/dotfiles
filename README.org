@@ -1142,18 +1142,16 @@ to support.
   (org-agenda-custom-commands
    '(("w" "Work: Day Agenda & Top Tasks"
       ((agenda "")
-       (tags-todo "-@home-MAYBE/TODO"
-		  ((org-agenda-max-entries 3)
-		   (org-agenda-todo-ignore-scheduled 'all)
+       (tags-todo "-@home-MAYBE-PRIORITY=\"C\"/TODO"
+		  ((org-agenda-todo-ignore-scheduled 'all)
 		   (org-agenda-todo-ignore-deadlines 'all)
 		   (org-agenda-todo-ignore-timestamp 'all))))
       ((org-agenda-span 'day)
        (org-agenda-filter '("-@home" "-MAYBE"))))
      ("h" "Home: Day Agenda & Top Tasks"
       ((agenda "")
-       (tags-todo "-@work-MAYBE/TODO"
-		  ((org-agenda-max-entries 3)
-		   (org-agenda-todo-ignore-scheduled 'all)
+       (tags-todo "-@work-MAYBE-PRIORITY=\"C\"/TODO"
+		  ((org-agenda-todo-ignore-scheduled 'all)
 		   (org-agenda-todo-ignore-deadlines 'all)
 		   (org-agenda-todo-ignore-timestamp 'all))))
       ((org-agenda-span 'day)
@@ -1168,7 +1166,7 @@ to support.
      ("ga" "Archivable" ((todo "COMPLETE")
 			 (tags "-PROJ/DONE")
                          (tags "-PROJ/CANCELLED")))
-     ("gp" "Projects" todo "PROJ")))
+     ("gp" "Projects" tags-todo "-MAYBE/PROJ")))
 
   :config
   (org-babel-do-load-languages 'org-babel-load-languages
