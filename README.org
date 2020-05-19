@@ -1142,38 +1142,44 @@ to support.
   (org-agenda-custom-commands
    '(("w" "Work: Day Agenda & Top Tasks"
       ((agenda "")
-       (tags-todo "-@home-MAYBE-PRIORITY=\"C\"/TODO"
-		  ((org-agenda-todo-ignore-scheduled 'all)
-		   (org-agenda-todo-ignore-deadlines 'all)
-		   (org-agenda-todo-ignore-timestamp 'all))))
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-filter '("-@home" "-MAYBE"))))
+       (org-agenda-tag-filter-preset '("-@home" "-MAYBE"))
+       (org-agenda-todo-ignore-scheduled 'all)
+       (org-agenda-todo-ignore-deadlines 'all)
+       (org-agenda-todo-ignore-timestamp 'all)))
      ("h" "Home: Day Agenda & Top Tasks"
       ((agenda "")
-       (tags-todo "-@work-MAYBE-PRIORITY=\"C\"/TODO"
-		  ((org-agenda-todo-ignore-scheduled 'all)
-		   (org-agenda-todo-ignore-deadlines 'all)
-		   (org-agenda-todo-ignore-timestamp 'all))))
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-filter '("-@work" "-MAYBE"))))
+       (org-agenda-tag-filter-preset '("-@work" "-MAYBE"))
+       (org-agenda-todo-ignore-scheduled 'all)
+       (org-agenda-todo-ignore-deadlines 'all)
+       (org-agenda-todo-ignore-timestamp 'all)))
      ("g" . "Getting Things Done")
      ("gm" "Maybe"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
-      ((org-agenda-filter '("+MAYBE"))))
-     ("gt" "Review for Tasks Complete" tags-todo "-MAYBE-RECURRING/TODO")
-     ("gw" "Waiting tasks" tags-todo "-MAYBE/WAITING")
-     ("ga" "Archivable" ((todo "COMPLETE")
-			 (tags "-PROJ/DONE")
-                         (tags "-PROJ/CANCELLED")))
-     ("gp" "Projects" tags-todo "-MAYBE/PROJ")))
+      ((org-agenda-tag-filter-preset '("+MAYBE"))))
+     ("gc" "Review for Tasks Complete"
+      todo "TODO"
+      ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING"))
+       (org-agenda-todo-ignore-scheduled 'all)
+       (org-agenda-todo-ignore-deadlines 'all)
+       (org-agenda-todo-ignore-timestamp 'all)))
+     ("gw" "Waiting tasks" todo "WAITING")
+     ("ga" "Archivable"
+      ((todo "DONE")
+       (todo "CANCELLED"))
+      ((org-agenda-tag-filter-preset '("-PROJ"))))
+     ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
-  :config
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((emacs-lisp . t)
-                                 (sql . t)
-                                 (shell . t)
-				 (http . t))) )
+   :config
+   (org-babel-do-load-languages 'org-babel-load-languages
+				'((emacs-lisp . t)
+				  (sql . t)
+				  (shell . t)
+				  (http . t)))))
 
 (use-package ob-http)
 
