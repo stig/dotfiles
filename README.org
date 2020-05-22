@@ -1100,10 +1100,11 @@ to support.
   (org-agenda-files '("~/org/agenda"))
 
   (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
+  (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled 'future)
-  (org-agenda-todo-ignore-deadlines 'far)
+  (org-agenda-todo-ignore-deadlines 'future)
+  (org-agenda-todo-ignore-with-date 'future)
   (org-agenda-todo-ignore-timestamp 'future)
-
   (org-agenda-skip-deadline-prewarning-if-scheduled t)
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
@@ -1144,18 +1145,12 @@ to support.
       ((agenda "")
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '("-@home" "-MAYBE"))
-       (org-agenda-todo-ignore-scheduled 'all)
-       (org-agenda-todo-ignore-deadlines 'all)
-       (org-agenda-todo-ignore-timestamp 'all)))
+       (org-agenda-tag-filter-preset '("-@home" "-MAYBE"))))
      ("h" "Home: Day Agenda & Top Tasks"
       ((agenda "")
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '("-@work" "-MAYBE"))
-       (org-agenda-todo-ignore-scheduled 'all)
-       (org-agenda-todo-ignore-deadlines 'all)
-       (org-agenda-todo-ignore-timestamp 'all)))
+       (org-agenda-tag-filter-preset '("-@work" "-MAYBE"))))
      ("g" . "Getting Things Done")
      ("gm" "Maybe"
       ((todo "PROJ")
@@ -1164,9 +1159,10 @@ to support.
      ("gc" "Review for Tasks Complete"
       todo "TODO"
       ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING"))
-       (org-agenda-todo-ignore-scheduled 'all)
-       (org-agenda-todo-ignore-deadlines 'all)
-       (org-agenda-todo-ignore-timestamp 'all)))
+       (org-agenda-todo-ignore-scheduled nil)
+       (org-agenda-todo-ignore-deadlines nil)
+       (org-agenda-todo-ignore-with-date nil)
+       (org-agenda-todo-ignore-timestamp nil)))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
       ((todo "DONE")
