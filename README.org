@@ -603,7 +603,7 @@ it are that it provides the following key bindings:
 (use-package projectile
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-project-search-path '("~/src"))
+  (projectile-project-search-path '("/usr/local/src"))
   (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
   (projectile-switch-project-action 'magit-status)
