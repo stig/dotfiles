@@ -591,13 +591,13 @@ it as an interactive macro, where you can constantly see what's being done.
 I use Projectile to navigate my projects. Some of the things I like about
 it are that it provides the following key bindings:
 
+- =C-c p f= :: Find a file in this project.
+- =C-c p k= :: Close all buffers for this project.
 - =C-c p t= :: This switches from an implementation file to its test file,
                or vice versa. I use this extensively in Clojure mode. It
                might not make sense for all languages; YMMV.
-- =C-c p 4 t= :: The same, as above, but open the file in "other" buffer.
-- =C-c p s s= :: Ag search for something in this project. If point is at a
-                 token, default to searching for that. (Mnemonic:
-                 "Projectile Silver Searcher".)
+- =C-c p s r= :: Ripgrep for something in this project. If point is at
+                 a token, default to searching for that.
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
