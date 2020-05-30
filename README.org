@@ -1122,7 +1122,7 @@ to support.
      ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
      ("tc" "Plain TODO & Clock in" entry (file "") (file "templates/todo.org") :clock-in t :clock-keep t)
      ("tj" "Write up Jira" entry (file "agenda/work_tasks.org") (file "templates/jira.org") :clock-in t)
-     ("tl" "TODO with link to here" entry (file "") (file "templates/todo.org"))
+     ("tl" "TODO with link to here" entry (file "") (file "templates/todo-with-link.org"))
      ("tp" "Project" entry (file "") (file "templates/proj.org"))
      ("tT" "Trip" entry (file "") (file "templates/trip.org"))
      ("tb" "Blog Idea" plain (file "") (file "templates/blog-post.org"))
