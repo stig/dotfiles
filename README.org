@@ -43,20 +43,6 @@ I also don't need to see a splash screen on every launch. Finally I do
 (setq visible-bell t)
 #+end_src
 
-** Emacs < 27 compatibility
-In older versions of Emacs we have to load ~early-init.el~ manually.
-While Emacs 27 initialises packages before loading the user config,
-older ones does not: thus we also call =package-initialize= here.
-
-#+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t; -*-
-(if (not visible-bell)
-    (progn
-      (load (expand-file-name "~/.emacs.d/early-init.el") t)
-      (require 'package)
-      (package-initialize)))
-#+END_SRC
-
 * Initialize package system
 
 A lot of my config installs packages from GNU elpa, MELPA, and Org
