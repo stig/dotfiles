@@ -1097,7 +1097,7 @@ to support.
   (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
   (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
   (org-agenda-include-diary t)
-  (org-agenda-files '("~/org/agenda"))
+  (org-agenda-files '("~/org"))
 
   (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
   (org-agenda-tags-todo-honor-ignore-options t)
@@ -1116,9 +1116,7 @@ to support.
      ("tl" "TODO with link to here" entry (file "") (file "templates/todo.org"))
      ("tp" "Project" entry (file "") (file "templates/proj.org"))
      ("tT" "Trip" entry (file "") (file "templates/trip.org"))
-     ("tb" "Blog Idea" plain
-      (file "~/org/agenda/blog-ideas.org")
-      (file "templates/blog-post.org"))
+     ("tb" "Blog Idea" plain (file "") (file "templates/blog-post.org"))
 
      ("a" "New Achievement" entry
       (file+olp+datetree "~/org/cci/achievements.org")
