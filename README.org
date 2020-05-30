@@ -107,7 +107,16 @@ Zsh reads =~/.zshenv= first, for both interactive and
 non-interactive shells.  It's where we should set up PATH, etc.
 
 #+begin_src sh :tangle ~/.zshenv
-export PATH=~/.local/bin:/usr/local/texlive/2019/bin/x86_64-darwin:$PATH
+# Add brew's sbin
+PATH=/usr/local/sbin:$PATH
+
+# Tex lives in its own place
+PATH=/usr/local/texlive/2019/bin/x86_64-darwin:$PATH
+
+# Add user-local scripts
+PATH=~/.local/bin:$PATH
+
+export PATH
 #+end_src
 
 ** Set =PATH= etc from the login shell
