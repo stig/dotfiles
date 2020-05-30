@@ -110,9 +110,6 @@ non-interactive shells.  It's where we should set up PATH, etc.
 # Add brew's sbin
 PATH=/usr/local/sbin:$PATH
 
-# Tex lives in its own place
-PATH=/usr/local/texlive/2019/bin/x86_64-darwin:$PATH
-
 # Add user-local scripts
 PATH=~/.local/bin:$PATH
 
