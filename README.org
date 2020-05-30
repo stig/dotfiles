@@ -43,6 +43,15 @@ I also don't need to see a splash screen on every launch. Finally I do
 (setq visible-bell t)
 #+end_src
 
+* Introduce Myself
+
+In case something needs my name/email address.
+
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Stig Brautaset")
+(setq user-mail-address "stig@brautaset.org")
+#+END_SRC
+
 * Initialize package system
 
 A lot of my config installs packages from GNU elpa, MELPA, and Org
@@ -126,15 +135,6 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 #+begin_src emacs-lisp
 (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
-
-** Introduce Myself
-
-In case something needs my name/email address.
-
-#+BEGIN_SRC emacs-lisp
-(setq user-full-name "Stig Brautaset")
-(setq user-mail-address "stig@brautaset.org")
-#+END_SRC
 
 ** Configure Meta/super/hyper keys
 
