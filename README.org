@@ -94,42 +94,25 @@ In addition use-package itself, I also install the
 #+end_src
 * Configure PATH
 
-The GUI Emacs gets exec path from the system, rather than the
-login shell.  We have to load PATH et. al. from the shell to get
-access to programs installed by Homebrew.
+  I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
 
-** Configure the login shell
+  The GUI Emacs gets exec path from the system, rather than the
+  login shell.  We have to load PATH et. al. from the shell to get
+  access to programs installed by Homebrew.
 
-I use Zsh as my login shell.  It feels a bit weird to set it up
-here, but it's the best way I have found so far.
+  Copy PATH and certain other variables from my login shell so these
+  variables are available in Eshell.  (And elsewhere in Emacs.)
 
-Zsh reads =~/.zshenv= first, for both interactive and
-non-interactive shells.  It's where we should set up PATH, etc.
-
-#+begin_src sh :tangle ~/.zshenv
-# Add brew's sbin
-PATH=/usr/local/sbin:$PATH
-
-# Add user-local scripts
-PATH=~/.local/bin:$PATH
-
-export PATH
-#+end_src
-
-** Set =PATH= etc from the login shell
-
-Copy PATH and certain other variables from my login shell so these
-variables are available in Eshell.  (And elsewhere in Emacs.)
-
-#+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-variables '("PATH" "MANPATH"
-                                    "LDFLAGS" "CPPFLAGS"
-                                    "JAVA_HOME"))
-  :config
-  (exec-path-from-shell-initialize))
-#+END_SRC
+  #+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :custom
+    (exec-path-from-shell-variables '("PATH" "MANPATH"
+				      "LDFLAGS" "CPPFLAGS"
+				      "JAVA_HOME"))
+    :config
+    (exec-path-from-shell-initialize))
+  #+END_SRC
 
 * Make Customize settings transient
 I prefer to code my configuration. This makes sure we store the custom
