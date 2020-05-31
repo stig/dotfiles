@@ -1101,6 +1101,8 @@ to support.
       (file "~/org/cci/notes.org")
       (file "templates/note.org"))
 
+     ("c" "Contact" entry (file "~/org/contacts.org") (file "templates/contact.org"))
+
      ("R" "Metre Readings")
      ("Rg" "New Gas Meter Reading" table-line
       (file "~/org/notes/gas-consumption.org")
