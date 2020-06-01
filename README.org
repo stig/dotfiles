@@ -1058,7 +1058,7 @@ to support.
                                 (concat
                                  (car (split-string (system-name) "\\."))
                                  ".org")
-                                "~/org/agenda"))
+                                "~/org"))
   :custom
   (org-src-preserve-indentation nil)
   (org-edit-src-content-indentation 0)
