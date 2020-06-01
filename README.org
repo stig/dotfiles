@@ -578,11 +578,19 @@ it are that it provides the following key bindings:
 (use-package projectile
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-project-search-path '("/usr/local/src" "~/src"))
   (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
   (projectile-switch-project-action 'magit-status)
   :config
+
+  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
+  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
+  ;; use that on my personal machine. I would just set both, but
+  ;; projectile doesn't like it if the directories don't exist.
+  (setq projectile-project-search-path
+	(seq-filter (lambda (e) (file-directory-p e))
+		    '("/usr/local/src" "~/src")))
+
   (projectile-mode))
 
 (use-package counsel-projectile)
