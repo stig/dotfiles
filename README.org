@@ -1162,12 +1162,12 @@ to support.
 				  (shell . t)
 				  (http . t)))))
 
-(use-package ob-http)
-
 (use-package org-inlinetask
   :ensure org-plus-contrib)
-#+END_SRC
 
+(use-package verb
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+#+END_SRC
 ** Org-Jira
 
 #+begin_src emacs-lisp
