@@ -1150,9 +1150,9 @@ to support.
        (org-agenda-todo-ignore-timestamp nil)))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
-      ((todo "DONE")
-       (todo "CANCELLED"))
-      ((org-agenda-tag-filter-preset '("-PROJ"))))
+      ((todo "COMPLETE")
+       (todo "-PROJ/DONE")
+       (todo "-PROJ/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
