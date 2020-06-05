@@ -1064,6 +1064,8 @@ to support.
                                  ".org")
                                 "~/org"))
   :custom
+  ;; Whitespace and edits
+  (org-adapt-indentation nil)
   (org-src-preserve-indentation nil)
   (org-edit-src-content-indentation 0)
   (org-link-file-path-type 'relative)
