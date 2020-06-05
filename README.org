@@ -442,6 +442,7 @@ This provides =counsel-find-file=, among others.
 (use-package amx) ;; make counsel-M-x work the way I like
 
 (use-package counsel
+  :diminish
   :after org
   :demand
   :bind (("C-c i" . counsel-semantic-or-imenu)
@@ -476,6 +477,7 @@ their indentation and file format preferences.
 
 #+BEGIN_SRC emacs-lisp
 (use-package editorconfig
+  :diminish "EC"
   :ensure-system-package editorconfig
   :custom
   (editorconfig-exclude-modes (quote (org-mode gist)))
@@ -512,6 +514,7 @@ any better.
 
 #+begin_src emacs-lisp
 (use-package ivy
+  :diminish
   :demand
   :bind (("C-c C-r" . ivy-resume)
          ("C-x b" . ivy-switch-buffer)
@@ -576,6 +579,7 @@ it are that it provides the following key bindings:
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
+  :diminish
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
   (projectile-completion-system 'ivy)
