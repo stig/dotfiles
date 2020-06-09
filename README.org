@@ -1173,7 +1173,8 @@ to support.
 				'((emacs-lisp . t)
 				  (sql . t)
 				  (shell . t)
-				  (http . t)))))
+				  (sh . t)
+				  (verb . t)))))
 
 (use-package org-inlinetask
   :ensure org-plus-contrib)
