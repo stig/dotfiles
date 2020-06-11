@@ -89,25 +89,25 @@ In addition use-package itself, I also install the
 #+end_src
 * Configure PATH
 
-  I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
+I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
 
-  The GUI Emacs gets exec path from the system, rather than the
-  login shell.  We have to load PATH et. al. from the shell to get
-  access to programs installed by Homebrew.
+The GUI Emacs gets exec path from the system, rather than the
+login shell.  We have to load PATH et. al. from the shell to get
+access to programs installed by Homebrew.
 
-  Copy PATH and certain other variables from my login shell so these
-  variables are available in Eshell.  (And elsewhere in Emacs.)
+Copy PATH and certain other variables from my login shell so these
+variables are available in Eshell.  (And elsewhere in Emacs.)
 
-  #+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell
-    :ensure t
-    :custom
-    (exec-path-from-shell-variables '("PATH" "MANPATH"
-				      "LDFLAGS" "CPPFLAGS"
-				      "JAVA_HOME"))
-    :config
-    (exec-path-from-shell-initialize))
-  #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :ensure t
+  :custom
+  (exec-path-from-shell-variables '("PATH" "MANPATH"
+				    "LDFLAGS" "CPPFLAGS"
+				    "JAVA_HOME"))
+  :config
+  (exec-path-from-shell-initialize))
+#+END_SRC
 
 * Make Customize settings transient
 I prefer to code my configuration. This makes sure we store the custom
@@ -122,11 +122,11 @@ Emacs. Credit to Robin Schroer for this trick.
 
 ** Support recursive minibuffers
 
-   I like to be able to use my kill-ring in the minibuffer.
+I like to be able to use my kill-ring in the minibuffer.
 
-   #+begin_src emacs-lisp
-   (setq enable-recursive-minibuffers t)
-   #+end_src
+#+begin_src emacs-lisp
+(setq enable-recursive-minibuffers t)
+#+end_src
 ** Ensure we don't use unencrypted auth sources
 
 This could take the form of e.g. saving auth info to =~/.authinfo=, or
@@ -919,12 +919,12 @@ We use protobufs for service-to-service communication at work.
 
 ** Ripgrep
 
-   Even faster than The Silver Searcher, apparently.
+Even faster than The Silver Searcher, apparently.
 
-   #+begin_src emacs-lisp
-   (use-package ripgrep
-     :ensure-system-package (rg . ripgrep))
-   #+end_src
+#+begin_src emacs-lisp
+(use-package ripgrep
+  :ensure-system-package (rg . ripgrep))
+#+end_src
 
 ** Simple HTML Renderer (HTML Email)
 
@@ -957,46 +957,46 @@ master british
 
 ** Tramp
 
-   Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]],
-   and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
+Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]],
+and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
 
-   #+begin_src emacs-lisp
-   (setq tramp-default-method "ssh"
-	 tramp-ssh-controlmaster-options
-	 "-o ControlMaster=auto -o ControlPath='tramp.%%C'")
+#+begin_src emacs-lisp
+(setq tramp-default-method "ssh"
+      tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C'")
 
-   ;; Various speedups
-   ;; from https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
-   (setq remote-file-name-inhibit-cache 3600
-	 tramp-completion-reread-directory-timeout nil
-	 vc-ignore-dir-regexp (format "%s\\|%s"
-				      vc-ignore-dir-regexp
-				      tramp-file-name-regexp)
-	 tramp-verbose 0)
+;; Various speedups
+;; from https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
+(setq remote-file-name-inhibit-cache 3600
+      tramp-completion-reread-directory-timeout nil
+      vc-ignore-dir-regexp (format "%s\\|%s"
+				   vc-ignore-dir-regexp
+				   tramp-file-name-regexp)
+      tramp-verbose 0)
 
-   ;; Disable the history file on remote hosts
-   (setq tramp-histfile-override t)
+;; Disable the history file on remote hosts
+(setq tramp-histfile-override t)
 
-   ;; Save backup files locally
-   ;; from https://stackoverflow.com/a/47021266
-   (add-to-list 'backup-directory-alist
-		(cons tramp-file-name-regexp "/tmp/emacs-backup/"))
-   #+end_src
+;; Save backup files locally
+;; from https://stackoverflow.com/a/47021266
+(add-to-list 'backup-directory-alist
+	     (cons tramp-file-name-regexp "/tmp/emacs-backup/"))
+#+end_src
 
 ** Wgrep (aka "writable grep")
 
-   ~wgrep~ mode is pretty close to magic. When in a buffer showing
-   grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
-   results of the search right from the results buffer!/ I can then
-   hit =C-x C-s= to save the results.
+~wgrep~ mode is pretty close to magic. When in a buffer showing
+grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
+results of the search right from the results buffer!/ I can then
+hit =C-x C-s= to save the results.
 
-   Hitting =C-c C-p= while already in writable grep mode I can delete
-   the entire matched line by hitting =C-c C-d=.
+Hitting =C-c C-p= while already in writable grep mode I can delete
+the entire matched line by hitting =C-c C-d=.
 
-   #+begin_src emacs-lisp
-   (use-package wgrep)
+#+begin_src emacs-lisp
+(use-package wgrep)
 
-   #+end_src
+#+end_src
 
 ** YAML
 
