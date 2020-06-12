@@ -819,8 +819,7 @@ then A.
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed-org
   :custom
-  (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"
-                          "~/org/elfeed.org"))
+  (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"))
   :config
   (elfeed-org))
 
