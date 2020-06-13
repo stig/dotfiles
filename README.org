@@ -1161,6 +1161,14 @@ to support.
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
+
+   (defun org-agenda-tag-from-system-name ()
+     (let ((name (car (split-string (system-name) "\\."))))
+       (message "Capturing on: %s" name)
+       (cond ((equal name "Pearmain") "@work")
+	     ((equal name "Margil") "@home")
+	     (t ""))))
+
    (org-babel-do-load-languages 'org-babel-load-languages
 				'((emacs-lisp . t)
 				  (sql . t)
