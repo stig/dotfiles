@@ -1156,8 +1156,8 @@ to support.
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
       ((todo "COMPLETE")
-       (todo "-PROJ/DONE")
-       (todo "-PROJ/CANCELLED")))
+       (tags "-PROJ/DONE")
+       (tags "-PROJ/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
