@@ -1,0 +1,5 @@
+#+title: My Configuration
+
+This is my configuration. It's mostly about [[file:emacs/README.org][Emacs]].
+
+
