@@ -1,8 +1,7 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle init.el :results silent
 #+STARTUP: content
 * Introduction
 
@@ -33,7 +32,7 @@ off the mouse interface here to avoid momentary display during launch.
 I also don't need to see a splash screen on every launch. Finally I do
 /not like/ Emacs beeping at me: I prefer a visual bell.
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/early-init.el
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
 ;; -*- lexical-binding: t; -*-
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))

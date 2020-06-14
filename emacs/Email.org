@@ -1,7 +1,7 @@
 #+title: Email Setup
 #+author: Stig Brautaset
 #+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/email.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle email.el :results silent
 #+STARTUP: content
 
 I like to use Emacs for /all/ writing, including email. I don't want a
@@ -252,7 +252,7 @@ Very occasionally I want to create HTML mail. (For tables, for
 example.) I then write my message using Org mode syntax and use
 org-mime-htmlize.
 
-#+BEGIN_SRC emacs-lisp (when sb/personal-setup-p "~/.emacs.d/init.el")
+#+BEGIN_SRC emacs-lisp
 (use-package org-mime
   :bind (:map message-mode-map
               ("C-c h" . org-mime-htmlize))
