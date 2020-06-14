@@ -213,25 +213,13 @@ use to launch Notmuch.
 
 * Sending mail with MSMTP
 
-MSMTP's configuration is really simple, and it will detect the account
-to use from the "from" address. Passwords are stored in the system
-Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]] section in the msmtp documentation
-for details.
+MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
+to use from the "from" address.
+
+Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
+section in the msmtp documentation for details.
 
 : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
-
-#+BEGIN_SRC conf :tangle "~/.msmtprc"
-defaults
-port 587
-tls on
-tls_trust_file /etc/ssl/cert.pem
-auth on
-
-account private
-from stig@brautaset.org
-host mail.gandi.net
-user stig@brautaset.org
-#+END_SRC
 
 Finally we have to tell Emacs to use msmtp to send mail.  (And to
 kill the message buffer on exit.)
