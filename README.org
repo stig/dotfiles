@@ -2,7 +2,7 @@
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
 #+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/init.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent
 #+STARTUP: content
 * Introduction
 
@@ -24,7 +24,7 @@ extension.
 #+end_src
 * Early Init
 
-Emacs 27 loads =~/.emacs.d/early-init.el= before loading GUI
+Emacs 27 loads =~/.config/emacs/early-init.el= before loading GUI
 components. This makes it a great place to disable the mouse
 interface, etc.
 
@@ -33,7 +33,7 @@ off the mouse interface here to avoid momentary display during launch.
 I also don't need to see a splash screen on every launch. Finally I do
 /not like/ Emacs beeping at me: I prefer a visual bell.
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/early-init.el
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/early-init.el
 ;; -*- lexical-binding: t; -*-
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -171,13 +171,13 @@ The adaptive mouse scrolling is far, far too quick so let's turn that off.
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
 #+END_SRC
 
-** Store backup files in =~/.emacs.d/backups=
+** Store backup files in a separate folder
 
 I don't like backup files (those dreaded =foo~= ones) all over my disk.
-This places them in =~/.emacs.d/backups=.
+This places them in a separate directory.
 
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 #+END_SRC
 
 ** Clipboard
@@ -814,12 +814,12 @@ then A.
 
 ** Elfeed
 
-~org-elfeed~ stores the feed in =~/.emacs.d/elfeed.org= rather than =custom.el=.
+~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed-org
   :custom
-  (rmh-elfeed-org-files '("~/.emacs.d/elfeed.org"))
+  (rmh-elfeed-org-files `,(expand-file-name "elfeed.org" user-emacs-directory))
   :config
   (elfeed-org))
 
@@ -1285,7 +1285,7 @@ Check if we have additional tangled config files to load.
 
 #+begin_src emacs-lisp
 (dolist (cfg '("email.el" "blogging.el"))
-  (let ((config-file (expand-file-name cfg "~/.emacs.d")))
+  (let ((config-file (expand-file-name cfg user-emacs-directory)))
     (when (file-exists-p config-file)
       (load config-file))))
 #+end_src
