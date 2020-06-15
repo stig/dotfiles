@@ -1,7 +1,7 @@
 #+title: Email Setup
 #+author: Stig Brautaset
 #+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/email.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle email.el :results silent
 #+STARTUP: content
 
 I like to use Emacs for /all/ writing, including email. I don't want a
@@ -213,25 +213,13 @@ use to launch Notmuch.
 
 * Sending mail with MSMTP
 
-MSMTP's configuration is really simple, and it will detect the account
-to use from the "from" address. Passwords are stored in the system
-Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]] section in the msmtp documentation
-for details.
+MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
+to use from the "from" address.
+
+Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
+section in the msmtp documentation for details.
 
 : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
-
-#+BEGIN_SRC conf :tangle "~/.msmtprc"
-defaults
-port 587
-tls on
-tls_trust_file /etc/ssl/cert.pem
-auth on
-
-account private
-from stig@brautaset.org
-host mail.gandi.net
-user stig@brautaset.org
-#+END_SRC
 
 Finally we have to tell Emacs to use msmtp to send mail.  (And to
 kill the message buffer on exit.)
@@ -252,7 +240,7 @@ Very occasionally I want to create HTML mail. (For tables, for
 example.) I then write my message using Org mode syntax and use
 org-mime-htmlize.
 
-#+BEGIN_SRC emacs-lisp (when sb/personal-setup-p "~/.emacs.d/init.el")
+#+BEGIN_SRC emacs-lisp
 (use-package org-mime
   :bind (:map message-mode-map
               ("C-c h" . org-mime-htmlize))

@@ -1,0 +1,10 @@
+defaults
+port 587
+tls on
+tls_trust_file /etc/ssl/cert.pem
+auth on
+
+account private
+from stig@brautaset.org
+host mail.gandi.net
+user stig@brautaset.org

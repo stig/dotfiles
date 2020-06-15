@@ -1,7 +1,7 @@
 #+title: Blogging Support
 #+Author: Stig Brautaset
 #+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.emacs.d/blogging.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle blogging.el :results silent
 #+STARTUP: content
 
 This file contains config I use for working on my blog. I create blog

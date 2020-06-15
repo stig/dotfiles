@@ -1,0 +1,1290 @@
+#+TITLE: My Emacs Setup
+#+AUTHOR: Stig Brautaset
+#+OPTIONS: f:t
+#+PROPERTY: header-args:emacs-lisp    :tangle init.el :results silent
+#+STARTUP: content
+* Introduction
+
+This is my Emacs configuration.  Because I'm forgetful, it is a
+[[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
+this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
+hitting =C-c C-v C-t=.
+
+* Installing
+
+I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
+
+I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
+et. al.) using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
+extension.
+
+#+begin_src sh
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#+end_src
+* Early Init
+
+Emacs 27 loads =~/.config/emacs/early-init.el= before loading GUI
+components. This makes it a great place to disable the mouse
+interface, etc.
+
+First make sure it uses lexial binding for performance. Next I turn
+off the mouse interface here to avoid momentary display during launch.
+I also don't need to see a splash screen on every launch. Finally I do
+/not like/ Emacs beeping at me: I prefer a visual bell.
+
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+;; -*- lexical-binding: t; -*-
+
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+(setq inhibit-startup-message t)
+(setq visible-bell t)
+#+end_src
+
+* Introduce Myself
+
+In case something needs my name/email address.
+
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Stig Brautaset")
+(setq user-mail-address "stig@brautaset.org")
+#+END_SRC
+
+* Initialize package system
+
+A lot of my config installs packages from GNU elpa, MELPA, and Org
+elpa. So we need to configure the package system before the rest of
+the config.
+
+I install most packages via Melpa and Org, so I add them to
+~package-archives~. By default it contains only GNU ELPA.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+#+END_SRC
+
+** Install & configure ~use-package~
+
+Install ~use-package~ and configure it to install packages by default.
+
+In addition use-package itself, I also install the
+~:ensure-system-package~ extension to install system packages.
+
+#+begin_src emacs-lisp
+(seq-doseq (package '(use-package bind-key diminish))
+  (unless (package-installed-p package)
+    (package-refresh-contents)
+    (package-install package)))
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+
+(use-package use-package-ensure-system-package
+  :ensure t)
+#+end_src
+* Configure PATH
+
+I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
+
+The GUI Emacs gets exec path from the system, rather than the
+login shell.  We have to load PATH et. al. from the shell to get
+access to programs installed by Homebrew.
+
+Copy PATH and certain other variables from my login shell so these
+variables are available in Eshell.  (And elsewhere in Emacs.)
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :ensure t
+  :custom
+  (exec-path-from-shell-variables '("PATH" "MANPATH"
+				    "LDFLAGS" "CPPFLAGS"
+				    "JAVA_HOME"))
+  :config
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+* Make Customize settings transient
+I prefer to code my configuration. This makes sure we store the custom
+settings in a temporary file, so they don't persist across restarts of
+Emacs. Credit to Robin Schroer for this trick.
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (make-temp-file ""))
+#+END_SRC
+
+* Configure the basics
+
+** Support recursive minibuffers
+
+I like to be able to use my kill-ring in the minibuffer.
+
+#+begin_src emacs-lisp
+(setq enable-recursive-minibuffers t)
+#+end_src
+** Ensure we don't use unencrypted auth sources
+
+This could take the form of e.g. saving auth info to =~/.authinfo=, or
+=~/.netrc= rather than =~/.authinfo.gpg=, for example.
+
+#+begin_src emacs-lisp
+(setq auth-sources (quote ("~/.authinfo.gpg")))
+#+end_src
+
+** Configure Meta/super/hyper keys
+
+#+BEGIN_SRC emacs-lisp
+(setq mac-command-modifier 'meta
+      mac-option-modifier 'super
+      mac-function-modifier 'hyper)
+#+END_SRC
+
+** Confirm kill emacs
+
+The default keybinding for this is close to =M-q= which I use for
+reflowing text.
+
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-emacs 'yes-or-no-p)
+#+END_SRC
+
+** Make 'y' and 'n' satisfy prompts
+
+Answering just 'y' or 'n' will do, rather than having to spell out "yes"
+or "no".
+
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Make mouse scrolling smoother
+
+The adaptive mouse scrolling is far, far too quick so let's turn that off.
+
+#+BEGIN_SRC emacs-lisp
+(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+#+END_SRC
+
+** Store backup files in a separate folder
+
+I don't like backup files (those dreaded =foo~= ones) all over my disk.
+This places them in a separate directory.
+
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
+#+END_SRC
+
+** Clipboard
+
+These settings improve pasting behaviour with programs outside
+Emacs.  Save clipboard text into kill ring before replacing them.
+Copying with the mouse copies at point, rather than where you
+click.
+
+#+BEGIN_SRC emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+(setq mouse-yank-at-point t)
+#+END_SRC
+
+** Make the fonts bigger
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :height 150)
+#+END_SRC
+
+** UTF-8: everywhere, always
+
+Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
+
+#+BEGIN_SRC emacs-lisp
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+#+END_SRC
+
+** End all files in a newline
+
+All files should end in a newline. Insert one if there isn't one already.
+
+#+BEGIN_SRC emacs-lisp
+(setq require-final-newline t)
+#+END_SRC
+
+** Save my place in each file
+
+It's nice if Emacs knows where I was last time I opened a file.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default save-place t)
+(setq save-place-file (concat user-emacs-directory "places"))
+#+END_SRC
+
+** Add keybinding to join next line to this
+
+With cursor at any point in a line, hit =M-j= to move to the end, and
+delete the newline. Leave the cursor where the newline used to be.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-j" (lambda ()
+                  (interactive)
+                  (join-line -1)))
+#+END_SRC
+
+** String Inflection
+
+Sometimes I need to swap between CamelCase and snake_case, or even
+SNAKE_CASE.
+
+#+begin_src emacs-lisp
+(use-package string-inflection
+  :bind (("C-c C-x C-s" . string-inflection-all-cycle)
+         ("C-c C-x C-c" . string-inflection-camelcase)
+         ("C-c C-x C-k" . string-inflection-kebab-case)
+         ("C-c C-x C-u" . string-inflection-upcase)))
+#+end_src
+
+** Unfill paragraphs and regions
+
+The default binding for =M-q= fills a paragraph. Very good. But
+sometimes I want to /unfill/[fn:: Particularly when editing markdown
+that is going to end up on GitHub, as otherwise the result has lots
+of hard linebreaks. This happens every time I edit a PR description
+in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
+
+#+begin_src emacs-lisp
+(defun sb/unfill-paragraph ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+
+(defun sb/fill-or-unfill-paragraph (arg)
+  "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
+  (interactive "P")
+  (if arg
+      (sb/unfill-paragraph)
+    (fill-paragraph)))
+
+(bind-key "M-q" 'sb/fill-or-unfill-paragraph)
+
+(defun sb/unfill-region ()
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-region (region-beginning) (region-end) nil)))
+#+end_src
+
+** Support for fullscreen
+
+I like to run apps in fullscreen mode. Sometimes it's useful to be
+able to toggle it on or off, which this function does. I found it
+at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
+
+#+BEGIN_SRC emacs-lisp
+(defun my-toggle-fullscreen ()
+  "Toggle full screen"
+  (interactive)
+  (set-frame-parameter
+   nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+(bind-key "M-<f11>" 'my-toggle-fullscreen)
+#+END_SRC
+
+** Toggle Window Split function
+
+Sometimes a window is split horizontally, and you would prefer
+vertically. Or vice versa. This function can help! Just don't ask me how
+it works: I found it on StackOverflow. (I think. Again.)
+
+#+BEGIN_SRC emacs-lisp
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
+
+** Diary (Calendar) Functions
+
+Prefer YMD to the /crazy/ american MDY order.
+
+I schedule some things every weekday,
+so add a convenience function for that.
+
+#+BEGIN_SRC emacs-lisp
+(setq calendar-date-style 'iso)
+
+(defun sb/weekday-p (date)
+  "Is `date' a weekday?"
+  (memq (calendar-day-of-week date) '(1 2 3 4 5)))
+#+END_SRC
+
+** Git Link
+
+Lets me link to a file location on GitHub/Bitbucket/GitLab
+from a local git repository.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-link
+  :after magit
+  :bind ("C-c g l" . git-link))
+#+END_SRC
+
+** GnuPG
+
+Emacs will open =.gpg= files transparently, but I need to install gnupg
+& pinentry for that to work.
+
+#+begin_src emacs-lisp
+(use-package gnupg
+  :ensure-system-package ((gpg . gnupg) pinentry)
+  :no-require t
+  :custom
+  (epa-pinentry-mode 'loopback))
+#+end_src
+
+#+begin_src conf :mkdirp t :tangle ~/.gnupg/gpg-agent.conf
+allow-emacs-pinentry
+allow-loopback-pinentry
+#+end_src
+
+** Remove ANSI colours
+
+#+begin_src emacs-lisp
+(defun sb/remove-ansi-colours-from-buffer ()
+  (interactive)
+  (ansi-color-filter-region (point-min) (point-max)))
+#+end_src
+
+** Add explicit keybinding for opening file at point
+
+#+begin_src emacs-lisp
+(bind-key "C-c C-x C-f" #'find-file-at-point)
+#+end_src
+
+** Don't require two spaces to end a sentence
+
+Having this enabled makes it harder to collaborate with others, and
+move sentences around in texts I haven't written.
+
+#+begin_src emacs-lisp
+(setq sentence-end-double-space nil)
+#+end_src
+
+* Configure minor modes
+** Ace Window
+
+This lets me rapidly switch to a different frame/window.  I use
+this mainly when resolving conflicts in ediff merge, since I need
+to swap between two frames there.
+
+#+begin_src emacs-lisp
+(use-package ace-window
+  :bind ("M-`" . ace-window))
+#+end_src
+
+** Auto commit
+
+In some projects (notably, my Org/Agenda setup) I want to
+automatically commit when editing files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-auto-commit-mode
+  :custom
+  (gac-automatically-add-new-files-p t)
+  (gac-automatically-push-p t))
+#+END_SRC
+
+** Beacon
+
+Highlight my cursor when scrolling
+
+#+begin_src emacs-lisp
+(use-package beacon
+  :pin gnu
+  :config
+  (beacon-mode 1))
+#+end_src
+
+** Counsel
+
+This provides =counsel-find-file=, among others.
+
+#+begin_src emacs-lisp
+(use-package amx) ;; make counsel-M-x work the way I like
+
+(use-package counsel
+  :diminish
+  :after org
+  :demand
+  :bind (("C-c i" . counsel-semantic-or-imenu)
+	 :map org-mode-map
+	 ("C-c i" . counsel-org-goto))
+  :config
+  (counsel-mode 1))
+#+end_src
+
+** Diff Highlight
+
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
+#+end_src
+
+** Edit "Org-like" lists in non-Org buffers
+
+#+begin_src emacs-lisp
+(use-package orgalist
+  :after org
+  :pin gnu
+  :hook
+  (message-mode . orgalist-mode))
+#+end_src
+
+** Editorconfig
+
+Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
+their indentation and file format preferences.
+
+#+BEGIN_SRC emacs-lisp
+(use-package editorconfig
+  :diminish "EC"
+  :ensure-system-package editorconfig
+  :custom
+  (editorconfig-exclude-modes (quote (org-mode gist)))
+  :config
+  (editorconfig-mode))
+#+END_SRC
+
+** Flycheck
+
+#+begin_src emacs-lisp
+(use-package flycheck-mode
+  :hook clojure-mode)
+#+end_src
+
+** Highlight & deal with whitespace annoyances
+
+This highlights certain whitespace annoyances, and adds a key binding to
+clean it up.
+
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :bind ("C-c w" . whitespace-cleanup)
+  :custom
+  (whitespace-style '(face empty tabs trailing))
+  :config
+  (global-whitespace-mode t))
+#+END_SRC
+
+** Ivy
+
+I've long been a happy Helm user, but it confuses me (and is slow!)
+in some situations so I thought I'd try again to see if Ivy fares
+any better.
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :diminish
+  :demand
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-x b" . ivy-switch-buffer)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view))
+  :custom
+  (ivy-use-virtual-buffers t)
+  (ivy-count-format "%d/%d ")
+  :config
+  (ivy-mode 1))
+#+end_src
+
+** LSP (Language Server Protocol)
+
+LSP is useful for =M-.= (~find-definitions~) and =M-?=
+(~find-references~).
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure-system-package clojure-lsp
+  :commands lsp
+  :config
+  (dolist (m '(clojure-mode
+               clojurec-mode
+               clojurescript-mode
+               clojurex-mode))
+    (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+  :init
+  (setq lsp-enable-indentation nil)
+  (add-hook 'clojure-mode-hook #'lsp)
+  (add-hook 'clojurec-mode-hook #'lsp)
+  (add-hook 'clojurescript-mode-hook #'lsp))
+#+end_src
+
+** Multiple Cursors
+
+This package is another one of those near-magical ones. It allows me to do
+multiple edits in the same buffer, using several cursors. You can think of
+it as an interactive macro, where you can constantly see what's being done.
+
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+
+  :bind (("C-c M-e" . mc/edit-lines)
+         ("C-c M-a" . mc/mark-all-dwim)
+         ("s-n" . mc/mark-next-like-this)
+         ("s-p" . mc/mark-previous-like-this)))
+#+END_SRC
+
+** Projectile
+
+I use Projectile to navigate my projects. Some of the things I like about
+it are that it provides the following key bindings:
+
+- =C-c p f= :: Find a file in this project.
+- =C-c p k= :: Close all buffers for this project.
+- =C-c p t= :: This switches from an implementation file to its test file,
+               or vice versa. I use this extensively in Clojure mode. It
+               might not make sense for all languages; YMMV.
+- =C-c p s r= :: Ripgrep for something in this project. If point is at
+                 a token, default to searching for that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :diminish
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-dynamic-mode-line nil)
+  (projectile-switch-project-action 'magit-status)
+  :config
+
+  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
+  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
+  ;; use that on my personal machine. I would just set both, but
+  ;; projectile doesn't like it if the directories don't exist.
+  (setq projectile-project-search-path
+	(seq-filter (lambda (e) (file-directory-p e))
+		    '("/usr/local/src" "~/src")))
+
+  (projectile-mode))
+
+(use-package counsel-projectile)
+#+END_SRC
+
+** Rainbow Delimiters
+
+This makes it slightly easier to discern matching parens when the
+nesting goes deep.
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+** Save minibuffer history
+
+This allows us to "tap up" in the minibuffer to recall previous items,
+even from a previous session.
+
+#+BEGIN_SRC emacs-lisp
+(savehist-mode 1)
+#+END_SRC
+
+** Show Matching parens
+
+This is extremely useful. Put the mark on a paren (any of =()[]{}=,
+actually) and Emacs shows the matching closing/opening one.
+
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+#+END_SRC
+
+** SmartParens
+
+Structural editing is a must when editing lisp, and it has bled
+into other aspects of programming for me.  In particular the
+ability to remove surrounding parens / quotes with ~sp-splice-sexp~
+is incredibly useful even when writing prose.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens-config
+  :demand
+  :custom
+  (sp-base-key-bindings 'sp)
+  (sp-show-pair-from-inside t)
+  :config
+  (sp-local-pair 'text-mode "'" nil :actions :rem)
+  (smartparens-global-strict-mode))
+#+END_SRC
+
+** Subword
+
+Treats CapitalizedWords as separate, so we can move forward by
+their components.  Useful in anything that looks like Java.
+
+#+begin_src emacs-lisp
+(use-package subword
+  :hook (prog-mode . subword-mode))
+#+end_src
+
+** Swiper
+
+Invoke swiper (find in current buffer).
+
+#+BEGIN_SRC emacs-lisp
+(use-package swiper
+  :bind (("C-x /" . swiper)))
+#+END_SRC
+
+** Transparently open compressed files
+
+I *do* like it when Emacs transparently opens compressed files. It gives
+me the warm fuzzies.
+
+#+BEGIN_SRC emacs-lisp
+(auto-compression-mode t)
+#+END_SRC
+
+** Visual line mode / word wrapping
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'visual-line-mode)
+#+END_SRC
+
+** Which Key Mode
+
+Show incomplete key cheatsheet.
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :config
+  (which-key-mode))
+#+END_SRC
+
+** Writegood Mode
+
+I'm not a great writer. I need all the crutches I can get. Lucklily,
+Emacs has them.
+
+This helps highlight passive voice, weasel words, etc in writing.
+
+#+BEGIN_SRC emacs-lisp
+(use-package writegood-mode
+  :hook text-mode)
+#+END_SRC
+
+** YAS
+
+A templating engine for Emacs.
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :config
+  (yas-global-mode))
+#+end_src
+
+* Configure major modes
+
+** Clojure
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck-clj-kondo
+  :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo"))
+
+(use-package clojure-mode
+  :ensure-system-package ((lein . leiningen)
+                          (clj . clojure))
+  :config
+  (require 'flycheck-clj-kondo)
+  (put-clojure-indent 'as-> ':defn)
+  (put-clojure-indent 'run ':defn)
+  (put-clojure-indent 'dosync ':defn)
+  (put-clojure-indent 'speculate 1)
+  (put-clojure-indent 'doseq ':defn))
+
+(use-package cider
+  :hook ((cider-mode . sb/unload-cider-jumps)
+	 (cider-repl-mode . sb/unload-cider-jumps))
+  :config
+  (defun sb/unload-cider-jumps ()
+    ;; I prefer lsp's jumps, so kindly don't steal them
+    (define-key cider-mode-map (kbd "M-.") nil)
+    (define-key cider-mode-map (kbd "M-,") nil))
+  :custom
+  (cider-prompt-for-symbol nil)
+  (cider-prefer-local-resources t)
+  (cider-auto-track-ns-form-changes t)
+  (cider-repl-pop-to-buffer-on-connect nil)
+  (cider-eldoc-display-context-dependent-info t)
+  (cider-font-lock-dynamically '(macro core function var)))
+
+(use-package clj-refactor
+  :custom
+  (cljr-suppress-middleware-warnings t))
+#+END_SRC
+
+I want to use some lein plugins across all projects.
+
+We use ~:pedantic? true~ in our project.clj files, as well as lein
+sub-project inheritance.  I think that plays merry hell with also
+loading ~refactor-nrepl~ (lots of complaints about duplications), so
+I add the ~:pedantic? :ranges~.  Not sure why it works, but it
+seems to.
+
+#+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
+{:user {:plugins [[lein-ancient "0.6.15"]
+                  [jonase/eastwood "0.3.5"]
+                  [lein-kibit "0.1.7"]
+                  [lein-environ "1.0.0"]]
+        :pedantic? :ranges}
+ :repl {:plugins [[cider/cider-nrepl "0.25.0-alpha1"]
+                  [refactor-nrepl "2.5.0"]]}}
+#+end_src
+
+** Ediff
+
+Sometimes I have to resolve conflicts. I use Ediff, which I
+(usually) launch from Magit.
+
+*** Automatically Unfold Org files
+
+This snippet makes sure that Org buffers don't start folded, as
+ediff is rather useless in that case. (Credit: Oleh Krehel on
+emacs-orgmode mailing list.)
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-prepare-buffer ()
+  (when (memq major-mode '(org-mode emacs-lisp-mode))
+    (outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+#+END_SRC
+
+*** Picking /both/ sides in a conflict
+
+If both branches add an entry to a list I may want to pick *both*
+sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
+=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
+then A.
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-copy-both-to-C ()
+  (interactive)
+  (ediff-copy-diff ediff-current-difference nil 'C nil
+                   (concat
+                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                    (ediff-get-region-contents
+                    ediff-current-difference 'B
+                    ediff-control-buffer))))
+
+(defun sb/add-d-to-ediff-mode-map ()
+  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+
+(add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
+#+END_SRC
+
+** Elfeed
+
+~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed-org
+  :custom
+  (rmh-elfeed-org-files `(,(expand-file-name "elfeed.org" user-emacs-directory)))
+  :config
+  (elfeed-org))
+
+(use-package elfeed
+  :bind (("C-x w" . elfeed)
+         :map elfeed-search-mode-map
+         ("m" . elfeed-toggle-star) )
+  :ensure-system-package curl
+  :config
+  (defalias 'elfeed-toggle-star
+    (elfeed-expose #'elfeed-search-toggle-all 'star)))
+#+END_SRC
+
+** Eshell
+
+I have started using /Eshell/. It is close to magic. There's not a lot of
+setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
+eshell quickly. This launches eshell if it is not already running, or
+switches to it if it is.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-c s" 'eshell)
+#+END_SRC
+
+Eshell is great, and its Tramp integration allows me to open remote files
+in local Emacs seamlessly with the =find-file= command. (Which I have
+aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
+and has the same config, whether I am on a local machine or a remote one.
+
+** HugSQL
+
+#+begin_src emacs-lisp
+(use-package hugsql
+  :defer t
+  :init
+  (defun sulami/init-hugsql-imenu ()
+    (when (string-suffix-p ".hug.sql" (buffer-file-name))
+      (setq imenu-generic-expression
+	    '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
+  :hook
+  (sql-mode . sulami/init-hugsql-imenu))
+#+end_src
+** Magit & Friends
+
+I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
+git cli any more.  I've seen someone suggest learning Emacs just to
+run Magit.
+
+Forge is an extension to Magit that interacts with GitHub / GitLab etc.
+
+#+BEGIN_SRC emacs-lisp
+(use-package transient)
+
+(use-package magit
+  :bind (("C-x C-g C-s" . magit-status)
+         ("C-x C-g s" . magit-status)
+         ("C-x C-g C-b" . magit-blame-addition)
+         ("C-x C-g b" . magit-blame-addition)))
+
+(use-package forge)
+#+END_SRC
+
+** Markdown
+
+I'm a sucker for lists, and I want to be able to reorder list items
+easily and have them renumbered automatically.
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  ;; I essentially don't use Markdown
+  ;; outside GitHub any more
+  :mode ("\\.md\\'" . gfm-mode)
+  :bind (("M-<up>" . markdown-move-list-item-up)
+         ("M-<down>" . markdown-move-list-item-down))
+  :custom
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-asymmetric-header t))
+#+END_SRC
+** Org drill (for learning new things)
+
+I use org-drill for drilling music theory.
+
+#+begin_src emacs-lisp
+(use-package org-drill
+  :custom
+  (org-drill-add-random-noise-to-intervals-p t)
+  (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+#+end_src
+
+** Protobuf Mode
+We use protobufs for service-to-service communication at work.
+
+#+begin_src emacs-lisp
+(use-package protobuf-mode)
+#+end_src
+
+** Ripgrep
+
+Even faster than The Silver Searcher, apparently.
+
+#+begin_src emacs-lisp
+(use-package ripgrep
+  :ensure-system-package (rg . ripgrep))
+#+end_src
+
+** Simple HTML Renderer (HTML Email)
+
+I mostly use shr for reading HTML mail.  I normally use a
+fullscreen window, but I don't like reading HTML mails with lines
+running all the way across.  Thus I prefer linebreaks roughly every
+80 characters.
+
+#+begin_src emacs-lisp
+(setq shr-width 80)
+#+end_src
+
+** Spell Checking
+
+I use aspell, with British English dictionary.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ispell
+  :ensure-system-package aspell
+  :custom
+  (ispell-dictionary "british")
+  (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
+#+END_SRC
+
+Configure aspell and let it find dictionaries:
+
+#+begin_src conf :tangle ~/.aspell.conf
+master british
+#+end_src
+
+** Tramp
+
+Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]],
+and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
+
+#+begin_src emacs-lisp
+(setq tramp-default-method "ssh"
+      tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C'")
+
+;; Various speedups
+;; from https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
+(setq remote-file-name-inhibit-cache 3600
+      tramp-completion-reread-directory-timeout nil
+      vc-ignore-dir-regexp (format "%s\\|%s"
+				   vc-ignore-dir-regexp
+				   tramp-file-name-regexp)
+      tramp-verbose 0)
+
+;; Disable the history file on remote hosts
+(setq tramp-histfile-override t)
+
+;; Save backup files locally
+;; from https://stackoverflow.com/a/47021266
+(add-to-list 'backup-directory-alist
+	     (cons tramp-file-name-regexp "/tmp/emacs-backup/"))
+#+end_src
+
+** Wgrep (aka "writable grep")
+
+~wgrep~ mode is pretty close to magic. When in a buffer showing
+grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
+results of the search right from the results buffer!/ I can then
+hit =C-x C-s= to save the results.
+
+Hitting =C-c C-p= while already in writable grep mode I can delete
+the entire matched line by hitting =C-c C-d=.
+
+#+begin_src emacs-lisp
+(use-package wgrep)
+
+#+end_src
+
+** YAML
+
+CircleCI and CloudFormation loves YAML.
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode)
+#+END_SRC
+
+* Org mode
+
+I use Org mode for all writing I initiate.  Org mode's support for
+tables, TOC, footnotes, TODO and Agenda items makes it an easy
+choice.  Gists and GitHub READMEs support Org mode too, and I can
+export to other formats including if I want.
+
+The Org manual expects the =C-c {l,a,c}= keybindings to be available
+in any mode, so define them globally.  I prefer to follow
+conventions.  It makes reading the manual and tutorials a lot
+easier!
+
+I use Org's refiling when "refactoring" documents such as this one.
+I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+
+I use Org Agenda for keeping track of my TODOs. I don't normally use
+properties, so I ignore most to help speed up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]]) I
+configure TODO list and tag search to ignore future scheduled,
+deadlined, and timestamped issues. These will show in the Agenda
+eventually anyway.
+
+I love Org's markup so much I wrote a JIRA export backend for it.  I
+also write in Org and export to GitHub.  GitHub unfortunately
+doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
+exporter, as this deletes linebreaks.  This means the rendered
+paragraphs re-flow properly on GitHub.
+
+Set up capture templates.  I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog
+post]] (and YouTube series).  It has grown a bit since then.
+
+Org Babel is magical: execute code from different languages in
+the same file, and capture the output!  I list the languages I want
+to support.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure org-plus-contrib
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+	 ;; I try to track time...
+	 ("C-c C-x C-j" . org-clock-goto)
+         :map org-mode-map
+         ("C-x C-<return>" . org-insert-subheading)
+         ("C-S-<return>" . org-insert-todo-subheading)
+         ("C-n" . org-next-link)
+         ("C-p" . org-previous-link))
+
+  :mode (("\\.org\\'" . org-mode)
+         ("\\.org_archive\\'" . org-mode))
+
+  :init
+  (setq org-default-notes-file (expand-file-name
+                                (concat
+                                 (car (split-string (system-name) "\\."))
+                                 ".org")
+                                "~/org"))
+  :custom
+  ;; Whitespace and edits
+  (org-adapt-indentation nil)
+  (org-src-preserve-indentation nil)
+  (org-edit-src-content-indentation 0)
+  (org-link-file-path-type 'relative)
+  (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
+  (org-catch-invisible-edits 'smart)
+  (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+  (org-export-backends '(html gfm jira latex))
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
+  (org-log-done 'time)
+  (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
+
+  (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
+                        (org-agenda-files . (:tag . "RECURRING"))
+			(org-agenda-files . (:maxlevel . 1))))
+  (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
+  (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
+  (org-agenda-include-diary t)
+  (org-agenda-files '("~/org"))
+
+  (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
+  (org-agenda-tags-todo-honor-ignore-options t)
+  (org-agenda-todo-ignore-scheduled 'future)
+  (org-agenda-todo-ignore-deadlines 'future)
+  (org-agenda-todo-ignore-with-date 'future)
+  (org-agenda-todo-ignore-timestamp 'future)
+  (org-agenda-skip-deadline-prewarning-if-scheduled t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+
+  (org-capture-templates
+   '(("t" "TODOs")
+     ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
+     ("tc" "Plain TODO & Clock in" entry (file "") (file "templates/todo.org") :clock-in t :clock-keep t)
+     ("tj" "Write up Jira" entry (file "agenda/work_tasks.org") (file "templates/jira.org") :clock-in t)
+     ("tl" "TODO with link to here" entry (file "") (file "templates/todo-with-link.org"))
+     ("tp" "Project" entry (file "") (file "templates/proj.org"))
+     ("tT" "Trip" entry (file "") (file "templates/trip.org"))
+     ("tb" "Blog Idea" plain (file "") (file "templates/blog-post.org"))
+
+     ("h" "A Haiku" entry (file "haiku.org") (file "templates/haiku.org"))
+
+     ("a" "New Achievement" entry
+      (file+olp+datetree "~/org/cci/achievements.org")
+      "* %?" :tree-type week)
+
+     ("n" "New Note (for reference)" entry
+      (file "~/org/cci/notes.org")
+      (file "templates/note.org"))
+
+     ("c" "Contact" entry (file "~/org/contacts.org") (file "templates/contact.org"))
+
+     ("R" "Metre Readings")
+     ("Rg" "New Gas Meter Reading" table-line
+      (file "~/org/notes/gas-consumption.org")
+      (file "templates/gas-consumption.org"))
+     ("Re" "New Electricity Meter Reading" table-line
+      (file "~/org/notes/electricity-consumption.org")
+      (file "templates/electricity-consumption.org"))
+
+     ("r" "New GTD Review" entry
+      (file+olp+datetree "~/org/archive/gtd_review.org")
+      (file "templates/gtd-review.org") :clock-in t)))
+
+  (org-agenda-custom-commands
+   '(("w" "Work: Day Agenda & Top Tasks"
+      ((agenda "")
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
+      ((org-agenda-span 'day)
+       (org-agenda-tag-filter-preset '("-@home" "-MAYBE"))))
+     ("h" "Home: Day Agenda & Top Tasks"
+      ((agenda "")
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
+      ((org-agenda-span 'day)
+       (org-agenda-tag-filter-preset '("-@work" "-MAYBE"))))
+     ("g" . "Getting Things Done")
+     ("gm" "Maybe"
+      ((todo "PROJ")
+       (tags-todo "-PROJ/TODO"))
+      ((org-agenda-tag-filter-preset '("+MAYBE"))))
+     ("gc" "Review for Tasks Complete"
+      todo "TODO"
+      ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING"))
+       (org-agenda-todo-ignore-scheduled nil)
+       (org-agenda-todo-ignore-deadlines nil)
+       (org-agenda-todo-ignore-with-date nil)
+       (org-agenda-todo-ignore-timestamp nil)))
+     ("gw" "Waiting tasks" todo "WAITING")
+     ("ga" "Archivable"
+      ((todo "COMPLETE")
+       (tags "-PROJ/DONE")
+       (tags "-PROJ/CANCELLED")))
+     ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
+
+   :config
+   (defun org-agenda-tag-from-system-name ()
+     (let ((name (car (split-string (system-name) "\\."))))
+       (cond ((equal name "Pearmain") "@work")
+	     ((equal name "Margil") "@home")
+	     (t ""))))
+
+   (org-babel-do-load-languages 'org-babel-load-languages
+				'((emacs-lisp . t)
+				  (sql . t)
+				  (shell . t)
+                                  (verb . t))))
+
+  (require 'ob-shell))
+
+(use-package org-inlinetask
+  :ensure org-plus-contrib)
+
+(use-package verb
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+#+END_SRC
+** Org-Jira
+
+#+begin_src emacs-lisp
+(use-package org-jira
+  :defer t
+  :custom
+  (jiralib-url "https://circleci.atlassian.net")
+  ;; FIXME haven't confirmed these yet, probably wrong.
+  ;; (org-jira-pross-issue-flow '(("Ready for Dev" . "In Progress")
+  ;;                              ("In Progress" . "Code Review")
+  ;;                              ("Code Review" . "Production Testing")
+  ;;                              ("Production Testing" . "Done")
+  ;;                              ("Done" . "In Progress")))
+  (org-jira-custom-jqls
+   '(;; Ready for dev
+     (:jql " issuetype != Epic and \"Dev Team\" = Pipelines and status in (\"Ready for Dev\")"
+           :limit 10
+           :filename "jira-ready-for-dev")
+     ;; My tickets
+     (:jql " issuetype != Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
+           :limit 10
+           :filename "jira-my-tickets")
+     ;; My epics
+     (:jql " issuetype = Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
+           :limit 10
+           :filename "jira-my-epics"))))
+
+#+end_src
+
+* Themes
+
+** Load one theme at a time
+
+For years I thought that theme switching in Emacs was broken---until
+I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
+supports /multiple themes being active at the same time/, which I'm
+sure is convenient sometimes but becomes a right nuisance when
+attempting to switch themes IMO. Add a utility function to disable
+all currently enabled themes first.
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/disable-all-themes ()
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(defun sb/load-theme (the-theme)
+  "Enhance `load-theme' by first disabling enabled themes."
+  (sb/disable-all-themes)
+  (load-theme the-theme t))
+#+END_SRC
+
+** Hydra Theme Switching
+
+Switch themes with Hydra! This loads all available themes and
+presents a menu to let you switch between them. The theme switcher
+is bound to =C-c w t=.
+
+The switcher is, regretfully, not automatically updated when
+installing new themes from the package selector menu, so you need to
+evaluate this block again manually.
+
+#+BEGIN_SRC emacs-lisp
+(setq sb/hydra-selectors
+      "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+(defun sb/load-theme-heads (themes)
+  (cl-map 'list
+          (lambda (a b)
+            (list (char-to-string a)
+                  `(sb/load-theme ',b)
+                  (symbol-name b)))
+          sb/hydra-selectors
+          themes))
+
+(defun sb/switch-theme ()
+  (interactive)
+  (call-interactively
+   (eval `(defhydra sb/select-theme (:hint nil :color pink)
+            "Select Theme"
+            ,@(sb/load-theme-heads (custom-available-themes))
+            ("DEL" (sb/disable-all-themes))
+            ("RET" nil "done" :color blue)))))
+#+END_SRC
+
+** Default Theme
+
+For years I've been using Leuven as my default theme. In general I
+like white / light backgrounds, and I like how it has special styles
+to make Org mode documents a pleasure to look at. However, right now
+I'm experimenting with "Doom solarized light".
+
+#+begin_src emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :config
+  (sb/load-theme 'doom-solarized-light))
+#+end_src
+
+* Load Optional Configuration
+
+Check if we have additional tangled config files to load.
+
+#+begin_src emacs-lisp
+(dolist (cfg '("email.el" "blogging.el"))
+  (let ((config-file (expand-file-name cfg user-emacs-directory)))
+    (when (file-exists-p config-file)
+      (load config-file))))
+#+end_src
