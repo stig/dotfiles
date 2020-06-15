@@ -1160,7 +1160,6 @@ to support.
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
-
    (defun org-agenda-tag-from-system-name ()
      (let ((name (car (split-string (system-name) "\\."))))
        (cond ((equal name "Pearmain") "@work")
