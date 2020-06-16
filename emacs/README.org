@@ -1041,6 +1041,12 @@ the same file, and capture the output!  I list the languages I want
 to support.
 
 #+BEGIN_SRC emacs-lisp
+(defun org-agenda-tag-from-system-name ()
+  (let ((name (car (split-string (system-name) "\\."))))
+    (cond ((equal name "Pearmain") "@work")
+	  ((equal name "Margil") "@home")
+	  (t ""))))
+
 (use-package org
   :ensure org-plus-contrib
   :bind (("C-c l" . org-store-link)
@@ -1162,11 +1168,7 @@ to support.
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
-   (defun org-agenda-tag-from-system-name ()
-     (let ((name (car (split-string (system-name) "\\."))))
-       (cond ((equal name "Pearmain") "@work")
-	     ((equal name "Margil") "@home")
-	     (t ""))))
+   
 
    (org-babel-do-load-languages 'org-babel-load-languages
 				'((emacs-lisp . t)
