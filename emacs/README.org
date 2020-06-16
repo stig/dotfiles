@@ -12,11 +12,13 @@ hitting =C-c C-v C-t=.
 
 * Installing
 
-I install Emacs from [[https://emacsformacosx.com/][emacsformacosx.com]].
+I install Emacs using brew, using the [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] tap:
 
-I install system dependencies (e.g. =notmuch=, =the-silver-searcher=
-et. al.) using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]]
-extension.
+: brew tap d12frosted/emacs-plus
+: brew install emacs-plus@28 --with-jansson --with-dbus
+
+I install system dependencies (e.g. =notmuch=, =ripgrep=, et. al.)
+using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension.
 
 #+begin_src sh
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
