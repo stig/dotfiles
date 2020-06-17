@@ -1,0 +1,9 @@
+#+title: Zsh setup
+
+I mainly use Emacs' Eshell, but when I do find myself in Zsh I don't
+want to be without these aliases.
+
+#+begin_src zsh :tangle ~/.zshrc
+alias dc=docker-compose
+alias dcl='docker-compose logs --follow --tail 10'
+#+end_src
