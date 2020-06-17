@@ -1119,9 +1119,15 @@ paragraphs re-flow properly on GitHub.
        (tags "-PROJ/DONE")
        (tags "-PROJ/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
-(use-package org-inlinetask
-  :ensure org-plus-contrib)
+#+end_src
 
+** Inline tasks
+
+I've been wanting to experiment with inlinetasks for a while. They're
+supposedly TODO items that don't disrupt the surrounding structure.
+
+#+begin_src emacs-lisp
+(use-package org-inlinetask :ensure org-plus-contrib)
 #+end_src
 
 ** Capturing
