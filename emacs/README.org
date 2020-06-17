@@ -1168,8 +1168,6 @@ to support.
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))
 
    :config
-   
-
    (org-babel-do-load-languages 'org-babel-load-languages
 				'((emacs-lisp . t)
 				  (sql . t)
