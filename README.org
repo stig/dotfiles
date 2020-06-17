@@ -1,5 +1,14 @@
 #+title: My Configuration
 
-This is my configuration. It's mostly about [[file:emacs/README.org][Emacs]].
+This is my configuration. To be honest it's centered around [[file:emacs/README.org][Emacs]],
+with smatterings of other stuff.
 
+Execute this next block of source code to tangle the main config
+files after checking out.
 
+#+begin_src emacs-lisp :results silent
+(require 'ob-tangle)
+(dolist (config-file '("emacs/README.org" "zsh/README.org"))
+  (when (file-exists-p config-file)
+    (org-babel-tangle-file config-file)))
+#+end_src
