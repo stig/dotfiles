@@ -1205,6 +1205,10 @@ works really well with REST APIs to reduce boilerplate.
 #+end_src
 
 ** Roam
+[[https://github.com/org-roam/org-roam][
+Org-roam]] is a new one for me. It's meant to be an "exo-brain",
+modelled after the Zettelkasten method. I'm excited to try it and see
+if it improves how I work.
 
 #+begin_src emacs-lisp
 (use-package org-roam
