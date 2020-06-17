@@ -1194,8 +1194,12 @@ to support.
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory "~/org/roam")
+  (org-roam-completion-system 'ivy)
+  ;; The below required due to https://github.com/org-roam/org-roam/issues/597
+  (org-roam-index-file "~/org/roam/index.org")
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
+	       ("C-c n j" . org-roam-jump-to-index)
                ("C-c n f" . org-roam-find-file)
                ("C-c n g" . org-roam-show-graph))
               :map org-mode-map
