@@ -1172,10 +1172,8 @@ to support.
 				'((emacs-lisp . t)
 				  (sql . t)
 				  (shell . t)
-                                  (verb . t))))
-
-  (require 'ob-shell))
-
+                                  (verb . t)))))
+(require 'ob-shell)
 (use-package org-inlinetask
   :ensure org-plus-contrib)
 
