@@ -1181,9 +1181,30 @@ to support.
 (use-package org-inlinetask
   :ensure org-plus-contrib)
 
-(use-package verb
-  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+END_SRC
+
+** Verb
+
+This is a package I use for interacting with REST HTTP APIs. Before
+arriving at it I tried restclient, walkman, and http.el. All have
+their strengths and weaknesses, but Verb seems the most well-rounded
+feature set. The hierachical inheritance is what really sold me, as it
+works really well with REST APIs to reduce boilerplate.
+
+#+begin_src emacs-lisp
+(use-package verb
+  :init
+  (defun sb/api-token-for-host (host)
+    "Return a token for the specified host."
+    (let ((found (nth 0 (auth-source-search :host host :create nil))))
+      (when found
+	(let ((secret (plist-get found :secret)))
+	  (if (functionp secret)
+	      (funcall secret)
+	    secret)))))
+  :config
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+#+end_src
 
 ** Roam
 
