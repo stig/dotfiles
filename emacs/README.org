@@ -1255,6 +1255,24 @@ if it improves how I work.
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
 #+end_src
+
+*** Org Roam Protocol
+
+This should allow interaction with Roam from outside Emacs, for
+example capturing from a Firefox bookmarklet.
+
+#+begin_src emacs-lisp
+(use-package org-roam-protocol
+  :after org-roam
+  :init
+  (server-start)
+  :custom
+  (org-roam-capture-ref-templates
+   '(("r" "ref" plain #'org-roam-capture--get-point ""
+      :file-name "websites/${slug}"
+      :head "#+title: ${title}\n#+roam_key: ${ref}\n"
+      :unnarrowed t))))
+#+end_src
 ** Org-Jira
 
 #+begin_src emacs-lisp
