@@ -1243,6 +1243,7 @@ if it improves how I work.
   :custom
   (org-roam-directory "~/org/roam")
   (org-roam-completion-system 'ivy)
+  (org-roam-tag-sources '(prop all-directories))
   ;; The below required due to https://github.com/org-roam/org-roam/issues/597
   (org-roam-index-file "~/org/roam/index.org")
   :bind (:map org-roam-mode-map
