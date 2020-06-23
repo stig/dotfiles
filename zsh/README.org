@@ -6,4 +6,6 @@ want to be without these aliases.
 #+begin_src zsh :tangle ~/.zshrc
 alias dc=docker-compose
 alias dcl='docker-compose logs --follow --tail 10'
+alias dcu=docker-compose up -d
+alias ff=emacsclient
 #+end_src
