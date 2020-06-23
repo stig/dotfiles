@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: commit
+# key: commit
+# --
+**Best reviewed commit-by-commit.**
+
+Navigate to the first commit and use <kbd>n</kbd> (next commit) and <kbd>p</kbd> (previous commit) to navigate.
+
+Please review commit messages as well; each should describe the motivation for the change.
