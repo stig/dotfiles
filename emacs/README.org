@@ -12,17 +12,9 @@ hitting =C-c C-v C-t=.
 
 * Installing
 
-I install Emacs using brew, using the [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] tap:
+I install Emacs from the [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] tap, along with all other tools
+(~ripgrep~, etc) using a [[file:../Brewfile][Brewfile]].
 
-: brew tap d12frosted/emacs-plus
-: brew install emacs-plus@28 --with-jansson --with-dbus
-
-I install system dependencies (e.g. =notmuch=, =ripgrep=, et. al.)
-using [[https://brew.sh][homebrew]], via =use-package='s [[https://github.com/jwiegley/use-package#use-package-ensure-system-package][:ensure-system-package]] extension.
-
-#+begin_src sh
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-#+end_src
 * Early Init
 
 Emacs 27 loads =~/.config/emacs/early-init.el= before loading GUI
@@ -71,9 +63,6 @@ I install most packages via Melpa and Org, so I add them to
 
 Install ~use-package~ and configure it to install packages by default.
 
-In addition use-package itself, I also install the
-~:ensure-system-package~ extension to install system packages.
-
 #+begin_src emacs-lisp
 (seq-doseq (package '(use-package bind-key diminish))
   (unless (package-installed-p package)
@@ -84,9 +73,6 @@ In addition use-package itself, I also install the
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
-
-(use-package use-package-ensure-system-package
-  :ensure t)
 #+end_src
 * Configure PATH
 
@@ -365,11 +351,7 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 & pinentry for that to work.
 
 #+begin_src emacs-lisp
-(use-package gnupg
-  :ensure-system-package ((gpg . gnupg) pinentry)
-  :no-require t
-  :custom
-  (epa-pinentry-mode 'loopback))
+(setq epa-pinentry-mode 'loopback)
 #+end_src
 
 #+begin_src conf :mkdirp t :tangle ~/.gnupg/gpg-agent.conf
@@ -479,7 +461,6 @@ their indentation and file format preferences.
 #+BEGIN_SRC emacs-lisp
 (use-package editorconfig
   :diminish "EC"
-  :ensure-system-package editorconfig
   :custom
   (editorconfig-exclude-modes (quote (org-mode gist)))
   :config
@@ -535,7 +516,6 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?=
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure-system-package clojure-lsp
   :commands lsp
   :config
   (dolist (m '(clojure-mode
@@ -718,12 +698,9 @@ A templating engine for Emacs.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck-clj-kondo
-  :ensure-system-package (clj-kondo . "borkdude/brew/clj-kondo"))
+(use-package flycheck-clj-kondo)
 
 (use-package clojure-mode
-  :ensure-system-package ((lein . leiningen)
-                          (clj . clojure))
   :config
   (require 'flycheck-clj-kondo)
   (put-clojure-indent 'as-> ':defn)
@@ -830,7 +807,6 @@ then A.
   :bind (("C-x w" . elfeed)
          :map elfeed-search-mode-map
          ("m" . elfeed-toggle-star) )
-  :ensure-system-package curl
   :config
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'star)))
@@ -924,8 +900,7 @@ We use protobufs for service-to-service communication at work.
 Even faster than The Silver Searcher, apparently.
 
 #+begin_src emacs-lisp
-(use-package ripgrep
-  :ensure-system-package (rg . ripgrep))
+(use-package ripgrep)
 #+end_src
 
 ** Simple HTML Renderer (HTML Email)
@@ -945,7 +920,6 @@ I use aspell, with British English dictionary.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
-  :ensure-system-package aspell
   :custom
   (ispell-dictionary "british")
   (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
