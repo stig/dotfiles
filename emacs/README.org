@@ -1038,6 +1038,17 @@ paragraphs re-flow properly on GitHub.
   (org-export-backends '(html gfm jira latex))
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+  (org-todo-keywords '((sequence "TODO(t!)" "WAITING(w@)" "|" "DONE(d!)")
+		       (sequence "PROJ(p!)" "|" "COMPLETE(!)")
+		       (sequence "READY(!)" "WIP(!)" "REVIEW(!)" "TESTING(!)" "|" "DONE(!)") ;; JIRAAAA
+		       (sequence "|" "CANCELLED(@)")))
+
+  (org-tag-alist '(("@work" . "w")
+		   ("@home" . "h")
+		   ("PROJ" . "p")
+		   ("AGENDA" . "a")
+		   ("MAYBE" . "m")))
+
   (org-log-done 'time)
   (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
 
