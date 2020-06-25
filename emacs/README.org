@@ -46,35 +46,46 @@ In case something needs my name/email address.
       user-login-name "stig")
 #+END_SRC
 
-* Initialize package system
+* Set up package system
 
-A lot of my config installs packages from GNU elpa, MELPA, and Org
-elpa. So we need to configure the package system before the rest of
-the config.
+I'm trialling [[https://github.com/raxod502/straight.el][straight.el]] right now. I like that it should make it
+easier to contribute back to modules I use.
 
-I install most packages via Melpa and Org, so I add them to
-~package-archives~. By default it contains only GNU ELPA.
+** Bootstrap ~straight.el~ itself
 
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-#+END_SRC
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
 
 ** Install & configure ~use-package~
 
 Install ~use-package~ and configure it to install packages by default.
 
 #+begin_src emacs-lisp
-(seq-doseq (package '(use-package bind-key diminish))
-  (unless (package-installed-p package)
-    (package-refresh-contents)
-    (package-install package)))
+(straight-use-package 'use-package)
+(straight-use-package 'bind-key)
+(straight-use-package 'diminish)
 
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
+
+;; No need to use ~:straight t~ for every package.
+(setq straight-use-package-by-default t)
 #+end_src
+
 * Configure PATH
 
 I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
@@ -88,7 +99,6 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
 
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
-  :ensure t
   :custom
   (exec-path-from-shell-variables '("PATH" "MANPATH"
 				    "LDFLAGS" "CPPFLAGS"
@@ -472,6 +482,7 @@ their indentation and file format preferences.
 
 #+begin_src emacs-lisp
 (use-package flycheck-mode
+  :straight flycheck
   :hook clojure-mode)
 #+end_src
 
@@ -619,6 +630,7 @@ is incredibly useful even when writing prose.
 
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens-config
+  :straight smartparens
   :demand
   :custom
   (sp-base-key-bindings 'sp)
@@ -833,6 +845,7 @@ and has the same config, whether I am on a local machine or a remote one.
 
 #+begin_src emacs-lisp
 (use-package hugsql
+  :straight nil
   :defer t
   :init
   (defun sulami/init-hugsql-imenu ()
@@ -1012,7 +1025,7 @@ paragraphs re-flow properly on GitHub.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :ensure org-plus-contrib
+  :straight org-plus-contrib
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -1109,7 +1122,8 @@ I've been wanting to experiment with inlinetasks for a while. They're
 supposedly TODO items that don't disrupt the surrounding structure.
 
 #+begin_src emacs-lisp
-(use-package org-inlinetask :ensure org-plus-contrib)
+(use-package org-inlinetask
+  :straight org-plus-contrib)
 #+end_src
 
 ** Capturing
@@ -1123,7 +1137,7 @@ usually I am in a work frame of mind on my work computer and vice versa.
 
 #+begin_src emacs-lisp
 (use-package org
-  :ensure org-plus-contrib
+  :straight org-plus-contrib
   :init
   (defun org-agenda-tag-from-system-name ()
     (let ((name (car (split-string (system-name) "\\."))))
@@ -1250,6 +1264,7 @@ example capturing from a Firefox bookmarklet.
 #+begin_src emacs-lisp
 (use-package org-roam-protocol
   :after org-roam
+  :straight nil
   :init
   (server-start)
   :custom
@@ -1372,7 +1387,6 @@ I'm experimenting with "Doom solarized light".
 
 #+begin_src emacs-lisp
 (use-package doom-themes
-  :ensure t
   :config
   (sb/load-theme 'doom-solarized-light))
 #+end_src

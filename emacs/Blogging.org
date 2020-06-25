@@ -230,10 +230,10 @@ This needs clearing up.
 * Syntax highlighting for languages I use on my blog
 
 #+begin_src emacs-lisp
-(use-package htmlize :ensure t)
-(use-package clojure-mode :ensure t)
-(use-package clojure-mode-extra-font-locking :ensure t)
-(use-package scala-mode :ensure t)
+(use-package htmlize)
+(use-package clojure-mode)
+(use-package clojure-mode-extra-font-locking)
+(use-package scala-mode)
 
 (org-babel-do-load-languages
  'org-babel-load-languages

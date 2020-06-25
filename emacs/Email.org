@@ -258,6 +258,6 @@ and can reply to it from there.
 
 #+begin_src emacs-lisp
 (use-package ol-notmuch
-  :ensure org-plus-contrib
+  :straight org-plus-contrib
   :after (org notmuch))
 #+end_src
