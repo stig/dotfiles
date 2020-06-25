@@ -1268,7 +1268,7 @@ of notes.
 (use-package org-roam-server
   :custom
   (org-roam-server-host "127.0.0.1")
-  (org-roam-server-port 8080)
+  (org-roam-server-port 4040)
   (org-roam-server-export-inline-images t)
   (org-roam-server-authenticate nil)
   (org-roam-server-network-arrows nil)
