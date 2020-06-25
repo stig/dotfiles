@@ -41,8 +41,9 @@ I also don't need to see a splash screen on every launch. Finally I do
 In case something needs my name/email address.
 
 #+BEGIN_SRC emacs-lisp
-(setq user-full-name "Stig Brautaset")
-(setq user-mail-address "stig@brautaset.org")
+(setq user-full-name "Stig Brautaset"
+      user-mail-address "stig@brautaset.org"
+      user-login-name "stig")
 #+END_SRC
 
 * Initialize package system
