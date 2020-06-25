@@ -1,3 +1,4 @@
+tap "bfontaine/utils"
 tap "d12frosted/emacs-plus"
 tap "homebrew/cask"
 brew "aspell"
