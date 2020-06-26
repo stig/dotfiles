@@ -393,6 +393,21 @@ move sentences around in texts I haven't written.
 (setq sentence-end-double-space nil)
 #+end_src
 
+** Delete buffer and file it is visiting
+
+Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
+
+#+begin_src emacs-lisp
+(defun sb/delete-file-and-buffer ()
+  "Deletes a buffer and the file it's visiting."
+  (interactive)
+  (when-let* ((file-name (buffer-file-name))
+              (really (yes-or-no-p (format "Delete %s? "
+                                           file-name))))
+    (delete-file file-name)
+    (kill-buffer)))
+#+end_src
+
 * Configure minor modes
 ** Ace Window
 
