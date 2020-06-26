@@ -1080,7 +1080,8 @@ paragraphs re-flow properly on GitHub.
 		   ("@home" . "h")
 		   ("PROJ" . "p")
 		   ("AGENDA" . "a")
-		   ("MAYBE" . "m")))
+		   ("MAYBE" . "m")
+		   ("noexport" . "n")))
 
   (org-log-done 'time)
   (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
