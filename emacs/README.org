@@ -1164,17 +1164,12 @@ usually I am in a work frame of mind on my work computer and vice versa.
 	    ((equal name "Margil") "@home")
 	    (t ""))))
 
-  (setq org-default-notes-file (expand-file-name
-                                (concat
-                                 (car (split-string (system-name) "\\."))
-                                 ".org")
-                                "~/org"))
-
   :custom
+  (org-default-notes-file "~/org/inbox.org")
   (org-capture-templates
    '(("t" "TODOs")
      ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
-     ("tc" "Plain TODO & Clock in" entry (file "") (file "templates/todo.org") :clock-in t :clock-keep t)
+     ("tc" "Plain TODO & Clock in" entry (file "tasks.org") (file "templates/todo.org") :clock-in t :clock-keep t)
      ("tj" "Write up Jira" entry (file "agenda/work_tasks.org") (file "templates/jira.org") :clock-in t)
      ("tl" "TODO with link to here" entry (file "") (file "templates/todo-with-link.org"))
      ("tp" "Project" entry (file "") (file "templates/proj.org"))
