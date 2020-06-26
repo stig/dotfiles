@@ -754,8 +754,12 @@ A templating engine for Emacs.
   (cider-font-lock-dynamically '(macro core function var)))
 
 (use-package clj-refactor
-  :custom
-  (cljr-suppress-middleware-warnings t))
+  :after (yas clojure-mode)
+  :init
+  (defun sb/clojure-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1))
+  :hook (clojure-mode . sb/clojure-mode-hook))
 #+END_SRC
 
 *** Leiningen
