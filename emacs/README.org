@@ -777,7 +777,7 @@ seems to.
 
 #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
 {:user {:plugins [[circleci/deps-plus "0.1.0-SNAPSHOT"]
-                  [cider/cider-nrepl "0.25.0-alpha1"]
+                  [cider/cider-nrepl "0.25.2"]
                   [refactor-nrepl "2.5.0"]]
         :pedantic? :ranges}}
 #+end_src
