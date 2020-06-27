@@ -1286,8 +1286,13 @@ example capturing from a Firefox bookmarklet.
   (org-roam-capture-ref-templates
    '(("r" "ref" plain #'org-roam-capture--get-point ""
       :file-name "website/${slug}"
-      :head "#+title: ${title}\n#+roam_key: ${ref}\n"
-      :unnarrowed t))))
+      :head "#+title: ${title}\n#+roam_key: ${ref}"
+      :unnarrowed t)
+     ("rs" "ref" plain #'org-roam-capture--get-point ""
+      :file-name "website/${slug}"
+      :head "#+title: ${title}\n#+roam_key: ${ref}\n\n${selection}"
+      :unnarrowed t)
+     )))
 #+end_src
 
 *** Org Roam Server
