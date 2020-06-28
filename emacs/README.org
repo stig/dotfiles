@@ -1076,12 +1076,12 @@ paragraphs re-flow properly on GitHub.
 		       (sequence "READY(!)" "WIP(!)" "REVIEW(!)" "TESTING(!)" "|" "DONE(!)") ;; JIRAAAA
 		       (sequence "|" "CANCELLED(@)")))
 
-  (org-tag-alist '(("@work" . "w")
-		   ("@home" . "h")
-		   ("PROJ" . "p")
-		   ("AGENDA" . "a")
-		   ("MAYBE" . "m")
-		   ("noexport" . "n")))
+  (org-tag-alist '(("@work" . ?w)
+		   ("@home" . ?h)
+		   ("PROJ" . ?p)
+		   ("AGENDA" . ?a)
+		   ("MAYBE" . ?m)
+		   ("noexport" . ?n)))
 
   (org-log-done 'time)
   (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
