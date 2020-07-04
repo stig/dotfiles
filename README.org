@@ -17,7 +17,7 @@ files after checking out.
 
 #+begin_src emacs-lisp :results silent
 (require 'ob-tangle)
-(dolist (config-file '("emacs/README.org" "zsh/README.org"))
-  (when (file-exists-p config-file)
-    (org-babel-tangle-file config-file)))
+(dolist (org-file (directory-files-recursively "." ".+\\.org"))
+  (when (file-exists-p org-file)
+    (org-babel-tangle-file org-file)))
 #+end_src
