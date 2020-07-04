@@ -1375,11 +1375,7 @@ I like to use Emacs for /all/ writing, including email. I don't want a
 separate program to read and write emails, so it follows I must /read/
 email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
 
-** Notmuch Setup
-
-Notmuch works pretty well for me out of the box. Mainly I set up a
-keybinding to quickly bring it up. Its threading and MIME handling
-works well.
+Notmuch works pretty well for me out of the box.
 
 Notmuch's Emacs bindings are closely tied to the binary programs, so
 they (strongly) recommend that you don't install Notmuch from ELPA.
@@ -1391,10 +1387,11 @@ folder.
 (use-package notmuch
   :straight nil
   :load-path "/usr/local/opt/notmuch/share/emacs/site-lisp/notmuch/"
+  :demand
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
   :bind (:map notmuch-message-mode
-         ("M-]" . notmuch-cycle-notmuch-buffers))
+              ("M-]" . notmuch-cycle-notmuch-buffers))
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-always-prompt-for-sender t)
