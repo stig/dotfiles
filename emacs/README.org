@@ -8,7 +8,7 @@
 
 This is my Emacs configuration.  Because I'm forgetful, it is a
 [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
-this file, and /tangle/ it into [[file:init.el][init.el]] (and other config files) by
+this file, and /tangle/ it into [[file:../../../../../Users/stig/.config/emacs/init.el][init.el]] (and other config files) by
 hitting =C-c C-v C-t=.
 
 * Installing
