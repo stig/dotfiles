@@ -7,7 +7,7 @@ nice Emacs client.
 
 #+begin_src conf :tangle ~/.notmuch-config
 [database]
-path=/Users/stig/Sync/Mail
+path=/Users/stig/.mail
 
 [user]
 name=Stig Brautaset
@@ -31,9 +31,26 @@ Remove the =new= tag from any messages just before refreshing. Do this
 in a =pre-hook= so we can use the new =new= tag to optimise further
 tagging in the =post-hook= below.
 
-#+BEGIN_SRC sh :tangle "~/Sync/Mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+#+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+set -euo pipefail
+IFS=$'\n\t'
+
+# Make sure we have up-to-date paths
+notmuch new --no-hooks
+
 notmuch tag -new -- tag:new
-notmuch search --output files tag:draft and tag:deleted | xargs rm
+
+# Delete deleted drafts immediately
+notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm || true
+
+# Delete old mail
+notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm || true
+
+# Move spam
+# notmuch search --output=files --format=text0 -- path:"gandi/INBOX/**" and tag:spam | xargs -0tI {} mv -n {} ~/.mail/gandi/spam/new/
+
+# Make sure we have up-to-date paths, again
+notmuch new --no-hooks
 #+END_SRC
 
 * Script to run immediately after checking for new mail
@@ -41,25 +58,35 @@ notmuch search --output files tag:draft and tag:deleted | xargs rm
 Notmuch assigns the =new= tag when it first sees a message, so we
 can use it to limit the search space for further tagging.
 
-#+BEGIN_SRC sh :tangle "~/Sync/Mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+#+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
 # Mute new messages to muted threads
-+muted -- thread:{tag:muted} and tag:new
++muted -- thread:{tag:muted}
 
 # Tag previously unseen messages
-+sent -- path:/sent/ and tag:new
--inbox -- path:/Archive/ and tag:new
++sent -- path:"gandi/sent/**"
+
+-inbox -unread +sent -- path:"gandi/sent/**" or path:"gmail/[Gmail]/Sent Mail/**"
+-inbox -- path:"gandi/archive/**"
+
++circleci -- path:"gmail/**"
 
 # Add specific tags for mailing lists, and remove from inbox
-+lists +org-mode -inbox -- path:/org-mode/ and tag:new
-+lists +clojure -inbox -- path:/clojure/ and tag:new
++lists +org-mode -inbox -- to:emacs-orgmode@gnu.org
++lists +clojure -inbox -- to:clojure@googlegroups.com
 
 # V. low volume lists gets to stay in inbox
-+lists +tuls -- path:/tuls/ and tag:new
++lists +tuls -- to:tuls@debussy.pauken.co.uk
 
-+lobsters -- tag:new and from:lobste.rs
++lobsters -- from:nobody@lobste.rs
++github -- from:notifications@github.com
++jira -- from:jira@circleci.atlassian.net
++pagerduty -- from:no-reply@pagerduty.com
++linkedin -- from:messaging-digest-noreply@linkedin.com
++patreon -- from:bingo@patreon.com
++guitarhacks -- from:support@guitarhacks.com
++amazon -- from:no-reply-aws@amazon.com
 
-+spam -inbox -- tag:new and from:alexandre@les-caves.fr
++spam -inbox -- from:alexandre@les-caves.fr
 EOF
 #+END_SRC
-

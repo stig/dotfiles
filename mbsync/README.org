@@ -1,13 +1,16 @@
 #+title: Mbsync
+#+PROPERTY: header-args:conf :tangle ~/.mbsyncrc :results silent
 
 I use =mbsync= (from the isync suite) to sync mail from my IMAP server
 to my local machine.
+
+* Personal account
 
 To rotate password:
 : security delete-generic-password -s mbsync-gandi-password
 : security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-#+BEGIN_SRC conf :tangle "~/.mbsyncrc"
+#+BEGIN_SRC conf
 IMAPAccount gandi
 Host mail.gandi.net
 User stig@brautaset.org
@@ -19,8 +22,8 @@ IMAPStore remote
 Account gandi
 
 MaildirStore local
-Path ~/Sync/Mail/
-Inbox ~/Sync/Mail/INBOX
+Path ~/.mail/gandi/
+Inbox ~/.mail/gandi/INBOX
 Trash trash
 
 Channel inbox
@@ -40,7 +43,6 @@ Master :remote:org-mode
 Slave :local:org-mode
 Create Slave
 SyncState *
-MaxMessages 500
 ExpireUnread yes
 Expunge Both
 
@@ -68,3 +70,44 @@ Create Slave
 SyncState *
 #+END_SRC
 
+* Work account
+
+To rotate password:
+: security delete-generic-password -s mbsync-gmail-password
+: security add-generic-password -a stig@circleci.com -s mbsync-gmail-password -w APP-SPECIFIC-PASSWORD
+
+#+begin_src conf
+IMAPAccount gmail
+Host imap.gmail.com
+User stig@circleci.com
+PassCmd "security find-generic-password -s mbsync-gmail-password -w"
+SSLType IMAPS
+AuthMechs PLAIN
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
+#CertificateFile ~/.cert/imap.gmail.com.pem
+#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/gmail/
+Inbox ~/.mail/gmail/Inbox
+
+Channel gmail
+Master :gmail-remote:
+Slave :gmail-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+# Or include everything
+Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+Sync All
+Expunge Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+#+end_src

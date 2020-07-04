@@ -1,0 +1,24 @@
+#+title: MSMTP
+
+Add passwords to Keychain:
+
+: security add-internet-password -s smtp.gmail.com -r smtp -a stig@circleci.com -w
+
+#+begin_src conf :tangle ~/.config/msmtp/config
+defaults
+port 587
+tls on
+tls_trust_file /etc/ssl/cert.pem
+auth on
+
+account default
+from stig@brautaset.org
+host mail.gandi.net
+user stig@brautaset.org
+
+account work
+host smtp.gmail.com
+from stig@circleci.com
+user stig@circleci.com
+#+end_src
+
