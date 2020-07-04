@@ -5,7 +5,7 @@ with smatterings of other stuff.
 
 * Install Homebrew & packages
 
-#+begin_src sh :tangle brew-bootstrap.sh
+#+begin_src sh :tangle brew-bootstrap.sh :tangle-mode (identity #o755)
 which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew bundle
 #+end_src
