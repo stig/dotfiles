@@ -7,7 +7,7 @@ nice Emacs client.
 
 #+begin_src conf :tangle ~/.notmuch-config
 [database]
-path=/Users/stig/Mail
+path=/Users/stig/Sync/Mail
 
 [user]
 name=Stig Brautaset
@@ -31,7 +31,7 @@ Remove the =new= tag from any messages just before refreshing. Do this
 in a =pre-hook= so we can use the new =new= tag to optimise further
 tagging in the =post-hook= below.
 
-#+BEGIN_SRC sh :tangle "~/Mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+#+BEGIN_SRC sh :tangle "~/Sync/Mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag -new -- tag:new
 notmuch search --output files tag:draft and tag:deleted | xargs rm
 #+END_SRC
@@ -41,7 +41,7 @@ notmuch search --output files tag:draft and tag:deleted | xargs rm
 Notmuch assigns the =new= tag when it first sees a message, so we
 can use it to limit the search space for further tagging.
 
-#+BEGIN_SRC sh :tangle "~/Mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+#+BEGIN_SRC sh :tangle "~/Sync/Mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
 # Mute new messages to muted threads
 +muted -- thread:{tag:muted} and tag:new

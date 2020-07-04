@@ -19,8 +19,8 @@ IMAPStore remote
 Account gandi
 
 MaildirStore local
-Path ~/Mail/
-Inbox ~/Mail/INBOX
+Path ~/Sync/Mail/
+Inbox ~/Sync/Mail/INBOX
 Trash trash
 
 Channel inbox
