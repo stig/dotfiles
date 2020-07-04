@@ -1388,9 +1388,8 @@ folder.
 
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
+  :straight nil
   :load-path "/usr/local/opt/notmuch/share/emacs/site-lisp/notmuch/"
-  :ensure nil
-  :ensure-system-package (notmuch msmtp (mbsync . isync))
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
   :bind (("C-x m" . sb/notmuch)
