@@ -1,7 +1,8 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:emacs-lisp    :tangle init.el :results silent
+#+PROPERTY: header-args:              :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent
 #+STARTUP: content
 * Introduction
 
@@ -26,7 +27,7 @@ off the mouse interface here to avoid momentary display during launch.
 I also don't need to see a splash screen on every launch. Finally I do
 /not like/ Emacs beeping at me: I prefer a visual bell.
 
-#+BEGIN_SRC emacs-lisp :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/early-init.el
 ;; -*- lexical-binding: t; -*-
 
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -365,7 +366,7 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-#+begin_src conf :mkdirp t :tangle ~/.gnupg/gpg-agent.conf
+#+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
 allow-emacs-pinentry
 allow-loopback-pinentry
 #+end_src

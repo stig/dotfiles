@@ -1,7 +1,7 @@
 #+title: Email Setup
 #+author: Stig Brautaset
 #+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle email.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/email.el :results silent
 #+STARTUP: content
 
 I like to use Emacs for /all/ writing, including email. I don't want a
