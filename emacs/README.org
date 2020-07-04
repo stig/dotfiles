@@ -1393,7 +1393,7 @@ folder.
   :load-path "/usr/local/opt/notmuch/share/emacs/site-lisp/notmuch/"
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
-  :bind (("C-x m" . sb/notmuch)
+  :bind (:map notmuch-message-mode
          ("M-]" . notmuch-cycle-notmuch-buffers))
   :custom
   (notmuch-search-oldest-first nil)
@@ -1428,37 +1428,7 @@ folder.
       "Delete")
      ("m"
       ("+muted")
-      "Mute Thread"))))
-
-  :config
-  (defun sb/notmuch (arg)
-    "Launch notmuch. If ran with prefix arg, launch mbsync in the
-background, and automatically refresh the current buffer when
-done. With two prefix args, launch mbsync with `--all` rather
-than just for inboxes."
-    (interactive "p")
-    (notmuch)
-    (if (> arg 1)
-        (set-process-sentinel
-         (sb/mbsync (if (eq 4 arg) "inbox" "--all"))
-         (lambda (proc state)
-           (message nil) ;; clear minibuffer
-           (notmuch-poll-and-refresh-this-buffer))))))
-#+END_SRC
-
-** Invoke mbsync from Emacs
-
-I don't like to leave Emacs.  Thus I create a function to call
-mbsync as an async shell process.  I run /this/ from the function I
-use to launch Notmuch.
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/mbsync (&rest group)
-  (interactive)
-  (let ((group (or (and (car group) group) '("--all")))
-        (command `("mbsync" "--verbose" "--quiet" ,@group)))
-    (message "Starting %s.." (mapconcat 'identity command " "))
-    (apply 'start-process "mbsync" "*mbsync*" command)))
+      "Mute Thread")))))
 #+END_SRC
 
 * Themes
