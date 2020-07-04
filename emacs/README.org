@@ -827,6 +827,9 @@ then A.
 
 ~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
 
+I keep my Elfeed DB in a folder that I sync between my work and home
+machine, so I don't have to mark stuff read in multiple places.
+
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed-org
   :custom
@@ -838,6 +841,8 @@ then A.
   :bind (("C-x w" . elfeed)
          :map elfeed-search-mode-map
          ("m" . elfeed-toggle-star) )
+  :custom
+  (elfeed-db-directory "~/Sync/elfeed")
   :config
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'star)))
