@@ -1,0 +1,70 @@
+#+title: Mbsync
+
+I use =mbsync= (from the isync suite) to sync mail from my IMAP server
+to my local machine.
+
+To rotate password:
+: security delete-generic-password -s mbsync-gandi-password
+: security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
+
+#+BEGIN_SRC conf :tangle "~/.mbsyncrc"
+IMAPAccount gandi
+Host mail.gandi.net
+User stig@brautaset.org
+SSLType IMAPS
+AuthMechs LOGIN
+PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+
+IMAPStore remote
+Account gandi
+
+MaildirStore local
+Path ~/Mail/
+Inbox ~/Mail/INBOX
+Trash trash
+
+Channel inbox
+Master :remote:
+Slave :local:
+Create Slave
+SyncState *
+
+Channel sent
+Master :remote:Sent
+Slave :local:sent
+Create Slave
+SyncState *
+
+Channel org-mode
+Master :remote:org-mode
+Slave :local:org-mode
+Create Slave
+SyncState *
+MaxMessages 500
+ExpireUnread yes
+Expunge Both
+
+Channel clojure
+Master :remote:clojure
+Slave :local:clojure
+Create Slave
+SyncState *
+MaxMessages 500
+ExpireUnread yes
+Expunge Both
+
+# Channel tuls
+# Master :remote:tuls
+# Slave :local:tuls
+# Create Slave
+# SyncState *
+# MaxMessages 500
+# Expunge Both
+
+Channel archive
+Master :remote:Archive
+Slave :local:archive
+Create Slave
+SyncState *
+#+END_SRC
+

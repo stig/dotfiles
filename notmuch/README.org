@@ -1,0 +1,65 @@
+#+title: Notmuch
+
+I currently use [[https://notmuchmail.org][Notmuch]] for reading and sending Email, as it has a
+nice Emacs client.
+
+* Configuring Notmuch
+
+#+begin_src conf :tangle ~/.notmuch-config
+[database]
+path=/Users/stig/Mail
+
+[user]
+name=Stig Brautaset
+primary_email=stig@brautaset.org
+other_email=stig@circleci.com
+
+[new]
+tags=new;unread;inbox
+ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
+
+[search]
+exclude_tags=deleted;spam;muted
+
+[maildir]
+synchronize_flags=true
+#+end_src
+
+* Script to run immediately before checking for new mail
+
+Remove the =new= tag from any messages just before refreshing. Do this
+in a =pre-hook= so we can use the new =new= tag to optimise further
+tagging in the =post-hook= below.
+
+#+BEGIN_SRC sh :tangle "~/Mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+notmuch tag -new -- tag:new
+notmuch search --output files tag:draft and tag:deleted | xargs rm
+#+END_SRC
+
+* Script to run immediately after checking for new mail
+
+Notmuch assigns the =new= tag when it first sees a message, so we
+can use it to limit the search space for further tagging.
+
+#+BEGIN_SRC sh :tangle "~/Mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+notmuch tag --batch <<EOF
+# Mute new messages to muted threads
++muted -- thread:{tag:muted} and tag:new
+
+# Tag previously unseen messages
++sent -- path:/sent/ and tag:new
+-inbox -- path:/Archive/ and tag:new
+
+# Add specific tags for mailing lists, and remove from inbox
++lists +org-mode -inbox -- path:/org-mode/ and tag:new
++lists +clojure -inbox -- path:/clojure/ and tag:new
+
+# V. low volume lists gets to stay in inbox
++lists +tuls -- path:/tuls/ and tag:new
+
++lobsters -- tag:new and from:lobste.rs
+
++spam -inbox -- tag:new and from:alexandre@les-caves.fr
+EOF
+#+END_SRC
+
