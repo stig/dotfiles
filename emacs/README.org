@@ -7,7 +7,7 @@
 * Introduction
 
 This is my Emacs configuration.  Because I'm forgetful, it is a
-[[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspaced with code.  I edit
+[[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspersed with code.  I edit
 this file, and /tangle/ it into [[file:../../../../../Users/stig/.config/emacs/init.el][init.el]] (and other config files) by
 hitting =C-c C-v C-t=.
 
@@ -928,17 +928,8 @@ running all the way across.  Thus I prefer linebreaks roughly every
 I use aspell, with British English dictionary.
 
 #+BEGIN_SRC emacs-lisp
-(use-package ispell
-  :custom
-  (ispell-dictionary "british")
-  (ispell-extra-args '("-W" "2" "--sug-mode=ultra")))
+(use-package ispell)
 #+END_SRC
-
-Configure aspell and let it find dictionaries:
-
-#+begin_src conf :tangle ~/.aspell.conf
-master british
-#+end_src
 
 ** Tramp
 
@@ -1399,3 +1390,4 @@ Check if we have additional tangled config files to load.
     (when (file-exists-p config-file)
       (load config-file))))
 #+end_src
+

@@ -1,6 +1,6 @@
 #+title: My Configuration
 
-This is my configuration. To be honest it's centered around [[file:emacs/README.org][Emacs]],
+This is my configuration. To be honest it's centred around [[file:emacs/README.org][Emacs]],
 with smatterings of other stuff.
 
 * Install Homebrew & packages
