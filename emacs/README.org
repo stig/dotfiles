@@ -366,11 +366,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-#+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
-allow-emacs-pinentry
-allow-loopback-pinentry
-#+end_src
-
 ** Remove ANSI colours
 
 #+begin_src emacs-lisp

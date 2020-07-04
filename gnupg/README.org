@@ -1,0 +1,9 @@
+#+title: GnuPG
+
+Set up GnuPG to use pinentry, and allow me to use it from Emacs.
+
+#+begin_src conf :tangle ~/.gnupg/gpg-agent.conf
+allow-emacs-pinentry
+allow-loopback-pinentry
+#+end_src
+
