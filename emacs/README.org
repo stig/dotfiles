@@ -92,10 +92,10 @@ Install ~use-package~ and configure it to install packages by default.
 I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
 
 The GUI Emacs gets exec path from the system, rather than the
-login shell.  We have to load PATH et. al. from the shell to get
+login shell.  We have to load ~PATH~ et. al. from the shell to get
 access to programs installed by Homebrew.
 
-Copy PATH and certain other variables from my login shell so these
+Copy ~PATH~ and certain other variables from my login shell so these
 variables are available in Eshell.  (And elsewhere in Emacs.)
 
 #+BEGIN_SRC emacs-lisp
@@ -103,6 +103,7 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
   :custom
   (exec-path-from-shell-variables '("PATH" "MANPATH"
 				    "LDFLAGS" "CPPFLAGS"
+				    "EDITOR"
 				    "JAVA_HOME"))
   :config
   (exec-path-from-shell-initialize))
