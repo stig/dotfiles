@@ -17,7 +17,9 @@ files after checking out.
 
 #+begin_src emacs-lisp :results silent
 (require 'ob-tangle)
-(dolist (org-file (directory-files-recursively "." ".+\\.org"))
-  (when (file-exists-p org-file)
+(dolist (org-file (directory-files-recursively "." ".+\\.org\\'"))
+  (when (and (file-exists-p org-file)
+	     (not (equal (expand-file-name org-file)
+			 (buffer-file-name))))
     (org-babel-tangle-file org-file)))
 #+end_src
