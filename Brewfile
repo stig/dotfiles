@@ -1,6 +1,7 @@
 tap "bfontaine/utils"
 tap "d12frosted/emacs-plus"
 tap "homebrew/cask"
+tap "borkdude/brew"
 
 brew "aspell"
 brew "bfontaine/utils/zprint"
