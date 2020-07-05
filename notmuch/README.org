@@ -16,7 +16,7 @@ other_email=stig@circleci.com
 
 [new]
 tags=new;unread;inbox
-ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db
+ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
 exclude_tags=deleted;spam;muted
