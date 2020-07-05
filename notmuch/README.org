@@ -47,7 +47,7 @@ notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xarg
 notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm || true
 
 # Move spam
-# notmuch search --output=files --format=text0 -- path:"gandi/INBOX/**" and tag:spam | xargs -0tI {} mv -n {} ~/.mail/gandi/spam/new/
+notmuch search --output=files --format=text0 -- path:"gandi/INBOX/**" and tag:spam | xargs -0tI {} mv -n {} ~/.mail/gandi/Junk/new/
 
 # Make sure we have up-to-date paths, again
 notmuch new --no-hooks
@@ -66,9 +66,12 @@ notmuch tag --batch <<EOF
 # Tag sent mail & remove from inbox
 -inbox -unread +sent -- tag:new path:"gandi/Sent/**" or path:"gmail/[Gmail]/Sent Mail/**"
 
-# Tag mail based on the account.
-+gandi -- path:"gandi/**" tag:new
-+circleci -- path:"gmail/**" tag:new
+-inbox +spam         -- tag:new path:"gandi/Junk/**"
+-inbox +archived     -- tag:new path:"gandi/Archive/**"
++deleted -- tag:new path:"gandi/Trash/**" path:"gmail/[Gmail]/Trash/**"
+
++gandi    -- path:"gandi/**"
++circleci -- path:"gmail/**"
 
 # Add specific tags for mailing lists, and remove from inbox
 +lists +org-mode -inbox -- tag:new to:emacs-orgmode@gnu.org

@@ -18,55 +18,24 @@ SSLType IMAPS
 AuthMechs LOGIN
 PassCmd "security find-generic-password -s mbsync-gandi-password -w"
 
-IMAPStore remote
+IMAPStore gandi-remote
 Account gandi
 
-MaildirStore local
+MaildirStore gandi-local
+Subfolders Verbatim
 Path ~/.mail/gandi/
 Inbox ~/.mail/gandi/INBOX
 Trash trash
 
-Channel inbox
-Master :remote:
-Slave :local:
-Create Slave
-SyncState *
-
-Channel sent
-Master :remote:Sent
-Slave :local:sent
-Create Slave
-SyncState *
-
-Channel org-mode
-Master :remote:org-mode
-Slave :local:org-mode
-Create Slave
-SyncState *
-ExpireUnread yes
+Channel gandi
+Master :gandi-remote:
+Slave :gandi-local:
+Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+Sync All
 Expunge Both
-
-Channel clojure
-Master :remote:clojure
-Slave :local:clojure
-Create Slave
-SyncState *
-MaxMessages 500
-ExpireUnread yes
-Expunge Both
-
-# Channel tuls
-# Master :remote:tuls
-# Slave :local:tuls
-# Create Slave
-# SyncState *
-# MaxMessages 500
-# Expunge Both
-
-Channel archive
-Master :remote:Archive
-Slave :local:archive
-Create Slave
+# Save the synchronization state files in the relevant directory
 SyncState *
 #+END_SRC
 
