@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Pretty Print
-# key: pp
-# --
-(clojure.pprint/pprint `yas-selected-text`$0)

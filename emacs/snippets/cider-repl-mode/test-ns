@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Test namespace
-# key: tn
-# --
-(t/test-ns *ns*)

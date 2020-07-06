@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: Test var
-# key: tv
-# --
-(t/test-var #'`yas-selected-text`$0)
