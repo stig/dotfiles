@@ -1213,8 +1213,7 @@ need them.
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((emacs-lisp . t)
 				 (sql . t)
-				 (shell . t)
-                                 (verb . t))))
+				 (shell . t))))
 #+end_src
 
 ** Verb
