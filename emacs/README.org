@@ -1403,8 +1403,7 @@ folder.
     ((:name "Inbox" :query "tag:inbox" :key "i")
      (:name "Flagged" :query "tag:flagged" :key "f")
      (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "New" :query "tag:new" :key "n")
-     (:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+     (:name "Recent" :query "date:2d.." :count-query "date:2d.. and tag:unread" :key "r" :search-type tree)
      (:name "My Threads w/New" :query "thread:\"{from:stig}\" and tag:new" :key "tn" :search-type tree)
      (:name "My Threads" :query "thread:\"{from:stig}\"" :key "ta" :count-query "tag:no-match" :search-type tree))))
   (notmuch-tagging-keys
