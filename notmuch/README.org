@@ -77,6 +77,10 @@ notmuch tag --batch <<EOF
 # V. low volume lists gets to stay in inbox
 +lists +tuls -- to:tuls@debussy.pauken.co.uk
 
+# Is it *to* a particular alias at my domain?
++fam         -- to:fam@brautaset.org
++solve	     -- to:solve@brautaset.org
+
 # Tag various common senders
 +lobsters    -- from:nobody@lobste.rs
 +github      -- from:notifications@github.com
