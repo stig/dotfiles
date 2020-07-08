@@ -5,7 +5,15 @@ nice Emacs client.
 
 * Configuring Notmuch
 
-#+begin_src conf :tangle ~/.notmuch-config
+For work/life balance I add my work tag to excluded mail, to avoid
+seeing work mail on my personal machine.
+
+#+name: ignore-tag
+#+begin_src emacs-lisp
+(if (string-match "margil" (system-name)) "circleci" "gandi")
+#+end_src
+
+#+begin_src conf :tangle ~/.notmuch-config :noweb yes
 [database]
 path=/Users/stig/.mail
 
@@ -19,7 +27,7 @@ tags=new;unread;inbox
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
-exclude_tags=deleted;spam;muted
+exclude_tags=deleted;spam;muted;<<ignore-tag()>>
 
 [maildir]
 synchronize_flags=true
