@@ -92,7 +92,6 @@ notmuch tag --batch <<EOF
 # Tag various common senders
 +lobsters    -- from:nobody@lobste.rs
 +github      -- from:notifications@github.com
-+jira 	     -- from:jira@circleci.atlassian.net
 +pagerduty   -- from:no-reply@pagerduty.com
 +linkedin    -- from:messaging-digest-noreply@linkedin.com
 +patreon     -- from:bingo@patreon.com
