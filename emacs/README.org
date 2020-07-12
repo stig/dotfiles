@@ -1072,6 +1072,9 @@ exporter, as this deletes linebreaks.  This means the rendered
 paragraphs re-flow properly on GitHub.
 
 #+BEGIN_SRC emacs-lisp
+(defun org-agenda-ignore-tag-from-system-name ()
+  (if (string-match "margil" (system-name)) "@work" "@home"))
+
 (use-package org
   :straight org-plus-contrib
   :bind (("C-c l" . org-store-link)
@@ -1135,16 +1138,12 @@ paragraphs re-flow properly on GitHub.
   (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
 
   (org-agenda-custom-commands
-   '(("w" "Work: Day Agenda & Top Tasks"
+   `(("d" "Day Agenda & Top Tasks"
       ((agenda "")
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '("-@home" "-MAYBE"))))
-     ("h" "Home: Day Agenda & Top Tasks"
-      ((agenda "")
-       (tags-todo "-PRIORITY=\"C\"/TODO"))
-      ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '("-@work" "-MAYBE"))))
+       (org-agenda-tag-filter-preset '(,(format "-%s" (org-agenda-ignore-tag-from-system-name))
+				       "-MAYBE"))))
      ("g" . "Getting Things Done")
      ("gm" "Maybe"
       ((todo "PROJ")
