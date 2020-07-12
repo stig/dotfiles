@@ -96,7 +96,10 @@ notmuch tag --batch <<EOF
 +linkedin    -- tag:new and from:messaging-digest-noreply@linkedin.com
 +patreon     -- tag:new and from:bingo@patreon.com
 +guitarhacks -- tag:new and from:support@guitarhacks.com
-+amazon      -- tag:new and from:no-reply-aws@amazon.com
+
+# Help me periodically confirm shipment & receipt of orders
++to_confirm -inbox -- tag:new and from:auto-confirm@amazon.co.uk
++to_confirm -inbox -- tag:new and from:shipment-tracking@amazon.co.uk
 
 # Tag *very persistent* spammers
 +spam -inbox -- tag:new and from:alexandre@les-caves.fr
