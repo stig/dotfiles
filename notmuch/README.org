@@ -63,8 +63,10 @@ Assign tags based on server filtering.
 
 #+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
-# Mute new messages to muted threads.
-+muted -- tag:new and thread:{tag:muted}
+# Propagate muted tag to new messages to muted threads.
+# We must include `tag:muted` in this search, and cannot include
+# `tag:new`, otherwise the search won't find anything.
++muted -- tag:muted and thread:{tag:muted}
 
 # Tag sent mail & remove from inbox
 -inbox -unread +sent -- tag:new and path:"gandi/Sent/**" or path:"gmail/[Gmail]/Sent Mail/**"
