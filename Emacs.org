@@ -1205,7 +1205,7 @@ usually I am in a work frame of mind on my work computer and vice versa.
      ("tT" "Trip" entry (file "") (file "templates/trip.org"))
      ("tb" "Blog Idea" plain (file "") (file "templates/blog-post.org"))
 
-     ("h" "A Haiku" entry (file "haiku.org") (file "templates/haiku.org"))
+     ("h" "A Haiku" entry (file "") (file "templates/haiku.org"))
 
      ("a" "New Achievement" entry
       (file+olp+datetree "~/org/cci/achievements.org")
