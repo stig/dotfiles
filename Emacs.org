@@ -1211,10 +1211,6 @@ usually I am in a work frame of mind on my work computer and vice versa.
       (file+olp+datetree "~/org/cci/achievements.org")
       "* %?" :tree-type week)
 
-     ("n" "New Note (for reference)" entry
-      (file "~/org/cci/notes.org")
-      (file "templates/note.org"))
-
      ("c" "Contact" entry (file "~/org/contacts.org") (file "templates/contact.org"))
 
      ("R" "Metre Readings")
