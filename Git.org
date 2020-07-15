@@ -1,0 +1,7 @@
+#+title: Git config
+
+For now this is essentially just a simple global ignore file.
+
+#+begin_src conf :tangle ~/.config/git/ignore :mkdirp t
+.DS_Store
+#+end_src
