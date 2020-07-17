@@ -105,6 +105,7 @@ notmuch tag --batch <<EOF
 
 # Tag *very persistent* spammers
 +spam -inbox -- tag:new and from:alexandre@les-caves.fr
++spam -inbox -- tag:new and from:replies@oracle-mail.com
 
 # Drop the 'new' tag, just used for optimising tagging
 -new -- tag:new
