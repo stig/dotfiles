@@ -1044,6 +1044,24 @@ CircleCI and CloudFormation loves YAML.
 (use-package yaml-mode)
 #+END_SRC
 
+** PlantUML
+
+I sometimes need to draw UML diagrams. For some reason I can't get the
+Jar to work in the major mode, but it works fine in Org mode.
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :custom
+  (plantuml-mode-debug-enabled t)
+  (plantuml-font-lock-keywords t))
+
+(use-package ob-plantuml
+  :after org
+  :straight nil
+  :custom
+  (org-plantuml-jar-path (expand-file-name "/usr/local/opt/plantuml/libexec/plantuml.jar")))
+#+end_src
+
 * Org mode
 
 I use Org mode for all writing I initiate.  Org mode's support for
@@ -1242,7 +1260,8 @@ need them.
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((emacs-lisp . t)
 				 (sql . t)
-				 (shell . t))))
+				 (shell . t)
+				 (plantuml . t))))
 #+end_src
 
 ** Verb
