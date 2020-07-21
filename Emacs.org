@@ -645,7 +645,6 @@ it are that it provides the following key bindings:
   :custom
   (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
-  (projectile-switch-project-action 'magit-status)
   :config
 
   ;; I use /usr/local/src on my work laptop in an attempt to avoid the
