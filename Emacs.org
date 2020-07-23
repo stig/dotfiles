@@ -787,7 +787,9 @@ A templating engine for Emacs.
   (put-clojure-indent 'run ':defn)
   (put-clojure-indent 'dosync ':defn)
   (put-clojure-indent 'speculate 1)
-  (put-clojure-indent 'doseq ':defn))
+  (put-clojure-indent 'doseq ':defn)
+  (put-clojure-indent 'wrap-with-timing ':defn)
+  (put-clojure-indent 'wrap-with-per-call-timing ':defn))
 
 (use-package cider
   :hook ((cider-mode . sb/unload-cider-jumps)
