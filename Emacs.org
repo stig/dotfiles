@@ -463,6 +463,15 @@ kill the message buffer on exit.)
       mail-specify-envelope-from t)
 #+END_SRC
 
+** Display line numbers
+
+Displaying line numbers is incredibly useful when remotely pairing
+with other people.
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
+#+end_src
+
 * Configure minor modes
 ** Ace Window
 
