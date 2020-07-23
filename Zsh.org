@@ -10,4 +10,5 @@ alias dcu=docker-compose up -d
 alias ff=emacsclient
 
 export EDITOR=emacsclient
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 #+end_src
