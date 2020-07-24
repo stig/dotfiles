@@ -14,7 +14,7 @@ hitting =C-c C-v C-t=.
 * Installing
 
 I install Emacs from the [[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] tap, along with all other tools
-(~ripgrep~, etc) using a [[file:../Brewfile][Brewfile]].
+(~ripgrep~, etc) using a [[file:Brewfile][Brewfile]].
 
 * Early Init
 
