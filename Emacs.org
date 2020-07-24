@@ -981,7 +981,10 @@ We use protobufs for service-to-service communication at work.
 Even faster than The Silver Searcher, apparently.
 
 #+begin_src emacs-lisp
-(use-package ripgrep)
+(use-package ripgrep
+  :custom
+  ;; I often look for stuff in .circleci/config.yml
+  (ripgrep-arguments '("--hidden")))
 #+end_src
 
 ** Simple HTML Renderer (HTML Email)
