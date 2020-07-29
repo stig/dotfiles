@@ -1183,7 +1183,7 @@ paragraphs re-flow properly on GitHub.
       ((org-agenda-tag-filter-preset '("+MAYBE"))))
      ("gc" "Review for Tasks Complete"
       todo "TODO"
-      ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING"))
+      ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING" "-GTD"))
        (org-agenda-todo-ignore-scheduled nil)
        (org-agenda-todo-ignore-deadlines nil)
        (org-agenda-todo-ignore-with-date nil)
@@ -1191,8 +1191,8 @@ paragraphs re-flow properly on GitHub.
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
       ((todo "COMPLETE")
-       (tags "-PROJ/DONE")
-       (tags "-PROJ/CANCELLED")))
+       (tags "-PROJ-GTD/DONE")
+       (tags "-PROJ-GTD/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
 #+end_src
 
