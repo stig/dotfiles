@@ -1012,8 +1012,7 @@ Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu
 and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
 
 #+begin_src emacs-lisp
-(setq tramp-default-method "ssh"
-      tramp-ssh-controlmaster-options
+(setq tramp-ssh-controlmaster-options
       "-o ControlMaster=auto -o ControlPath='tramp.%%C'")
 
 ;; Various speedups
