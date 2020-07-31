@@ -612,8 +612,10 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?=
                clojurescript-mode
                clojurex-mode))
     (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
+  :custom
+  (lsp-enable-indentation nil)
+  (lsp-enable-file-watchers nil)
   :init
-  (setq lsp-enable-indentation nil)
   (add-hook 'clojure-mode-hook #'lsp)
   (add-hook 'clojurec-mode-hook #'lsp)
   (add-hook 'clojurescript-mode-hook #'lsp))
