@@ -8,7 +8,9 @@ alias dc=docker-compose
 alias dcl='docker-compose logs --follow --tail 10'
 alias dcu=docker-compose up -d
 alias ff=emacsclient
+#+end_src
 
+#+begin_src zsh :tangle ~/.zshenv
 export EDITOR=emacsclient
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 #+end_src
