@@ -1380,6 +1380,9 @@ of notes.
 	 ("C-c j o" . org-journal-open-current-journal-file))
   :custom
   (org-journal-dir "~/org/journal/")
+  (org-journal-date-prefix "#+title: ")
+  (org-journal-time-prefix "* ")
+  (org-journal-file-format "%Y-%m-%d.org")
   (org-journal-date-format "%A, %d %B %Y")
   (org-journal-enable-agenda-integration t)
   (org-journal-skip-carryover-drawers (list "LOGBOOK")))
