@@ -1372,7 +1372,20 @@ of notes.
   :hook (after-init . org-roam-server-mode))
 #+end_src
 
-** Org-Jira
+** Org Journal
+
+#+begin_src emacs-lisp
+(use-package org-journal
+  :bind (("C-c j j" . org-journal-new-entry)
+	 ("C-c j o" . org-journal-open-current-journal-file))
+  :custom
+  (org-journal-dir "~/org/journal/")
+  (org-journal-date-format "%A, %d %B %Y")
+  (org-journal-enable-agenda-integration t)
+  (org-journal-skip-carryover-drawers (list "LOGBOOK")))
+#+end_src
+
+** Org Jira
 
 #+begin_src emacs-lisp
 (use-package org-jira
