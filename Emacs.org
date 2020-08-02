@@ -1378,6 +1378,7 @@ of notes.
 #+begin_src emacs-lisp
 (use-package org-journal
   :bind (("C-c j j" . org-journal-new-entry)
+	 ("C-c j s" . org-journal-new-scheduled-entry)
 	 ("C-c j o" . org-journal-open-current-journal-file))
   :custom
   (org-journal-dir "~/org/journal/")
