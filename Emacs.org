@@ -1197,16 +1197,6 @@ paragraphs re-flow properly on GitHub.
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
 #+end_src
 
-** Inline tasks
-
-I've been wanting to experiment with inlinetasks for a while. They're
-supposedly TODO items that don't disrupt the surrounding structure.
-
-#+begin_src emacs-lisp
-(use-package org-inlinetask
-  :straight org-plus-contrib)
-#+end_src
-
 ** Capturing
 
 Set up capture templates. I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]
