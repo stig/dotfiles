@@ -1191,6 +1191,9 @@ paragraphs re-flow properly on GitHub.
        (tags "-PROJ-GTD/DONE")
        (tags "-PROJ-GTD/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
+
+(use-package ox-jira)
+(use-package ox-gfm)
 #+end_src
 
 ** Capturing
