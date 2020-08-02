@@ -23,6 +23,7 @@ brew "editorconfig"
 brew "emacs-plus@28", args: ["with-jansson", "with-dbus"]
 brew "git"
 brew "gnupg"
+brew "gnuplot"
 brew "isync", restart_service: true
 brew "jq"
 brew "leiningen"
