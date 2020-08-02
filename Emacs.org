@@ -472,6 +472,13 @@ with other people.
 (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
 #+end_src
 
+** Lorem Ipsum input
+
+Useful for quickly filling in placeholder text.
+
+#+begin_src emacs-lisp
+(use-package lorem-ipsum)
+#+end_src
 * Configure minor modes
 ** Ace Window
 
