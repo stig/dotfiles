@@ -1378,7 +1378,12 @@ of notes.
 	 ("C-c j s" . org-journal-new-scheduled-entry)
 	 ("C-c j o" . org-journal-open-current-journal-file))
   :custom
-  (org-journal-dir "~/org/journal/")
+  (org-journal-dir "~/org/roam/")
+  (org-journal-file-header
+   (lambda (time)
+     (let ((year (format-time-string "%Y" time)))
+       (format "#+roam_tags: journal\n- tags :: [[file:%s.org][%s]]"
+	       year year))))
   (org-journal-date-prefix "#+title: ")
   (org-journal-time-prefix "* ")
   (org-journal-file-format "%Y-%m-%d.org")
