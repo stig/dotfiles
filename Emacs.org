@@ -1192,7 +1192,13 @@ paragraphs re-flow properly on GitHub.
        (tags "-PROJ-GTD/CANCELLED")))
      ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
 
-(use-package ox-jira)
+(use-package ox-jira
+  ;; Need to specify the branch here because of
+  ;; https://github.com/raxod502/straight.el/issues/279
+  :straight (ox-jira :type git
+		     :host github
+		     :repo "stig/ox-jira.el"
+		     :branch "trunk"))
 (use-package ox-gfm)
 #+end_src
 
