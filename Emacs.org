@@ -1380,7 +1380,9 @@ of notes.
   (org-journal-file-header
    (lambda (time)
      (let ((year (format-time-string "%Y" time)))
-       (format "#+roam_tags: journal\n- tags :: [[file:%s.org][%s]]"
+       (format "#+roam_tags: journal
+#+category: journal
+- tags :: [[file:%s.org][%s]]"
 	       year year))))
   (org-journal-date-prefix "#+title: ")
   (org-journal-time-prefix "* ")
