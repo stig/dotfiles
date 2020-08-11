@@ -1380,11 +1380,25 @@ of notes.
   (org-journal-dir "~/org/roam/")
   (org-journal-file-header
    (lambda (time)
-     (let ((year (format-time-string "%Y" time)))
+     (let* ((year-file (format-time-string "%Y.org" time))
+	    (year-path (expand-file-name year-file org-journal-dir))
+	    (year-title (format-time-string "%Y" time))
+	    (year-month-file (format-time-string "%Y-%m.org" time))
+	    (year-month-path (expand-file-name year-month-file org-journal-dir))
+	    (year-month-title (format-time-string "%B" time)))
+       ;; Create the tag files
+       (unless (file-exists-p year-path)
+	 (with-temp-file year-path
+	   (insert "#+title: " year-title)
+	   (insert "- tags :: [[file:journal_entries.org][Journal Entries]]")))
+       (unless (file-exists-p year-month-path)
+	 (with-temp-file year-month-path
+	   (insert "#+title: " year-month-title)
+	   (insert (format "- tags :: [[file:%s][%s]]" year-file year-title))))
        (format "#+roam_tags: journal
-#+category: journal
-- tags :: [[file:%s.org][%s]]"
-	       year year))))
+,#+category: journal
+- tags :: [[file:%s][%s]]"
+	       year-month-file year-month-title))))
   (org-journal-date-prefix "#+title: ")
   (org-journal-time-prefix "* ")
   (org-journal-file-format "%Y-%m-%d.org")
