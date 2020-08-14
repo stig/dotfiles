@@ -9,9 +9,9 @@ I add the ~:pedantic? :ranges~.  Not sure why it works, but it
 seems to.
 
 #+begin_src clojure :mkdirp t :tangle ~/.lein/profiles.clj
-{:user {:plugins [[circleci/deps-plus "0.1.0-SNAPSHOT"]
-                  [cider/cider-nrepl "0.25.2"]
-                  [refactor-nrepl "2.5.0"]]
-        :pedantic? :ranges}}
+{:user {:plugins [[circleci/deps-plus "0.1.0-SNAPSHOT"]]
+        :pedantic? :ranges}
+ :repl {:plugins [[cider/cider-nrepl "0.25.2"]
+                  [refactor-nrepl "2.5.0"]]}}
 #+end_src
 
