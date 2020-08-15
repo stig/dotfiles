@@ -1042,8 +1042,10 @@ Hitting =C-c C-p= while already in writable grep mode I can delete
 the entire matched line by hitting =C-c C-d=.
 
 #+begin_src emacs-lisp
-(use-package wgrep)
-
+(use-package wgrep
+  :straight (wgrep :type git
+		   :host github
+		   :repo "mhayashi1120/Emacs-wgrep"))
 #+end_src
 
 ** YAML
