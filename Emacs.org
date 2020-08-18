@@ -548,6 +548,16 @@ This provides =counsel-find-file=, among others.
   (global-diff-hl-mode))
 #+end_src
 
+** Dumb-jump
+
+Trying this out again, now that it registers an xref backend:
+
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+#+end_src
+
 ** Edit "Org-like" lists in non-Org buffers
 
 #+begin_src emacs-lisp
