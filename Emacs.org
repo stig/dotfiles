@@ -1406,7 +1406,7 @@ of notes.
 	    (year-title (format-time-string "%Y" time))
 	    (year-month-file (format-time-string "%Y-%m.org" time))
 	    (year-month-path (expand-file-name year-month-file org-journal-dir))
-	    (year-month-title (format-time-string "%B" time)))
+	    (year-month-title (format-time-string "%B %Y" time)))
        ;; Create the tag files
        (unless (file-exists-p year-path)
 	 (with-temp-file year-path
