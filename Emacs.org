@@ -1248,14 +1248,9 @@ usually I am in a work frame of mind on my work computer and vice versa.
   (org-capture-templates
    '(("t" "TODOs")
      ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
-     ("tc" "Plain TODO & Clock in" entry (file "tasks.org") (file "templates/todo.org") :clock-in t :clock-keep t)
-     ("tj" "Write up Jira" entry (file "agenda/work_tasks.org") (file "templates/jira.org") :clock-in t)
      ("tl" "TODO with link to here" entry (file "") (file "templates/todo-with-link.org"))
      ("tp" "Project" entry (file "") (file "templates/proj.org"))
      ("tT" "Trip" entry (file "") (file "templates/trip.org"))
-     ("tb" "Blog Idea" plain (file "") (file "templates/blog-post.org"))
-
-     ("h" "A Haiku" entry (file "") (file "templates/haiku.org") :clock-in t)
 
      ("a" "New Achievement" entry
       (file+olp+datetree "~/org/cci/achievements.org")
