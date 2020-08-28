@@ -1406,6 +1406,7 @@ of notes.
        (unless (file-exists-p year-path)
 	 (with-temp-file year-path
 	   (insert "#+title: " year-title)
+	   (insert "\n")
 	   (insert "- tags :: [[file:journal_entries.org][Journal Entries]]")))
        (unless (file-exists-p year-month-path)
 	 (with-temp-file year-month-path
