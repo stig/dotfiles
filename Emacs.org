@@ -236,10 +236,11 @@ click.
 (setq mouse-yank-at-point t)
 #+END_SRC
 
-** Make the fonts bigger
+** Font size and type
 
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :height 150)
+(set-face-attribute 'default nil :font "Jetbrains Mono") 
 #+END_SRC
 
 ** UTF-8: everywhere, always
