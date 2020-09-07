@@ -4,4 +4,5 @@ For now this is essentially just a simple global ignore file.
 
 #+begin_src conf :tangle ~/.config/git/ignore :mkdirp t
 .DS_Store
+.clj-kondo/
 #+end_src
