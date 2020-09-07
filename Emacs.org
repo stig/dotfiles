@@ -541,6 +541,11 @@ This provides =counsel-find-file=, among others.
   (counsel-mode 1))
 #+end_src
 
+** Company (COMplete ANYthing)
+#+begin_src emacs-lisp
+(use-package company
+  :hook (after-init . global-company-mode))
+#+end_src
 ** Diff Highlight
 
 #+begin_src emacs-lisp
@@ -627,25 +632,26 @@ any better.
 
 ** LSP (Language Server Protocol)
 
-LSP is useful for =M-.= (~find-definitions~) and =M-?=
-(~find-references~).
+LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
+among other things.
 
 #+begin_src emacs-lisp
+;; Important for lsp performance
+(setq read-process-output-max (* 1024 1024))
+
 (use-package lsp-mode
+  :hook ((clojure-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
-  :config
-  (dolist (m '(clojure-mode
-               clojurec-mode
-               clojurescript-mode
-               clojurex-mode))
-    (add-to-list 'lsp-language-id-configuration `(,m . "clojure")))
   :custom
-  (lsp-enable-indentation nil)
-  (lsp-enable-file-watchers nil)
-  :init
-  (add-hook 'clojure-mode-hook #'lsp)
-  (add-hook 'clojurec-mode-hook #'lsp)
-  (add-hook 'clojurescript-mode-hook #'lsp))
+  (lsp-enable-file-watchers . nil))
+
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+(use-package lsp-java
+  :commands lsp
+  :hook (java-mode . lsp))
 #+end_src
 
 ** Multiple Cursors
@@ -810,6 +816,7 @@ A templating engine for Emacs.
   :config
   (yas-global-mode))
 #+end_src
+
 
 * Configure major modes
 
@@ -1195,6 +1202,9 @@ paragraphs re-flow properly on GitHub.
 						    "@work" "@home"))
 				       "-MAYBE"))))
      ("g" . "Getting Things Done")
+     ("gA" "Agenda minus recurring tasks"
+      agenda ""
+      ((org-agenda-tag-filter-preset '("-RECURRING"))))
      ("gi" "Inbox" tags "INBOX")
      ("gm" "Maybe"
       ((todo "PROJ")
