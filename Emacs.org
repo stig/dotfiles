@@ -1212,7 +1212,9 @@ paragraphs re-flow properly on GitHub.
       ((todo "COMPLETE")
        (tags "-PROJ-GTD/DONE")
        (tags "-PROJ-GTD/CANCELLED")))
-     ("gp" "Projects" tags-todo "-MAYBE/PROJ"))))
+     ("gp" "Projects" tags-todo "-MAYBE/PROJ")))
+  :config
+  (require 'org-habit))
 
 (use-package ox-jira
   ;; Need to specify the branch here because of
