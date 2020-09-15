@@ -21,7 +21,6 @@ brew "circleci"
 brew "clojure"
 brew "clojure-lsp"
 brew "curl"
-brew "editorconfig"
 brew "emacs-plus@28", args: ["with-jansson", "with-dbus"]
 brew "git"
 brew "gnupg"

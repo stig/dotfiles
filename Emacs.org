@@ -573,20 +573,6 @@ Trying this out again, now that it registers an xref backend:
   (message-mode . orgalist-mode))
 #+end_src
 
-** Editorconfig
-
-Some projects I touch, particularly at work, use [[http://editorconfig.org][editorconfig]] to set up
-their indentation and file format preferences.
-
-#+BEGIN_SRC emacs-lisp
-(use-package editorconfig
-  :diminish "EC"
-  :custom
-  (editorconfig-exclude-modes (quote (org-mode gist)))
-  :config
-  (editorconfig-mode))
-#+END_SRC
-
 ** Flycheck
 
 #+begin_src emacs-lisp
