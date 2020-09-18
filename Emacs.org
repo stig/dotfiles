@@ -1144,6 +1144,8 @@ paragraphs re-flow properly on GitHub.
   (org-export-backends '(html gfm jira latex))
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+  (org-table-header-line-p t)
+
   (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
 		       (sequence "PROJ(p)" "|" "COMPLETE")
 		       (sequence "READY" "WIP" "REVIEW" "TESTING" "|" "DONE") ;; JIRAAAA
