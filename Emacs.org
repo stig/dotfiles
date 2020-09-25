@@ -122,7 +122,7 @@ In case something needs my name/email address.
       user-login-name "stig")
 #+END_SRC
 
-* Configure PATH
+* Configure PATH (and other variables) from shell
 
 I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
 
@@ -139,7 +139,8 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
   (exec-path-from-shell-variables '("PATH" "MANPATH"
 				    "LDFLAGS" "CPPFLAGS"
 				    "EDITOR"
-				    "JAVA_HOME"))
+				    "JAVA_HOME"
+				    "NVM_DIR"))
   :config
   (exec-path-from-shell-initialize))
 #+END_SRC
@@ -916,8 +917,8 @@ machine, so I don't have to mark stuff read in multiple places.
 
 ** Eshell
 
-I have started using /Eshell/. It is close to magic. There's not a lot of
-setup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
+I have started using /Eshell/. It is close to magic. There's not a lot ofs
+etup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
 eshell quickly. This launches eshell if it is not already running, or
 switches to it if it is.
 

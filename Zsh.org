@@ -14,4 +14,7 @@ alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
 #+begin_src zsh :tangle ~/.zshenv
 export EDITOR=emacsclient
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+
+# For NVM
+export NVM_DIR="$HOME/.nvm"
 #+end_src
