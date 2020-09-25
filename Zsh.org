@@ -8,6 +8,7 @@ alias dc=docker-compose
 alias dcl='docker-compose logs --follow --tail 10'
 alias dcu=docker-compose up -d
 alias ff=emacsclient
+alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
 #+end_src
 
 #+begin_src zsh :tangle ~/.zshenv
