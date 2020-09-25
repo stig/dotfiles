@@ -1078,14 +1078,14 @@ Jar to work in the major mode, but it works fine in Org mode.
 #+begin_src emacs-lisp
 (use-package plantuml-mode
   :custom
-  (plantuml-mode-debug-enabled t)
+  (plantuml-default-exec-mode 'executable)
   (plantuml-font-lock-keywords t))
 
 (use-package ob-plantuml
   :after org
   :straight nil
   :custom
-  (org-plantuml-jar-path (expand-file-name "/usr/local/opt/plantuml/libexec/plantuml.jar")))
+  (org-plantuml-exec-mode 'executable))
 #+end_src
 
 * Org mode
