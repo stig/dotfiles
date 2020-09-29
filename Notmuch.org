@@ -89,7 +89,7 @@ notmuch tag --batch <<EOF
 
 # Is it *to* a particular alias at my domain?
 +fam         -- tag:new and to:fam@brautaset.org
-+solve	     -- tag:new and to:solve@brautaset.org
++solve       -- tag:new and to:solve@brautaset.org
 
 # Tag various common senders
 +lobsters    -- tag:new and from:nobody@lobste.rs
