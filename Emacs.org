@@ -1419,9 +1419,9 @@ of notes.
 	   (insert "#+title: " year-month-title)
 	   (insert "\n")
 	   (insert (format "- tags :: [[file:%s][%s]]" year-file year-title))))
-       (format "#+category: journal
-- tags :: [[file:%s][%s]]"
-	       year-month-file year-month-title))))
+       (format "#+category: journal\n- tags :: [[file:%s][%s]]"
+	       year-month-file
+	       year-month-title))))
   (org-journal-date-prefix "#+title: ")
   (org-journal-time-prefix "* ")
   (org-journal-file-format "%Y-%m-%d.org")
