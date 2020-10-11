@@ -1417,6 +1417,7 @@ of notes.
        (unless (file-exists-p year-month-path)
 	 (with-temp-file year-month-path
 	   (insert "#+title: " year-month-title)
+	   (insert "\n")
 	   (insert (format "- tags :: [[file:%s][%s]]" year-file year-title))))
        (format "#+category: journal
 - tags :: [[file:%s][%s]]"
