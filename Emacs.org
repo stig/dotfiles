@@ -1225,7 +1225,13 @@ paragraphs re-flow properly on GitHub.
   :straight (ox-jira :type git
 		     :host github
 		     :repo "stig/ox-jira.el"
-		     :branch "trunk"))
+		     :branch "trunk")
+
+  :custom
+  ;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
+  ;; See https://github.com/stig/ox-jira.el/issues/53
+  (org-export-with-sub-superscripts '{}))
+
 (use-package ox-gfm)
 #+end_src
 
