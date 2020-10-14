@@ -41,20 +41,18 @@ Move messages based on tags, to avoid other email clients seing just a giant INB
 set -euo pipefail
 IFS=$'\n\t'
 
-# Make sure we have up-to-date paths
-notmuch new --no-hooks
+# Prune deleted drafts immediately
+notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm
 
-# Delete deleted drafts immediately
-notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm || true
+# Expunge old deleted mail
+notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm
 
-# Delete old mail
-notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm || true
+# Move deleted mail to Trash, for non-notmuch clients.
+notmuch search --output=files --format=text0 -- tag:gandi and tag:deleted and not path:"gandi/Trash/**" | xargs -0I {} mv {} ~/.mail/gandi/Trash/new/
+
 
 # Move spam in INBOX to correct folder on server
-notmuch search --output=files --format=text0 -- path:"gandi/INBOX/**" and tag:spam | xargs -0tI {} mv -n {} ~/.mail/gandi/Junk/new/
-
-# Make sure we have up-to-date paths, again
-notmuch new --no-hooks
+notmuch search --output=files --format=text0 -- tag:gandi and tag:spam and not path:"gandi/Junk/**" | xargs -0I {} mv {} ~/.mail/gandi/Junk/new/
 #+END_SRC
 
 * Script to run immediately after checking for new mail
