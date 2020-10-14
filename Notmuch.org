@@ -62,10 +62,10 @@ notmuch new --no-hooks
 Assign tags based on server filtering.
 
 #+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-notmuch tag --batch <<EOF
 # Propagate muted tag to new messages to muted threads.
 # We must include `tag:muted` in this search, and cannot include
 # `tag:new`, otherwise the search won't find anything.
+notmuch tag --batch <<EOF
 +muted -- tag:muted and thread:{tag:muted}
 
 # Tag sent mail & remove from inbox
