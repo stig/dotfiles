@@ -1090,7 +1090,7 @@ Jar to work in the major mode, but it works fine in Org mode.
   :after org
   :straight nil
   :custom
-  (org-plantuml-exec-mode 'executable))
+  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
 #+end_src
 
 * Org mode
