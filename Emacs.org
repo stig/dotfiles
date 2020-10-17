@@ -1160,11 +1160,11 @@ paragraphs re-flow properly on GitHub.
 		   ("@home" . ?h)
 		   ("PROJ" . ?p)
 		   ("AGENDA" . ?a)
-		   ("MAYBE" . ?m)
+		   ("SOMEDAY" . ?m)
 		   ("noexport" . ?n)))
 
   (org-log-done 'time)
-  (org-stuck-projects '("-MAYBE/PROJ" ("TODO" "WAITING") nil ""))
+  (org-stuck-projects '("-SOMEDAY/PROJ" ("TODO" "WAITING") nil ""))
 
   (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
   (org-refile-allow-creating-parent-nodes 'confirm)
@@ -1193,19 +1193,19 @@ paragraphs re-flow properly on GitHub.
        (org-agenda-tag-filter-preset '(,(format "-%s"
 						(if (string-match "margil" (system-name))
 						    "@work" "@home"))
-				       "-MAYBE"))))
+				       "-SOMEDAY"))))
      ("g" . "Getting Things Done")
      ("gA" "Agenda minus recurring tasks"
       agenda ""
       ((org-agenda-tag-filter-preset '("-RECURRING"))))
      ("gi" "Inbox" tags "INBOX")
-     ("gm" "Maybe"
+     ("gs" "Someday"
       ((todo "PROJ")
        (tags-todo "-PROJ/TODO"))
-      ((org-agenda-tag-filter-preset '("+MAYBE"))))
+      ((org-agenda-tag-filter-preset '("+SOMEDAY"))))
      ("gc" "Review for Tasks Complete"
       todo "TODO"
-      ((org-agenda-tag-filter-preset '("-MAYBE" "-RECURRING" "-GTD"))
+      ((org-agenda-tag-filter-preset '("-SOMEDAY" "-RECURRING" "-GTD"))
        (org-agenda-todo-ignore-scheduled nil)
        (org-agenda-todo-ignore-deadlines nil)
        (org-agenda-todo-ignore-with-date nil)
@@ -1215,7 +1215,7 @@ paragraphs re-flow properly on GitHub.
       ((todo "COMPLETE")
        (tags "-PROJ-GTD/DONE")
        (tags "-PROJ-GTD/CANCELLED")))
-     ("gp" "Projects" tags-todo "-MAYBE/PROJ")))
+     ("gp" "Projects" tags-todo "-SOMEDAY/PROJ")))
   :config
   (require 'org-habit))
 
