@@ -1155,8 +1155,7 @@ paragraphs re-flow properly on GitHub.
 
   (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
 		       (sequence "PROJ(p)" "|" "COMPLETE")
-		       (sequence "READY" "WIP" "REVIEW" "TESTING" "|" "DONE") ;; JIRAAAA
-		       (sequence "|" "CANCELLED")))
+		       (sequence "|" "CANCELLED(c)")))
 
   (org-tag-alist '(("@work" . ?w)
 		   ("@home" . ?h)
