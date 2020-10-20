@@ -1416,6 +1416,7 @@ of notes.
 	 ("C-c j o" . org-journal-open-current-journal-file))
   :custom
   (org-journal-dir "~/org/roam/journal")
+  (org-journal-file-type 'weekly)
   (org-journal-file-header
    (lambda (time)
      (let* ((year-file (format-time-string "%Y.org" time))
@@ -1438,10 +1439,10 @@ of notes.
        (format "#+category: journal\n- tags :: [[file:%s][%s]]"
 	       year-month-file
 	       year-month-title))))
-  (org-journal-date-prefix "#+title: ")
-  (org-journal-time-prefix "* ")
+  (org-journal-date-prefix "* ")
+  (org-journal-time-prefix "** ")
   (org-journal-file-format "%Y-%m-%d.org")
-  (org-journal-date-format "%A, %d %B %Y")
+  (org-journal-date-format "%A, %d %B")
   (org-journal-enable-agenda-integration t))
 #+end_src
 
