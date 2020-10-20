@@ -160,6 +160,11 @@ Emacs. Credit to Robin Schroer for this trick.
 
 * Configure the basics
 
+** Expand Region
+#+begin_src emacs-lisp
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+#+end_src
 ** Prefer Ibuffer over Buffer Menu
 One of the key features for me is ibuffer's ability to filter by major mode.
 #+begin_src emacs-lisp
