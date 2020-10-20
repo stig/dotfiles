@@ -1622,7 +1622,7 @@ I'm experimenting with "Doom solarized light".
 #+begin_src emacs-lisp
 (use-package doom-themes
   :config
-  (sb/load-theme 'doom-solarized-light))
+  (sb/load-theme 'leuven))
 #+end_src
 
 * Blogging
