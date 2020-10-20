@@ -759,7 +759,7 @@ Invoke swiper (find in current buffer).
 
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
-  :bind (("C-x /" . swiper)))
+  :bind (("C-s" . swiper)))
 #+END_SRC
 
 ** Transparently open compressed files
