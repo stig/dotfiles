@@ -1151,7 +1151,7 @@ paragraphs re-flow properly on GitHub.
   (org-adapt-indentation nil)
   (org-src-preserve-indentation nil)
   (org-edit-src-content-indentation 0)
-  (org-hide-emphasis-markers t)
+  (org-hide-emphasis-markers nil)
   (org-link-file-path-type 'relative)
   (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
   (org-catch-invisible-edits 'smart)
