@@ -110,6 +110,10 @@ Install ~use-package~ and configure it to install packages by default.
 
 ;; No need to use ~:straight t~ for every package.
 (setq straight-use-package-by-default t)
+
+;; Avoid conflicts between multiple Org versions, cf
+;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
+(straight-use-package '(org-plus-contrib :includes (org) :local-repo "org"))
 #+end_src
 
 * Introduce Myself
