@@ -847,6 +847,7 @@ A templating engine for Emacs.
     (define-key cider-mode-map (kbd "M-,") nil))
   :custom
   (cider-prompt-for-symbol nil)
+  (cider-redirect-server-output-to-repl nil)
   (cider-prefer-local-resources t)
   (cider-auto-track-ns-form-changes t)
   (cider-repl-pop-to-buffer-on-connect nil)
