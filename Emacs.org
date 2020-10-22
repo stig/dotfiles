@@ -1204,7 +1204,8 @@ paragraphs re-flow properly on GitHub.
        (org-agenda-tag-filter-preset '(,(format "-%s"
 						(if (string-match "margil" (system-name))
 						    "@work" "@home"))
-				       "-SOMEDAY"))))
+				       "-SOMEDAY"
+				       "-INBOX"))))
      ("g" . "Getting Things Done")
      ("gA" "Agenda minus recurring tasks"
       agenda ""
