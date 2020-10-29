@@ -1253,17 +1253,16 @@ which machine I am capturing the item. It's not always correct, but
 usually I am in a work frame of mind on my work computer and vice versa.
 
 #+begin_src emacs-lisp
+(defun org-default-notes-file-from-system-name ()
+  (let ((name (car (split-string (system-name) "\\."))))
+    (cond ((equal name "Pearmain") "~/org/work_inbox.org")
+	  ((equal name "Margil") "~/org/personal_inbox.org")
+	  (t "~/org/inbox.org"))))
+
 (use-package org
   :straight org-plus-contrib
-  :init
-  (defun org-agenda-tag-from-system-name ()
-    (let ((name (car (split-string (system-name) "\\."))))
-      (cond ((equal name "Pearmain") "@work")
-	    ((equal name "Margil") "@home")
-	    (t ""))))
-
   :custom
-  (org-default-notes-file "~/org/inbox.org")
+  (org-default-notes-file (org-default-notes-file-from-system-name))
   (org-capture-templates
    '(("t" "TODOs")
      ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
