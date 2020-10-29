@@ -1190,7 +1190,7 @@ paragraphs re-flow properly on GitHub.
   (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
   (org-agenda-tags-todo-honor-ignore-options t)
   (org-agenda-todo-ignore-scheduled 'future)
-  (org-agenda-todo-ignore-deadlines 'future)
+  (org-agenda-todo-ignore-deadlines 'far)
   (org-agenda-todo-ignore-with-date 'future)
   (org-agenda-todo-ignore-timestamp 'future)
   (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -1217,11 +1217,7 @@ paragraphs re-flow properly on GitHub.
       ((org-agenda-tag-filter-preset '("+SOMEDAY"))))
      ("gc" "Review for Tasks Complete"
       todo "TODO"
-      ((org-agenda-tag-filter-preset '("-SOMEDAY" "-RECURRING" "-GTD"))
-       (org-agenda-todo-ignore-scheduled nil)
-       (org-agenda-todo-ignore-deadlines nil)
-       (org-agenda-todo-ignore-with-date nil)
-       (org-agenda-todo-ignore-timestamp nil)))
+      ((org-agenda-tag-filter-preset '("-SOMEDAY" "-RECURRING" "-GTD"))))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
       ((todo "COMPLETE")
