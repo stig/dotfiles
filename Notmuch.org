@@ -104,12 +104,8 @@ notmuch tag --batch <<EOF
 +patreon     -- tag:new and from:bingo@patreon.com
 +guitarhacks -- tag:new and from:support@guitarhacks.com
 
-# Help me periodically confirm shipment & receipt of orders
+# Help me periodically confirm receipt of orders
 +to_confirm -inbox -- tag:new and from:auto-confirm@amazon.co.uk
-+to_confirm -inbox -- tag:new and from:shipment-tracking@amazon.co.uk
-+to_confirm -inbox -- tag:new and from:yourdelivery@dpd.co.uk
-+to_confirm -inbox -- tag:new and from:yourorder@dpd.co.uk
-+to_confirm -inbox -- tag:new and from:donotreply@myhermes.co.uk
 
 # Tag *very persistent* spammers
 +spam -inbox -- tag:new and from:alexandre@les-caves.fr
