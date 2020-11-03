@@ -56,6 +56,10 @@ notmuch search --output=files --format=text0 -- tag:gandi and tag:deleted and no
 
 # Move spam in INBOX to correct folder on server
 notmuch search --output=files --format=text0 -- tag:gandi and tag:spam and not path:"gandi/Junk/**" | xargs -0I {} mv {} ~/.mail/gandi/Junk/new/
+
+# Move incorrectly-tagged spam into inbox
+notmuch search --output=files --format=text0 -- tag:gandi and not tag:spam and path:"gandi/Junk/**" | xargs -0I {} mv {} ~/.mail/gandi/INBOX/new/
+
 #+END_SRC
 
 * Script to run immediately after checking for new mail
