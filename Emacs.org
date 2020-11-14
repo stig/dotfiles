@@ -513,7 +513,8 @@ to swap between two frames there.
 
 #+begin_src emacs-lisp
 (use-package ace-window
-  :bind ("M-`" . ace-window))
+  :bind (("C-S-s-<tab>" . ace-window) ; aka Meh-<tab>
+	 ("M-`" . ace-window)))
 #+end_src
 
 ** Auto commit
@@ -973,6 +974,8 @@ Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 
 (use-package magit
   :bind (("C-x C-g C-s" . magit-status)
+	 ("C-S-s-m" . magit-status)
+	 ("C-S-s-b" . magit-blame-addition)
          ("C-x C-g s" . magit-status)
          ("C-x C-g C-b" . magit-blame-addition)
          ("C-x C-g b" . magit-blame-addition)))
