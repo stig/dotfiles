@@ -435,12 +435,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
   (ansi-color-filter-region (point-min) (point-max)))
 #+end_src
 
-** Add explicit keybinding for opening file at point
-
-#+begin_src emacs-lisp
-(bind-key "C-c C-x C-f" #'find-file-at-point)
-#+end_src
-
 ** Don't require two spaces to end a sentence
 
 Having this enabled makes it harder to collaborate with others, and
