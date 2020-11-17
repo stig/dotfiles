@@ -1759,7 +1759,7 @@ and use a simple Python server to host it.
   (start-process "Blog Server" "*blog server*"
                  "python3"
                  "-m" "http.server"
-                 "--directory" (expand-file-name "~/public_html/"))
+                 "--directory" (expand-file-name "~/blog/"))
   (message "Blog Server started"))
 #+end_src
 
