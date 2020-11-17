@@ -1445,9 +1445,11 @@ of notes.
 	   (insert "#+title: " year-month-title)
 	   (insert "\n")
 	   (insert (format "- tags :: [[file:%s][%s]]" year-file year-title))))
-       (format "- tags :: [[file:%s][%s]]"
-	       year-month-file
-	       year-month-title))))
+       (format (format "#+title: Week #%s
+- tags :: [[file:%s][%s]]"
+		       (format-time-string "%V" time) ;; iso calendar week
+		       year-month-file
+		       year-month-title)))))
   (org-journal-date-prefix "* ")
   (org-journal-time-prefix "** ")
   (org-journal-file-format "%Y-%m-%d.org")
