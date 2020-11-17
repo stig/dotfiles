@@ -239,6 +239,21 @@ This places them in a separate directory.
 (setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 #+END_SRC
 
+** Auto-save visited files
+
+Since I sync my Org files with Synchthing I want to make sure to save
+my Org files regularly to avoid lost content.
+
+Moreover, I don't like auto-save files (those pesky =#foo#= ones) all
+over my disk. This places them in a separate directory. 
+
+#+BEGIN_SRC emacs-lisp
+(auto-save-visited-mode)
+(setq sb/auto-save-dir (expand-file-name "auto-save" user-emacs-directory))
+(setq auto-save-list-file-prefix sb/auto-save-dir)
+(setq auto-save-file-name-transforms `((".*" ,sb/auto-save-dir)))
+#+END_SRC
+
 ** Clipboard
 
 These settings improve pasting behaviour with programs outside
@@ -1255,10 +1270,8 @@ usually I am in a work frame of mind on my work computer and vice versa.
 
 #+begin_src emacs-lisp
 (defun org-default-notes-file-from-system-name ()
-  (let ((name (car (split-string (system-name) "\\."))))
-    (cond ((equal name "Pearmain") "~/org/work_inbox.org")
-	  ((equal name "Margil") "~/org/personal_inbox.org")
-	  (t "~/org/inbox.org"))))
+  (let ((name (downcase (car (split-string (system-name) "\\.")))))
+    (expand-file-name (format "%s.org" name) "~/org")))
 
 (use-package org
   :straight org-plus-contrib
