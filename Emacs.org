@@ -245,7 +245,7 @@ Since I sync my Org files with Synchthing I want to make sure to save
 my Org files regularly to avoid lost content.
 
 Moreover, I don't like auto-save files (those pesky =#foo#= ones) all
-over my disk. This places them in a separate directory. 
+over my disk. This places them in a separate directory.
 
 #+BEGIN_SRC emacs-lisp
 (auto-save-visited-mode)
@@ -270,7 +270,7 @@ click.
 
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :height 150)
-(set-face-attribute 'default nil :font "Jetbrains Mono") 
+(set-face-attribute 'default nil :font "Jetbrains Mono")
 #+END_SRC
 
 ** UTF-8: everywhere, always
