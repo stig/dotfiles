@@ -355,6 +355,15 @@ in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
     (fill-region (region-beginning) (region-end) nil)))
 #+end_src
 
+** Cycle Spaces
+
+Replaces all spaces and tabs around cursor with a single space. If
+called with prefix arg N, leaves N spaces. If N is negative, deletes
+newlines too.
+
+#+begin_src emacs-lisp
+(bind-key "M-SPC" #'cycle-spacing)
+#+end_src
 ** Support for fullscreen
 
 I like to run apps in fullscreen mode. Sometimes it's useful to be
@@ -513,6 +522,37 @@ Useful for quickly filling in placeholder text.
 #+begin_src emacs-lisp
 (use-package lorem-ipsum)
 #+end_src
+
+** View Mode
+
+Navigate read-only buffers up and down with space and backspace.
+
+#+begin_src emacs-lisp
+(setq view-read-only t)
+#+end_src
+** Pulse
+
+I used to use Beacon for this, but now I don't need a separate module.
+[[https://karthinks.com/software/batteries-included-with-emacs/#pulse--pulse-dot-el][Source]].
+
+#+BEGIN_SRC emacs-lisp
+(defun pulse-line (&rest _)
+      "Pulse the current line."
+      (pulse-momentary-highlight-one-line (point)))
+
+(dolist (command '(scroll-up-command scroll-down-command
+                   recenter-top-bottom other-window))
+  (advice-add command :after #'pulse-line))
+#+end_src
+** Upcase-dwim and dowcase-dwim
+
+Acts like ~upcase-word~ with no region selected, and ~upcase-region~
+when one is.
+
+#+begin_src emacs-lisp
+(bind-key "M-u" #'upcase-dwim)
+(bind-key "M-l" #'downcase-dwim)
+#+end_src
 * Configure minor modes
 ** Ace Window
 
@@ -537,16 +577,6 @@ automatically commit when editing files.
   (gac-automatically-add-new-files-p t)
   (gac-automatically-push-p t))
 #+END_SRC
-
-** Beacon
-
-Highlight my cursor when scrolling
-
-#+begin_src emacs-lisp
-(use-package beacon
-  :config
-  (beacon-mode 1))
-#+end_src
 
 ** Counsel
 
