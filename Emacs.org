@@ -1311,24 +1311,22 @@ usually I am in a work frame of mind on my work computer and vice versa.
   :custom
   (org-default-notes-file (org-default-notes-file-from-system-name))
   (org-capture-templates
-   '(("t" "TODOs")
-     ("tt" "Plain TODO" entry (file "") (file "templates/todo.org"))
-     ("tl" "TODO with link to here" entry (file "") (file "templates/todo-with-link.org"))
-     ("tp" "Project" entry (file "") (file "templates/proj.org"))
-     ("tT" "Trip" entry (file "") (file "templates/trip.org"))
-     ("tj" "Jira ticket" entry (file "") (file "templates/jira.org"))
+   '(("t" "TODO" entry (file "") "* TODO %?")
+     ("l" "TODO with [l]ink to here" entry (file "") "* TODO %?\ncf %a")
 
-     ("a" "New Achievement" entry
-      (file+olp+datetree "~/org/cci/achievements.org")
-      "* %?" :tree-type week)
+     ("T" "Trip" entry (file "") (file "templates/trip.org"))
 
-     ("c" "Contact" entry (file "~/org/contacts.org") (file "templates/contact.org"))
+     ("j" "Journal Entry" entry (function org-journal-open-current-journal-file)
+      "* %(format-time-string org-journal-time-format)%?"
+      :jump-to-captured t)
+     ("J" "Jira ticket" entry (function org-journal-open-current-journal-file)
+      (file "templates/jira.org")
+      :jump-to-captured t)
 
-     ("R" "Metre Readings")
-     ("Rg" "New Gas Meter Reading" table-line
+     ("g" "New Gas Meter Reading" table-line
       (file "~/org/notes/gas-consumption.org")
       (file "templates/gas-consumption.org"))
-     ("Re" "New Electricity Meter Reading" table-line
+     ("e" "New Electricity Meter Reading" table-line
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
 
@@ -1455,9 +1453,7 @@ of notes.
 
 #+begin_src emacs-lisp
 (use-package org-journal
-  :bind (("C-c j j" . org-journal-new-entry)
-	 ("C-c j s" . org-journal-new-scheduled-entry)
-	 ("C-c j o" . org-journal-open-current-journal-file))
+  :bind (("C-c C-x j" . org-journal-open-current-journal-file))
   :custom
   (org-journal-dir "~/org/roam/journal")
   (org-journal-file-type 'weekly)
@@ -1488,7 +1484,7 @@ of notes.
   (org-journal-file-format "%Y-%m-%d.org")
   (org-journal-date-format "%A, %d %B")
   (org-journal-enable-agenda-integration t))
-#+end_src
+  #+end_src
 
 ** Org Jira
 
