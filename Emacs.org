@@ -1302,24 +1302,28 @@ which machine I am capturing the item. It's not always correct, but
 usually I am in a work frame of mind on my work computer and vice versa.
 
 #+begin_src emacs-lisp
-(defun org-default-notes-file-from-system-name ()
-  (let ((name (downcase (car (split-string (system-name) "\\.")))))
-    (expand-file-name (format "%s.org" name) "~/org")))
+(defun sb/org-journal-new-entry-location ()
+  "Creates a new date entry, if necessary, and moves to the current date."
+  (org-journal-new-entry t)
+  (org-journal-open-current-journal-file))
 
 (use-package org
   :straight org-plus-contrib
   :custom
-  (org-default-notes-file (org-default-notes-file-from-system-name))
+  (org-default-notes-file
+   (let ((name (downcase (car (split-string (system-name) "\\.")))))
+     (expand-file-name (format "%s.org" name) "~/org")))
+  
   (org-capture-templates
    '(("t" "TODO" entry (file "") "* TODO %?")
      ("l" "TODO with [l]ink to here" entry (file "") "* TODO %?\ncf %a")
 
      ("T" "Trip" entry (file "") (file "templates/trip.org"))
 
-     ("j" "Journal Entry" entry (function org-journal-open-current-journal-file)
+     ("j" "Journal Entry" entry (function sb/org-journal-new-entry-location)
       "* %(format-time-string org-journal-time-format)%?"
       :jump-to-captured t)
-     ("J" "Jira ticket" entry (function org-journal-open-current-journal-file)
+     ("J" "Jira ticket" entry (function sb/org-journal-new-entry-location)
       (file "templates/jira.org")
       :jump-to-captured t)
 
