@@ -1785,7 +1785,7 @@ post from the index page."
 
 ** Blog server
 
-While noodling around with my blog locally I publish to =~/public_html=
+While noodling around with my blog locally I publish to =~/blog=
 and use a simple Python server to host it.
 
 #+begin_src emacs-lisp
@@ -1803,79 +1803,65 @@ and use a simple Python server to host it.
 This needs clearing up.
 
 #+begin_src emacs-lisp
-(setq blog/copyright "<p>Copyright &copy; 2001-2020 Stig Brautaset</p>")
+(setq org-export-allow-bind-keywords t)
 
-(setq blog/org-html-preamble "
-<nav>
-  <ul>
-    <li><a accesskey=\"H\" href=\"index.html\">Home</a></li>
-    <li><a accesskey=\"p\" href=\"publications.html\">Publications</a></li>
-    <li><a accesskey=\"A\" href=\"about.html\">About</a></li>
-  </ul>
-</nav>
+;; Don't use inline CSS for source code
+(setq org-html-htmlize-output-type "css")
+
+(setq sb/copyright "<p>Copyright &copy; 2001-2020 Stig Brautaset</p>")
+
+(setq org-html-footnotes-section "<div id=\"footnotes\"><hr/><!--%s-->%s</div>")
+
+(setq org-html-format-drawer-function
+      (lambda (name content)
+	(format "<div class=\"drawer %s\"><h6>%s</h6>%s</div>"
+		(downcase name)
+		(capitalize name)
+		content)))
+
+(setq org-html-home/up-format "
+<div id=\"org-div-home-and-up\">
+  <nav>
+    <a accesskey=\"h\" href=\"%s\">Home</a> 
+    |
+    <a accesskey=\"H\" href=\"%s\">About</a>
+  </nav>
+</div>
 ")
-
-(setq blog/org-html-postamble (concat "
-<nav>
-  <ul>
-    <li><a accesskey=\"H\" href=\"../../index.html\">Home</a></li>
-    <li><a accesskey=\"A\" href=\"../../about.html\">About</a></li>
-  </ul>
-</nav>
-" blog/copyright))
 
 (setq common-properties
       '(:author "Stig Brautaset"
-		:email "stig@brautaset.org"
+	:email "stig@brautaset.org"
 
-		:section-numbers nil
-		:time-stamp-file nil
-		:with-drawers t
-		:with-toc nil
+	:section-numbers nil
+	:time-stamp-file nil
+	:with-drawers t
+	:with-toc nil
 
-		;; Don't use inline CSS for source code
-		:with-html-htmlize-output-type "css"
-		:with-html-preamble blog/org-html-preamble
-		:with-html-postamble blog/org-html-postamble
-		:with-html-fromta-drawer-function (lambda (name content)
-						    (format "<div class=\"drawer %s\"><h6>%s</h6>%s</div>"
-							    (downcase name)
-							    (capitalize name)
-							    content))
-		:with-html-footnotes-section "<div id=\"footnotes\"><hr/><!--%s-->%s</div>"
-
-		:html-doctype "html5"
-		:html-head-include-default-style nil
-		:html-head-include-scripts nil
-		:html-html5-fancy t
-		:html-metadata-timestamp-format "%e %B %Y"))
+	:html-doctype "html5"
+	:html-head-include-default-style nil
+	:html-head-include-scripts nil
+	:html-html5-fancy t
+	:html-metadata-timestamp-format "%e %B %Y"))
 
 (setq org-publish-project-alist
       `(("www"
-	 :components ("www-pages" "www-articles" "www-static" "www-rss"))
+	 :components ("www-pages" "www-articles" "www-rss"))
 
-	("www-static"
+        ("www-pages"
 	 ,@common-properties
 	 :base-directory "~/blog"
-	 :base-extension "css\\|jpg\\|jpeg\\|png\\|pdf\\|html\\|xml"
-	 :recursive t
-	 :publishing-directory "~/public_html"
-	 :publishing-function org-publish-attachment)
-
-	("www-pages"
-	 ,@common-properties
-	 :base-directory "~/blog"
-	 :exclude ".*"
-	 :html-postamble (lambda (ignored) blog/copyright) ;; no bottom nav for pages
-	 :include ("index.org" "publications.org" "articles.org" "about.org")
-	 :publishing-directory "~/public_html"
+         :exclude ".*"
+	 :html-postamble ,sb/copyright
+	 :include ("index.org" "articles.org" "about.org" "style-demo.org")
+	 :publishing-directory "~/blog"
 	 :publishing-function org-html-publish-to-html)
 
 	("www-articles"
 	 ,@common-properties
 	 :base-directory "~/blog/articles"
-	 :html-preamble nil ;; no preamble (top nav!) for articles
-	 :publishing-directory "~/public_html/articles"
+         :html-postamble ,sb/copyright
+	 :publishing-directory "~/blog/articles"
 	 :publishing-function org-html-publish-to-html
 	 :recursive t)
 
@@ -1886,10 +1872,14 @@ This needs clearing up.
 	 :html-link-home "https://www.brautaset.org"
 	 :html-link-use-abs-url t
 	 :include ("feed.org")
-	 :publishing-directory "~/public_html"
+	 :publishing-directory "~/blog"
 	 :publishing-function (org-rss-publish-to-rss)
-	 :rss-image-url "https://www.brautaset.org/etc/icon.png"
+	 :rss-image-url "https://www.brautaset.org/icon.png"
 	 :rss-extension "xml")))
+
+;; Turn off a harmless (but annoying) warning during publication.
+;; ("Can't guess python-indent-offset, using defaults 4")
+(setq python-indent-guess-indent-offset-verbose nil)
 #+end_src
 
 ** Turn off annoying ~python-indent-offset~ during publication
