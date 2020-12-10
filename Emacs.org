@@ -1577,6 +1577,7 @@ folder.
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
   :custom
+  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
   (notmuch-search-oldest-first nil)
   (notmuch-always-prompt-for-sender t)
   (notmuch-address-use-company nil)
