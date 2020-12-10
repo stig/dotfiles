@@ -1390,6 +1390,7 @@ if it improves how I work.
   :hook
   (after-init . org-roam-mode)
   :custom
+  (org-roam-rename-file-on-title-change t)
   (org-roam-directory "~/org/roam")
   (org-roam-completion-system 'ivy)
   (org-roam-tag-sources '(prop all-directories))
