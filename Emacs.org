@@ -1703,7 +1703,7 @@ post from the index page."
       ;; Would have loved to use `org-insert-link' here but
       ;; I can't stop it from presenting a prompt.
       (insert "[[file:" path "][" title "]]\n"
-              "#+include: " path "::begin_abstract :only-contents t")
+              "#+include: " path "::abstract :only-contents t")
       ;; Need to go back to the first line to set tags, as
       ;; org-set-tags assumes point is on a headline.
       (goto-char (point-min))
