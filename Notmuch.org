@@ -23,7 +23,7 @@ primary_email=stig@brautaset.org
 other_email=stig@circleci.com
 
 [new]
-tags=new;unread;inbox
+tags=new;inbox
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
