@@ -27,7 +27,7 @@ tags=new;inbox
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
-exclude_tags=deleted;spam;muted;<<ignore-tag()>>
+exclude_tags=deleted;spam;<<ignore-tag()>>
 
 [maildir]
 synchronize_flags=true
@@ -91,11 +91,7 @@ mbsync <<mailbox()>>
 
 Assign tags based on server filtering.
 
-Propagate muted tag to new messages to muted threads. We must include
-=tag:muted= in this search, and cannot include =tag:new=, otherwise
-the search won't find anything.
-
-Moreover I tag sent mail and remove it from my inbox. I decide whether
+I tag sent mail and remove it from my inbox. I decide whether
 it's sent mail based on which mailbox it's in on the server.
 
 Spam, archived, and deleted messages gets tagged as such, based on
@@ -115,8 +111,6 @@ through my provider's spam filter, so they don't bother me.
 
 #+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
-+muted -- tag:muted and thread:{tag:muted}
-
 -inbox -unread +sent -- tag:new and path:/Sent/
 
 -inbox +spam         -- tag:new and path:/Junk/

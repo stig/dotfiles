@@ -1598,8 +1598,7 @@ folder.
      ("u" notmuch-show-mark-read-tags "Mark read")
      ("f" ("+flagged") "Flag")
      ("s" ("+spam" "-inbox") "Mark as spam")
-     ("d" ("+deleted" "-inbox") "Delete")
-     ("m" ("+muted") "Mute Thread")))))
+     ("d" ("+deleted" "-inbox") "Delete")))))
 #+END_SRC
 
 * Themes
