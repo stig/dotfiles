@@ -37,62 +37,101 @@ synchronize_flags=true
 
 Move messages based on tags, to avoid other email clients seing just a giant INBOX.
 
-#+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/pre-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+#+name: notmuch-search
+#+begin_src sh :tangle no :padline no
+notmuch search --exclude=false --output=files --format=text0
+#+end_src
+
+#+name: xargs-mv
+#+begin_src sh :tangle no :padline no
+xargs -0I % mv -fv %
+#+end_src
+
+#+name: mailbox
+#+begin_src emacs-lisp
+(if (string-match "margil" (system-name)) "gandi" "gmail")
+#+end_src
+
+#+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t :noweb yes
 set -euo pipefail
 IFS=$'\n\t'
 
-# Fix paths; files may be moved/removed by mbsync
-notmuch new --no-hooks
+echo "Pruning deleted drafts.."
+<<notmuch-search>> -- tag:deleted and tag:draft | xargs -0 rm -fv
 
-# Prune deleted drafts immediately
-notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm
+echo "Move deleted mail to Trash.."
+<<notmuch-search>> -- tag:deleted and tag:gandi and not path:"gandi/Trash/**" \
+    | <<xargs-mv>> ~/.mail/gandi/Trash/cur/ || true
+<<notmuch-search>> -- tag:deleted and tag:gmail and not path "gmail/[Gmail]/Trash/**" \
+    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Trash/cur || true
 
-# Expunge old deleted mail
-notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm
+# echo "Expunge old deleted mail.."
+# <<notmuch-search>> -- tag:deleted and path:/Trash/ and date:..4w | xargs -0 rm -fv
 
-# Move deleted mail to Trash, for non-notmuch clients.
-notmuch search --output=files --format=text0 -- tag:gandi and tag:deleted and not path:"gandi/Trash/**" | xargs -0I {} mv {} ~/.mail/gandi/Trash/new/
+echo "Move spam in INBOX to correct folder on server.."
+<<notmuch-search>> -- tag:spam and not tag:deleted and tag:gandi and not path:"gandi/Junk/**" \
+    | <<xargs-mv>> ~/.mail/gandi/Junk/cur/ || true
+<<notmuch-search>> -- tag:spam and not tag:deleted and tag:gmail and not path:"gmail/[Gmail]/Spam/**" \
+    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Spam/cur/ || true
 
+echo "Move incorrectly-tagged spam to INBOX.."
+<<notmuch-search>> -- not tag:spam and tag:gandi and path:"gandi/Junk/**" \
+    | <<xargs-mv>> ~/.mail/gandi/INBOX/cur/ || true
+<<notmuch-search>> -- not tag:spam and tag:gmail and path:"gmail/[Gmail]/Spam/**" \
+    | <<xargs-mv>> ~/.mail/gmail/INBOX/cur/ || true
 
-# Move spam in INBOX to correct folder on server
-notmuch search --output=files --format=text0 -- tag:gandi and tag:spam and not path:"gandi/Junk/**" | xargs -0I {} mv {} ~/.mail/gandi/Junk/new/
+echo "Remove 'new' tag for old messages.."
+notmuch tag -new -- tag:new
 
-# Move incorrectly-tagged spam into inbox
-notmuch search --output=files --format=text0 -- tag:gandi and not tag:spam and path:"gandi/Junk/**" | xargs -0I {} mv {} ~/.mail/gandi/INBOX/new/
-
+echo "Synchronise local mailbox with upstream.."
+mbsync <<mailbox()>>
 #+END_SRC
 
 * Script to run immediately after checking for new mail
 
 Assign tags based on server filtering.
 
-#+BEGIN_SRC sh :tangle "~/.mail/.notmuch/hooks/post-new" :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-# Propagate muted tag to new messages to muted threads.
-# We must include `tag:muted` in this search, and cannot include
-# `tag:new`, otherwise the search won't find anything.
+Propagate muted tag to new messages to muted threads. We must include
+=tag:muted= in this search, and cannot include =tag:new=, otherwise
+the search won't find anything.
+
+Moreover I tag sent mail and remove it from my inbox. I decide whether
+it's sent mail based on which mailbox it's in on the server.
+
+Spam, archived, and deleted messages gets tagged as such, based on
+their mailboxes on the server.
+
+I don't normally want to see mailing list posts in my inbox, so remove
+that tag. (And add specific tags based on their lists.)
+
+Messages to particular aliases at my domain also gets tagged
+appropriately.
+
+Order confirmation messages from Amazon gets tagged so I can
+batch-process them once a week.
+
+Finally I tag some persistent spammers that are pretty good at getting
+through my provider's spam filter, so they don't bother me.
+
+#+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
 +muted -- tag:muted and thread:{tag:muted}
 
-# Tag sent mail & remove from inbox
--inbox -unread +sent -- tag:new and path:"gandi/Sent/**" or path:"gmail/[Gmail]/Sent Mail/**"
+-inbox -unread +sent -- tag:new and path:/Sent/
 
--inbox +spam         -- tag:new and path:"gandi/Junk/**"
--inbox +archived     -- tag:new and path:"gandi/Archive/**"
-
-# If I delete it on the server, mark it deleted here
-+deleted  -- tag:new and path:"gandi/Trash/**" path:"gmail/[Gmail]/Trash/**"
+-inbox +spam         -- tag:new and path:/Junk/
+-inbox +archived     -- tag:new and path:/Archive/
+-inbox +deleted      -- tag:new and path:/Trash/
 
 +gandi    -- tag:new and path:"gandi/**"
 +circleci -- tag:new and path:"gmail/**"
 
-# Add specific tags for mailing lists, and remove from inbox
 +lists +org-mode -inbox -- tag:new and to:emacs-orgmode@gnu.org
 +lists +clojure -inbox  -- tag:new and to:clojure@googlegroups.com
 
 # V. low volume lists gets to stay in inbox
 +lists +tuls -- tag:new and to:tuls@debussy.pauken.co.uk
 
-# Is it *to* a particular alias at my domain?
 +fam         -- tag:new and to:fam@brautaset.org
 +solve       -- tag:new and to:solve@brautaset.org
 
@@ -107,12 +146,9 @@ notmuch tag --batch <<EOF
 # Help me periodically confirm receipt of orders
 +to_confirm -inbox -- tag:new and from:auto-confirm@amazon.co.uk
 
-# Tag *very persistent* spammers
 +spam -inbox -- tag:new and from:alexandre@les-caves.fr
 +spam -inbox -- tag:new and from:alexandre@agence-gwa.com
 +spam -inbox -- tag:new and from:replies@oracle-mail.com
 
-# Drop the 'new' tag, just used for optimising tagging
--new -- tag:new
 EOF
 #+END_SRC
