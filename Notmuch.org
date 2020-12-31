@@ -23,7 +23,7 @@ primary_email=stig@brautaset.org
 other_email=stig@circleci.com
 
 [new]
-tags=new;inbox
+tags=new
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
@@ -106,38 +106,40 @@ through my provider's spam filter, so they don't bother me.
 
 #+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
--inbox -unread +sent -- tag:new and path:/Sent/
++inbox -- tag:new folder:gandi/INBOX
++inbox -- tag:new folder:gmail/Inbox
 
--inbox +spam         -- tag:new and path:/Junk/
--inbox +archived     -- tag:new and path:/Archive/
--inbox +deleted      -- tag:new and path:/Trash/
+-unread +sent -- tag:new path:/Sent/
 
-+gandi    -- tag:new and path:"gandi/**"
-+circleci -- tag:new and path:"gmail/**"
++spam         -- tag:new path:/Junk/
++archived     -- tag:new path:/Archive/
++deleted      -- tag:new path:/Trash/
 
-+lists +org-mode -inbox -- tag:new and to:emacs-orgmode@gnu.org
-+lists +clojure -inbox  -- tag:new and to:clojure@googlegroups.com
++gandi        -- tag:new path:"gandi/**"
++circleci     -- tag:new path:"gmail/**"
 
-# V. low volume lists gets to stay in inbox
-+lists +tuls -- tag:new and to:tuls@debussy.pauken.co.uk
++lists +org-mode  -- tag:new to:emacs-orgmode@gnu.org
++lists +clojure	  -- tag:new to:clojure@googlegroups.com
 
-+fam         -- tag:new and to:fam@brautaset.org
-+solve       -- tag:new and to:solve@brautaset.org
++inbox +lists +tuls -- tag:new to:tuls@debussy.pauken.co.uk
 
-# Tag various common senders
-+lobsters    -- tag:new and from:nobody@lobste.rs
-+github      -- tag:new and from:notifications@github.com
-+pagerduty   -- tag:new and from:no-reply@pagerduty.com
-+linkedin    -- tag:new and from:messaging-digest-noreply@linkedin.com
-+patreon     -- tag:new and from:bingo@patreon.com
-+guitarhacks -- tag:new and from:support@guitarhacks.com
++fam   -- tag:new to:fam@brautaset.org
++solve -- tag:new to:solve@brautaset.org
+
++lobsters    -- tag:new from:nobody@lobste.rs
++github      -- tag:new from:notifications@github.com
++pagerduty   -- tag:new from:no-reply@pagerduty.com
++linkedin    -- tag:new from:messaging-digest-noreply@linkedin.com
++patreon     -- tag:new from:bingo@patreon.com
++guitarhacks -- tag:new from:support@guitarhacks.com
 
 # Help me periodically confirm receipt of orders
-+to_confirm -inbox -- tag:new and from:auto-confirm@amazon.co.uk
++to_confirm -inbox -- tag:new from:auto-confirm@amazon.co.uk
 
-+spam -inbox -- tag:new and from:alexandre@les-caves.fr
-+spam -inbox -- tag:new and from:alexandre@agence-gwa.com
-+spam -inbox -- tag:new and from:replies@oracle-mail.com
+# Persistent spammers
++spam -inbox -- tag:new from:alexandre@les-caves.fr
++spam -inbox -- tag:new from:alexandre@agence-gwa.com
++spam -inbox -- tag:new from:replies@oracle-mail.com
 
 EOF
 #+END_SRC
