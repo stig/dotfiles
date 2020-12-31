@@ -26,7 +26,7 @@ AltMap yes
 Subfolders Verbatim
 Path ~/.mail/gandi/
 Inbox ~/.mail/gandi/INBOX
-Trash trash
+Trash Trash
 
 Channel gandi
 Master :gandi-remote:
