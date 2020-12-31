@@ -8,11 +8,6 @@ nice Emacs client.
 For work/life balance I add my work tag to excluded mail, to avoid
 seeing work mail on my personal machine.
 
-#+name: ignore-tag
-#+begin_src emacs-lisp
-(if (string-match "margil" (system-name)) "circleci" "gandi")
-#+end_src
-
 #+begin_src conf :tangle ~/.notmuch-config :noweb yes
 [database]
 path=/Users/stig/.mail
@@ -27,7 +22,7 @@ tags=new
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
-exclude_tags=deleted;spam;<<ignore-tag()>>
+exclude_tags=deleted
 
 [maildir]
 synchronize_flags=true
@@ -39,7 +34,7 @@ Move messages based on tags, to avoid other email clients seing just a giant INB
 
 #+name: notmuch-search
 #+begin_src sh :tangle no :padline no
-notmuch search --exclude=false --output=files --format=text0
+notmuch search --output=files --format=text0
 #+end_src
 
 #+name: xargs-mv
@@ -55,25 +50,25 @@ echo "Pruning deleted drafts.."
 <<notmuch-search>> -- tag:deleted and tag:draft | xargs -0 rm -fv
 
 echo "Move deleted mail to Trash.."
-<<notmuch-search>> -- tag:deleted and tag:gandi and not path:"gandi/Trash/**" \
-    | <<xargs-mv>> ~/.mail/gandi/Trash/cur/ || true
-<<notmuch-search>> -- tag:deleted and tag:gmail and not path "gmail/[Gmail]/Trash/**" \
-    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Trash/cur || true
+<<notmuch-search>> -- tag:deleted and tag:gandi and not folder:"gandi/Trash" \
+    | <<xargs-mv>> ~/.mail/gandi/Trash/cur/
+<<notmuch-search>> -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" \
+    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Trash/cur/
 
 # echo "Expunge old deleted mail.."
 # <<notmuch-search>> -- tag:deleted and path:/Trash/ and date:..4w | xargs -0 rm -fv
 
 echo "Move spam in INBOX to correct folder on server.."
-<<notmuch-search>> -- tag:spam and not tag:deleted and tag:gandi and not path:"gandi/Junk/**" \
-    | <<xargs-mv>> ~/.mail/gandi/Junk/cur/ || true
-<<notmuch-search>> -- tag:spam and not tag:deleted and tag:gmail and not path:"gmail/[Gmail]/Spam/**" \
-    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Spam/cur/ || true
+<<notmuch-search>> -- tag:spam and tag:gandi and not folder:"gandi/Junk" \
+    | <<xargs-mv>> ~/.mail/gandi/Junk/cur/
+<<notmuch-search>> -- tag:spam and tag:gmail and not folder:"gmail/[Gmail]/Spam" \
+    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Spam/cur/
 
 echo "Move incorrectly-tagged spam to INBOX.."
-<<notmuch-search>> -- not tag:spam and tag:gandi and path:"gandi/Junk/**" \
-    | <<xargs-mv>> ~/.mail/gandi/INBOX/cur/ || true
-<<notmuch-search>> -- not tag:spam and tag:gmail and path:"gmail/[Gmail]/Spam/**" \
-    | <<xargs-mv>> ~/.mail/gmail/INBOX/cur/ || true
+<<notmuch-search>> -- not tag:spam and tag:gandi and folder:"gandi/Junk" \
+    | <<xargs-mv>> ~/.mail/gandi/INBOX/cur/
+<<notmuch-search>> -- not tag:spam and tag:gmail and folder:"gmail/[Gmail]/Spam" \
+    | <<xargs-mv>> ~/.mail/gmail/INBOX/cur/
 
 echo "Remove 'new' tag for old messages.."
 notmuch tag -new -- tag:new

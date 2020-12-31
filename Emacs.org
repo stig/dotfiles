@@ -1587,7 +1587,8 @@ folder.
                       ("stig@circleci.com" . "\"gmail/[Gmail]/Sent Mail\" +sent -inbox -unread")))
   (notmuch-saved-searches
    (quote
-    ((:name "Inbox" :query "tag:inbox" :key "i")
+    ((:name "Private Inbox" :query "tag:inbox and tag:gandi" :key "p")
+     (:name "Work Inbox" :query "tag:inbox and tag:gmail" :key "w")
      (:name "Flagged" :query "tag:flagged" :key "f")
      (:name "Drafts" :query "tag:draft" :key "d")
      (:name "Recent" :query "date:2d.." :count-query "date:2d.. and not tag:lists" :key "r" :search-type tree)
