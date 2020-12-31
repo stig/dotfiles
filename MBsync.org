@@ -82,3 +82,13 @@ Expunge Both
 # Save the synchronization state files in the relevant directory
 SyncState *
 #+end_src
+
+* Create =inboxes= group for speedy check of new mail
+
+I'll use this in my Notmuch hooks.
+
+#+begin_src conf
+Group inboxes
+Channel gandi:inbox
+Channel gmail:inbox
+#+end_src
