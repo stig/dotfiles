@@ -56,7 +56,7 @@ echo "Move deleted mail to Trash.."
     | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Trash/cur/
 
 # echo "Expunge old deleted mail.."
-# <<notmuch-search>> -- tag:deleted and path:/Trash/ and date:..4w | xargs -0 rm -fv
+<<notmuch-search>> -- tag:deleted and date:..4w | xargs -0 rm -fv
 
 echo "Move spam in INBOX to correct folder on server.."
 <<notmuch-search>> -- tag:spam and tag:gandi and not folder:"gandi/Junk" \
