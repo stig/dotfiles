@@ -897,6 +897,7 @@ A templating engine for Emacs.
   (cider-font-lock-dynamically '(macro core function var)))
 
 (use-package clj-refactor
+  :disabled
   :after (yas clojure-mode)
   :init
   (defun sb/clojure-mode-hook ()
