@@ -1390,6 +1390,12 @@ if it improves how I work.
   :hook
   (after-init . org-roam-mode)
   :custom
+  (org-roam-dailies-directory "daily/")
+  (org-roam-dailies-capture-templates
+   '(("d" "daily" entry #'org-roam-capture--get-point
+      "* %<%H:%M> %?\n"
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n\n")))
   (org-roam-rename-file-on-title-change t)
   (org-roam-directory "~/org/roam")
   (org-roam-completion-system 'ivy)
@@ -1397,7 +1403,8 @@ if it improves how I work.
   ;; The below required due to https://github.com/org-roam/org-roam/issues/597
   (org-roam-index-file "~/org/roam/index.org")
   :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
+              (("C-c n d" . org-roam-dailies-capture-today)
+	       ("C-c n l" . org-roam)
                ("C-c n j" . org-roam-jump-to-index)
 	       ("C-c n b" . org-roam-db-build-cache)
                ("C-c n f" . org-roam-find-file)
