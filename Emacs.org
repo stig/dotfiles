@@ -1332,6 +1332,13 @@ usually I am in a work frame of mind on my work computer and vice versa.
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
 
+     ("f" "Decide Focus Areas" entry
+      (file "~/org/focus-areas.org")
+      (file "templates/focus-areas.org"))
+     ("b" "Boulders for the Week" entry
+      (file "~/org/boulders.org")
+      "* %<%Y/%B/Week %V>\n- %?")
+
      ("r" "New GTD Review" entry
       (file+olp+datetree "~/org/archive/gtd_review.org")
       (file "templates/gtd-review.org") :clock-in t))))
