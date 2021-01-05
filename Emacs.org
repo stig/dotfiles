@@ -1314,7 +1314,7 @@ usually I am in a work frame of mind on my work computer and vice versa.
   (org-default-notes-file
    (let ((name (downcase (car (split-string (system-name) "\\.")))))
      (expand-file-name (format "%s.org" name) "~/org")))
-  
+
   (org-capture-templates
    '(("t" "TODO" entry (file "") "* TODO %?")
      ("l" "TODO with [l]ink to here" entry (file "") "* TODO %?\ncf %a")
@@ -1387,8 +1387,7 @@ works really well with REST APIs to reduce boilerplate.
 #+end_src
 
 ** Roam
-[[https://github.com/org-roam/org-roam][
-Org-roam]] is a new one for me. It's meant to be an "exo-brain",
+[[https://github.com/org-roam/org-roam][Org-roam]] is a new one for me. It's meant to be an "exo-brain",
 modelled after the Zettelkasten method. I'm excited to try it and see
 if it improves how I work.
 
@@ -1839,7 +1838,7 @@ This needs clearing up.
 (setq org-html-home/up-format "
 <div id=\"org-div-home-and-up\">
   <nav>
-    <a accesskey=\"h\" href=\"%s\">Home</a> 
+    <a accesskey=\"h\" href=\"%s\">Home</a>
     |
     <a accesskey=\"H\" href=\"%s\">About</a>
   </nav>
