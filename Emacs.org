@@ -861,7 +861,10 @@ A templating engine for Emacs.
 #+end_src
 
 
-* Configure major modes
+* Major modes
+
+Each buffer has exactly one major mode. (Though a major mode can be
+/derived/ from another one.)
 
 ** Clojure
 
@@ -1041,6 +1044,71 @@ easily and have them renumbered automatically.
   (markdown-fontify-code-blocks-natively t)
   (markdown-asymmetric-header t))
 #+END_SRC
+** Notmuch
+
+I like to use Emacs for /all/ writing, including email. I don't want a
+separate program to read and write emails, so it follows I must /read/
+email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
+
+Notmuch works pretty well for me out of the box.
+
+Notmuch's Emacs bindings are closely tied to the binary programs, so
+they (strongly) recommend that you don't install Notmuch from ELPA.
+
+I configure Notmuch to save a copy of outgoing mail into my sent mail
+folder.
+
+#+BEGIN_SRC emacs-lisp
+(use-package notmuch
+  :demand
+  :hook
+  (notmuch-message-mode . turn-off-auto-fill)
+  :custom
+  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
+  (notmuch-search-oldest-first nil)
+  (notmuch-always-prompt-for-sender t)
+  (notmuch-address-use-company nil)
+  (notmuch-hello-thousands-separator ",")
+  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
+  (notmuch-fcc-dirs '(("stig@brautaset.org" . "gandi/Sent +sent -inbox -unread")
+                      ("stig@circleci.com" . "\"gmail/[Gmail]/Sent Mail\" +sent -inbox -unread")))
+  (notmuch-saved-searches
+   `((:name "Inbox" :query ,(format "tag:inbox and tag:%s"
+				    (if (string-match "margil" (system-name))
+					"gandi" "circleci"))
+	    :key "i")
+     (:name "Flagged" :query "tag:flagged" :key "f")
+     (:name "Drafts" :query "tag:draft" :key "d")
+     (:name "Recent" :query "date:2d.." :count-query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+     (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
+  (notmuch-tagging-keys
+   (quote
+    (("a" notmuch-archive-tags "Archive")
+     ("u" notmuch-show-mark-read-tags "Mark read")
+     ("f" ("+flagged") "Flag")
+     ("s" ("+spam" "-inbox") "Mark as spam")
+     ("d" ("+deleted" "-inbox") "Delete")))))
+#+END_SRC
+
+
+** PlantUML
+
+I sometimes need to draw UML diagrams. For some reason I can't get the
+Jar to work in the major mode, but it works fine in Org mode.
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :custom
+  (plantuml-default-exec-mode 'executable)
+  (plantuml-font-lock-keywords t))
+
+(use-package ob-plantuml
+  :after org
+  :straight nil
+  :custom
+  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
+#+end_src
+
 ** Protobuf Mode
 We use protobufs for service-to-service communication at work.
 
@@ -1129,24 +1197,6 @@ CircleCI and CloudFormation loves YAML.
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode)
 #+END_SRC
-
-** PlantUML
-
-I sometimes need to draw UML diagrams. For some reason I can't get the
-Jar to work in the major mode, but it works fine in Org mode.
-
-#+begin_src emacs-lisp
-(use-package plantuml-mode
-  :custom
-  (plantuml-default-exec-mode 'executable)
-  (plantuml-font-lock-keywords t))
-
-(use-package ob-plantuml
-  :after org
-  :straight nil
-  :custom
-  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
-#+end_src
 
 * Org mode
 
@@ -1563,52 +1613,6 @@ I use org-drill for drilling music theory.
   (org-drill-add-random-noise-to-intervals-p t)
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
-
-* Email
-
-I like to use Emacs for /all/ writing, including email. I don't want a
-separate program to read and write emails, so it follows I must /read/
-email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
-
-Notmuch works pretty well for me out of the box.
-
-Notmuch's Emacs bindings are closely tied to the binary programs, so
-they (strongly) recommend that you don't install Notmuch from ELPA.
-
-I configure Notmuch to save a copy of outgoing mail into my sent mail
-folder.
-
-#+BEGIN_SRC emacs-lisp
-(use-package notmuch
-  :demand
-  :hook
-  (notmuch-message-mode . turn-off-auto-fill)
-  :custom
-  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
-  (notmuch-search-oldest-first nil)
-  (notmuch-always-prompt-for-sender t)
-  (notmuch-address-use-company nil)
-  (notmuch-hello-thousands-separator ",")
-  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
-  (notmuch-fcc-dirs '(("stig@brautaset.org" . "gandi/Sent +sent -inbox -unread")
-                      ("stig@circleci.com" . "\"gmail/[Gmail]/Sent Mail\" +sent -inbox -unread")))
-  (notmuch-saved-searches
-   `((:name "Inbox" :query ,(format "tag:inbox and tag:%s"
-				    (if (string-match "margil" (system-name))
-					"gandi" "circleci"))
-	    :key "i")
-     (:name "Flagged" :query "tag:flagged" :key "f")
-     (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "Recent" :query "date:2d.." :count-query "date:2d.. and not tag:lists" :key "r" :search-type tree)
-     (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
-  (notmuch-tagging-keys
-   (quote
-    (("a" notmuch-archive-tags "Archive")
-     ("u" notmuch-show-mark-read-tags "Mark read")
-     ("f" ("+flagged") "Flag")
-     ("s" ("+spam" "-inbox") "Mark as spam")
-     ("d" ("+deleted" "-inbox") "Delete")))))
-#+END_SRC
 
 * Themes
 
