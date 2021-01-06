@@ -553,7 +553,11 @@ when one is.
 (bind-key "M-u" #'upcase-dwim)
 (bind-key "M-l" #'downcase-dwim)
 #+end_src
-* Configure minor modes
+* Minor modes
+
+A minor mode provides some functionality that you can turn off or on.
+Multiple minor modes can be active for a buffer.
+
 ** Ace Window
 
 This lets me rapidly switch to a different frame/window.  I use
@@ -578,6 +582,11 @@ automatically commit when editing files.
   (gac-automatically-push-p t))
 #+END_SRC
 
+** Company (COMplete ANYthing)
+#+begin_src emacs-lisp
+(use-package company
+  :hook (after-init . global-company-mode))
+#+end_src
 ** Counsel
 
 This provides =counsel-find-file=, among others.
@@ -596,11 +605,6 @@ This provides =counsel-find-file=, among others.
   (counsel-mode 1))
 #+end_src
 
-** Company (COMplete ANYthing)
-#+begin_src emacs-lisp
-(use-package company
-  :hook (after-init . global-company-mode))
-#+end_src
 ** Diff Highlight
 
 #+begin_src emacs-lisp
