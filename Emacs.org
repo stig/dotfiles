@@ -1385,8 +1385,6 @@ if it improves how I work.
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
-  :hook
-  (after-init . org-roam-mode)
   :custom
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
@@ -1404,16 +1402,15 @@ if it improves how I work.
   (org-roam-tag-sources '(prop all-directories))
   ;; The below required due to https://github.com/org-roam/org-roam/issues/597
   (org-roam-index-file "~/org/roam/index.org")
-  :bind (:map org-roam-mode-map
-              (("C-c n d" . org-roam-dailies-capture-today)
-	       ("C-c n l" . org-roam)
-               ("C-c n j" . org-roam-jump-to-index)
-	       ("C-c n b" . org-roam-db-build-cache)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
+  :bind ((("C-c n d" . org-roam-dailies-capture-today)
+	  ("C-c n l" . org-roam)
+	  ("C-c n j" . org-roam-jump-to-index)
+	  ("C-c n b" . org-roam-db-build-cache)
+	  ("C-c n f" . org-roam-find-file)
+	  ("C-c n g" . org-roam-graph))
+	 :map org-mode-map
+	 (("C-c n i" . org-roam-insert))
+	 (("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
 *** Org Roam Protocol
