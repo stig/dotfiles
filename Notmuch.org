@@ -48,20 +48,26 @@ mv_without_uid () {
 echo "Pruning deleted drafts.."
 notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm -fv
 
+echo "Expunge old deleted mail.."
+notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm -fv
+
+echo "Delete old spam.."
+notmuch search --output=files --format=text0 -- tag:spam and date:..6w | xargs -0 rm -fv
+
 echo "Move deleted mail to Trash.."
 notmuch search --output=files -- tag:deleted and tag:gandi and not folder:"gandi/Trash" | mv_without_uid ~/.mail/gandi/Trash
 notmuch search --output=files -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Trash
 
-# echo "Expunge old deleted mail.."
-notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm -fv
-
-echo "Move identified spam to correct folder on server.."
-notmuch search --output=files -- tag:spam and tag:gandi and not folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/Junk
-notmuch search --output=files -- tag:spam and tag:gmail and not folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
+echo "Move spam messages out of inbox.."
+notmuch search --output=files -- tag:spam and folder:"gandi/INBOX" | mv_without_uid ~/.mail/gandi/Junk
+notmuch search --output=files -- tag:spam and folder:"gmail/Inbox" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
 
 echo "Move incorrectly-tagged spam to INBOX.."
-notmuch search --output=files -- not tag:spam and tag:gandi and folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/INBOX
-notmuch search --output=files -- not tag:spam and tag:gmail and folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/INBOX
+notmuch search --output=files -- not tag:spam and folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/INBOX
+notmuch search --output=files -- not tag:spam and folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/INBOX
+
+echo "Archive messages.."
+notmuch search --output=files -- not tag:inbox and folder:"gandi/INBOX" | mv_without_uid ~/.mail/gandi/Archive
 
 echo "Remove 'new' tag for old messages.."
 notmuch tag -new -- tag:new
