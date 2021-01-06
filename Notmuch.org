@@ -32,43 +32,36 @@ synchronize_flags=true
 
 Move messages based on tags, to avoid other email clients seing just a giant INBOX.
 
-#+name: notmuch-search
-#+begin_src sh :tangle no :padline no
-notmuch search --output=files --format=text0
-#+end_src
-
-#+name: xargs-mv
-#+begin_src sh :tangle no :padline no
-xargs -0I % mv -fv %
-#+end_src
-
-#+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t :noweb yes
+#+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/pre-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 set -euo pipefail
 IFS=$'\n\t'
 
+# Strip UIDs from filenames when moving mails so that mbsync doesn't
+# get confused.
+mv_without_uid () {
+    while IFS= read -r name; do
+        new_name="$(basename $name | awk -F ',' '{print $1}')"
+	[ -f "$name" ] && mv -nv "$name" "$1/new/$new_name"
+    done
+}
+
 echo "Pruning deleted drafts.."
-<<notmuch-search>> -- tag:deleted and tag:draft | xargs -0 rm -fv
+notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm -fv
 
 echo "Move deleted mail to Trash.."
-<<notmuch-search>> -- tag:deleted and tag:gandi and not folder:"gandi/Trash" \
-    | <<xargs-mv>> ~/.mail/gandi/Trash/cur/
-<<notmuch-search>> -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" \
-    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Trash/cur/
+notmuch search --output=files -- tag:deleted and tag:gandi and not folder:"gandi/Trash" | mv_without_uid ~/.mail/gandi/Trash
+notmuch search --output=files -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Trash
 
 # echo "Expunge old deleted mail.."
-<<notmuch-search>> -- tag:deleted and date:..4w | xargs -0 rm -fv
+notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm -fv
 
-echo "Move spam in INBOX to correct folder on server.."
-<<notmuch-search>> -- tag:spam and tag:gandi and not folder:"gandi/Junk" \
-    | <<xargs-mv>> ~/.mail/gandi/Junk/cur/
-<<notmuch-search>> -- tag:spam and tag:gmail and not folder:"gmail/[Gmail]/Spam" \
-    | <<xargs-mv>> ~/.mail/gmail/\[Gmail\]/Spam/cur/
+echo "Move identified spam to correct folder on server.."
+notmuch search --output=files -- tag:spam and tag:gandi and not folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/Junk
+notmuch search --output=files -- tag:spam and tag:gmail and not folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
 
 echo "Move incorrectly-tagged spam to INBOX.."
-<<notmuch-search>> -- not tag:spam and tag:gandi and folder:"gandi/Junk" \
-    | <<xargs-mv>> ~/.mail/gandi/INBOX/cur/
-<<notmuch-search>> -- not tag:spam and tag:gmail and folder:"gmail/[Gmail]/Spam" \
-    | <<xargs-mv>> ~/.mail/gmail/INBOX/cur/
+notmuch search --output=files -- not tag:spam and tag:gandi and folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/INBOX
+notmuch search --output=files -- not tag:spam and tag:gmail and folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/INBOX
 
 echo "Remove 'new' tag for old messages.."
 notmuch tag -new -- tag:new

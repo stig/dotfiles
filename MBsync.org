@@ -22,7 +22,6 @@ IMAPStore gandi-remote
 Account gandi
 
 MaildirStore gandi-local
-AltMap yes
 Subfolders Verbatim
 Path ~/.mail/gandi/
 Inbox ~/.mail/gandi/INBOX
@@ -62,7 +61,6 @@ IMAPStore gmail-remote
 Account gmail
 
 MaildirStore gmail-local
-AltMap yes
 Subfolders Verbatim
 # The trailing "/" is important
 Path ~/.mail/gmail/
