@@ -1510,45 +1510,6 @@ of notes.
   :hook (after-init . org-roam-server-mode))
 #+end_src
 
-** Org Journal
-
-#+begin_src emacs-lisp
-(use-package org-journal
-  :disabled
-  :bind (("C-c j j" . org-journal-new-entry)
-	 ("C-c j o" . org-journal-open-current-journal-file))
-  :custom
-  (org-journal-dir "~/org/roam/journal")
-  (org-journal-file-type 'weekly)
-  (org-journal-file-header
-   (lambda (time)
-     (let* ((year-file (format-time-string "%Y.org" time))
-	    (year-path (expand-file-name year-file org-journal-dir))
-	    (year-title (format-time-string "%Y" time))
-	    (year-month-file (format-time-string "%Y-%m.org" time))
-	    (year-month-path (expand-file-name year-month-file org-journal-dir))
-	    (year-month-title (format-time-string "%B %Y" time)))
-       ;; Create the tag files
-       (unless (file-exists-p year-path)
-	 (with-temp-file year-path
-	   (insert "#+title: " year-title)))
-       (unless (file-exists-p year-month-path)
-	 (with-temp-file year-month-path
-	   (insert "#+title: " year-month-title)
-	   (insert "\n")
-	   (insert (format "- tags :: [[file:%s][%s]]" year-file year-title))))
-       (format (format "#+title: Week #%s
-- tags :: [[file:%s][%s]]"
-		       (format-time-string "%V" time) ;; iso calendar week
-		       year-month-file
-		       year-month-title)))))
-  (org-journal-date-prefix "* ")
-  (org-journal-time-prefix "** ")
-  (org-journal-file-format "%Y-%m-%d.org")
-  (org-journal-date-format "%A, %d %B")
-  (org-journal-enable-agenda-integration t))
-  #+end_src
-
 ** Org Jira
 
 #+begin_src emacs-lisp
