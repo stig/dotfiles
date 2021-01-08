@@ -1083,7 +1083,7 @@ folder.
    `((:name "Inbox" :query ,(concat "tag:inbox and tag:" machine-tag) :key "i")
      (:name "Flagged" :query ,(concat "tag:flagged and tag:" machine-tag) :key "f")
      (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "Recent" :query "date:2d.." :count-query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+     (:name "Recent" :query ,(concat "date:2d.. and not tag:lists and tag:" machine-tag) :key "r" :search-type tree)
      (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
   (notmuch-tagging-keys
    (quote
@@ -1093,7 +1093,6 @@ folder.
      ("s" ("+spam" "-inbox") "Mark as spam")
      ("d" ("+deleted" "-inbox") "Delete")))))
 #+END_SRC
-
 
 ** PlantUML
 
