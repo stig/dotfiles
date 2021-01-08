@@ -1444,11 +1444,11 @@ if it improves how I work.
    '(("d" "daily" entry #'org-roam-capture--get-point
       "* %<%H:%M> %?\n"
       :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n\n")
+      :head "#+title: %<%Y-%m-%d>\n#+roam-tags: %<%Yw%V>\n\n")
      ("j" "Jira entry" entry #'org-roam-capture--get-point
       (file "templates/jira.org")
       :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n\n")))
+      :head "#+title: %<%Y-%m-%d>\n#+roam-tags: %<%Yw%V>\n\n")))
   (org-roam-rename-file-on-title-change t)
   (org-roam-directory "~/org/roam")
   (org-roam-completion-system 'ivy)
