@@ -22,7 +22,7 @@ tags=new
 ignore=.mbsyncstate;.mbsyncstate.journal;.mbsyncstate.lock;.mbsyncstate.new;.uidvalidity;.isyncuidmap.db;.DS_Store
 
 [search]
-exclude_tags=deleted
+exclude_tags=deleted;spam
 
 [maildir]
 synchronize_flags=true
@@ -58,9 +58,9 @@ echo "Move deleted mail to Trash.."
 notmuch search --output=files -- tag:deleted and tag:gandi and not folder:"gandi/Trash" | mv_without_uid ~/.mail/gandi/Trash
 notmuch search --output=files -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Trash
 
-echo "Move spam messages out of inbox.."
-notmuch search --output=files -- tag:spam and folder:"gandi/INBOX" | mv_without_uid ~/.mail/gandi/Junk
-notmuch search --output=files -- tag:spam and folder:"gmail/Inbox" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
+echo "Move spam messages.."
+notmuch search --output=files -- tag:spam and path:/gandi/ and not folder:gandi/Junk | mv_without_uid ~/.mail/gandi/Junk
+notmuch search --output=files -- tag:spam and path:/gmail/ and not folder:"gmail/[Gmail]/Inbox" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
 
 echo "Move incorrectly-tagged spam to INBOX.."
 notmuch search --output=files -- not tag:spam and folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/INBOX
