@@ -1176,6 +1176,29 @@ and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/ema
 	     (cons tramp-file-name-regexp "/tmp/emacs-backup/"))
 #+end_src
 
+** Typescript
+Credit to Robin Schroer.
+
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :mode "\\.tsx\\'"
+  :defer t
+  :custom
+  (typescript-indent-level 2))
+
+(use-package tide
+  :defer t
+  :config
+  (defun sulami/tide-setup ()
+    (when (equal "tsx"
+                 (file-name-extension buffer-file-name))
+      (tide-setup)
+      (flycheck-mode +1)
+      (eldoc-mode +1)))
+  :hook
+  ((typescript-mode . sulami/tide-setup)
+   (web-mode . sulami/tide-setup)))
+#+end_src
 ** Wgrep (aka "writable grep")
 
 ~wgrep~ mode is pretty close to magic. When in a buffer showing
