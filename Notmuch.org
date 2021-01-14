@@ -113,7 +113,7 @@ notmuch tag --batch <<EOF
 +circleci     -- tag:new path:"gmail/**"
 
 +lists +org-mode  -- tag:new to:emacs-orgmode@gnu.org
-+lists +clojure	  -- tag:new to:clojure@googlegroups.com
++lists +clojure   -- tag:new to:clojure@googlegroups.com
 
 +inbox +lists +tuls -- tag:new to:tuls@debussy.pauken.co.uk
 
