@@ -69,10 +69,7 @@ Inbox ~/.mail/gmail/Inbox
 Channel gmail
 Master :gmail-remote:
 Slave :gmail-local:
-# Exclude everything under the internal [Gmail] folder, except the interesting folders
-# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
-# Or include everything
-Patterns * !CI-SPAM
+Patterns * !CI-SPAM ![Gmail]/Drafts
 # Automatically create missing mailboxes locally; not on the server
 Create Slave
 Sync All
