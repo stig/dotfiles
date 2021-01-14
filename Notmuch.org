@@ -40,8 +40,8 @@ IFS=$'\n\t'
 # get confused.
 mv_without_uid () {
     while IFS= read -r name; do
-        new_name="$(basename $name | sed 's/,U=[0-9][0-9]*//')"
-	[ -f "$name" ] && mv -nv "$name" "$1/cur/$new_name"
+        new_name="$(basename $name | awk -F ',' '{print $1}')"
+	[ -f "$name" ] && mv -nv "$name" "$1/new/$new_name"
     done
 }
 
