@@ -56,7 +56,7 @@ IFS=$'\n\t'
 mv_without_uid () {
     while IFS= read -r name; do
         new_name="$(basename $name | awk -F ',' '{print $1}')"
-	[ -f "$name" ] && mv -nv "$name" "$1/new/$new_name"
+	[ -f "$name" ] && mv -nv "$name" "$1/new/$new_name" | sed 's,/Users/stig/.mail/,,g'
     done
 }
 
