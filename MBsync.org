@@ -1,5 +1,5 @@
 #+title: Mbsync
-#+PROPERTY: header-args:conf :tangle ~/.mbsyncrc :results silent
+#+PROPERTY: header-args:conf :results silent
 
 I use =mbsync= (from the isync suite) to sync mail from my IMAP server
 to my local machine.
@@ -10,32 +10,49 @@ To rotate password:
 : security delete-generic-password -s mbsync-gandi-password
 : security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-#+BEGIN_SRC conf
-IMAPAccount gandi
+#+BEGIN_SRC conf :tangle (if (string-match "margil" (system-name)) "~/.mbsyncrc" "no")
+IMAPStore remote
 Host mail.gandi.net
 User stig@brautaset.org
 SSLType IMAPS
 AuthMechs LOGIN
 PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+PipelineDepth 1
 
-IMAPStore gandi-remote
-Account gandi
-
-MaildirStore gandi-local
+MaildirStore local
 Subfolders Verbatim
-Path ~/.mail/gandi/
-Inbox ~/.mail/gandi/INBOX
-Trash Trash
+Path ~/.mail/
+Inbox ~/.mail/INBOX
 
-Channel gandi
-Master :gandi-remote:
-Slave :gandi-local:
-Patterns *
-# Automatically create missing mailboxes locally; not on the server
-Create Slave
-Sync All
-Expunge Both
-# Save the synchronization state files in the relevant directory
+Channel inbox
+Master :remote:
+Slave :local:
+SyncState *
+
+Channel sent
+Master :remote:Sent
+Slave :local:Sent
+SyncState *
+
+Channel archive
+Master :remote:Archive
+Slave :local:Archive
+SyncState *
+
+Channel trash
+Master :remote:Trash
+Slave :local:Trash
+SyncState *
+
+Channel spam
+Master :remote:Junk
+Slave :local:Spam
+SyncState *
+
+Channel lists
+Master :remote:
+Slave :local:
+Patterns org-mode tuls
 SyncState *
 #+END_SRC
 
@@ -45,8 +62,8 @@ To rotate password:
 : security delete-generic-password -s mbsync-gmail-password
 : security add-generic-password -a stig@circleci.com -s mbsync-gmail-password -w APP-SPECIFIC-PASSWORD
 
-#+begin_src conf
-IMAPAccount gmail
+#+begin_src conf :tangle (if (string-match "pearmain" (system-name)) "~/.mbsyncrc" "no")
+IMAPStore remote
 Host imap.gmail.com
 User stig@circleci.com
 PassCmd "security find-generic-password -s mbsync-gmail-password -w"
@@ -57,33 +74,33 @@ AuthMechs PLAIN
 #CertificateFile ~/.cert/imap.gmail.com.pem
 #CertificateFile ~/.cert/Equifax_Secure_CA.pem
 
-IMAPStore gmail-remote
-Account gmail
-
-MaildirStore gmail-local
+MaildirStore local
 Subfolders Verbatim
-# The trailing "/" is important
-Path ~/.mail/gmail/
-Inbox ~/.mail/gmail/Inbox
+Path ~/.mail/
+Inbox ~/.mail/INBOX
 
-Channel gmail
-Master :gmail-remote:
-Slave :gmail-local:
-Patterns * !CI-SPAM ![Gmail]/Drafts
-# Automatically create missing mailboxes locally; not on the server
-Create Slave
-Sync All
-Expunge Both
-# Save the synchronization state files in the relevant directory
+Channel inbox
+Master :remote:
+Slave :local:
 SyncState *
-#+end_src
 
-* Create =inboxes= group for speedy check of new mail
+Channel sent
+Master :remote:[Gmail]/Sent
+Slave :local:Sent
+SyncState *
 
-I'll use this in my Notmuch hooks.
+Channel archive
+Master :remote:Archive
+Slave :local:Archive
+SyncState *
 
-#+begin_src conf
-Group inboxes
-Channel gandi:inbox
-Channel gmail:inbox
+Channel trash
+Master :remote:[Gmail]/Trash
+Slave :local:Trash
+SyncState *
+
+Channel spam
+Master :remote:[Gmail]/Spam
+Slave :local:Spam
+SyncState *
 #+end_src

@@ -8,14 +8,29 @@ nice Emacs client.
 For work/life balance I add my work tag to excluded mail, to avoid
 seeing work mail on my personal machine.
 
-#+begin_src conf :tangle ~/.notmuch-config :noweb yes
+#+name: primary-email
+#+begin_src emacs-lisp
+(if (string-match "margil" (system-name))
+    "stig@brautaset.org"
+  "stig@circleci.com")
+#+end_src
+
+#+name: other-email
+#+begin_src emacs-lisp
+(if (string-match "margil" (system-name))
+    "stig@circleci.com"
+  "stig@brautaset.org")
+#+end_src
+
+
+#+begin_src conf :tangle ~/.notmuch-config :noweb yes :noweb yes
 [database]
 path=/Users/stig/.mail
 
 [user]
 name=Stig Brautaset
-primary_email=stig@brautaset.org
-other_email=stig@circleci.com
+primary_email=<<primary-email()>>
+other_email=<<other-email()>>
 
 [new]
 tags=new
@@ -45,35 +60,29 @@ mv_without_uid () {
     done
 }
 
-echo "Pruning deleted drafts.."
-notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm -fv
+# Delete old spam and list messages
+notmuch tag --batch <<EOF
++deleted -- tag:lists and not tag:archived and date:..6w
++deleted -- tag:spam and date:..6w
+EOF
 
-echo "Expunge old deleted mail.."
-notmuch search --output=files --format=text0 -- tag:deleted and date:..4w | xargs -0 rm -fv
+# Move deleted messages
+notmuch search --output=files -- tag:deleted and not folder:Trash | mv_without_uid ~/.mail/Trash
 
-echo "Delete old spam.."
-notmuch search --output=files --format=text0 -- tag:spam and date:..6w | xargs -0 rm -fv
+# Move spam messages
+notmuch search --output=files -- tag:spam and not tag:deleted and not folder:Spam | mv_without_uid ~/.mail/Spam
 
-echo "Move deleted mail to Trash.."
-notmuch search --output=files -- tag:deleted and tag:gandi and not folder:"gandi/Trash" | mv_without_uid ~/.mail/gandi/Trash
-notmuch search --output=files -- tag:deleted and tag:gmail and not folder:"gmail/[Gmail]/Trash" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Trash
+# Move incorrectly-tagged spam OUT of Spam folder
+notmuch search --output=files -- not tag:spam and folder:Spam | mv_without_uid ~/.mail/INBOX
 
-echo "Move spam messages.."
-notmuch search --output=files -- tag:spam and path:/gandi/ and not folder:gandi/Junk | mv_without_uid ~/.mail/gandi/Junk
-notmuch search --output=files -- tag:spam and path:/gmail/ and not folder:"gmail/[Gmail]/Inbox" | mv_without_uid ~/.mail/gmail/\[Gmail\]/Spam
+# Archive messages
+notmuch search --output=files -- tag:archived not folder:Archive | mv_without_uid ~/.mail/Archive
 
-echo "Move incorrectly-tagged spam to INBOX.."
-notmuch search --output=files -- not tag:spam and folder:"gandi/Junk" | mv_without_uid ~/.mail/gandi/INBOX
-notmuch search --output=files -- not tag:spam and folder:"gmail/[Gmail]/Spam" | mv_without_uid ~/.mail/gmail/INBOX
-
-echo "Archive messages.."
-notmuch search --output=files -- not tag:inbox and folder:"gandi/INBOX" | mv_without_uid ~/.mail/gandi/Archive
-
-echo "Remove 'new' tag for old messages.."
+# Remove 'new' tag for old messages
 notmuch tag -new -- tag:new
 
-echo "Synchronise local mailbox with upstream.."
-mbsync inboxes
+# Synchronise local mailbox with upstream
+mbsync -a
 #+END_SRC
 
 * Script to run immediately after checking for new mail
@@ -100,40 +109,17 @@ through my provider's spam filter, so they don't bother me.
 
 #+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
-+inbox -- tag:new folder:gandi/INBOX
-+inbox -- tag:new folder:gmail/Inbox
++inbox        -- tag:new folder:INBOX
+-unread +sent -- tag:new folder:Sent
++spam         -- tag:new folder:Spam
 
--unread +sent -- tag:new path:/Sent/
-
-+spam         -- tag:new path:/Junk/
-+archived     -- tag:new path:/Archive/
-+deleted      -- tag:new path:/Trash/
-
-+gandi        -- tag:new path:"gandi/**"
-+circleci     -- tag:new path:"gmail/**"
-
-+lists +org-mode  -- tag:new to:emacs-orgmode@gnu.org
-+lists +clojure   -- tag:new to:clojure@googlegroups.com
-
-+inbox +lists +tuls -- tag:new to:tuls@debussy.pauken.co.uk
++lists +org-mode    -- tag:new folder:org-mode
++inbox +lists +tuls -- tag:new folder:tuls
 
 +fam   -- tag:new to:fam@brautaset.org
 +solve -- tag:new to:solve@brautaset.org
 
-+lobsters    -- tag:new from:nobody@lobste.rs
-+github      -- tag:new from:notifications@github.com
-+pagerduty   -- tag:new from:no-reply@pagerduty.com
-+linkedin    -- tag:new from:messaging-digest-noreply@linkedin.com
-+patreon     -- tag:new from:bingo@patreon.com
-+guitarhacks -- tag:new from:support@guitarhacks.com
-
-# Help me periodically confirm receipt of orders
 +to_confirm -inbox -- tag:new from:auto-confirm@amazon.co.uk
-
-# Persistent spammers
-+spam -inbox -- tag:new from:alexandre@les-caves.fr
-+spam -inbox -- tag:new from:alexandre@agence-gwa.com
-+spam -inbox -- tag:new from:replies@oracle-mail.com
 
 EOF
 #+END_SRC
