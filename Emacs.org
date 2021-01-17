@@ -1292,23 +1292,24 @@ paragraphs re-flow properly on GitHub.
 
   (org-tag-alist '(("@work" . ?w)
 		   ("@home" . ?h)
-		   ("PROJ" . ?p)
-                   ("SOMEDAY" . ?s)
+		   ("proj" . ?p)
+                   ("someday" . ?s)
 		   ("noexport" . ?n)
 		   ("toil" . ?t)
 		   ("meeting" . ?m)
 		   ("brag" . ?b)
 		   ("achievement" . ?a)
-		   ("interrupt" . ?i)
+		   ("inbox" . ?i)
+		   ("interrupt" . ?I)
 		   ("note" . ?N)))
 
   (org-log-done 'time)
-  (org-stuck-projects '("-SOMEDAY/PROJ" ("TODO" "WAITING") nil ""))
+  (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
   (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
   (org-refile-allow-creating-parent-nodes 'confirm)
   (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
-                        (org-agenda-files . (:tag . "RECURRING"))
+                        (org-agenda-files . (:tag . "recurring"))
 			(org-agenda-files . (:maxlevel . 1))))
   (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
   (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
@@ -1330,26 +1331,26 @@ paragraphs re-flow properly on GitHub.
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
        (org-agenda-tag-filter-preset '(,sb/agenda-tag
-				       "-SOMEDAY"
-				       "-INBOX"))))
+				       "-someday"
+				       "-inbox"))))
      ("g" . "Getting Things Done")
      ("gA" "Agenda minus recurring tasks"
       agenda ""
-      ((org-agenda-tag-filter-preset '("-RECURRING"))))
-     ("gi" "Inbox" tags "INBOX")
+      ((org-agenda-tag-filter-preset '("-recurring"))))
+     ("gi" "Inbox" tags "inbox")
      ("gs" "Someday"
       ((todo "PROJ")
-       (tags-todo "-PROJ/TODO"))
-      ((org-agenda-tag-filter-preset '("+SOMEDAY"))))
+       (tags-todo "-proj/TODO"))
+      ((org-agenda-tag-filter-preset '("+someday"))))
      ("gc" "Review for Tasks Complete"
       todo "TODO"
-      ((org-agenda-tag-filter-preset '("-SOMEDAY" "-RECURRING" "-GTD"))))
+      ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
       ((todo "COMPLETE")
-       (tags "-PROJ-GTD/DONE")
-       (tags "-PROJ-GTD/CANCELLED")))
-     ("gp" "Projects" tags-todo "-SOMEDAY/PROJ")))
+       (tags "-proj-gtd/DONE")
+       (tags "-proj-gtd/CANCELLED")))
+     ("gp" "Projects" tags-todo "-someday/PROJ")))
   :config
   (require 'org-habit))
 
@@ -1391,8 +1392,8 @@ usually I am in a work frame of mind on my work computer and vice versa.
      (expand-file-name (format "%s.org" name) "~/org")))
 
   (org-capture-templates
-   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :INBOX:%s:" sb/capture-tag))
-     ("l" "TODO with [l]ink to here" entry (file "") ,(format "* TODO %%? :INBOX:%s:\ncf %%a " sb/capture-tag))
+   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:" sb/capture-tag))
+     ("l" "TODO with [l]ink to here" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/capture-tag))
 
      ("T" "Trip" entry (file "") (file "templates/trip.org"))
 
