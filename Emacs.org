@@ -1063,9 +1063,6 @@ I configure Notmuch to save a copy of outgoing mail into my sent mail
 folder.
 
 #+BEGIN_SRC emacs-lisp
-(setq machine-tag (if (string-match "margil" (system-name))
-		      "gandi" "circleci"))
-
 (use-package notmuch
   :demand
   :hook
@@ -1080,10 +1077,10 @@ folder.
   (notmuch-mua-cite-function (quote message-cite-original-without-signature))
   (notmuch-fcc-dirs "Sent +sent -inbox -unread")
   (notmuch-saved-searches
-   `((:name "Inbox" :query ,(concat "tag:inbox and tag:" machine-tag) :key "i")
-     (:name "Flagged" :query ,(concat "tag:flagged and tag:" machine-tag) :key "f")
+   `((:name "Inbox" :query "tag:inbox" :key "i")
+     (:name "Flagged" :query "tag:flagged" :key "f")
      (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "Recent" :query ,(concat "date:2d.. and not tag:lists and tag:" machine-tag) :key "r" :search-type tree)
+     (:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
      (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
   (notmuch-tagging-keys
    (quote
