@@ -1384,8 +1384,8 @@ usually I am in a work frame of mind on my work computer and vice versa.
      (expand-file-name (format "%s.org" name) "~/org")))
 
   (org-capture-templates
-   '(("t" "TODO" entry (file "") "* TODO %?")
-     ("l" "TODO with [l]ink to here" entry (file "") "* TODO %?\ncf %a")
+   '(("t" "TODO" entry (file "") "* TODO %? :INBOX:")
+     ("l" "TODO with [l]ink to here" entry (file "") "* TODO %? :INBOX:\ncf %a ")
 
      ("T" "Trip" entry (file "") (file "templates/trip.org"))
 
