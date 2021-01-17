@@ -1071,7 +1071,6 @@ folder.
   (notmuch-archive-tags '("-inbox" "+archived"))
   (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
   (notmuch-search-oldest-first nil)
-  (notmuch-always-prompt-for-sender t)
   (notmuch-address-use-company nil)
   (notmuch-hello-thousands-separator ",")
   (notmuch-mua-cite-function (quote message-cite-original-without-signature))
@@ -1249,6 +1248,12 @@ exporter, as this deletes linebreaks.  This means the rendered
 paragraphs re-flow properly on GitHub.
 
 #+BEGIN_SRC emacs-lisp
+;; This is the opposite direction of the sb/capture-tag, so that we
+;; can exclude home tasks from work and vice versa, but still have
+;; tasks that show up both home and at work.
+(setq sb/agenda-tag (if (string-match "margil" (system-name))
+			"-@work" "-@home"))
+
 (use-package org
   :straight org-plus-contrib
   :bind (("C-c l" . org-store-link)
@@ -1324,9 +1329,7 @@ paragraphs re-flow properly on GitHub.
       ((agenda "")
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '(,(format "-%s"
-						(if (string-match "margil" (system-name))
-						    "@work" "@home"))
+       (org-agenda-tag-filter-preset '(,sb/agenda-tag
 				       "-SOMEDAY"
 				       "-INBOX"))))
      ("g" . "Getting Things Done")
@@ -1376,6 +1379,10 @@ which machine I am capturing the item. It's not always correct, but
 usually I am in a work frame of mind on my work computer and vice versa.
 
 #+begin_src emacs-lisp
+;; This is the tag we assign based on which machine we tag on.
+(setq sb/capture-tag (if (string-match "margil" (system-name))
+		      "@home" "@work"))
+
 (use-package org
   :straight org-plus-contrib
   :custom
@@ -1384,8 +1391,8 @@ usually I am in a work frame of mind on my work computer and vice versa.
      (expand-file-name (format "%s.org" name) "~/org")))
 
   (org-capture-templates
-   '(("t" "TODO" entry (file "") "* TODO %? :INBOX:")
-     ("l" "TODO with [l]ink to here" entry (file "") "* TODO %? :INBOX:\ncf %a ")
+   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :INBOX:%s:" sb/capture-tag))
+     ("l" "TODO with [l]ink to here" entry (file "") ,(format "* TODO %%? :INBOX:%s:\ncf %%a " sb/capture-tag))
 
      ("T" "Trip" entry (file "") (file "templates/trip.org"))
 
