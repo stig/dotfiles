@@ -85,22 +85,22 @@ Slave :local:
 SyncState *
 
 Channel sent
-Master :remote:[Gmail]/Sent
+Master :remote:"[Gmail]/Sent Mail"
 Slave :local:Sent
 SyncState *
 
 Channel archive
-Master :remote:Archive
+Master :remote:History
 Slave :local:Archive
 SyncState *
 
 Channel trash
-Master :remote:[Gmail]/Trash
+Master :remote:"[Gmail]/Trash"
 Slave :local:Trash
 SyncState *
 
 Channel spam
-Master :remote:[Gmail]/Spam
+Master :remote:"[Gmail]/Spam"
 Slave :local:Spam
 SyncState *
 #+end_src
