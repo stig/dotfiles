@@ -1010,6 +1010,12 @@ and has the same config, whether I am on a local machine or a remote one.
   :hook
   (sql-mode . sulami/init-hugsql-imenu))
 #+end_src
+
+** JSON Mode
+
+#+begin_src emacs-lisp
+(use-package json-mode)
+#+end_src
 ** Magit & Friends
 
 I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
