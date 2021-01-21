@@ -60,17 +60,16 @@ mv_without_uid () {
     done
 }
 
-# Delete old spam and list messages
-notmuch tag --batch <<EOF
-+deleted -- tag:lists and not tag:archived and date:..6w
-+deleted -- tag:spam and date:..6w
-EOF
+# Delete old deleted and spam messages
+notmuch search --output=files --format=text0 -- tag:deleted date:..12w | xargs -0 rm -v
+notmuch search --output=files --format=text0 -- tag:spam date:..6w | xargs -0 rm -v
+notmuch search --output=files --format=text0 -- tag:lists and not tag:archived and date:..6w | xargs -0 rm -v
 
 # Move deleted messages
 notmuch search --output=files -- tag:deleted and not folder:Trash | mv_without_uid ~/.mail/Trash
 
 # Move spam messages
-notmuch search --output=files -- tag:spam and not tag:deleted and not folder:Spam | mv_without_uid ~/.mail/Spam
+notmuch search --output=files -- tag:spam and not folder:Spam | mv_without_uid ~/.mail/Spam
 
 # Move incorrectly-tagged spam OUT of Spam folder
 notmuch search --output=files -- not tag:spam and folder:Spam | mv_without_uid ~/.mail/INBOX
