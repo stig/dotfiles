@@ -81,7 +81,7 @@ notmuch search --output=files -- tag:archived not folder:Archive | mv_without_ui
 notmuch tag -new -- tag:new
 
 # Synchronise local mailbox with upstream
-mbsync -a
+mbsync -aq
 #+END_SRC
 
 * Script to run immediately after checking for new mail
