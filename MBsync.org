@@ -28,32 +28,38 @@ Channel inbox
 Master :remote:
 Slave :local:
 SyncState *
+Expunge Both
 
 Channel sent
 Master :remote:Sent
 Slave :local:Sent
 SyncState *
+Expunge Both
 
 Channel archive
 Master :remote:Archive
 Slave :local:Archive
 SyncState *
+Expunge Both
 
 Channel trash
 Master :remote:Trash
 Slave :local:Trash
 SyncState *
+Expunge Both
 
 Channel spam
 Master :remote:Junk
 Slave :local:Spam
 SyncState *
+Expunge Both
 
 Channel lists
 Master :remote:
 Slave :local:
-Patterns org-mode tuls
+Patterns org-mode
 SyncState *
+Expunge Both
 #+END_SRC
 
 * Work account
@@ -83,24 +89,29 @@ Channel inbox
 Master :remote:
 Slave :local:
 SyncState *
+Expunge Both
 
 Channel sent
 Master :remote:"[Gmail]/Sent Mail"
 Slave :local:Sent
 SyncState *
+Expunge Both
 
 Channel archive
 Master :remote:History
 Slave :local:Archive
 SyncState *
+Expunge Both
 
 Channel trash
 Master :remote:"[Gmail]/Trash"
 Slave :local:Trash
 SyncState *
+Expunge Both
 
 Channel spam
 Master :remote:"[Gmail]/Spam"
 Slave :local:Spam
 SyncState *
+Expunge Both
 #+end_src
