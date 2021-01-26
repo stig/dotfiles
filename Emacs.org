@@ -1329,7 +1329,10 @@ paragraphs re-flow properly on GitHub.
   (org-agenda-todo-ignore-with-date 'future)
   (org-agenda-todo-ignore-timestamp 'future)
   (org-agenda-skip-deadline-prewarning-if-scheduled t)
-  (org-agenda-skip-scheduled-if-deadline-is-shown 'not-today)
+  (org-agenda-skip-timestamp-if-done t)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown 'repeated-after-deadline)
 
   (org-agenda-custom-commands
    `(("d" "Day Agenda & Top Tasks"
