@@ -12,6 +12,7 @@ cask "homebrew/cask-versions/adoptopenjdk8"
 cask "mactex-no-gui"
 cask "ngrok"
 cask "platypus"
+cask "refined-github-safari"
 cask "slack"
 
 brew "aspell"
