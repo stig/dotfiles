@@ -29,9 +29,10 @@ brew "jq"
 brew "leiningen"
 brew "msmtp"
 brew "notmuch"
+brew "nvm" # For frontend @work
 brew "pinentry"
 brew "plantuml"
 brew "postgresql"
 brew "restic"
 brew "ripgrep"
-brew "typescript"
+brew "typescript" # For frontend @work

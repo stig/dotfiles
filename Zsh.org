@@ -17,4 +17,5 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 # For NVM
 export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
 #+end_src
