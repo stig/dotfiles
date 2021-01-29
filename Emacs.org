@@ -1074,7 +1074,6 @@ folder.
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
   :custom
-  (notmuch-archive-tags '("-inbox" "+archived"))
   (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
   (notmuch-search-oldest-first nil)
   (notmuch-address-use-company nil)
@@ -1090,10 +1089,11 @@ folder.
   (notmuch-tagging-keys
    (quote
     (("a" notmuch-archive-tags "Archive")
-     ("u" notmuch-show-mark-read-tags "Mark read")
+     ("A" ("+archived") "Archive forever")
+     ("r" notmuch-show-mark-read-tags "Mark read")
      ("f" ("+flagged") "Flag")
-     ("s" ("+spam" "-inbox") "Mark as spam")
-     ("d" ("+deleted" "-inbox") "Delete")))))
+     ("s" ("+spam") "Mark as spam")
+     ("d" ("+deleted") "Delete")))))
 #+END_SRC
 
 ** PlantUML
