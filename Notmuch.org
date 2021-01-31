@@ -86,34 +86,28 @@ mbsync -aq
 
 * Script to run immediately after checking for new mail
 
-Assign tags based on server filtering.
+Assign tags, partly based on server filtering.
 
-I tag sent mail and remove it from my inbox. I decide whether
-it's sent mail based on which mailbox it's in on the server.
+I now Bcc myself on sent mail, so tag mail as =sent= based on sender
+address, and remove it from my inbox.
 
-Spam, archived, and deleted messages gets tagged as such, based on
-their mailboxes on the server.
+Server-side filtered =spam= and mailing lists gets based on its
+mailbox. (Though I don't currently subscribe to any high-volume
+mailing lists.)
 
-I don't normally want to see mailing list posts in my inbox, so remove
-that tag. (And add specific tags based on their lists.)
+I also tag messages to particular aliases at my domain.
 
-Messages to particular aliases at my domain also gets tagged
-appropriately.
-
-Order confirmation messages from Amazon gets tagged so I can
-batch-process them once a week.
-
-Finally I tag some persistent spammers that are pretty good at getting
-through my provider's spam filter, so they don't bother me.
+I order a lot from Amazon, and things doesn't always arrive straight
+away. I tag order confirmations from Amazon for batch-processing once
+a week, to make sure I don't miss checking up on missed orders.
 
 #+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
-+inbox        -- tag:new folder:INBOX
--unread +sent -- tag:new folder:Sent
-+spam         -- tag:new folder:Spam
++inbox -- tag:new folder:INBOX
++spam  -- tag:new folder:Spam
 
-+lists +org-mode    -- tag:new folder:org-mode
-+inbox +lists +tuls -- tag:new folder:tuls
++sent -inbox -- tag:new from:stig@brautaset.org
++sent -inbox -- tag:new from:stig@circleci.com
 
 +fam   -- tag:new to:fam@brautaset.org
 +solve -- tag:new to:solve@brautaset.org

@@ -1074,12 +1074,15 @@ folder.
   :hook
   (notmuch-message-mode . turn-off-auto-fill)
   :custom
+  (message-default-mail-headers (format "Bcc: stig@%s\n" (if (string-match "margil" (system-name))
+							     "brautaset.org"
+							   "circleci.com")))
   (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
   (notmuch-search-oldest-first nil)
   (notmuch-address-use-company nil)
   (notmuch-hello-thousands-separator ",")
   (notmuch-mua-cite-function (quote message-cite-original-without-signature))
-  (notmuch-fcc-dirs "Sent +sent -inbox -unread")
+  (notmuch-fcc-dirs nil)
   (notmuch-saved-searches
    `((:name "Inbox" :query "tag:inbox" :key "i")
      (:name "Flagged" :query "tag:flagged" :key "f")
