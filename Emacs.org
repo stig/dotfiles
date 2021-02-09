@@ -1423,7 +1423,7 @@ usually I am in a work frame of mind on my work computer and vice versa.
 #+begin_src emacs-lisp
 ;; This is the tag we assign based on which machine we tag on.
 (setq sb/capture-tag (if (string-match "margil" (system-name))
-		      "@home" "@work"))
+			 "@home" "@work"))
 
 (use-package org
   :straight org-plus-contrib
