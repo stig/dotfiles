@@ -1,0 +1,23 @@
+#+title: Restic
+#+subtitle: Backups--I have them?
+
+I use Restic to back up to an S3 bucket.
+
+#+BEGIN_SRC sh :tangle ~/Library/Scripts/backup :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
+set -euo pipefail
+export RESTIC_REPOSITORY="s3:s3.amazonaws.com/brautaset-backups"
+export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
+/usr/local/bin/restic backup \
+                      .mail org \
+		      --exclude .mail/.notmuch/xapian/
+#+end_src
+
+* Schedule
+
+crontab -e, paste in
+: 7 * * * * ~/Library/Scripts/backup
+
+
+* Set password
+
+: security add-generic-password -a s3.amazonaws.com/brautaset-backups -D 'restic backup password' -s restic -w
