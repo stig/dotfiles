@@ -1443,23 +1443,22 @@ usually I am in a work frame of mind on my work computer and vice versa.
    `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:" sb/capture-tag))
      ("l" "TODO with [l]ink to here" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/capture-tag))
 
-     ("T" "Trip" entry (file "") (file "templates/trip.org"))
-
-     ("g" "New Gas Meter Reading" table-line
+     ("u" "Utility Metres")
+     ("ug" "New Gas Meter Reading" table-line
       (file "~/org/notes/gas-consumption.org")
       (file "templates/gas-consumption.org"))
-     ("e" "New Electricity Meter Reading" table-line
+     ("ue" "New Electricity Meter Reading" table-line
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
 
-     ("f" "Decide Focus Areas" entry
-      (file "~/org/focus-areas.org")
+     ("p" "Productivity")
+     ("pf" "Decide Focus Areas" entry
+      (file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
       (file "templates/focus-areas.org"))
-     ("b" "Boulders for the Week" entry
-      (file "~/org/boulders.org")
-      "* %<%Y/%B/Week %V>\n1. %?")
-
-     ("r" "New GTD Review" entry
+     ("pb" "Boulders for the Week" entry
+      (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
+      "* %<%B/Week %V>\n1. %?")
+     ("pr" "New GTD Review" entry
       (file+olp+datetree "~/org/archive/gtd_review.org")
       (file "templates/gtd-review.org") :clock-in t))))
 #+end_src
