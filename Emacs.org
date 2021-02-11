@@ -145,7 +145,7 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
 				    "EDITOR"
 				    "JAVA_HOME"
 				    "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
-				    "NVM_DIR"))
+				    "NVM_DIR" "NVM_PATH" "NVM_BIN"))
   :config
   (exec-path-from-shell-initialize))
 #+END_SRC
@@ -170,6 +170,13 @@ Emacs. Credit to Robin Schroer for this trick.
 One of the key features for me is ibuffer's ability to filter by major mode.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
+** NVM Support
+NVM is the Node Version Manager. It's annoyingly implemented as shell
+functionality you source, so it won't work in Eshell. Luckily there's
+third-party emacs support.
+#+begin_src emacs-lisp
+(use-package nvm)
 #+end_src
 ** Support recursive minibuffers
 
