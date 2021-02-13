@@ -15,6 +15,10 @@ alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
 export EDITOR=emacsclient
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
+# For interacting with backup snapshots using restic
+export RESTIC_REPOSITORY="s3:s3.amazonaws.com/brautaset-backups"
+export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
+
 # For NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
