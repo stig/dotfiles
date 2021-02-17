@@ -690,6 +690,14 @@ clean it up.
   (global-whitespace-mode t))
 #+END_SRC
 
+** Prettier.js
+#+begin_src emacs-lisp
+(use-package prettier-js
+  :defer t
+  :hook
+  ((typescript-mode . prettier-js-mode)
+   (web-mode . prettier-js-mode)))
+#+end_src
 ** Ivy
 
 I've long been a happy Helm user, but it confuses me (and is slow!)

@@ -34,6 +34,7 @@ brew "nvm" # For frontend @work
 brew "pinentry"
 brew "plantuml"
 brew "postgresql"
+brew "prettier" # For JavaScript indentation
 brew "restic"
 brew "ripgrep"
 brew "typescript" # For frontend @work
