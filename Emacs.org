@@ -584,15 +584,32 @@ automatically commit when editing files.
 #+END_SRC
 
 ** Bug Reference Mode
-Automatically create JIRA links for things that looks like them.
-
+Automatically create JIRA links for things that looks like them. For
+this I've adapted snippets from Alex ter Weele and Robin Schroer.
 #+begin_src emacs-lisp
+;; `bug-reference-mode'
+(defun sb/bug-reference-setup ()
+  (setq bug-reference-bug-regexp
+	(rx (group "")  ; deliberately empty capture group;
+                        ; bug-reference assumes the first capture
+                        ; group is something like "Bug-" that should
+                        ; be thrown away.
+            (group
+             ;; <https://circleci.atlassian.net/projects?page=1&selectedCategory=all&selectedProjectType=all&sortKey=name&sortOrder=ASC>
+             (or "ACE" "AE" "BACKPLANE" "CE" "CECIA" "CEOPS" "CIRCLE" "COGS" "COM"
+		 "DATA" "DES" "DNAMEDIA" "DRC" "DS" "DSA" "DTP" "ENG" "ENGOPS" "EXP"
+		 "INSIGHT" "IT" "JOM" "MAC" "MKTG" "OP" "PLATFORM" "POTS" "PROD" "RE"
+		 "SEC" "SECOPS" "SERVER" "SRE" "TRAIN" "UXR" "WEB")
+             "-"
+             (any "1-9") (zero-or-more digit)))
+	bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
+
 (use-package bug-reference
-  :config
-  (defun sb/bug-reference-mode-settings ()
-    (setq bug-reference-bug-regexp "\\(CIRCLE-\\)\\([1-9][0-9]\\{3,4\\}\\)"
-          bug-reference-url-format "http://circleci.atlassian.net/browse/CIRCLE-%s"))
-  (add-hook 'bug-reference-mode-hook #'sb/bug-reference-mode-settings))
+  :straight nil
+  :hook
+  ((bug-reference-mode . sb/bug-reference-setup)
+   (org-mode . bug-reference-mode)
+   (clojure-mode . bug-reference-mode)))
 #+end_src
 ** Company (COMplete ANYthing)
 #+begin_src emacs-lisp
