@@ -140,12 +140,15 @@ variables are available in Eshell.  (And elsewhere in Emacs.)
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
   :custom
-  (exec-path-from-shell-variables '("PATH" "MANPATH"
-				    "LDFLAGS" "CPPFLAGS"
-				    "EDITOR"
-				    "JAVA_HOME"
-				    "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
-				    "NVM_DIR" "NVM_PATH" "NVM_BIN"))
+  (exec-path-from-shell-variables
+   '("PATH" "MANPATH"
+     "LDFLAGS" "CPPFLAGS"
+     "EDITOR"
+     "JAVA_HOME"
+     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
+     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
+     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
+     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
   :config
   (exec-path-from-shell-initialize))
 #+END_SRC
@@ -1957,3 +1960,18 @@ Turn off a harmless (but annoying) warning during publication:
 #+begin_src emacs-lisp
 (setq python-indent-guess-indent-offset-verbose nil)
 #+end_src
+* Nix
+
+There are two distinct parts here:
+
+- =nix-mode= :: Provides support for editing Nix expressions
+- =nix-sandbox= :: Used to make other commands Nix-aware
+
+#+begin_src emacs-lisp
+(use-package nix-mode
+  :defer t)
+
+(use-package nix-sandbox
+  :defer t)
+#+end_src
+
