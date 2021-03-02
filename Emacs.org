@@ -1406,8 +1406,7 @@ paragraphs re-flow properly on GitHub.
       ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
-      ((todo "COMPLETE")
-       (tags "-proj-gtd/DONE")
+      ((tags "-proj-gtd/DONE")
        (tags "-proj-gtd/CANCELLED")))
      ("gp" "Projects" tags-todo "-someday/PROJ")))
   :config
