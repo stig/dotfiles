@@ -1386,7 +1386,7 @@ paragraphs re-flow properly on GitHub.
   (org-agenda-custom-commands
    `(("d" "Day Agenda & Top Tasks"
       ((agenda "")
-       (todo "TODO"))
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
        (org-agenda-tag-filter-preset '(,sb/agenda-tag
 				       "-someday"
