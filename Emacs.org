@@ -1358,7 +1358,6 @@ paragraphs re-flow properly on GitHub.
 		   ("interrupt" . ?I)
 		   ("note" . ?N)))
 
-  (org-log-done 'time)
   (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
   (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
