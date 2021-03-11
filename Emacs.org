@@ -1601,8 +1601,7 @@ of notes.
   (org-roam-server-network-label-truncate t)
   (org-roam-server-network-label-truncate-length 60)
   (org-roam-server-network-label-wrap-length 20)
-  (org-html-postamble nil)
-  :hook (after-init . org-roam-server-mode))
+  (org-html-postamble nil))
 #+end_src
 
 ** Org Jira
