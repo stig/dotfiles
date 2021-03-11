@@ -548,8 +548,10 @@ I used to use Beacon for this, but now I don't need a separate module.
       "Pulse the current line."
       (pulse-momentary-highlight-one-line (point)))
 
-(dolist (command '(scroll-up-command scroll-down-command
-                   recenter-top-bottom other-window))
+(dolist (command '(scroll-up-command
+		   scroll-down-command
+                   recenter-top-bottom
+		   other-window))
   (advice-add command :after #'pulse-line))
 #+end_src
 ** Upcase-dwim and dowcase-dwim
