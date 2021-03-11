@@ -1737,9 +1737,9 @@ to make Org mode documents a pleasure to look at. However, right now
 I'm experimenting with "Doom solarized light".
 
 #+begin_src emacs-lisp
-(use-package doom-themes
+(use-package material-theme
   :config
-  (sb/load-theme 'leuven))
+  (sb/load-theme 'material-light))
 #+end_src
 
 * Blogging
