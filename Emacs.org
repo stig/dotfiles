@@ -14,61 +14,23 @@ I install Emacs itself using Homebrew, along with other tools
 (~ripgrep~, etc) using a [[file:Brewfile][Brewfile]].
 
 * Early Init
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el
+:END:
 
-Emacs 27 loads =~/.config/emacs/early-init.el= before loading GUI
-components. This makes it a great place to disable the mouse
-interface, etc.
+Emacs loads =early-init.el= before loading GUI components. That makes
+it a great place to turn off the mouse interface, to avoid momentary
+display during launch. I also disable the splash screen, the audible
+bell, and the ~package.el~ subsystem.
 
-First make sure it uses lexial binding for performance. Next I turn
-off the mouse interface here to avoid momentary display during launch.
-I also don't need to see a splash screen on every launch. Finally I do
-/not like/ Emacs beeping at me: I prefer a visual bell.
-
-I also don't want to use ~package.el~, so I inhibit that here to avoid
-loading it.
-
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/early-init.el
+#+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
-
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(setq inhibit-startup-message t)
+(setq inhibit-startup-screen t)
 (setq visible-bell t)
-
-(setq package-enable-at-startup nil
-      package--init-file-ensured t)
-#+end_src
-
-Let's also turn off GC during launch, to try to improve startup speed.
-I stole this from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs.d/init.el][Robin Schroer's config]].
-
-#+begin_src emacs-lisp :tangle ~/.config/emacs/early-init.el
-;; Enable debug-on-error during launch
-(setq debug-on-error t)
-
-;; Prevent GC during launch
-(setq gc-cons-threshold 500000000
-      gc-cons-percentage 0.6)
-
-;; We don't need file handlers during launch either
-(defvar sulami--file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-
-;; Don't check packages for rebuild on startup
-(setq straight-check-for-modifications '(find-when-checking
-                                         check-on-save))
-
-;; Prefer newer bytecode
-(setq load-prefer-newer t)
-
-;; Reset file handlers & GC settings after we're done loading
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq file-name-handler-alist sulami--file-name-handler-alist)
-            (setq gc-cons-threshold 16777216
-                  gc-cons-percentage 0.1)
-            (setq debug-on-error nil)))
+(setq package-enable-at-startup nil)
 #+end_src
 
 * Bootstrap configuration
