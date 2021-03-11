@@ -912,7 +912,6 @@ A templating engine for Emacs.
   (yas-global-mode))
 #+end_src
 
-
 * Major modes
 
 Each buffer has exactly one major mode. (Though a major mode can be
@@ -1734,7 +1733,7 @@ evaluate this block again manually.
 For years I've been using Leuven as my default theme. In general I
 like white / light backgrounds, and I like how it has special styles
 to make Org mode documents a pleasure to look at. However, right now
-I'm experimenting with "Doom solarized light".
+I'm experimenting with "Material Light".
 
 #+begin_src emacs-lisp
 (use-package material-theme
