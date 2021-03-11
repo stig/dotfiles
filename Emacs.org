@@ -24,6 +24,9 @@ off the mouse interface here to avoid momentary display during launch.
 I also don't need to see a splash screen on every launch. Finally I do
 /not like/ Emacs beeping at me: I prefer a visual bell.
 
+I also don't want to use ~package.el~, so I inhibit that here to avoid
+loading it.
+
 #+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/early-init.el
 ;; -*- lexical-binding: t; -*-
 
@@ -32,10 +35,13 @@ I also don't need to see a splash screen on every launch. Finally I do
 
 (setq inhibit-startup-message t)
 (setq visible-bell t)
+
+(setq package-enable-at-startup nil
+      package--init-file-ensured t)
 #+end_src
 
 Let's also turn off GC during launch, to try to improve startup speed.
-I stole this from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs.d/init.el][Robin Schroer's config]], who got it via doom-emacs.
+I stole this from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs.d/init.el][Robin Schroer's config]].
 
 #+begin_src emacs-lisp :tangle ~/.config/emacs/early-init.el
 ;; Enable debug-on-error during launch
@@ -48,10 +54,6 @@ I stole this from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs.
 ;; We don't need file handlers during launch either
 (defvar sulami--file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
-
-;; Don't use package.el
-(setq package-enable-at-startup nil
-      package--init-file-ensured t)
 
 ;; Don't check packages for rebuild on startup
 (setq straight-check-for-modifications '(find-when-checking
@@ -1970,4 +1972,3 @@ There are two distinct parts here:
 (use-package nix-sandbox
   :defer t)
 #+end_src
-
