@@ -1,8 +1,8 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:              :mkdirp yes :results silent
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el
+#+PROPERTY: header-args:              :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent
 #+STARTUP: content
 * Introduction
 
