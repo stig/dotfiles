@@ -196,13 +196,6 @@ my Org files regularly to avoid lost content.
 (auto-save-visited-mode)
 #+END_SRC
 
-** Font size and type
-
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :height 150)
-(set-face-attribute 'default nil :font "Jetbrains Mono")
-#+END_SRC
-
 ** UTF-8: everywhere, always
 
 Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
@@ -230,6 +223,29 @@ It's nice if Emacs knows where I was last time I opened a file.
 #+BEGIN_SRC emacs-lisp
 (save-place-mode 1)
 #+END_SRC
+
+* Look and Feel
+
+** Font size and type
+
+I install this font with Homebrew, from my [[file:Brewfile][Brewfile]].
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :height 150)
+(set-face-attribute 'default nil :font "Jetbrains Mono")
+#+END_SRC
+
+** Default Theme
+
+For years I've been using Leuven as my default theme. In general I
+like white / light backgrounds, and I like how it has special styles
+to make Org mode documents a pleasure to look at. However, right now
+I'm experimenting with "Material Light".
+
+#+begin_src emacs-lisp
+(use-package material-theme
+  :config
+  (load-theme 'material-light t))
+#+end_src
 
 * TODO [#C] make this section go away 
 
@@ -1509,19 +1525,6 @@ evaluate this block again manually.
             ("DEL" (sb/disable-all-themes))
             ("RET" nil "done" :color blue)))))
 #+END_SRC
-
-*** Default Theme
-
-For years I've been using Leuven as my default theme. In general I
-like white / light backgrounds, and I like how it has special styles
-to make Org mode documents a pleasure to look at. However, right now
-I'm experimenting with "Material Light".
-
-#+begin_src emacs-lisp
-(use-package material-theme
-  :config
-  (sb/load-theme 'material-light))
-#+end_src
 
 ** Blogging
 I create blog entries in a directory under =~/blog= and link to them
