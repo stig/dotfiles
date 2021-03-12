@@ -344,402 +344,20 @@ I'm experimenting with "Material Light".
 #+end_src
 * TODO [#C] make this section go away 
 
-** Expand Region
-#+begin_src emacs-lisp
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
-#+end_src
-** NVM Support
-NVM is the Node Version Manager. It's annoyingly implemented as shell
-functionality you source, so it won't work in Eshell. Luckily there's
-third-party emacs support.
-#+begin_src emacs-lisp
-(use-package nvm)
-#+end_src
-** String Inflection
-
-Sometimes I need to swap between CamelCase and snake_case, or even
-SNAKE_CASE.
-
-#+begin_src emacs-lisp
-(use-package string-inflection
-  :bind (("C-c C-x C-s" . string-inflection-all-cycle)
-         ("C-c C-x C-c" . string-inflection-camelcase)
-         ("C-c C-x C-k" . string-inflection-kebab-case)
-         ("C-c C-x C-u" . string-inflection-upcase)))
-#+end_src
-
-** Git Link
-
-Lets me link to a file location on GitHub/Bitbucket/GitLab
-from a local git repository.
-
-#+BEGIN_SRC emacs-lisp
-(use-package git-link
-  :after magit
-  :bind ("C-c g l" . git-link))
-#+END_SRC
-
-** Sending mail with MSMTP
-
-MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
-to use from the "from" address.
-
-Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
-section in the msmtp documentation for details.
-
-: security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
-
-Finally we have to tell Emacs to use msmtp to send mail.  (And to
-kill the message buffer on exit.)
-
-#+BEGIN_SRC emacs-lisp
-(setq sendmail-program "msmtp"
-      message-send-mail-function 'message-send-mail-with-sendmail
-      message-kill-buffer-on-exit t
-      message-directory "~/.mail"
-      message-sendmail-envelope-from 'header
-      mail-envelope-from 'header
-      mail-specify-envelope-from t)
-#+END_SRC
-
-** Lorem Ipsum input
-
-Useful for quickly filling in placeholder text.
-
-#+begin_src emacs-lisp
-(use-package lorem-ipsum)
-#+end_src
-
-** View Mode
-
-Navigate read-only buffers up and down with space and backspace.
-
-#+begin_src emacs-lisp
-(setq view-read-only t)
-#+end_src
-** Upcase-dwim and dowcase-dwim
-
-Acts like ~upcase-word~ with no region selected, and ~upcase-region~
-when one is.
-
-#+begin_src emacs-lisp
-(bind-key "M-u" #'upcase-dwim)
-(bind-key "M-l" #'downcase-dwim)
-#+end_src
-** Configure PATH (and other variables) from shell
-
-The GUI Emacs gets exec path from the system, rather than the
-login shell.  We have to load ~PATH~ et. al. from the shell to get
-access to programs installed by Homebrew.
-
-Copy ~PATH~ and certain other variables from my login shell so these
-variables are available in Eshell.  (And elsewhere in Emacs.)
-
-#+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-variables
-   '("PATH" "MANPATH"
-     "LDFLAGS" "CPPFLAGS"
-     "EDITOR"
-     "JAVA_HOME"
-     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
-     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
-     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
-     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
-  :config
-  (exec-path-from-shell-initialize))
-#+END_SRC
-
 ** Minor modes
 
 A minor mode provides some functionality that you can turn off or on.
 Multiple minor modes can be active for a buffer.
 
-*** Ace Window
-
-This lets me rapidly switch to a different frame/window.  I use
-this mainly when resolving conflicts in ediff merge, since I need
-to swap between two frames there.
-
-#+begin_src emacs-lisp
-(use-package ace-window
-  :bind (("C-S-s-<tab>" . ace-window) ; aka Meh-<tab>
-	 ("M-`" . ace-window)))
-#+end_src
-
-** Bug Reference Mode
-Automatically create JIRA links for things that looks like them. For
-this I've adapted snippets from Alex ter Weele and Robin Schroer.
-#+begin_src emacs-lisp
-;; `bug-reference-mode'
-(defun sb/bug-reference-setup ()
-  (setq bug-reference-bug-regexp
-	(rx (group "")  ; deliberately empty capture group;
-                        ; bug-reference assumes the first capture
-                        ; group is something like "Bug-" that should
-                        ; be thrown away.
-            (group
-             ;; <https://circleci.atlassian.net/projects?page=1&selectedCategory=all&selectedProjectType=all&sortKey=name&sortOrder=ASC>
-             (or "ACE" "AE" "BACKPLANE" "CE" "CECIA" "CEOPS" "CIRCLE" "COGS" "COM"
-		 "DATA" "DES" "DNAMEDIA" "DRC" "DS" "DSA" "DTP" "ENG" "ENGOPS" "EXP"
-		 "INSIGHT" "IT" "JOM" "MAC" "MKTG" "OP" "PLATFORM" "POTS" "PROD" "RE"
-		 "SEC" "SECOPS" "SERVER" "SRE" "TRAIN" "UXR" "WEB")
-             "-"
-             (any "1-9") (zero-or-more digit)))
-	bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
-
-(use-package bug-reference
-  :straight nil
-  :hook
-  ((bug-reference-mode . sb/bug-reference-setup)
-   (org-mode . bug-reference-mode)
-   (clojure-mode . bug-reference-mode)))
-#+end_src
 *** Company (COMplete ANYthing)
 #+begin_src emacs-lisp
 (use-package company
   :hook (after-init . global-company-mode))
 #+end_src
-** Diff Highlight
-
-#+begin_src emacs-lisp
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode))
-#+end_src
-
-*** Dumb-jump
-
-Trying this out again, now that it registers an xref backend:
-
-#+begin_src emacs-lisp
-(use-package dumb-jump
-  :init
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-#+end_src
-
-*** Edit "Org-like" lists in non-Org buffers
-
-#+begin_src emacs-lisp
-(use-package orgalist
-  :after org
-  :hook
-  (message-mode . orgalist-mode))
-#+end_src
-
-*** Flycheck
-
-#+begin_src emacs-lisp
-(use-package flycheck-mode
-  :straight flycheck
-  :hook clojure-mode)
-#+end_src
-
-*** Highlight & deal with whitespace annoyances
-
-This highlights certain whitespace annoyances, and adds a key binding to
-clean it up.
-
-#+BEGIN_SRC emacs-lisp
-(use-package whitespace
-  :bind ("C-c w" . whitespace-cleanup)
-  :custom
-  (whitespace-style '(face empty tabs trailing))
-  :config
-  (global-whitespace-mode t))
-#+END_SRC
-
-*** Prettier.js
-#+begin_src emacs-lisp
-(use-package prettier-js
-  :defer t
-  :hook
-  ((typescript-mode . prettier-js-mode)
-   (web-mode . prettier-js-mode)))
-#+end_src
-** LSP (Language Server Protocol)
-
-LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
-among other things.
-
-#+begin_src emacs-lisp
-;; Important for lsp performance
-(setq read-process-output-max (* 1024 1024))
-
-(use-package lsp-mode
-  :hook ((clojure-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-  :custom
-  (lsp-enable-file-watchers . nil))
-
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-(use-package lsp-java
-  :commands lsp
-  :hook (java-mode . lsp))
-#+end_src
-
-*** Multiple Cursors
-
-This package is another one of those near-magical ones. It allows me to do
-multiple edits in the same buffer, using several cursors. You can think of
-it as an interactive macro, where you can constantly see what's being done.
-
-#+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
-  :bind (("C-c M-e" . mc/edit-lines)
-         ("C-c M-a" . mc/mark-all-dwim)
-         ("s-n" . mc/mark-next-like-this)
-         ("s-p" . mc/mark-previous-like-this)))
-#+END_SRC
-
-*** Projectile
-
-I use Projectile to navigate my projects. Some of the things I like about
-it are that it provides the following key bindings:
-
-- =C-c p f= :: Find a file in this project.
-- =C-c p k= :: Close all buffers for this project.
-- =C-c p t= :: This switches from an implementation file to its test file,
-               or vice versa. I use this extensively in Clojure mode. It
-               might not make sense for all languages; YMMV.
-- =C-c p s r= :: Ripgrep for something in this project. If point is at
-                 a token, default to searching for that.
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :diminish
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :custom
-  (projectile-dynamic-mode-line nil)
-  :config
-
-  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
-  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
-  ;; use that on my personal machine. I would just set both, but
-  ;; projectile doesn't like it if the directories don't exist.
-  (setq projectile-project-search-path
-	(seq-filter (lambda (e) (file-directory-p e))
-		    '("/usr/local/src" "~/src")))
-
-  (projectile-mode))
-#+END_SRC
-
-** Save minibuffer history
-
-This allows us to "tap up" in the minibuffer to recall previous items,
-even from a previous session.
-
-#+BEGIN_SRC emacs-lisp
-(savehist-mode 1)
-#+END_SRC
-
-*** Show Matching parens
-
-This is extremely useful. Put the mark on a paren (any of =()[]{}=,
-actually) and Emacs shows the matching closing/opening one.
-
-#+BEGIN_SRC emacs-lisp
-(show-paren-mode 1)
-#+END_SRC
-
-*** SmartParens
-
-Structural editing is a must when editing lisp, and it has bled
-into other aspects of programming for me.  In particular the
-ability to remove surrounding parens / quotes with ~sp-splice-sexp~
-is incredibly useful even when writing prose.
-
-#+BEGIN_SRC emacs-lisp
-(use-package smartparens-config
-  :straight smartparens
-  :demand
-  :custom
-  (sp-base-key-bindings 'sp)
-  (sp-show-pair-from-inside t)
-  :config
-  (sp-local-pair 'text-mode "'" nil :actions :rem)
-  (show-smartparens-global-mode t))
-(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'org-mode-hook 'turn-on-smartparens-strict-mode)
-#+END_SRC
-
-*** Subword
-
-Treats CapitalizedWords as separate, so we can move forward by
-their components.  Useful in anything that looks like Java.
-
-#+begin_src emacs-lisp
-(use-package subword
-  :hook (prog-mode . subword-mode))
-#+end_src
-
-** Transparently open compressed files
-
-I *do* like it when Emacs transparently opens compressed files. It gives
-me the warm fuzzies.
-
-#+BEGIN_SRC emacs-lisp
-(auto-compression-mode t)
-#+END_SRC
-
-*** Visual line mode / word wrapping
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'text-mode-hook 'visual-line-mode)
-#+END_SRC
-
 ** Major modes
 
 Each buffer has exactly one major mode. (Though a major mode can be
 /derived/ from another one.)
-
-*** Clojure
-
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck-clj-kondo)
-
-(use-package clojure-mode
-  :config
-  (require 'flycheck-clj-kondo)
-  (put-clojure-indent 'as-> ':defn)
-  (put-clojure-indent 'run ':defn)
-  (put-clojure-indent 'dosync ':defn)
-  (put-clojure-indent 'speculate 1)
-  (put-clojure-indent 'doseq ':defn)
-  (put-clojure-indent 'wrap-with-timing ':defn)
-  (put-clojure-indent 'wrap-with-per-call-timing ':defn))
-
-(use-package cider
-  :hook ((cider-mode . sb/unload-cider-jumps)
-	 (cider-repl-mode . sb/unload-cider-jumps))
-  :config
-  (defun sb/unload-cider-jumps ()
-    ;; I prefer lsp's jumps, so kindly don't steal them
-    (define-key cider-mode-map (kbd "M-.") nil)
-    (define-key cider-mode-map (kbd "M-,") nil))
-  :custom
-  (cider-prompt-for-symbol nil)
-  (cider-redirect-server-output-to-repl nil)
-  (cider-prefer-local-resources t)
-  (cider-auto-track-ns-form-changes t)
-  (cider-repl-pop-to-buffer-on-connect nil)
-  (cider-eldoc-display-context-dependent-info t)
-  (cider-font-lock-dynamically '(macro core function var)))
-
-(use-package clj-refactor
-  :disabled
-  :after (yas clojure-mode)
-  :init
-  (defun sb/clojure-mode-hook ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1))
-  :hook (clojure-mode . sb/clojure-mode-hook))
-#+END_SRC
 
 *** Tramp
 
@@ -767,54 +385,6 @@ and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/ema
 (add-to-list 'backup-directory-alist
 	     (cons tramp-file-name-regexp "/tmp/emacs-backup/"))
 #+end_src
-
-*** Typescript
-Credit to Robin Schroer.
-
-#+begin_src emacs-lisp
-(use-package typescript-mode
-  :mode "\\.tsx\\'"
-  :defer t
-  :custom
-  (typescript-indent-level 2))
-
-(use-package tide
-  :defer t
-  :config
-  (defun sulami/tide-setup ()
-    (when (equal "tsx"
-                 (file-name-extension buffer-file-name))
-      (tide-setup)
-      (flycheck-mode +1)
-      (eldoc-mode +1)))
-  :hook
-  ((typescript-mode . sulami/tide-setup)
-   (web-mode . sulami/tide-setup)))
-#+end_src
-*** Wgrep (aka "writable grep")
-
-~wgrep~ mode is pretty close to magic. When in a buffer showing
-grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
-results of the search right from the results buffer!/ I can then
-hit =C-x C-s= to save the results.
-
-Hitting =C-c C-p= while already in writable grep mode I can delete
-the entire matched line by hitting =C-c C-d=.
-
-#+begin_src emacs-lisp
-(use-package wgrep
-  :straight (wgrep :type git
-		   :host github
-		   :repo "mhayashi1120/Emacs-wgrep"))
-#+end_src
-
-*** YAML
-
-CircleCI and CloudFormation loves YAML.
-
-#+BEGIN_SRC emacs-lisp
-(use-package yaml-mode)
-#+END_SRC
 
 ** Org mode
 
@@ -1050,102 +620,6 @@ works really well with REST APIs to reduce boilerplate.
 	    secret)))))
   :config
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
-#+end_src
-
-*** Roam
-[[https://github.com/org-roam/org-roam][Org-roam]] is a new one for me. It's meant to be an "exo-brain",
-modelled after the Zettelkasten method. I'm excited to try it and see
-if it improves how I work.
-
-#+begin_src emacs-lisp
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-dailies-directory "daily/")
-  (org-roam-dailies-capture-templates
-   '(("d" "Journal" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %?\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Journal"))
-     ("l" "Lab Notes" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %?\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Lab Notes"))
-     ("m" "Most Important Thing" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %? :mit:\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Most Important Thing"))
-     ("j" "Jira entry" entry #'org-roam-capture--get-point
-      (file "templates/jira.org")
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Jira Tickets"))))
-  (org-roam-rename-file-on-title-change t)
-  (org-roam-directory "~/org/roam")
-  (org-roam-tag-sources '(prop all-directories))
-  ;; The below required due to https://github.com/org-roam/org-roam/issues/597
-  (org-roam-index-file "~/org/roam/index.org")
-  :bind ((("C-c n d" . org-roam-dailies-capture-today)
-	  ("C-c n l" . org-roam)
-	  ("C-c n j" . org-roam-jump-to-index)
-	  ("C-c n b" . org-roam-db-build-cache)
-	  ("C-c n f" . org-roam-find-file)
-	  ("C-c n g" . org-roam-graph))
-	 :map org-mode-map
-	 (("C-c n i" . org-roam-insert))
-	 (("C-c n I" . org-roam-insert-immediate))))
-#+end_src
-
-**** Org Roam Protocol
-
-This should allow interaction with Roam from outside Emacs, for
-example capturing from a Firefox bookmarklet.
-
-#+begin_src emacs-lisp
-(use-package org-roam-protocol
-  :after org-roam
-  :straight nil
-  :init
-  (server-start)
-  :custom
-  (org-roam-capture-ref-templates
-   '(("r" "ref" plain #'org-roam-capture--get-point ""
-      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+title: ${title}\n#+roam_key: ${ref}"
-      :unnarrowed t)
-     ("rs" "ref" plain #'org-roam-capture--get-point ""
-      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+title: ${title}\n#+roam_key: ${ref}\n\n${selection}"
-      :unnarrowed t)
-     )))
-#+end_src
-
-** Allow linking to emails in Notmuch
-
-I don't like using my email inbox as a todo list. When I receive an
-email I need to act on but /can't yet/ for some reason, I link to it
-from my Org mode agenda and archive it. When Org agenda prompts me I
-can click on the link and immediately get to the mail in my archive,
-and can reply to it from there.
-
-#+begin_src emacs-lisp
-(use-package ol-notmuch
-  :straight org-plus-contrib
-  :after (org notmuch))
-#+end_src
-
-*** Org drill (for learning new things)
-
-I use org-drill for drilling music theory.
-
-#+begin_src emacs-lisp
-(use-package org-drill
-  :custom
-  (org-drill-add-random-noise-to-intervals-p t)
-  (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
 
 ** Blogging
@@ -1747,4 +1221,399 @@ it as an interactive macro, where you can constantly see what's being done.
          ("s-n" . mc/mark-next-like-this)
          ("s-p" . mc/mark-previous-like-this)))
 #+END_SRC
+
+* Prettier.js
+#+begin_src emacs-lisp
+(use-package prettier-js
+  :defer t
+  :hook
+  ((typescript-mode . prettier-js-mode)
+   (web-mode . prettier-js-mode)))
+#+end_src
+* Highlight & deal with whitespace annoyances
+
+This highlights certain whitespace annoyances, and adds a key binding to
+clean it up.
+
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :bind ("C-c w" . whitespace-cleanup)
+  :custom
+  (whitespace-style '(face empty tabs trailing))
+  :config
+  (global-whitespace-mode t))
+#+END_SRC
+
+* Dumb-jump
+
+Trying this out again, now that it registers an xref backend:
+
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+#+end_src
+
+* Edit "Org-like" lists in non-Org buffers
+
+#+begin_src emacs-lisp
+(use-package orgalist
+  :after org
+  :hook
+  (message-mode . orgalist-mode))
+#+end_src
+
+* Diff Highlight
+
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
+#+end_src
+
+* Bug Reference Mode
+Automatically create JIRA links for things that looks like them. For
+this I've adapted snippets from Alex ter Weele and Robin Schroer.
+#+begin_src emacs-lisp
+;; `bug-reference-mode'
+(defun sb/bug-reference-setup ()
+  (setq bug-reference-bug-regexp
+	(rx (group "")  ; deliberately empty capture group;
+                        ; bug-reference assumes the first capture
+                        ; group is something like "Bug-" that should
+                        ; be thrown away.
+            (group
+             ;; <https://circleci.atlassian.net/projects?page=1&selectedCategory=all&selectedProjectType=all&sortKey=name&sortOrder=ASC>
+             (or "ACE" "AE" "BACKPLANE" "CE" "CECIA" "CEOPS" "CIRCLE" "COGS" "COM"
+		 "DATA" "DES" "DNAMEDIA" "DRC" "DS" "DSA" "DTP" "ENG" "ENGOPS" "EXP"
+		 "INSIGHT" "IT" "JOM" "MAC" "MKTG" "OP" "PLATFORM" "POTS" "PROD" "RE"
+		 "SEC" "SECOPS" "SERVER" "SRE" "TRAIN" "UXR" "WEB")
+             "-"
+             (any "1-9") (zero-or-more digit)))
+	bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
+
+(use-package bug-reference
+  :straight nil
+  :hook
+  ((bug-reference-mode . sb/bug-reference-setup)
+   (org-mode . bug-reference-mode)
+   (clojure-mode . bug-reference-mode)))
+#+end_src
+* Ace Window
+
+This lets me rapidly switch to a different frame/window.  I use
+this mainly when resolving conflicts in ediff merge, since I need
+to swap between two frames there.
+
+#+begin_src emacs-lisp
+(use-package ace-window
+  :bind (("C-S-s-<tab>" . ace-window) ; aka Meh-<tab>
+	 ("M-`" . ace-window)))
+#+end_src
+
+* Configure PATH (and other variables) from shell
+
+The GUI Emacs gets exec path from the system, rather than the login
+shell. We have to load ~PATH~ et. al. from the shell to get access to
+programs installed by Homebrew.
+
+Copy ~PATH~ and certain other variables from my login shell so these
+variables are available in Eshell. (And elsewhere in Emacs.)
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-variables
+   '("PATH" "MANPATH"
+     "LDFLAGS" "CPPFLAGS"
+     "EDITOR"
+     "JAVA_HOME"
+     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"))
+  :config
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+* Lorem Ipsum input
+
+Useful for quickly filling in placeholder text.
+
+#+begin_src emacs-lisp
+(use-package lorem-ipsum)
+#+end_src
+
+* Sending mail with MSMTP
+
+MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
+to use from the "from" address.
+
+Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
+section in the msmtp documentation for details.
+
+: security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
+
+Finally we have to tell Emacs to use msmtp to send mail.  (And to
+kill the message buffer on exit.)
+
+#+BEGIN_SRC emacs-lisp
+(setq sendmail-program "msmtp"
+      message-send-mail-function 'message-send-mail-with-sendmail
+      message-kill-buffer-on-exit t
+      message-directory "~/.mail"
+      message-sendmail-envelope-from 'header
+      mail-envelope-from 'header
+      mail-specify-envelope-from t)
+#+END_SRC
+
+* Git Link
+
+Lets me link to a file location on GitHub/Bitbucket/GitLab
+from a local git repository.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-link
+  :after magit
+  :bind ("C-c g l" . git-link))
+#+END_SRC
+
+* String Inflection
+
+Sometimes I need to swap between CamelCase and snake_case, or even
+SNAKE_CASE.
+
+#+begin_src emacs-lisp
+(use-package string-inflection)
+#+end_src
+
+* NVM Support
+NVM is the Node Version Manager. It's annoyingly implemented as shell
+functionality you source, so it won't work in Eshell. Luckily there's
+third-party emacs support.
+#+begin_src emacs-lisp
+(use-package nvm)
+#+end_src
+* Expand Region
+Hit ~C-=~ multiple times to expand the highlighted region.
+#+begin_src emacs-lisp
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+#+end_src
+* Flycheck
+
+#+begin_src emacs-lisp
+(use-package flycheck-mode
+  :straight flycheck
+  :hook clojure-mode)
+#+end_src
+
+* LSP (Language Server Protocol)
+
+LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
+among other things.
+
+#+begin_src emacs-lisp
+;; Important for lsp performance
+(setq read-process-output-max (* 1024 1024))
+
+(use-package lsp-mode
+  :hook ((clojure-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
+  :custom
+  (lsp-enable-file-watchers . nil))
+
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+(use-package lsp-java
+  :commands lsp
+  :hook (java-mode . lsp))
+#+end_src
+
+* flycheck-clj-kondo
+Automatic linting for Clojure code.
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck-clj-kondo)
+#+END_SRC
+
+* CIDER
+This is the Clojure / ClojureScript REPL I use.
+#+BEGIN_SRC emacs-lisp
+(use-package cider
+  :hook ((cider-mode . sb/unload-cider-jumps)
+	 (cider-repl-mode . sb/unload-cider-jumps))
+  :config
+  (defun sb/unload-cider-jumps ()
+    ;; I prefer lsp's jumps, so kindly don't steal them
+    (define-key cider-mode-map (kbd "M-.") nil)
+    (define-key cider-mode-map (kbd "M-,") nil))
+  :custom
+  (cider-prompt-for-symbol nil)
+  (cider-redirect-server-output-to-repl nil)
+  (cider-prefer-local-resources t)
+  (cider-auto-track-ns-form-changes t)
+  (cider-repl-pop-to-buffer-on-connect nil)
+  (cider-eldoc-display-context-dependent-info t)
+  (cider-font-lock-dynamically '(macro core function var)))
+#+END_SRC
+
+* Clojure Mode
+For editing clojure files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package clojure-mode
+  :config
+  (require 'flycheck-clj-kondo)
+  (put-clojure-indent 'as-> ':defn)
+  (put-clojure-indent 'run ':defn)
+  (put-clojure-indent 'dosync ':defn)
+  (put-clojure-indent 'speculate 1)
+  (put-clojure-indent 'doseq ':defn)
+  (put-clojure-indent 'wrap-with-timing ':defn)
+  (put-clojure-indent 'wrap-with-per-call-timing ':defn))
+#+END_SRC
+
+* Typescript
+Credit to Robin Schroer.
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :mode "\\.tsx\\'"
+  :defer t
+  :custom
+  (typescript-indent-level 2))
+#+end_src
+
+* Typescript Interactive Development Environment (TIDE)
+Credit to Robin Schroer.
+#+begin_src emacs-lisp
+(use-package tide
+  :defer t
+  :config
+  (defun sulami/tide-setup ()
+    (when (equal "tsx"
+                 (file-name-extension buffer-file-name))
+      (tide-setup)
+      (flycheck-mode +1)
+      (eldoc-mode +1)))
+  :hook
+  ((typescript-mode . sulami/tide-setup)
+   (web-mode . sulami/tide-setup)))
+#+end_src
+* YAML
+CircleCI and CloudFormation loves YAML.
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode)
+#+END_SRC
+
+* Wgrep (aka "writable grep")
+
+~wgrep~ mode is pretty close to magic. When in a buffer showing
+grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
+results of the search right from the results buffer!/ I can then
+hit =C-x C-s= to save the results.
+
+Hitting =C-c C-p= while already in writable grep mode I can delete
+the entire matched line by hitting =C-c C-d=.
+
+#+begin_src emacs-lisp
+(use-package wgrep
+  :straight (wgrep :type git
+		   :host github
+		   :repo "mhayashi1120/Emacs-wgrep"))
+#+end_src
+
+* Link to emails in Notmuch
+
+I don't like using my email inbox as a todo list. When I receive an
+email I need to act on but /can't yet/ for some reason, I link to it
+from my Org mode agenda and archive it. When Org agenda prompts me I
+can click on the link and immediately get to the mail in my archive,
+and can reply to it from there.
+
+#+begin_src emacs-lisp
+(use-package ol-notmuch
+  :straight org-plus-contrib
+  :after (org notmuch))
+#+end_src
+
+* Org drill (for learning new things)
+
+I use org-drill for drilling music theory.
+
+#+begin_src emacs-lisp
+(use-package org-drill
+  :custom
+  (org-drill-add-random-noise-to-intervals-p t)
+  (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+#+end_src
+
+* Org Roam
+[[https://github.com/org-roam/org-roam][Org-roam]] is a new one for me. It's meant to be an "exo-brain",
+modelled after the Zettelkasten method. I'm excited to try it and see
+if it improves how I work.
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-dailies-directory "daily/")
+  (org-roam-dailies-capture-templates
+   '(("d" "Journal" entry #'org-roam-capture--get-point
+      "* %<%H:%M> %?\n"
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
+      :olp ("Journal"))
+     ("l" "Lab Notes" entry #'org-roam-capture--get-point
+      "* %<%H:%M> %?\n"
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
+      :olp ("Lab Notes"))
+     ("m" "Most Important Thing" entry #'org-roam-capture--get-point
+      "* %<%H:%M> %? :mit:\n"
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
+      :olp ("Most Important Thing"))
+     ("j" "Jira entry" entry #'org-roam-capture--get-point
+      (file "templates/jira.org")
+      :file-name "daily/%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
+      :olp ("Jira Tickets"))))
+  (org-roam-rename-file-on-title-change t)
+  (org-roam-directory "~/org/roam")
+  (org-roam-tag-sources '(prop all-directories))
+  ;; The below required due to https://github.com/org-roam/org-roam/issues/597
+  (org-roam-index-file "~/org/roam/index.org")
+  :bind ((("C-c n d" . org-roam-dailies-capture-today)
+	  ("C-c n l" . org-roam)
+	  ("C-c n j" . org-roam-jump-to-index)
+	  ("C-c n b" . org-roam-db-build-cache)
+	  ("C-c n f" . org-roam-find-file)
+	  ("C-c n g" . org-roam-graph))
+	 :map org-mode-map
+	 (("C-c n i" . org-roam-insert))
+	 (("C-c n I" . org-roam-insert-immediate))))
+#+end_src
+
+* Org Roam Protocol
+
+This allows me to capture links to websites from my browser, and store
+it as a resource in Org roam.
+
+#+begin_src emacs-lisp
+(use-package org-roam-protocol
+  :after org-roam
+  :straight nil
+  :init
+  (server-start)
+  :custom
+  (org-roam-capture-ref-templates
+   '(("r" "ref" plain #'org-roam-capture--get-point ""
+      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
+      :head "#+title: ${title}\n#+roam_key: ${ref}"
+      :unnarrowed t)
+     ("rs" "ref" plain #'org-roam-capture--get-point ""
+      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
+      :head "#+title: ${title}\n#+roam_key: ${ref}\n\n${selection}"
+      :unnarrowed t)
+     )))
+#+end_src
 
