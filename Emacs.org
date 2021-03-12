@@ -277,6 +277,49 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
+** Save minibuffer history
+
+This allows us to "tap up" in the minibuffer to recall previous items,
+even from a previous session.
+
+#+BEGIN_SRC emacs-lisp
+(savehist-mode 1)
+#+END_SRC
+
+** Show Matching parens
+
+Put the cursor on any of =()[]{}= and Emacs shows the matching
+closing/opening one.
+
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+#+END_SRC
+
+** Transparently open compressed files
+
+I *do* like it when Emacs transparently opens compressed files. It gives
+me the warm fuzzies.
+
+#+BEGIN_SRC emacs-lisp
+(auto-compression-mode t)
+#+END_SRC
+
+** Visual line mode / word wrapping
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'visual-line-mode)
+#+END_SRC
+
+** Simple HTML Renderer (HTML Email)
+
+I use shr for reading HTML mail. I normally use a fullscreen window,
+but I don't like reading HTML mails with lines running all the way
+across. Thus I prefer linebreaks roughly every 80 characters.
+
+#+begin_src emacs-lisp
+(setq shr-width 80)
+#+end_src
+
 * Look and Feel
 
 ** Font size and type
@@ -336,39 +379,6 @@ from a local git repository.
   :after magit
   :bind ("C-c g l" . git-link))
 #+END_SRC
-
-** GnuPG
-
-Emacs will open =.gpg= files transparently, but I need to install gnupg
-& pinentry for that to work.
-
-#+begin_src emacs-lisp
-(setq epa-pinentry-mode 'loopback)
-#+end_src
-
-** Don't require two spaces to end a sentence
-
-Having this enabled makes it harder to collaborate with others, and
-move sentences around in texts I haven't written.
-
-#+begin_src emacs-lisp
-(setq sentence-end-double-space nil)
-#+end_src
-
-** Delete buffer and file it is visiting
-
-Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
-
-#+begin_src emacs-lisp
-(defun sb/delete-file-and-buffer ()
-  "Deletes a buffer and the file it's visiting."
-  (interactive)
-  (when-let* ((file-name (buffer-file-name))
-              (really (yes-or-no-p (format "Delete %s? "
-                                           file-name))))
-    (delete-file file-name)
-    (kill-buffer)))
-#+end_src
 
 ** Sending mail with MSMTP
 
@@ -981,17 +991,6 @@ Even faster than The Silver Searcher, apparently.
   :custom
   ;; I often look for stuff in .circleci/config.yml
   (ripgrep-arguments '("--hidden")))
-#+end_src
-
-*** Simple HTML Renderer (HTML Email)
-
-I mostly use shr for reading HTML mail.  I normally use a
-fullscreen window, but I don't like reading HTML mails with lines
-running all the way across.  Thus I prefer linebreaks roughly every
-80 characters.
-
-#+begin_src emacs-lisp
-(setq shr-width 80)
 #+end_src
 
 *** Spell Checking
