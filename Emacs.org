@@ -109,61 +109,18 @@ metadata.
       user-login-name "stig")
 #+END_SRC
 
-* Configure PATH (and other variables) from shell
+* Better Defaults
 
-I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
-
-The GUI Emacs gets exec path from the system, rather than the
-login shell.  We have to load ~PATH~ et. al. from the shell to get
-access to programs installed by Homebrew.
-
-Copy ~PATH~ and certain other variables from my login shell so these
-variables are available in Eshell.  (And elsewhere in Emacs.)
-
-#+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-variables
-   '("PATH" "MANPATH"
-     "LDFLAGS" "CPPFLAGS"
-     "EDITOR"
-     "JAVA_HOME"
-     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
-     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
-     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
-     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
-  :config
-  (exec-path-from-shell-initialize))
-#+END_SRC
-
-* Make Customize settings transient
-I prefer to code my configuration. This makes sure we store the custom
-settings in a temporary file, so they don't persist across restarts of
-Emacs. Credit to Robin Schroer for this trick.
+** Make Customize settings transient
+Store settings applied via [[info:emacs#Easy Customization][info:emacs#Easy Customization]] in a
+temporary file, so they don't persist across restarts of Emacs. I
+prefer to code my configuration. Credit to Robin Schroer for this
+trick.
 
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (make-temp-file ""))
 #+END_SRC
 
-* Configure the basics
-
-** Expand Region
-#+begin_src emacs-lisp
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
-#+end_src
-** Prefer Ibuffer over Buffer Menu
-One of the key features for me is ibuffer's ability to filter by major mode.
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-#+end_src
-** NVM Support
-NVM is the Node Version Manager. It's annoyingly implemented as shell
-functionality you source, so it won't work in Eshell. Luckily there's
-third-party emacs support.
-#+begin_src emacs-lisp
-(use-package nvm)
-#+end_src
 ** Support recursive minibuffers
 
 I like to be able to use my kill-ring in the minibuffer.
@@ -180,12 +137,13 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
 
-** Configure Meta/super/hyper keys
+** Configure Control/Meta/super/hyper keys
 
 #+BEGIN_SRC emacs-lisp
 (setq mac-command-modifier 'meta
-      mac-option-modifier 'super
-      mac-function-modifier 'hyper)
+      mac-control-modifier 'control
+      mac-function-modifier 'hyper
+      mac-option-modifier 'super)
 #+END_SRC
 
 ** Confirm kill emacs
@@ -208,20 +166,25 @@ or "no".
 
 ** Auto-revert mode
 
-Because I use Syncthing to share files between two computers, I want
-auto-revert mode on.
+When open files change on disk, I want to revert the corrersponding
+buffer. This is useful when checking out a different branch in Magit,
+and because I use Syncthing to share my Org "Exo Brain" between two
+computers.
 
 #+begin_src emacs-lisp
 (global-auto-revert-mode 1)
 #+end_src
 
-** Store backup files in a separate folder
+** Store backup and auto-save files in a separate folder
 
-I don't like backup files (those dreaded =foo~= ones) all over my disk.
-This places them in a separate directory.
+I don't like backup and auto-save files all over my disk. This places
+them in a separate directory.
 
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
+
+(setq auto-save-list-file-prefix (expand-file-name "auto-save" user-emacs-directory)
+      auto-save-file-name-transforms `((".*" ,auto-save-list-file-prefix)))
 #+END_SRC
 
 ** Auto-save visited files
@@ -229,14 +192,8 @@ This places them in a separate directory.
 Since I sync my Org files with Synchthing I want to make sure to save
 my Org files regularly to avoid lost content.
 
-Moreover, I don't like auto-save files (those pesky =#foo#= ones) all
-over my disk. This places them in a separate directory.
-
 #+BEGIN_SRC emacs-lisp
 (auto-save-visited-mode)
-(setq sb/auto-save-dir (expand-file-name "auto-save" user-emacs-directory))
-(setq auto-save-list-file-prefix sb/auto-save-dir)
-(setq auto-save-file-name-transforms `((".*" ,sb/auto-save-dir)))
 #+END_SRC
 
 ** Font size and type
@@ -271,8 +228,72 @@ All files should end in a newline. Insert one if there isn't one already.
 It's nice if Emacs knows where I was last time I opened a file.
 
 #+BEGIN_SRC emacs-lisp
-(setq-default save-place t)
-(setq save-place-file (concat user-emacs-directory "places"))
+(save-place-mode 1)
+#+END_SRC
+
+* Configure PATH (and other variables) from shell
+
+The GUI Emacs gets exec path from the system, rather than the
+login shell.  We have to load ~PATH~ et. al. from the shell to get
+access to programs installed by Homebrew.
+
+Copy ~PATH~ and certain other variables from my login shell so these
+variables are available in Eshell.  (And elsewhere in Emacs.)
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-variables
+   '("PATH" "MANPATH"
+     "LDFLAGS" "CPPFLAGS"
+     "EDITOR"
+     "JAVA_HOME"
+     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
+     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
+     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
+     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
+  :config
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+* TODO make this section go away 
+
+** Expand Region
+#+begin_src emacs-lisp
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
+#+end_src
+** Prefer Ibuffer over Buffer Menu
+One of the key features for me is ibuffer's ability to filter by major mode.
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
+** NVM Support
+NVM is the Node Version Manager. It's annoyingly implemented as shell
+functionality you source, so it won't work in Eshell. Luckily there's
+third-party emacs support.
+#+begin_src emacs-lisp
+(use-package nvm)
+#+end_src
+** Make mouse scrolling smoother
+
+The adaptive mouse scrolling is far, far too quick so let's turn that off.
+
+#+BEGIN_SRC emacs-lisp
+(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
+#+END_SRC
+
+** Clipboard
+
+These settings improve pasting behaviour with programs outside
+Emacs.  Save clipboard text into kill ring before replacing them.
+Copying with the mouse copies at point, rather than where you
+click.
+
+#+BEGIN_SRC emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+(setq mouse-yank-at-point t)
 #+END_SRC
 
 ** String Inflection
