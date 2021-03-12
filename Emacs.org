@@ -268,6 +268,15 @@ One of the key features for me is ibuffer's ability to filter by major mode.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+end_src
+** GnuPG
+
+Emacs will open =.gpg= files transparently, but I need to install gnupg
+& pinentry for that to work.
+
+#+begin_src emacs-lisp
+(setq epa-pinentry-mode 'loopback)
+#+end_src
+
 * Look and Feel
 
 ** Font size and type
@@ -316,41 +325,6 @@ SNAKE_CASE.
          ("C-c C-x C-k" . string-inflection-kebab-case)
          ("C-c C-x C-u" . string-inflection-upcase)))
 #+end_src
-
-** Toggle Window Split function
-
-Sometimes a window is split horizontally, and you would prefer
-vertically. Or vice versa. This function can help! Just don't ask me how
-it works: I found it on StackOverflow. (I think. Again.)
-
-#+BEGIN_SRC emacs-lisp
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(define-key ctl-x-4-map "t" 'toggle-window-split)
-#+END_SRC
 
 ** Git Link
 
@@ -1672,4 +1646,39 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 (define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 #+end_src
+
+** Toggle Window Split function
+
+This function re-arranges horizontally-split windows to be
+vertically-split, and vice versa. I found it on StackOverflow, once
+upon a time but now can't find the link.
+
+#+BEGIN_SRC emacs-lisp
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
 
