@@ -693,38 +693,6 @@ me the warm fuzzies.
 (add-hook 'text-mode-hook 'visual-line-mode)
 #+END_SRC
 
-*** Which Key Mode
-
-Show incomplete key cheatsheet.
-
-#+BEGIN_SRC emacs-lisp
-(use-package which-key
-  :config
-  (which-key-mode))
-#+END_SRC
-
-*** Writegood Mode
-
-I'm not a great writer. I need all the crutches I can get. Lucklily,
-Emacs has them.
-
-This helps highlight passive voice, weasel words, etc in writing.
-
-#+BEGIN_SRC emacs-lisp
-(use-package writegood-mode
-  :hook text-mode)
-#+END_SRC
-
-*** YAS
-
-A templating engine for Emacs.
-
-#+begin_src emacs-lisp
-(use-package yasnippet
-  :config
-  (yas-global-mode))
-#+end_src
-
 ** Major modes
 
 Each buffer has exactly one major mode. (Though a major mode can be
@@ -771,192 +739,6 @@ Each buffer has exactly one major mode. (Though a major mode can be
     (clj-refactor-mode 1)
     (yas-minor-mode 1))
   :hook (clojure-mode . sb/clojure-mode-hook))
-#+END_SRC
-
-*** Elfeed
-
-~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
-
-I keep my Elfeed DB in a folder that I sync between my work and home
-machine, so I don't have to mark stuff read in multiple places.
-
-#+BEGIN_SRC emacs-lisp
-(use-package elfeed-org
-  :custom
-  (rmh-elfeed-org-files `("~/org/elfeed.org"))
-  :config
-  (elfeed-org))
-
-(use-package elfeed
-  :bind (("C-x w" . elfeed)
-         :map elfeed-search-mode-map
-         ("m" . elfeed-toggle-star) )
-  :custom
-  (elfeed-db-directory "~/Sync/elfeed")
-  :config
-  (defalias 'elfeed-toggle-star
-    (elfeed-expose #'elfeed-search-toggle-all 'star)))
-#+END_SRC
-
-*** Eshell
-
-I have started using /Eshell/. It is close to magic. There's not a lot ofs
-etup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
-eshell quickly. This launches eshell if it is not already running, or
-switches to it if it is.
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "C-c s" 'eshell)
-#+END_SRC
-
-Eshell is great, and its Tramp integration allows me to open remote files
-in local Emacs seamlessly with the =find-file= command. (Which I have
-aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
-and has the same config, whether I am on a local machine or a remote one.
-
-*** HugSQL
-
-#+begin_src emacs-lisp
-(use-package hugsql
-  :straight nil
-  :defer t
-  :init
-  (defun sulami/init-hugsql-imenu ()
-    (when (string-suffix-p ".hug.sql" (buffer-file-name))
-      (setq imenu-generic-expression
-	    '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
-  :hook
-  (sql-mode . sulami/init-hugsql-imenu))
-#+end_src
-
-*** JSON Mode
-
-#+begin_src emacs-lisp
-(use-package json-mode)
-#+end_src
-*** Magit & Friends
-
-I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
-git cli any more.  I've seen someone suggest learning Emacs just to
-run Magit.
-
-Forge is an extension to Magit that interacts with GitHub / GitLab etc.
-
-#+BEGIN_SRC emacs-lisp
-(use-package transient)
-
-(use-package magit
-  :bind (("C-x C-g C-s" . magit-status)
-	 ("C-S-s-m" . magit-status)
-	 ("C-S-s-b" . magit-blame-addition)
-         ("C-x C-g s" . magit-status)
-         ("C-x C-g C-b" . magit-blame-addition)
-         ("C-x C-g b" . magit-blame-addition)))
-
-(use-package forge)
-#+END_SRC
-
-*** Markdown
-
-I'm a sucker for lists, and I want to be able to reorder list items
-easily and have them renumbered automatically.
-
-#+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-  ;; I essentially don't use Markdown
-  ;; outside GitHub any more
-  :mode ("\\.md\\'" . gfm-mode)
-  :bind (("M-<up>" . markdown-move-list-item-up)
-         ("M-<down>" . markdown-move-list-item-down))
-  :custom
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-asymmetric-header t))
-#+END_SRC
-*** Notmuch
-
-I like to use Emacs for /all/ writing, including email. I don't want a
-separate program to read and write emails, so it follows I must /read/
-email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
-
-Notmuch works pretty well for me out of the box.
-
-Notmuch's Emacs bindings are closely tied to the binary programs, so
-they (strongly) recommend that you don't install Notmuch from ELPA.
-
-I configure Notmuch to save a copy of outgoing mail into my sent mail
-folder.
-
-#+BEGIN_SRC emacs-lisp
-(use-package notmuch
-  :demand
-  :hook
-  (notmuch-message-mode . turn-off-auto-fill)
-  :custom
-  (message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
-  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
-  (notmuch-search-oldest-first nil)
-  (notmuch-address-use-company nil)
-  (notmuch-hello-thousands-separator ",")
-  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
-  (notmuch-fcc-dirs nil)
-  (notmuch-saved-searches
-   `((:name "Inbox" :query "tag:inbox" :key "i")
-     (:name "Flagged" :query "tag:flagged" :key "f")
-     (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
-     (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
-  (notmuch-tagging-keys
-   (quote
-    (("a" notmuch-archive-tags "Archive")
-     ("A" ("+archived" "-inbox") "Archive forever")
-     ("r" notmuch-show-mark-read-tags "Mark read")
-     ("f" ("+flagged") "Flag")
-     ("s" ("+spam") "Mark as spam")
-     ("d" ("+deleted") "Delete")))))
-#+END_SRC
-
-*** PlantUML
-
-I sometimes need to draw UML diagrams. For some reason I can't get the
-Jar to work in the major mode, but it works fine in Org mode.
-
-#+begin_src emacs-lisp
-(use-package plantuml-mode
-  :custom
-  (plantuml-default-exec-mode 'executable)
-  (plantuml-font-lock-keywords t))
-
-(use-package ob-plantuml
-  :after org
-  :straight nil
-  :custom
-  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
-#+end_src
-
-*** Protobuf Mode
-We use protobufs for service-to-service communication at work.
-
-#+begin_src emacs-lisp
-(use-package protobuf-mode)
-#+end_src
-
-*** Ripgrep
-
-Even faster than The Silver Searcher, apparently.
-
-#+begin_src emacs-lisp
-(use-package ripgrep
-  :custom
-  ;; I often look for stuff in .circleci/config.yml
-  (ripgrep-arguments '("--hidden")))
-#+end_src
-
-*** Spell Checking
-
-I use aspell, with British English dictionary.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ispell)
 #+END_SRC
 
 *** Tramp
@@ -1672,5 +1454,297 @@ then A.
   (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
 
 (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
+#+END_SRC
+
+* Eshell
+
+Eshell is great, and its Tramp integration allows me to open remote
+files in local Emacs seamlessly with the =find-file= command. (Which I
+have aliased to =ff=.) Eshell also makes sure that my shell behaves
+the same, and has the same config, whether I am on a local machine or
+a remote one. It is my primary shell nowadays.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-c s" 'eshell)
+#+END_SRC
+
+* HugSQL
+HugSQL is a great abstraction for using SQL from Clojure. Robin's
+imenu integration makes it easy to search for "functions" in the
+HugSQL files.
+
+#+begin_src emacs-lisp
+(use-package hugsql
+  :straight nil
+  :defer t
+  :init
+  (defun sulami/init-hugsql-imenu ()
+    (when (string-suffix-p ".hug.sql" (buffer-file-name))
+      (setq imenu-generic-expression
+	    '((nil "^--[[:space:]]:name[[:space:]]+\\([[:alnum:]-]+\\)" 1)))))
+  :hook
+  (sql-mode . sulami/init-hugsql-imenu))
+#+end_src
+
+* JSON Mode
+This makes Org-mode source blocks do syntax highlighting of JSON
+documents, which I like.
+#+begin_src emacs-lisp
+(use-package json-mode)
+#+end_src
+* Magit & Forge
+
+I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day. I rarely use the git
+cli any more. I've seen someone suggest learning Emacs just to run
+Magit.
+
+Forge is an extension to Magit that lets me create & manipulate pull
+requests on GitHub / GitLab etc.
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :bind (("C-S-s-m" . magit-status)
+	 ("C-S-s-b" . magit-blame-addition)))
+
+(use-package forge)
+#+END_SRC
+
+* Markdown
+
+I'm a sucker for lists, and I want to be able to reorder list items
+easily and have them renumbered automatically.
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  ;; I essentially don't use Markdown
+  ;; outside GitHub any more
+  :mode ("\\.md\\'" . gfm-mode)
+  :bind (("M-<up>" . markdown-move-list-item-up)
+         ("M-<down>" . markdown-move-list-item-down))
+  :custom
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-asymmetric-header t))
+#+END_SRC
+* Notmuch
+
+I like to use Emacs for /all/ writing, including email. I don't want a
+separate program to read and write emails, so it follows I must /read/
+email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
+
+Notmuch works pretty well for me out of the box.
+
+Notmuch's Emacs bindings are closely tied to the binary programs, so
+they (strongly) recommend that you don't install Notmuch from ELPA.
+
+I configure Notmuch to save a copy of outgoing mail into my sent mail
+folder.
+
+#+BEGIN_SRC emacs-lisp
+(use-package notmuch
+  :demand
+  :hook
+  (notmuch-message-mode . turn-off-auto-fill)
+  :custom
+  (message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
+  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
+  (notmuch-search-oldest-first nil)
+  (notmuch-address-use-company nil)
+  (notmuch-hello-thousands-separator ",")
+  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
+  (notmuch-fcc-dirs nil)
+  (notmuch-saved-searches
+   `((:name "Inbox" :query "tag:inbox" :key "i")
+     (:name "Flagged" :query "tag:flagged" :key "f")
+     (:name "Drafts" :query "tag:draft" :key "d")
+     (:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+     (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
+  (notmuch-tagging-keys
+   (quote
+    (("a" notmuch-archive-tags "Archive")
+     ("A" ("+archived" "-inbox") "Archive forever")
+     ("r" notmuch-show-mark-read-tags "Mark read")
+     ("f" ("+flagged") "Flag")
+     ("s" ("+spam") "Mark as spam")
+     ("d" ("+deleted") "Delete")))))
+#+END_SRC
+
+* Protobuf Mode
+We use protobufs for service-to-service communication at work.
+
+#+begin_src emacs-lisp
+(use-package protobuf-mode)
+#+end_src
+
+* Ripgrep
+
+Even faster than The Silver Searcher, apparently.
+
+#+begin_src emacs-lisp
+(use-package ripgrep
+  :custom
+  ;; I often look for stuff in .circleci/config.yml
+  (ripgrep-arguments '("--hidden")))
+#+end_src
+
+* Spell Checking
+
+I use aspell, with British English dictionary.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ispell)
+#+END_SRC
+
+* PlantUML
+
+I sometimes need to draw UML diagrams. For some reason I can't get the
+Jar to work in the major mode, but it works fine in Org mode.
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode
+  :custom
+  (plantuml-default-exec-mode 'executable)
+  (plantuml-font-lock-keywords t))
+
+(use-package ob-plantuml
+  :after org
+  :straight nil
+  :custom
+  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
+#+end_src
+
+* Elfeed
+Elfeed is an Emacs (RSS & Atom) feed reader. ~org-elfeed~ is an
+extension that stores the feed config in =elfeed.org= rather than
+=custom.el=.
+
+I keep my Elfeed DB in a folder that I sync between my work and home
+machine, so I don't have to mark stuff read in multiple places.
+
+#+BEGIN_SRC emacs-lisp
+(use-package elfeed-org
+  :custom
+  (rmh-elfeed-org-files `("~/org/elfeed.org"))
+  :config
+  (elfeed-org))
+
+(use-package elfeed
+  :bind (("C-x w" . elfeed)
+         :map elfeed-search-mode-map
+         ("m" . elfeed-toggle-star) )
+  :custom
+  (elfeed-db-directory "~/Sync/elfeed")
+  :config
+  (defalias 'elfeed-toggle-star
+    (elfeed-expose #'elfeed-search-toggle-all 'star)))
+#+END_SRC
+
+* Subword
+
+Treats CapitalizedWords as separate, so we can move forward by
+their components.  Useful in anything that looks like Java.
+
+#+begin_src emacs-lisp
+(use-package subword
+  :hook (prog-mode . subword-mode))
+#+end_src
+
+* Which Key Mode
+
+Show incomplete key cheatsheet.
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :config
+  (which-key-mode))
+#+END_SRC
+
+* Writegood Mode
+
+I'm not a great writer. I need all the crutches I can get. Lucklily,
+Emacs has them.
+
+This helps highlight passive voice, weasel words, etc in writing.
+
+#+BEGIN_SRC emacs-lisp
+(use-package writegood-mode
+  :hook text-mode)
+#+END_SRC
+
+* YAS
+
+A templating engine for Emacs.
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :config
+  (yas-global-mode))
+#+end_src
+
+* SmartParens
+
+Structural editing is a must when editing lisp, and it has bled
+into other aspects of programming for me.  In particular the
+ability to remove surrounding parens / quotes with ~sp-splice-sexp~
+is incredibly useful even when writing prose.
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens-config
+  :straight smartparens
+  :demand
+  :custom
+  (sp-base-key-bindings 'sp)
+  (sp-show-pair-from-inside t)
+  :config
+  (sp-local-pair 'text-mode "'" nil :actions :rem)
+  (show-smartparens-global-mode t))
+(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+(add-hook 'org-mode-hook 'turn-on-smartparens-strict-mode)
+#+END_SRC
+
+* Projectile
+
+I use Projectile to navigate my projects. Some of the things I like about
+it are that it provides the following key bindings:
+
+- =C-c p f= :: Find a file in this project.
+- =C-c p k= :: Close all buffers for this project.
+- =C-c p t= :: This switches from an implementation file to its test file,
+               or vice versa. I use this extensively in Clojure mode. It
+               might not make sense for all languages; YMMV.
+- =C-c p s r= :: Ripgrep for something in this project. If point is at
+                 a token, default to searching for that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :diminish
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :custom
+  (projectile-dynamic-mode-line nil)
+  :config
+
+  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
+  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
+  ;; use that on my personal machine. I would just set both, but
+  ;; projectile doesn't like it if the directories don't exist.
+  (setq projectile-project-search-path
+	(seq-filter (lambda (e) (file-directory-p e))
+		    '("/usr/local/src" "~/src")))
+
+  (projectile-mode))
+#+END_SRC
+
+* Multiple Cursors
+
+This package is another one of those near-magical ones. It allows me to do
+multiple edits in the same buffer, using several cursors. You can think of
+it as an interactive macro, where you can constantly see what's being done.
+
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :bind (("C-c M-e" . mc/edit-lines)
+         ("C-c M-a" . mc/mark-all-dwim)
+         ("s-n" . mc/mark-next-like-this)
+         ("s-p" . mc/mark-previous-like-this)))
 #+END_SRC
 
