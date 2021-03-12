@@ -285,47 +285,6 @@ I'm experimenting with "Material Light".
   :config
   (load-theme 'material-light t))
 #+end_src
-* Custom Functions
-** Delete buffer and file it is visiting
-
-Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
-
-#+begin_src emacs-lisp
-(defun sb/delete-file-and-buffer ()
-  "Deletes a buffer and the file it's visiting."
-  (interactive)
-  (when-let* ((file-name (buffer-file-name))
-              (really (yes-or-no-p (format "Delete %s? "
-                                           file-name))))
-    (delete-file file-name)
-    (kill-buffer)))
-#+end_src
-
-** Unfill paragraphs and regions
-
-The default binding for =M-q= fills a paragraph. Very good. But
-sometimes I want to /unfill/, particularly when editing markdown that
-is going to end up on GitHub. Otherwise the result has lots of hard
-linebreaks. This happens every time I edit a PR description in Magit,
-for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
-
-#+begin_src emacs-lisp
-(defun endless/fill-or-unfill ()
-  "Like `fill-paragraph', but unfill if used twice."
-  (interactive)
-  (let ((fill-column
-         (if (eq last-command #'endless/fill-or-unfill)
-             (progn (setq this-command nil)
-                    (point-max))
-           fill-column)))
-    (if (eq major-mode 'org-mode)
-        (call-interactively #' org-fill-paragraph)
-      (call-interactively #'fill-paragraph))))
-
-(define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
-(global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
-#+end_src
-
 * TODO [#C] make this section go away 
 
 ** Expand Region
@@ -1694,3 +1653,44 @@ There are two distinct parts here:
 (use-package nix-sandbox
   :defer t)
 #+end_src
+* Custom Functions
+** Delete buffer and file it is visiting
+
+Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
+
+#+begin_src emacs-lisp
+(defun sb/delete-file-and-buffer ()
+  "Deletes a buffer and the file it's visiting."
+  (interactive)
+  (when-let* ((file-name (buffer-file-name))
+              (really (yes-or-no-p (format "Delete %s? "
+                                           file-name))))
+    (delete-file file-name)
+    (kill-buffer)))
+#+end_src
+
+** Unfill paragraphs and regions
+
+The default binding for =M-q= fills a paragraph. Very good. But
+sometimes I want to /unfill/, particularly when editing markdown that
+is going to end up on GitHub. Otherwise the result has lots of hard
+linebreaks. This happens every time I edit a PR description in Magit,
+for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
+
+#+begin_src emacs-lisp
+(defun endless/fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command #'endless/fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (if (eq major-mode 'org-mode)
+        (call-interactively #' org-fill-paragraph)
+      (call-interactively #'fill-paragraph))))
+
+(define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
+(global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
+#+end_src
+
