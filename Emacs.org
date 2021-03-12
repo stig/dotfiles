@@ -773,48 +773,6 @@ Each buffer has exactly one major mode. (Though a major mode can be
   :hook (clojure-mode . sb/clojure-mode-hook))
 #+END_SRC
 
-*** Ediff
-
-Sometimes I have to resolve conflicts. I use Ediff, which I
-(usually) launch from Magit.
-
-**** Automatically Unfold Org files
-
-This snippet makes sure that Org buffers don't start folded, as
-ediff is rather useless in that case. (Credit: Oleh Krehel on
-emacs-orgmode mailing list.)
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/ediff-prepare-buffer ()
-  (when (memq major-mode '(org-mode emacs-lisp-mode))
-    (outline-show-all)))
-
-(add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
-#+END_SRC
-
-**** Picking /both/ sides in a conflict
-
-If both branches add an entry to a list I may want to pick *both*
-sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
-=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
-then A.
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/ediff-copy-both-to-C ()
-  (interactive)
-  (ediff-copy-diff ediff-current-difference nil 'C nil
-                   (concat
-                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                    (ediff-get-region-contents
-                    ediff-current-difference 'B
-                    ediff-control-buffer))))
-
-(defun sb/add-d-to-ediff-mode-map ()
-  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
-
-(add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
-#+END_SRC
-
 *** Elfeed
 
 ~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
@@ -1677,5 +1635,42 @@ evaluate this block again manually.
             ,@(sb/load-theme-heads (custom-available-themes))
             ("DEL" (sb/disable-all-themes))
             ("RET" nil "done" :color blue)))))
+#+END_SRC
+
+** Ediff: Automatically Unfold Org files
+
+This snippet makes sure that Org buffers don't start folded, as
+ediff is rather useless in that case. (Credit: Oleh Krehel on
+emacs-orgmode mailing list.)
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-prepare-buffer ()
+  (when (memq major-mode '(org-mode emacs-lisp-mode))
+    (outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+#+END_SRC
+
+** Ediff: Picking /both/ sides in a conflict
+
+If both branches add an entry to a list I may want to pick *both*
+sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
+=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
+then A.
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-copy-both-to-C ()
+  (interactive)
+  (ediff-copy-diff ediff-current-difference nil 'C nil
+                   (concat
+                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                    (ediff-get-region-contents
+                    ediff-current-difference 'B
+                    ediff-control-buffer))))
+
+(defun sb/add-d-to-ediff-mode-map ()
+  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+
+(add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
 #+END_SRC
 
