@@ -295,23 +295,6 @@ in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
     (fill-region (region-beginning) (region-end) nil)))
 #+end_src
 
-** Support for fullscreen
-
-I like to run apps in fullscreen mode. Sometimes it's useful to be
-able to toggle it on or off, which this function does. I found it
-at the [[https://www.emacswiki.org/emacs/FullScreen#toc26][EmacsWiki Fullscreen page]].
-
-#+BEGIN_SRC emacs-lisp
-(defun my-toggle-fullscreen ()
-  "Toggle full screen"
-  (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-
-(bind-key "M-<f11>" 'my-toggle-fullscreen)
-#+END_SRC
-
 ** Toggle Window Split function
 
 Sometimes a window is split horizontally, and you would prefer
