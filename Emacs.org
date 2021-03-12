@@ -1617,3 +1617,18 @@ it as a resource in Org roam.
      )))
 #+end_src
 
+* Selectrum
+Incremental searching and selecting.
+#+begin_src emacs-lisp
+(use-package selectrum
+  :config
+  (selectrum-mode +1))
+#+end_src
+* Selectrum Prescient Mode
+Learn which completions I prefer, to improve performance over time.
+#+begin_src emacs-lisp
+(use-package selectrum-prescient
+  :config
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1))
+#+end_src
