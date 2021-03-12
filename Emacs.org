@@ -495,24 +495,6 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 (use-package company
   :hook (after-init . global-company-mode))
 #+end_src
-** Counsel
-
-This provides =counsel-find-file=, among others.
-
-#+begin_src emacs-lisp
-(use-package amx) ;; make counsel-M-x work the way I like
-
-(use-package counsel
-  :diminish
-  :after org
-  :demand
-  :bind (("C-c i" . counsel-semantic-or-imenu)
-	 :map org-mode-map
-	 ("C-c i" . counsel-org-goto))
-  :config
-  (counsel-mode 1))
-#+end_src
-
 ** Diff Highlight
 
 #+begin_src emacs-lisp
@@ -570,27 +552,6 @@ clean it up.
   ((typescript-mode . prettier-js-mode)
    (web-mode . prettier-js-mode)))
 #+end_src
-** Ivy
-
-I've long been a happy Helm user, but it confuses me (and is slow!)
-in some situations so I thought I'd try again to see if Ivy fares
-any better.
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :diminish
-  :demand
-  :bind (("C-c C-r" . ivy-resume)
-         ("C-x b" . ivy-switch-buffer)
-         ("C-c v" . ivy-push-view)
-         ("C-c V" . ivy-pop-view))
-  :custom
-  (ivy-use-virtual-buffers t)
-  (ivy-count-format "%d/%d ")
-  :config
-  (ivy-mode 1))
-#+end_src
-
 ** LSP (Language Server Protocol)
 
 LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
@@ -607,7 +568,6 @@ among other things.
   :custom
   (lsp-enable-file-watchers . nil))
 
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
 (use-package lsp-java
@@ -647,7 +607,6 @@ it are that it provides the following key bindings:
   :diminish
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-completion-system 'ivy)
   (projectile-dynamic-mode-line nil)
   :config
 
@@ -660,8 +619,6 @@ it are that it provides the following key bindings:
 		    '("/usr/local/src" "~/src")))
 
   (projectile-mode))
-
-(use-package counsel-projectile)
 #+END_SRC
 
 ** Save minibuffer history
@@ -713,15 +670,6 @@ their components.  Useful in anything that looks like Java.
 (use-package subword
   :hook (prog-mode . subword-mode))
 #+end_src
-
-** Swiper
-
-Invoke swiper (find in current buffer).
-
-#+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :bind (("C-s" . swiper)))
-#+END_SRC
 
 ** Transparently open compressed files
 
@@ -1224,8 +1172,8 @@ paragraphs re-flow properly on GitHub.
   (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
                         (org-agenda-files . (:tag . "recurring"))
 			(org-agenda-files . (:maxlevel . 1))))
-  (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
-  (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
+  (org-goto-interface 'outline-path-completion)
+  (org-outline-path-complete-in-steps nil)
   (org-agenda-include-diary t)
   (org-agenda-files "~/org/org-agenda-files.txt")
 
@@ -1405,7 +1353,6 @@ if it improves how I work.
       :olp ("Jira Tickets"))))
   (org-roam-rename-file-on-title-change t)
   (org-roam-directory "~/org/roam")
-  (org-roam-completion-system 'ivy)
   (org-roam-tag-sources '(prop all-directories))
   ;; The below required due to https://github.com/org-roam/org-roam/issues/597
   (org-roam-index-file "~/org/roam/index.org")
@@ -1443,68 +1390,6 @@ example capturing from a Firefox bookmarklet.
       :unnarrowed t)
      )))
 #+end_src
-
-*** Org Roam Server
-
-This exposes an HTTP server that makes it easier to browse the graphs
-of notes.
-
-#+begin_src emacs-lisp
-(use-package org-roam-server
-  :custom
-  (org-roam-server-host "127.0.0.1")
-  (org-roam-server-port 4040)
-  (org-roam-server-export-inline-images t)
-  (org-roam-server-authenticate nil)
-  (org-roam-server-network-arrows nil)
-  (org-roam-server-network-label-truncate t)
-  (org-roam-server-network-label-truncate-length 60)
-  (org-roam-server-network-label-wrap-length 20)
-  (org-html-postamble nil))
-#+end_src
-
-** Org Jira
-
-#+begin_src emacs-lisp
-(use-package org-jira
-  :defer t
-  :custom
-  (jiralib-url "https://circleci.atlassian.net")
-  ;; FIXME haven't confirmed these yet, probably wrong.
-  ;; (org-jira-pross-issue-flow '(("Ready for Dev" . "In Progress")
-  ;;                              ("In Progress" . "Code Review")
-  ;;                              ("Code Review" . "Production Testing")
-  ;;                              ("Production Testing" . "Done")
-  ;;                              ("Done" . "In Progress")))
-  (org-jira-custom-jqls
-   '(;; Ready for dev
-     (:jql " issuetype != Epic and \"Dev Team\" = Pipelines and status in (\"Ready for Dev\")"
-           :limit 10
-           :filename "jira-ready-for-dev")
-     ;; My tickets
-     (:jql " issuetype != Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
-           :limit 10
-           :filename "jira-my-tickets")
-     ;; My epics
-     (:jql " issuetype = Epic and assignee = \"Stig Brautaset\" and (status != Done or resolution changed after -7d)"
-           :limit 10
-           :filename "jira-my-epics"))))
-
-#+end_src
-
-** Compose Emails with Org mode
-
-Very occasionally I want to create HTML mail. (For tables, for
-example.) I then write my message using Org mode syntax and use
-org-mime-htmlize.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-mime
-  :bind (:map message-mode-map
-              ("C-c h" . org-mime-htmlize))
-  :custom
-  (org-mime-preserve-breaks nil))
-#+END_SRC
 
 ** Allow linking to emails in Notmuch
 
@@ -1727,94 +1612,6 @@ and use a simple Python server to host it.
   (message "Blog Server started"))
 #+end_src
 
-** Load Blog Publish Configuration
-
-This needs clearing up.
-
-#+begin_src emacs-lisp
-(setq org-export-allow-bind-keywords t)
-
-;; Don't use inline CSS for source code
-(setq org-html-htmlize-output-type "css")
-
-(setq sb/copyright "<p>Copyright &copy; 2001-2020 Stig Brautaset</p>")
-
-(setq org-html-footnotes-section "<div id=\"footnotes\"><hr/><!--%s-->%s</div>")
-
-(setq org-html-format-drawer-function
-      (lambda (name content)
-	(format "<div class=\"drawer %s\"><h6>%s</h6>%s</div>"
-		(downcase name)
-		(capitalize name)
-		content)))
-
-(setq org-html-home/up-format "
-<div id=\"org-div-home-and-up\">
-  <nav>
-    <a accesskey=\"h\" href=\"%s\">Home</a>
-    |
-    <a accesskey=\"H\" href=\"%s\">About</a>
-  </nav>
-</div>
-")
-
-(setq common-properties
-      '(:author "Stig Brautaset"
-	:email "stig@brautaset.org"
-
-	:section-numbers nil
-	:time-stamp-file nil
-	:with-drawers t
-	:with-toc nil
-
-	:html-doctype "html5"
-	:html-head-include-default-style nil
-	:html-head-include-scripts nil
-	:html-html5-fancy t
-	:html-metadata-timestamp-format "%e %B %Y"))
-
-(setq org-publish-project-alist
-      `(("www"
-	 :components ("www-pages" "www-articles" "www-rss"))
-
-        ("www-pages"
-	 ,@common-properties
-	 :base-directory "~/blog"
-         :exclude ".*"
-	 :html-postamble ,sb/copyright
-	 :include ("index.org" "articles.org" "about.org" "style-demo.org")
-	 :publishing-directory "~/blog"
-	 :publishing-function org-html-publish-to-html)
-
-	("www-articles"
-	 ,@common-properties
-	 :base-directory "~/blog/articles"
-         :html-postamble ,sb/copyright
-	 :publishing-directory "~/blog/articles"
-	 :publishing-function org-html-publish-to-html
-	 :recursive t)
-
-	("www-rss"
-	 ,@common-properties
-	 :base-directory "~/blog"
-	 :exclude ".*"
-	 :html-link-home "https://www.brautaset.org"
-	 :html-link-use-abs-url t
-	 :include ("feed.org")
-	 :publishing-directory "~/blog"
-	 :publishing-function (org-rss-publish-to-rss)
-	 :rss-image-url "https://www.brautaset.org/icon.png"
-	 :rss-extension "xml")))
-#+end_src
-
-** Turn off annoying ~python-indent-offset~ during publication
-Turn off a harmless (but annoying) warning during publication:
-
-: Can't guess python-indent-offset, using defaults 4
-
-#+begin_src emacs-lisp
-(setq python-indent-guess-indent-offset-verbose nil)
-#+end_src
 * Nix
 
 There are two distinct parts here:
