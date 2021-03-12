@@ -224,6 +224,45 @@ It's nice if Emacs knows where I was last time I opened a file.
 (save-place-mode 1)
 #+END_SRC
 
+** Don't require two spaces to end a sentence
+
+Having this enabled makes it harder to collaborate with others, and
+move sentences around in texts I haven't written.
+
+#+begin_src emacs-lisp
+(setq sentence-end-double-space nil)
+#+end_src
+
+** Display line numbers
+
+Displaying line numbers is incredibly useful when remotely pairing
+with other people.
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
+#+end_src
+
+** Upcase-dwim and dowcase-dwim
+
+Acts like ~upcase-word~ with no region selected, and ~upcase-region~
+when one is.
+
+#+begin_src emacs-lisp
+(bind-key "M-u" #'upcase-dwim)
+(bind-key "M-l" #'downcase-dwim)
+#+end_src
+** Prefer YMD for dates in Diary / Calendar
+
+#+BEGIN_SRC emacs-lisp
+(setq calendar-date-style 'iso)
+#+END_SRC
+
+** View Mode
+Navigate read-only buffers up and down with space and backspace.
+
+#+begin_src emacs-lisp
+(setq view-read-only t)
+#+end_src
 * Look and Feel
 
 ** Font size and type
@@ -245,6 +284,21 @@ I'm experimenting with "Material Light".
 (use-package material-theme
   :config
   (load-theme 'material-light t))
+#+end_src
+* Custom Functions
+** Delete buffer and file it is visiting
+
+Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
+
+#+begin_src emacs-lisp
+(defun sb/delete-file-and-buffer ()
+  "Deletes a buffer and the file it's visiting."
+  (interactive)
+  (when-let* ((file-name (buffer-file-name))
+              (really (yes-or-no-p (format "Delete %s? "
+                                           file-name))))
+    (delete-file file-name)
+    (kill-buffer)))
 #+end_src
 
 * TODO [#C] make this section go away 
@@ -364,21 +418,6 @@ it works: I found it on StackOverflow. (I think. Again.)
 (define-key ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 
-** Diary (Calendar) Functions
-
-Prefer YMD to the /crazy/ american MDY order.
-
-I schedule some things every weekday,
-so add a convenience function for that.
-
-#+BEGIN_SRC emacs-lisp
-(setq calendar-date-style 'iso)
-
-(defun sb/weekday-p (date)
-  "Is `date' a weekday?"
-  (memq (calendar-day-of-week date) '(1 2 3 4 5)))
-#+END_SRC
-
 ** Git Link
 
 Lets me link to a file location on GitHub/Bitbucket/GitLab
@@ -445,15 +484,6 @@ kill the message buffer on exit.)
       mail-envelope-from 'header
       mail-specify-envelope-from t)
 #+END_SRC
-
-** Display line numbers
-
-Displaying line numbers is incredibly useful when remotely pairing
-with other people.
-
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
-#+end_src
 
 ** Lorem Ipsum input
 
