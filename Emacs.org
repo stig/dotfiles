@@ -304,27 +304,6 @@ third-party emacs support.
 #+begin_src emacs-lisp
 (use-package nvm)
 #+end_src
-** Make mouse scrolling smoother
-
-The adaptive mouse scrolling is far, far too quick so let's turn that off.
-
-#+BEGIN_SRC emacs-lisp
-(setq mouse-wheel-progressive-speed nil)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
-#+END_SRC
-
-** Clipboard
-
-These settings improve pasting behaviour with programs outside
-Emacs.  Save clipboard text into kill ring before replacing them.
-Copying with the mouse copies at point, rather than where you
-click.
-
-#+BEGIN_SRC emacs-lisp
-(setq save-interprogram-paste-before-kill t)
-(setq mouse-yank-at-point t)
-#+END_SRC
-
 ** String Inflection
 
 Sometimes I need to swap between CamelCase and snake_case, or even
