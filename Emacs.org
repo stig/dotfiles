@@ -231,32 +231,7 @@ It's nice if Emacs knows where I was last time I opened a file.
 (save-place-mode 1)
 #+END_SRC
 
-* Configure PATH (and other variables) from shell
-
-The GUI Emacs gets exec path from the system, rather than the
-login shell.  We have to load ~PATH~ et. al. from the shell to get
-access to programs installed by Homebrew.
-
-Copy ~PATH~ and certain other variables from my login shell so these
-variables are available in Eshell.  (And elsewhere in Emacs.)
-
-#+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-variables
-   '("PATH" "MANPATH"
-     "LDFLAGS" "CPPFLAGS"
-     "EDITOR"
-     "JAVA_HOME"
-     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
-     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
-     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
-     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
-  :config
-  (exec-path-from-shell-initialize))
-#+END_SRC
-
-* TODO make this section go away 
+* TODO [#C] make this section go away 
 
 ** Expand Region
 #+begin_src emacs-lisp
@@ -488,12 +463,37 @@ when one is.
 (bind-key "M-u" #'upcase-dwim)
 (bind-key "M-l" #'downcase-dwim)
 #+end_src
-* Minor modes
+** Configure PATH (and other variables) from shell
+
+The GUI Emacs gets exec path from the system, rather than the
+login shell.  We have to load ~PATH~ et. al. from the shell to get
+access to programs installed by Homebrew.
+
+Copy ~PATH~ and certain other variables from my login shell so these
+variables are available in Eshell.  (And elsewhere in Emacs.)
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-variables
+   '("PATH" "MANPATH"
+     "LDFLAGS" "CPPFLAGS"
+     "EDITOR"
+     "JAVA_HOME"
+     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"
+     "NIX_PATH" "NIX_PROFILES" "NIX_SSL_CERT_FILE" "NIX_USER_PROFILE_DIR"
+     ;; "__NIX_DARWIN_SET_ENVIRONMENT_DONE"
+     "NVM_DIR" "NVM_PATH" "NVM_BIN"))
+  :config
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+** Minor modes
 
 A minor mode provides some functionality that you can turn off or on.
 Multiple minor modes can be active for a buffer.
 
-** Ace Window
+*** Ace Window
 
 This lets me rapidly switch to a different frame/window.  I use
 this mainly when resolving conflicts in ediff merge, since I need
@@ -533,7 +533,7 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
    (org-mode . bug-reference-mode)
    (clojure-mode . bug-reference-mode)))
 #+end_src
-** Company (COMplete ANYthing)
+*** Company (COMplete ANYthing)
 #+begin_src emacs-lisp
 (use-package company
   :hook (after-init . global-company-mode))
@@ -546,7 +546,7 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
   (global-diff-hl-mode))
 #+end_src
 
-** Dumb-jump
+*** Dumb-jump
 
 Trying this out again, now that it registers an xref backend:
 
@@ -556,7 +556,7 @@ Trying this out again, now that it registers an xref backend:
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 #+end_src
 
-** Edit "Org-like" lists in non-Org buffers
+*** Edit "Org-like" lists in non-Org buffers
 
 #+begin_src emacs-lisp
 (use-package orgalist
@@ -565,7 +565,7 @@ Trying this out again, now that it registers an xref backend:
   (message-mode . orgalist-mode))
 #+end_src
 
-** Flycheck
+*** Flycheck
 
 #+begin_src emacs-lisp
 (use-package flycheck-mode
@@ -573,7 +573,7 @@ Trying this out again, now that it registers an xref backend:
   :hook clojure-mode)
 #+end_src
 
-** Highlight & deal with whitespace annoyances
+*** Highlight & deal with whitespace annoyances
 
 This highlights certain whitespace annoyances, and adds a key binding to
 clean it up.
@@ -587,7 +587,7 @@ clean it up.
   (global-whitespace-mode t))
 #+END_SRC
 
-** Prettier.js
+*** Prettier.js
 #+begin_src emacs-lisp
 (use-package prettier-js
   :defer t
@@ -618,7 +618,7 @@ among other things.
   :hook (java-mode . lsp))
 #+end_src
 
-** Multiple Cursors
+*** Multiple Cursors
 
 This package is another one of those near-magical ones. It allows me to do
 multiple edits in the same buffer, using several cursors. You can think of
@@ -632,7 +632,7 @@ it as an interactive macro, where you can constantly see what's being done.
          ("s-p" . mc/mark-previous-like-this)))
 #+END_SRC
 
-** Projectile
+*** Projectile
 
 I use Projectile to navigate my projects. Some of the things I like about
 it are that it provides the following key bindings:
@@ -673,7 +673,7 @@ even from a previous session.
 (savehist-mode 1)
 #+END_SRC
 
-** Show Matching parens
+*** Show Matching parens
 
 This is extremely useful. Put the mark on a paren (any of =()[]{}=,
 actually) and Emacs shows the matching closing/opening one.
@@ -682,7 +682,7 @@ actually) and Emacs shows the matching closing/opening one.
 (show-paren-mode 1)
 #+END_SRC
 
-** SmartParens
+*** SmartParens
 
 Structural editing is a must when editing lisp, and it has bled
 into other aspects of programming for me.  In particular the
@@ -704,7 +704,7 @@ is incredibly useful even when writing prose.
 (add-hook 'org-mode-hook 'turn-on-smartparens-strict-mode)
 #+END_SRC
 
-** Subword
+*** Subword
 
 Treats CapitalizedWords as separate, so we can move forward by
 their components.  Useful in anything that looks like Java.
@@ -723,13 +723,13 @@ me the warm fuzzies.
 (auto-compression-mode t)
 #+END_SRC
 
-** Visual line mode / word wrapping
+*** Visual line mode / word wrapping
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'text-mode-hook 'visual-line-mode)
 #+END_SRC
 
-** Which Key Mode
+*** Which Key Mode
 
 Show incomplete key cheatsheet.
 
@@ -739,7 +739,7 @@ Show incomplete key cheatsheet.
   (which-key-mode))
 #+END_SRC
 
-** Writegood Mode
+*** Writegood Mode
 
 I'm not a great writer. I need all the crutches I can get. Lucklily,
 Emacs has them.
@@ -751,7 +751,7 @@ This helps highlight passive voice, weasel words, etc in writing.
   :hook text-mode)
 #+END_SRC
 
-** YAS
+*** YAS
 
 A templating engine for Emacs.
 
@@ -761,12 +761,12 @@ A templating engine for Emacs.
   (yas-global-mode))
 #+end_src
 
-* Major modes
+** Major modes
 
 Each buffer has exactly one major mode. (Though a major mode can be
 /derived/ from another one.)
 
-** Clojure
+*** Clojure
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-clj-kondo)
@@ -809,12 +809,12 @@ Each buffer has exactly one major mode. (Though a major mode can be
   :hook (clojure-mode . sb/clojure-mode-hook))
 #+END_SRC
 
-** Ediff
+*** Ediff
 
 Sometimes I have to resolve conflicts. I use Ediff, which I
 (usually) launch from Magit.
 
-*** Automatically Unfold Org files
+**** Automatically Unfold Org files
 
 This snippet makes sure that Org buffers don't start folded, as
 ediff is rather useless in that case. (Credit: Oleh Krehel on
@@ -828,7 +828,7 @@ emacs-orgmode mailing list.)
 (add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
 #+END_SRC
 
-*** Picking /both/ sides in a conflict
+**** Picking /both/ sides in a conflict
 
 If both branches add an entry to a list I may want to pick *both*
 sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
@@ -851,7 +851,7 @@ then A.
 (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
 #+END_SRC
 
-** Elfeed
+*** Elfeed
 
 ~org-elfeed~ stores the feed config in =elfeed.org= rather than =custom.el=.
 
@@ -876,7 +876,7 @@ machine, so I don't have to mark stuff read in multiple places.
     (elfeed-expose #'elfeed-search-toggle-all 'star)))
 #+END_SRC
 
-** Eshell
+*** Eshell
 
 I have started using /Eshell/. It is close to magic. There's not a lot ofs
 etup (it has its own [[file:eshell/alias][alias file]]), but I've got a keybinding to bring up
@@ -892,7 +892,7 @@ in local Emacs seamlessly with the =find-file= command. (Which I have
 aliased to =ff=.) Eshell also makes sure that my shell behaves the same,
 and has the same config, whether I am on a local machine or a remote one.
 
-** HugSQL
+*** HugSQL
 
 #+begin_src emacs-lisp
 (use-package hugsql
@@ -907,12 +907,12 @@ and has the same config, whether I am on a local machine or a remote one.
   (sql-mode . sulami/init-hugsql-imenu))
 #+end_src
 
-** JSON Mode
+*** JSON Mode
 
 #+begin_src emacs-lisp
 (use-package json-mode)
 #+end_src
-** Magit & Friends
+*** Magit & Friends
 
 I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day.  I rarely use the
 git cli any more.  I've seen someone suggest learning Emacs just to
@@ -934,7 +934,7 @@ Forge is an extension to Magit that interacts with GitHub / GitLab etc.
 (use-package forge)
 #+END_SRC
 
-** Markdown
+*** Markdown
 
 I'm a sucker for lists, and I want to be able to reorder list items
 easily and have them renumbered automatically.
@@ -950,7 +950,7 @@ easily and have them renumbered automatically.
   (markdown-fontify-code-blocks-natively t)
   (markdown-asymmetric-header t))
 #+END_SRC
-** Notmuch
+*** Notmuch
 
 I like to use Emacs for /all/ writing, including email. I don't want a
 separate program to read and write emails, so it follows I must /read/
@@ -993,7 +993,7 @@ folder.
      ("d" ("+deleted") "Delete")))))
 #+END_SRC
 
-** PlantUML
+*** PlantUML
 
 I sometimes need to draw UML diagrams. For some reason I can't get the
 Jar to work in the major mode, but it works fine in Org mode.
@@ -1011,14 +1011,14 @@ Jar to work in the major mode, but it works fine in Org mode.
   (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
 #+end_src
 
-** Protobuf Mode
+*** Protobuf Mode
 We use protobufs for service-to-service communication at work.
 
 #+begin_src emacs-lisp
 (use-package protobuf-mode)
 #+end_src
 
-** Ripgrep
+*** Ripgrep
 
 Even faster than The Silver Searcher, apparently.
 
@@ -1029,7 +1029,7 @@ Even faster than The Silver Searcher, apparently.
   (ripgrep-arguments '("--hidden")))
 #+end_src
 
-** Simple HTML Renderer (HTML Email)
+*** Simple HTML Renderer (HTML Email)
 
 I mostly use shr for reading HTML mail.  I normally use a
 fullscreen window, but I don't like reading HTML mails with lines
@@ -1040,7 +1040,7 @@ running all the way across.  Thus I prefer linebreaks roughly every
 (setq shr-width 80)
 #+end_src
 
-** Spell Checking
+*** Spell Checking
 
 I use aspell, with British English dictionary.
 
@@ -1048,7 +1048,7 @@ I use aspell, with British English dictionary.
 (use-package ispell)
 #+END_SRC
 
-** Tramp
+*** Tramp
 
 Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]],
 and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/emacs/.emacs][Robin Schroer]]'s config.
@@ -1075,7 +1075,7 @@ and cribbing liberally from [[https://github.com/sulami/dotfiles/tree/master/ema
 	     (cons tramp-file-name-regexp "/tmp/emacs-backup/"))
 #+end_src
 
-** Typescript
+*** Typescript
 Credit to Robin Schroer.
 
 #+begin_src emacs-lisp
@@ -1098,7 +1098,7 @@ Credit to Robin Schroer.
   ((typescript-mode . sulami/tide-setup)
    (web-mode . sulami/tide-setup)))
 #+end_src
-** Wgrep (aka "writable grep")
+*** Wgrep (aka "writable grep")
 
 ~wgrep~ mode is pretty close to magic. When in a buffer showing
 grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
@@ -1115,7 +1115,7 @@ the entire matched line by hitting =C-c C-d=.
 		   :repo "mhayashi1120/Emacs-wgrep"))
 #+end_src
 
-** YAML
+*** YAML
 
 CircleCI and CloudFormation loves YAML.
 
@@ -1123,7 +1123,7 @@ CircleCI and CloudFormation loves YAML.
 (use-package yaml-mode)
 #+END_SRC
 
-* Org mode
+** Org mode
 
 I use Org mode for all writing I initiate.  Org mode's support for
 tables, TOC, footnotes, TODO and Agenda items makes it an easy
@@ -1273,7 +1273,7 @@ paragraphs re-flow properly on GitHub.
 (use-package ox-gfm)
 #+end_src
 
-** Capturing
+*** Capturing
 
 Set up capture templates. I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]
 (and YouTube series). It has grown a bit since then.
@@ -1317,7 +1317,7 @@ usually I am in a work frame of mind on my work computer and vice versa.
       (file "templates/gtd-review.org") :clock-in t))))
 #+end_src
 
-** Babel
+*** Babel
 
 Org Babel is magical: execute code from different languages in the
 same file, and capture the output! I list the languages I want to
@@ -1336,7 +1336,7 @@ need them.
 				 (plantuml . t))))
 #+end_src
 
-** Verb
+*** Verb
 
 This is a package I use for interacting with REST HTTP APIs. Before
 arriving at it I tried restclient, walkman, and http.el. All have
@@ -1359,7 +1359,7 @@ works really well with REST APIs to reduce boilerplate.
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
 
-** Roam
+*** Roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is a new one for me. It's meant to be an "exo-brain",
 modelled after the Zettelkasten method. I'm excited to try it and see
 if it improves how I work.
@@ -1406,7 +1406,7 @@ if it improves how I work.
 	 (("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
-*** Org Roam Protocol
+**** Org Roam Protocol
 
 This should allow interaction with Roam from outside Emacs, for
 example capturing from a Firefox bookmarklet.
@@ -1444,7 +1444,7 @@ and can reply to it from there.
   :after (org notmuch))
 #+end_src
 
-** Org drill (for learning new things)
+*** Org drill (for learning new things)
 
 I use org-drill for drilling music theory.
 
@@ -1455,9 +1455,9 @@ I use org-drill for drilling music theory.
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
 
-* Themes
+** Themes
 
-** Load one theme at a time
+*** Load one theme at a time
 
 For years I thought that theme switching in Emacs was broken---until
 I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
@@ -1477,7 +1477,7 @@ all currently enabled themes first.
   (load-theme the-theme t))
 #+END_SRC
 
-** Hydra Theme Switching
+*** Hydra Theme Switching
 
 Switch themes with Hydra! This loads all available themes and
 presents a menu to let you switch between them. The theme switcher
@@ -1510,7 +1510,7 @@ evaluate this block again manually.
             ("RET" nil "done" :color blue)))))
 #+END_SRC
 
-** Default Theme
+*** Default Theme
 
 For years I've been using Leuven as my default theme. In general I
 like white / light backgrounds, and I like how it has special styles
@@ -1523,12 +1523,12 @@ I'm experimenting with "Material Light".
   (sb/load-theme 'material-light))
 #+end_src
 
-* Blogging
+** Blogging
 I create blog entries in a directory under =~/blog= and link to them
 from the main index page. It has so far been a manual job, but I have
 finally managed to create a function to automate it a bit.
 
-** Helper function to get a value from Org keyword element
+*** Helper function to get a value from Org keyword element
 
 #+begin_src emacs-lisp
 (defun sb/org-kw-get (key)
@@ -1539,7 +1539,7 @@ its :value property if its :key property matches `key'."
          (org-element-property :value kw))))
 #+end_src
 
-** Create blog post index entry
+*** Create blog post index entry
 
 #+BEGIN_SRC emacs-lisp
 (defun sb/blog-post-index-entry ()
@@ -1566,7 +1566,7 @@ post from the index page."
        (point-min) (point-max)))))
 #+END_SRC
 
-** Create RSS entry
+*** Create RSS entry
 
 Creating an entry in the RSS feed is another manual step. This way I
 can "soft publish" and publish to RSS separately from the index page.
@@ -1599,7 +1599,7 @@ post from the index page."
 (require 'ox-rss)
 #+end_src
 
-** Find drafts
+*** Find drafts
 
 #+begin_src emacs-lisp
 (defun sb/find-drafts ()
@@ -1636,7 +1636,7 @@ post from the index page."
       (message "No drafts could be found!"))))
 #+end_src
 
-** Blog server
+*** Blog server
 
 While noodling around with my blog locally I publish to =~/blog=
 and use a simple Python server to host it.
