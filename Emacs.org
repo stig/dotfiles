@@ -263,6 +263,11 @@ Navigate read-only buffers up and down with space and backspace.
 #+begin_src emacs-lisp
 (setq view-read-only t)
 #+end_src
+** Prefer Ibuffer over Buffer Menu
+One of the key features for me is ibuffer's ability to filter by major mode.
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
 * Look and Feel
 
 ** Font size and type
@@ -291,11 +296,6 @@ I'm experimenting with "Material Light".
 #+begin_src emacs-lisp
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
-#+end_src
-** Prefer Ibuffer over Buffer Menu
-One of the key features for me is ibuffer's ability to filter by major mode.
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 #+end_src
 ** NVM Support
 NVM is the Node Version Manager. It's annoyingly implemented as shell
