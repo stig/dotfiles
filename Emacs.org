@@ -291,17 +291,6 @@ It's nice if Emacs knows where I was last time I opened a file.
 (setq save-place-file (concat user-emacs-directory "places"))
 #+END_SRC
 
-** Add keybinding to join next line to this
-
-With cursor at any point in a line, hit =M-j= to move to the end, and
-delete the newline. Leave the cursor where the newline used to be.
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "M-j" (lambda ()
-                  (interactive)
-                  (join-line -1)))
-#+END_SRC
-
 ** String Inflection
 
 Sometimes I need to swap between CamelCase and snake_case, or even
@@ -344,15 +333,6 @@ in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
     (fill-region (region-beginning) (region-end) nil)))
 #+end_src
 
-** Cycle Spaces
-
-Replaces all spaces and tabs around cursor with a single space. If
-called with prefix arg N, leaves N spaces. If N is negative, deletes
-newlines too.
-
-#+begin_src emacs-lisp
-(bind-key "M-SPC" #'cycle-spacing)
-#+end_src
 ** Support for fullscreen
 
 I like to run apps in fullscreen mode. Sometimes it's useful to be
