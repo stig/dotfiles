@@ -88,7 +88,7 @@ for configuration in one place.
 (straight-use-package '(org-plus-contrib :includes (org) :local-repo "org"))
 #+end_src
 
-* Where am I?
+* Where, and who, am I?
 
 I use one computer for work, and another for personal stuff. I don't
 have vastly different configs, but I do set some variables
@@ -99,9 +99,9 @@ context we're in later.
 (setq sb/home? (string-match "margil" (system-name)))
 #+end_src
 
-* Introduce Myself
-
-In case something needs my name or email address.
+Set up my name, email address, and login. I use the email in my
+Notmuch config below, and some of these show up in Org mode's export
+metadata.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Stig Brautaset"
