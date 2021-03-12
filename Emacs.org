@@ -301,6 +301,31 @@ Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README
     (kill-buffer)))
 #+end_src
 
+** Unfill paragraphs and regions
+
+The default binding for =M-q= fills a paragraph. Very good. But
+sometimes I want to /unfill/, particularly when editing markdown that
+is going to end up on GitHub. Otherwise the result has lots of hard
+linebreaks. This happens every time I edit a PR description in Magit,
+for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
+
+#+begin_src emacs-lisp
+(defun endless/fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command #'endless/fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (if (eq major-mode 'org-mode)
+        (call-interactively #' org-fill-paragraph)
+      (call-interactively #'fill-paragraph))))
+
+(define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
+(global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
+#+end_src
+
 * TODO [#C] make this section go away 
 
 ** Expand Region
@@ -352,35 +377,6 @@ SNAKE_CASE.
          ("C-c C-x C-c" . string-inflection-camelcase)
          ("C-c C-x C-k" . string-inflection-kebab-case)
          ("C-c C-x C-u" . string-inflection-upcase)))
-#+end_src
-
-** Unfill paragraphs and regions
-
-The default binding for =M-q= fills a paragraph. Very good. But
-sometimes I want to /unfill/[fn:: Particularly when editing markdown
-that is going to end up on GitHub, as otherwise the result has lots
-of hard linebreaks. This happens every time I edit a PR description
-in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
-
-#+begin_src emacs-lisp
-(defun sb/unfill-paragraph ()
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-paragraph nil)))
-
-(defun sb/fill-or-unfill-paragraph (arg)
-  "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
-  (interactive "P")
-  (if arg
-      (sb/unfill-paragraph)
-    (fill-paragraph)))
-
-(bind-key "M-q" 'sb/fill-or-unfill-paragraph)
-
-(defun sb/unfill-region ()
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-region (region-beginning) (region-end) nil)))
 #+end_src
 
 ** Toggle Window Split function
