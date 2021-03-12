@@ -231,15 +231,6 @@ auto-revert mode on.
 (global-auto-revert-mode 1)
 #+end_src
 
-** Make mouse scrolling smoother
-
-The adaptive mouse scrolling is far, far too quick so let's turn that off.
-
-#+BEGIN_SRC emacs-lisp
-(setq mouse-wheel-progressive-speed nil)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control))))
-#+END_SRC
-
 ** Store backup files in a separate folder
 
 I don't like backup files (those dreaded =foo~= ones) all over my disk.
@@ -262,18 +253,6 @@ over my disk. This places them in a separate directory.
 (setq sb/auto-save-dir (expand-file-name "auto-save" user-emacs-directory))
 (setq auto-save-list-file-prefix sb/auto-save-dir)
 (setq auto-save-file-name-transforms `((".*" ,sb/auto-save-dir)))
-#+END_SRC
-
-** Clipboard
-
-These settings improve pasting behaviour with programs outside
-Emacs.  Save clipboard text into kill ring before replacing them.
-Copying with the mouse copies at point, rather than where you
-click.
-
-#+BEGIN_SRC emacs-lisp
-(setq save-interprogram-paste-before-kill t)
-(setq mouse-yank-at-point t)
 #+END_SRC
 
 ** Font size and type
@@ -461,14 +440,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-** Remove ANSI colours
-
-#+begin_src emacs-lisp
-(defun sb/remove-ansi-colours-from-buffer ()
-  (interactive)
-  (ansi-color-filter-region (point-min) (point-max)))
-#+end_src
-
 ** Don't require two spaces to end a sentence
 
 Having this enabled makes it harder to collaborate with others, and
@@ -540,22 +511,6 @@ Navigate read-only buffers up and down with space and backspace.
 #+begin_src emacs-lisp
 (setq view-read-only t)
 #+end_src
-** Pulse
-
-I used to use Beacon for this, but now I don't need a separate module.
-[[https://karthinks.com/software/batteries-included-with-emacs/#pulse--pulse-dot-el][Source]].
-
-#+BEGIN_SRC emacs-lisp
-(defun pulse-line (&rest _)
-      "Pulse the current line."
-      (pulse-momentary-highlight-one-line (point)))
-
-(dolist (command '(scroll-up-command
-		   scroll-down-command
-                   recenter-top-bottom
-		   other-window))
-  (advice-add command :after #'pulse-line))
-#+end_src
 ** Upcase-dwim and dowcase-dwim
 
 Acts like ~upcase-word~ with no region selected, and ~upcase-region~
@@ -581,18 +536,6 @@ to swap between two frames there.
   :bind (("C-S-s-<tab>" . ace-window) ; aka Meh-<tab>
 	 ("M-`" . ace-window)))
 #+end_src
-
-** Auto commit
-
-In some projects (notably, my Org/Agenda setup) I want to
-automatically commit when editing files.
-
-#+BEGIN_SRC emacs-lisp
-(use-package git-auto-commit-mode
-  :custom
-  (gac-automatically-add-new-files-p t)
-  (gac-automatically-push-p t))
-#+END_SRC
 
 ** Bug Reference Mode
 Automatically create JIRA links for things that looks like them. For
@@ -795,16 +738,6 @@ it are that it provides the following key bindings:
 
 (use-package counsel-projectile)
 #+END_SRC
-
-** Rainbow Delimiters
-
-This makes it slightly easier to discern matching parens when the
-nesting goes deep.
-
-#+begin_src emacs-lisp
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-#+end_src
 
 ** Save minibuffer history
 
