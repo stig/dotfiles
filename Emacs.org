@@ -707,7 +707,7 @@ For editing clojure files.
 ** Default Theme
 
 Right now I'm experimenting with "Material Light" theme. I like that
-it's got a light background, and muted colours. 
+it's got a light background, and muted colours.
 
 #+begin_src emacs-lisp
 (use-package material-theme
@@ -1315,16 +1315,23 @@ it are that it provides the following key bindings:
   :diminish
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-dynamic-mode-line nil)
+  (projectile-switch-project-action 'projectile-find-file)
+  (projectile-completion-system 'default)
+  (projectile-project-search-path '("~/src"))
   :config
+  (defun sulami/projectile-rg ()
+    (interactive)
+    (consult-ripgrep (projectile-project-root)))
 
-  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
-  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
-  ;; use that on my personal machine. I would just set both, but
-  ;; projectile doesn't like it if the directories don't exist.
-  (setq projectile-project-search-path
-	(seq-filter (lambda (e) (file-directory-p e))
-		    '("/usr/local/src" "~/src")))
+  (defun sulami/projectile-rg-thing-at-point ()
+    (interactive)
+    (consult-ripgrep (projectile-project-root)
+                     (thing-at-point 'symbol t)))
+
+  ;; Don't do projectile stuff on remote files
+  ;; from https://github.com/syl20bnr/spacemacs/issues/11381#issuecomment-481239700
+  (defadvice projectile-project-root (around ignore-remote first activate)
+    (unless (file-remote-p default-directory) ad-do-it))
 
   (projectile-mode))
 #+END_SRC
@@ -1351,17 +1358,61 @@ Even faster than The Silver Searcher, apparently.
 Incremental searching and selecting.
 #+begin_src emacs-lisp
 (use-package selectrum
-  :config
-  (selectrum-mode +1))
+  :hook
+  (after-init . selectrum-mode))
 #+end_src
-** Selectrum Prescient Mode
+*** Selectrum Prescient Mode
 Learn which completions I prefer, to improve performance over time.
 #+begin_src emacs-lisp
 (use-package selectrum-prescient
-  :config
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1))
+  :hook
+  (after-init . selectrum-prescient-mode)
+  (after-init . prescient-persist-mode))
 #+end_src
+*** Consult
+
+Consult is counsel for selectrum, in that it adds selectrum support
+for various commands that do not use ~read-string~ normally.
+
+#+begin_src emacs-lisp
+(use-package consult
+  :defer t
+  :straight
+  '(consult
+    :type git
+    :host github
+    :repo "minad/consult"
+    :branch "main")
+  :custom
+  (consult-preview-key nil)
+  :config
+  ;; Eshell only defines its locally keymap when you launch it, so we
+  ;; have to add bindings with a hook.
+  (defun sulami/consult-setup-eshell-bindings ()
+    (general-imap
+     :keymaps 'eshell-mode-map
+     "C-r" 'consult-history))
+
+  :bind (("M-y" . consult-yank-pop)
+	 :map shell-mode-map
+	 ("C-r" . consult-history))
+  :hook
+  (eshell-mode . sulami/consult-setup-eshell-bindings))
+#+end_src
+
+*** Orderless
+
+This package provides a minibuffer completion style that is
+"whitespace separated words in any order." Very useful if you don't
+know exactly what you're looking for.
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :defer t
+  :custom
+  (completion-styles '(orderless)))
+#+end_src
+
 ** Sending mail with MSMTP
 
 MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
@@ -1565,5 +1616,3 @@ A templating engine for Emacs.
   :config
   (yas-global-mode))
 #+end_src
-
-
