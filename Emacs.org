@@ -615,11 +615,6 @@ for configuration in one place.
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
-
-;; TODO: move this to Org config section
-;; Avoid conflicts between multiple Org versions, cf
-;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-(straight-use-package '(org-plus-contrib :includes (org) :local-repo "org"))
 #+end_src
 
 * Installed Packages
@@ -1016,41 +1011,57 @@ I use org-drill for drilling music theory.
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
 
+** Org Export Backend: GitHub Flavour Markdown
+GitHub unfortunately doesn't properly ignore linebreaks in Markdown,
+so I use the =gfm= exporter, rather than the standard Markdown one, as
+this deletes linebreaks. This means the rendered paragraphs re-flow
+properly on GitHub.
+
+#+begin_src emacs-lisp
+(use-package ox-gfm)
+#+end_src
+** Org Export Backend: Jira
+I love Org's markup so much I wrote a JIRA export backend for it.
+#+begin_src emacs-lisp
+(use-package ox-jira
+  ;; Need to specify the branch here because of
+  ;; https://github.com/raxod502/straight.el/issues/279
+  :straight (ox-jira :type git
+		     :host github
+		     :repo "stig/ox-jira.el"
+		     :branch "trunk")
+
+  :custom
+  ;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
+  ;; See https://github.com/stig/ox-jira.el/issues/53
+  (org-export-with-sub-superscripts '{}))
+#+end_src
+
 ** Org mode
 
-I use Org mode for all writing I initiate.  Org mode's support for
-tables, TOC, footnotes, TODO and Agenda items makes it an easy
-choice.  Gists and GitHub READMEs support Org mode too, and I can
-export to other formats including if I want.
-
 The Org manual expects the =C-c {l,a,c}= keybindings to be available
-in any mode, so define them globally.  I prefer to follow
-conventions.  It makes reading the manual and tutorials a lot
-easier!
+in any mode, so define them globally. I prefer to follow conventions.
+It makes reading the manual and tutorials a lot easier!
 
-I use Org's refiling when "refactoring" documents such as this one.
-I learnt about it from this from [[https://www.youtube.com/watch?v=ECWtf6mAi9k][this YouTube video]].
+I use Org Agenda for keeping track of my TODOs. I configure TODO list
+and tag search to ignore future scheduled, deadlined, and timestamped
+issues. These will show in the Agenda eventually anyway.
 
-I use Org Agenda for keeping track of my TODOs. I don't normally use
-properties, so I ignore most to help speed up my agenda view. ([[http://orgmode.org/worg/agenda-optimization.html][ref]]) I
-configure TODO list and tag search to ignore future scheduled,
-deadlined, and timestamped issues. These will show in the Agenda
-eventually anyway.
+Set up capture templates to automatically tag tasks with ~@work~ and
+~@home~ tags, based on which machine I am on. It's not always correct,
+but usually I am in a work frame of mind on my work computer and vice
+versa.
 
-I love Org's markup so much I wrote a JIRA export backend for it.  I
-also write in Org and export to GitHub.  GitHub unfortunately
-doesn't properly ignore linebreaks in Markdown, so I use the =gfm=
-exporter, as this deletes linebreaks.  This means the rendered
-paragraphs re-flow properly on GitHub.
+Org Babel is magical: execute code from different languages in the
+same file, and capture the output! I list the languages I want to
+support. I also have to load some modules so they're available when I
+need them.
 
 #+BEGIN_SRC emacs-lisp
-;; This is the opposite direction of the sb/capture-tag, so that we
-;; can exclude home tasks from work and vice versa, but still have
-;; tasks that show up both home and at work.
-(setq sb/agenda-tag (if sb/home? "-@work" "-@home"))
-
 (use-package org
-  :straight org-plus-contrib
+  ;; Avoid conflicts between multiple Org versions, cf
+  ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
+  :straight (org-plus-contrib :includes (org) :local-repo "org")
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -1127,7 +1138,8 @@ paragraphs re-flow properly on GitHub.
       ((agenda "")
        (tags-todo "-PRIORITY=\"C\"/TODO"))
       ((org-agenda-span 'day)
-       (org-agenda-tag-filter-preset '(,sb/agenda-tag
+       ;; Exclude @home tasks when I'm on my  work machine, and vice versa
+       (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
 				       "-someday"
 				       "-inbox"))))
      ("g" . "Getting Things Done")
@@ -1147,48 +1159,16 @@ paragraphs re-flow properly on GitHub.
       ((tags "-proj-gtd/DONE")
        (tags "-proj-gtd/CANCELLED")))
      ("gp" "Projects" tags-todo "-someday/PROJ")))
-  :config
-  (require 'org-habit))
 
-(use-package ox-jira
-  ;; Need to specify the branch here because of
-  ;; https://github.com/raxod502/straight.el/issues/279
-  :straight (ox-jira :type git
-		     :host github
-		     :repo "stig/ox-jira.el"
-		     :branch "trunk")
-
-  :custom
-  ;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
-  ;; See https://github.com/stig/ox-jira.el/issues/53
-  (org-export-with-sub-superscripts '{}))
-
-(use-package ox-gfm)
-#+end_src
-
-*** Capturing
-
-Set up capture templates. I learnt about these from [[http://koenig-haunstetten.de/2014/08/29/the-power-of-orgmode-capture-templates/][Rainer's blog post]]
-(and YouTube series). It has grown a bit since then.
-
-I have a special function to create ~@work~ and ~@home~ tags, based on
-which machine I am capturing the item. It's not always correct, but
-usually I am in a work frame of mind on my work computer and vice versa.
-
-#+begin_src emacs-lisp
-;; This is the tag we assign based on which machine we tag on.
-(setq sb/capture-tag (if sb/home? "@home" "@work"))
-
-(use-package org
-  :straight org-plus-contrib
-  :custom
   (org-default-notes-file
    (let ((name (downcase (car (split-string (system-name) "\\.")))))
      (expand-file-name (format "%s.org" name) "~/org")))
 
   (org-capture-templates
-   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:" sb/capture-tag))
-     ("l" "TODO with [l]ink to here" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/capture-tag))
+   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
+					  (if sb/home? "@home" "@work")))
+     ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
+						      (if sb/home? "@home" "@work")))
 
      ("u" "Utility Metres")
      ("ug" "New Gas Meter Reading" table-line
@@ -1207,49 +1187,15 @@ usually I am in a work frame of mind on my work computer and vice versa.
       "* %<%B/Week %V>\n1. %?")
      ("pr" "New GTD Review" entry
       (file+olp+datetree "~/org/archive/gtd_review.org")
-      (file "templates/gtd-review.org") :clock-in t))))
-#+end_src
+      (file "templates/gtd-review.org") :clock-in t)))
 
-*** Babel
-
-Org Babel is magical: execute code from different languages in the
-same file, and capture the output! I list the languages I want to
-support. I also have to load some modules so they're available when I
-need them.
-
-#+begin_src emacs-lisp
-(use-package org
-  :init
-  (require 'ob-shell)
   :config
+  (require 'org-habit)
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((emacs-lisp . t)
 				 (sql . t)
 				 (shell . t)
 				 (plantuml . t))))
-#+end_src
-
-*** Verb
-
-This is a package I use for interacting with REST HTTP APIs. Before
-arriving at it I tried restclient, walkman, and http.el. All have
-their strengths and weaknesses, but Verb seems the most well-rounded
-feature set. The hierachical inheritance is what really sold me, as it
-works really well with REST APIs to reduce boilerplate.
-
-#+begin_src emacs-lisp
-(use-package verb
-  :init
-  (defun sb/api-token-for-host (host)
-    "Return a token for the specified host."
-    (let ((found (nth 0 (auth-source-search :host host :create nil))))
-      (when found
-	(let ((secret (plist-get found :secret)))
-	  (if (functionp secret)
-	      (funcall secret)
-	    secret)))))
-  :config
-  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
 
 ** Org Roam
@@ -1534,6 +1480,29 @@ Credit to Robin Schroer.
   ((typescript-mode . sulami/tide-setup)
    (web-mode . sulami/tide-setup)))
 #+end_src
+** Verb
+
+This is a package I use for interacting with REST HTTP APIs. Before
+arriving at it I tried restclient, walkman, and http.el. All have
+their strengths and weaknesses, but Verb seems the most well-rounded
+feature set. The hierachical inheritance is what really sold me, as it
+works really well with REST APIs to reduce boilerplate.
+
+#+begin_src emacs-lisp
+(use-package verb
+  :init
+  (defun sb/api-token-for-host (host)
+    "Return a token for the specified host."
+    (let ((found (nth 0 (auth-source-search :host host :create nil))))
+      (when found
+	(let ((secret (plist-get found :secret)))
+	  (if (functionp secret)
+	      (funcall secret)
+	    secret)))))
+  :config
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+#+end_src
+
 ** Wgrep (aka "writable grep")
 
 ~wgrep~ mode is pretty close to magic. When in a buffer showing
@@ -1603,4 +1572,5 @@ A templating engine for Emacs.
   :config
   (yas-global-mode))
 #+end_src
+
 
