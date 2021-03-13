@@ -54,6 +54,56 @@ metadata.
       user-login-name "stig")
 #+END_SRC
 
+* Install config management packages
+
+I'm using =straight.el= to install packages, and =use-package= to
+configure them. Because of that, we need to bootstrap them near the
+start of the config.
+
+** Bootstrap =straight.el=
+
+One of the things I like about straight is that it makes it easier to
+make local changes to modules, and contribute these back to modules I
+use.
+
+I don't feel the need to specify ~:straigth t~ in every ~use-package~
+stanza, so I specify that to be the default.
+
+#+begin_src emacs-lisp
+;; -*- lexical-binding: t; -*-
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
+#+end_src
+
+** Install =use-package= and friends
+
+I appreciate that =use-package= makes it easier to write lazy loading
+configuration. I also like that its manual documents all the options
+for configuration in one place.
+
+#+begin_src emacs-lisp
+(straight-use-package 'use-package)
+(straight-use-package 'bind-key)
+(straight-use-package 'diminish)
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
+#+end_src
+
 * Better Defaults
 
 ** Auto-revert mode
@@ -128,6 +178,18 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 #+begin_src emacs-lisp
 (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
+
+** Eshell
+
+Eshell is great, and its Tramp integration allows me to open remote
+files in local Emacs seamlessly with the =find-file= command. (Which I
+have aliased to =ff=.) Eshell also makes sure that my shell behaves
+the same, and has the same config, whether I am on a local machine or
+a remote one. It is my primary shell nowadays.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-c s" 'eshell)
+#+END_SRC
 
 ** Font size and type
 
@@ -341,13 +403,6 @@ post from the index page."
                                 (file-name-sans-extension path)))
       (copy-region-as-kill
        (point-min) (point-max)))))
-#+end_src
-
-=org-rss= requires these to do its thing:
-
-#+begin_src emacs-lisp
-(require 'ox-icalendar)
-(require 'ox-rss)
 #+end_src
 
 *** Find drafts
@@ -566,57 +621,7 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 #+end_src
 
-* Bootstrap package management tools
-
-I'm using =straight.el= to install packages, and =use-package= to
-configure them. Because of that, we need to bootstrap them near the
-start of the config.
-
-** Bootstrap =straight.el=
-
-One of the things I like about straight is that it makes it easier to
-make local changes to modules, and contribute these back to modules I
-use.
-
-I don't feel the need to specify ~:straigth t~ in every ~use-package~
-stanza, so I specify that to be the default.
-
-#+begin_src emacs-lisp
-;; -*- lexical-binding: t; -*-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(setq straight-use-package-by-default t)
-#+end_src
-
-** Bootstrap =use-package=
-
-I appreciate that =use-package= makes it easier to write lazy loading
-configuration. I also like that its manual documents all the options
-for configuration in one place.
-
-#+begin_src emacs-lisp
-(straight-use-package 'use-package)
-(straight-use-package 'bind-key)
-(straight-use-package 'diminish)
-
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)
-(require 'bind-key)
-#+end_src
-
-* Installed Packages
+* Packages
 
 ** Ace Window
 
@@ -685,7 +690,6 @@ For editing clojure files.
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
   :config
-  (require 'flycheck-clj-kondo)
   (put-clojure-indent 'as-> ':defn)
   (put-clojure-indent 'run ':defn)
   (put-clojure-indent 'dosync ':defn)
@@ -752,18 +756,6 @@ machine, so I don't have to mark stuff read in multiple places.
   :config
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'star)))
-#+END_SRC
-
-** Eshell
-
-Eshell is great, and its Tramp integration allows me to open remote
-files in local Emacs seamlessly with the =find-file= command. (Which I
-have aliased to =ff=.) Eshell also makes sure that my shell behaves
-the same, and has the same config, whether I am on a local machine or
-a remote one. It is my primary shell nowadays.
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "C-c s" 'eshell)
 #+END_SRC
 
 ** Exec Path From Shell
@@ -999,7 +991,7 @@ third-party emacs support.
 #+begin_src emacs-lisp
 (use-package nvm)
 #+end_src
-** Org drill (for learning new things)
+** Org Drill (for learning new things)
 
 I use org-drill for drilling music theory.
 
@@ -1009,7 +1001,6 @@ I use org-drill for drilling music theory.
   (org-drill-add-random-noise-to-intervals-p t)
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
 #+end_src
-
 ** Org Export Backend: GitHub Flavour Markdown
 GitHub unfortunately doesn't properly ignore linebreaks in Markdown,
 so I use the =gfm= exporter, rather than the standard Markdown one, as
@@ -1057,145 +1048,147 @@ support. I also have to load some modules so they're available when I
 need them.
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  ;; Avoid conflicts between multiple Org versions, cf
-  ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-  :straight (org-plus-contrib :includes (org) :local-repo "org")
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-	 ;; I try to track time...
-	 ("C-c C-x C-j" . org-clock-goto)
-         :map org-mode-map
-	 ("M-q" . endless/fill-or-unfill)
-         ("C-x C-<return>" . org-insert-subheading)
-         ("C-S-<return>" . org-insert-todo-subheading)
-         ("C-n" . org-next-link)
-         ("C-p" . org-previous-link))
+  (use-package org
+    ;; Avoid conflicts between multiple Org versions, cf
+    ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
+    :straight (org-plus-contrib :includes (org) :local-repo "org")
+    :bind (("C-c l" . org-store-link)
+	   ("C-c a" . org-agenda)
+	   ("C-c c" . org-capture)
+	   ;; I try to track time...
+	   ("C-c C-x C-j" . org-clock-goto)
+	   :map org-mode-map
+	   ("M-q" . endless/fill-or-unfill)
+	   ("C-x C-<return>" . org-insert-subheading)
+	   ("C-S-<return>" . org-insert-todo-subheading)
+	   ("C-n" . org-next-link)
+	   ("C-p" . org-previous-link))
 
-  :mode (("\\.org\\'" . org-mode)
-         ("\\.org_archive\\'" . org-mode))
+    :mode (("\\.org\\'" . org-mode)
+	   ("\\.org_archive\\'" . org-mode))
 
-  :custom
-  ;; Whitespace and edits
-  (org-adapt-indentation nil)
-  (org-src-preserve-indentation nil)
-  (org-edit-src-content-indentation 0)
-  (org-hide-emphasis-markers nil)
-  (org-link-file-path-type 'relative)
-  (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
-  (org-catch-invisible-edits 'smart)
-  (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
-  (org-export-with-section-numbers nil)
-  (org-export-with-toc nil)
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+    :custom
+    ;; Whitespace and edits
+    (org-adapt-indentation nil)
+    (org-src-preserve-indentation nil)
+    (org-edit-src-content-indentation 0)
+    (org-hide-emphasis-markers nil)
+    (org-link-file-path-type 'relative)
+    (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
+    (org-catch-invisible-edits 'smart)
+    (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+    (org-export-with-section-numbers nil)
+    (org-export-with-toc nil)
+    (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-  (org-table-header-line-p t)
+    (org-table-header-line-p t)
 
-  (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
-		       (sequence "PROJ(p)" "|" "COMPLETE")
-		       (sequence "|" "CANCELLED")))
+    (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
+			 (sequence "PROJ(p)" "|" "COMPLETE")
+			 (sequence "|" "CANCELLED")))
 
-  (org-tag-alist '(("@work" . ?w)
-		   ("@home" . ?h)
-		   ("proj" . ?p)
-                   ("someday" . ?s)
-		   ("noexport" . ?n)
-		   ("toil" . ?t)
-		   ("meeting" . ?m)
-		   ("brag" . ?b)
-		   ("achievement" . ?a)
-		   ("inbox" . ?i)
-		   ("interrupt" . ?I)
-		   ("note" . ?N)))
+    (org-tag-alist '(("@work" . ?w)
+		     ("@home" . ?h)
+		     ("proj" . ?p)
+		     ("someday" . ?s)
+		     ("noexport" . ?n)
+		     ("toil" . ?t)
+		     ("meeting" . ?m)
+		     ("brag" . ?b)
+		     ("achievement" . ?a)
+		     ("inbox" . ?i)
+		     ("interrupt" . ?I)
+		     ("note" . ?N)))
 
-  (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
+    (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
-  (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
-                        (org-agenda-files . (:tag . "recurring"))
-			(org-agenda-files . (:maxlevel . 1))))
-  (org-goto-interface 'outline-path-completion)
-  (org-outline-path-complete-in-steps nil)
-  (org-agenda-include-diary t)
-  (org-agenda-files "~/org/org-agenda-files.txt")
+    (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
+    (org-refile-allow-creating-parent-nodes 'confirm)
+    (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
+			  (org-agenda-files . (:tag . "recurring"))
+			  (org-agenda-files . (:maxlevel . 1))))
+    (org-goto-interface 'outline-path-completion)
+    (org-outline-path-complete-in-steps nil)
+    (org-agenda-include-diary t)
+    (org-agenda-files "~/org/org-agenda-files.txt")
 
-  (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
-  (org-agenda-tags-todo-honor-ignore-options t)
-  (org-agenda-todo-ignore-scheduled 'future)
-  (org-agenda-todo-ignore-deadlines 'far)
-  (org-agenda-todo-ignore-with-date 'future)
-  (org-agenda-todo-ignore-timestamp 'future)
-  (org-agenda-skip-deadline-prewarning-if-scheduled t)
-  (org-agenda-skip-timestamp-if-done t)
-  (org-agenda-skip-scheduled-if-done t)
-  (org-agenda-skip-deadline-if-done t)
-  (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
+    (org-agenda-tags-todo-honor-ignore-options t)
+    (org-agenda-todo-ignore-scheduled 'future)
+    (org-agenda-todo-ignore-deadlines 'far)
+    (org-agenda-todo-ignore-with-date 'future)
+    (org-agenda-todo-ignore-timestamp 'future)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+    (org-agenda-skip-timestamp-if-done t)
+    (org-agenda-skip-scheduled-if-done t)
+    (org-agenda-skip-deadline-if-done t)
+    (org-agenda-skip-scheduled-if-deadline-is-shown t)
 
-  (org-agenda-custom-commands
-   `(("d" "Day Agenda & Top Tasks"
-      ((agenda "")
-       (tags-todo "-PRIORITY=\"C\"/TODO"))
-      ((org-agenda-span 'day)
-       ;; Exclude @home tasks when I'm on my  work machine, and vice versa
-       (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
-				       "-someday"
-				       "-inbox"))))
-     ("g" . "Getting Things Done")
-     ("gA" "Agenda minus recurring tasks"
-      agenda ""
-      ((org-agenda-tag-filter-preset '("-recurring"))))
-     ("gi" "Inbox" tags "inbox")
-     ("gs" "Someday"
-      ((todo "PROJ")
-       (tags-todo "-proj/TODO"))
-      ((org-agenda-tag-filter-preset '("+someday"))))
-     ("gc" "Review for Tasks Complete"
-      todo "TODO"
-      ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
-     ("gw" "Waiting tasks" todo "WAITING")
-     ("ga" "Archivable"
-      ((tags "-proj-gtd/DONE")
-       (tags "-proj-gtd/CANCELLED")))
-     ("gp" "Projects" tags-todo "-someday/PROJ")))
+    (org-agenda-custom-commands
+     `(("d" "Day Agenda & Top Tasks"
+	((agenda "")
+	 (tags-todo "-PRIORITY=\"C\"/TODO"))
+	((org-agenda-span 'day)
+	 ;; Exclude @home tasks when I'm on my  work machine, and vice versa
+	 (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
+					 "-someday"
+					 "-inbox"))))
+       ("g" . "Getting Things Done")
+       ("gA" "Agenda minus recurring tasks"
+	agenda ""
+	((org-agenda-tag-filter-preset '("-recurring"))))
+       ("gi" "Inbox" tags "inbox")
+       ("gs" "Someday"
+	((todo "PROJ")
+	 (tags-todo "-proj/TODO"))
+	((org-agenda-tag-filter-preset '("+someday"))))
+       ("gc" "Review for Tasks Complete"
+	todo "TODO"
+	((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
+       ("gw" "Waiting tasks" todo "WAITING")
+       ("ga" "Archivable"
+	((tags "-proj-gtd/DONE")
+	 (tags "-proj-gtd/CANCELLED")))
+       ("gp" "Projects" tags-todo "-someday/PROJ")))
 
-  (org-default-notes-file
-   (let ((name (downcase (car (split-string (system-name) "\\.")))))
-     (expand-file-name (format "%s.org" name) "~/org")))
+    (org-default-notes-file
+     (let ((name (downcase (car (split-string (system-name) "\\.")))))
+       (expand-file-name (format "%s.org" name) "~/org")))
 
-  (org-capture-templates
-   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
-					  (if sb/home? "@home" "@work")))
-     ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
-						      (if sb/home? "@home" "@work")))
+    (org-capture-templates
+     `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
+					    (if sb/home? "@home" "@work")))
+       ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
+							(if sb/home? "@home" "@work")))
 
-     ("u" "Utility Metres")
-     ("ug" "New Gas Meter Reading" table-line
-      (file "~/org/notes/gas-consumption.org")
-      (file "templates/gas-consumption.org"))
-     ("ue" "New Electricity Meter Reading" table-line
-      (file "~/org/notes/electricity-consumption.org")
-      (file "templates/electricity-consumption.org"))
+       ("u" "Utility Metres")
+       ("ug" "New Gas Meter Reading" table-line
+	(file "~/org/notes/gas-consumption.org")
+	(file "templates/gas-consumption.org"))
+       ("ue" "New Electricity Meter Reading" table-line
+	(file "~/org/notes/electricity-consumption.org")
+	(file "templates/electricity-consumption.org"))
 
-     ("p" "Productivity")
-     ("pf" "Decide Focus Areas" entry
-      (file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
-      (file "templates/focus-areas.org"))
-     ("pb" "Boulders for the Week" entry
-      (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
-      "* %<%B/Week %V>\n1. %?")
-     ("pr" "New GTD Review" entry
-      (file+olp+datetree "~/org/archive/gtd_review.org")
-      (file "templates/gtd-review.org") :clock-in t)))
+       ("p" "Productivity")
+       ("pf" "Decide Focus Areas" entry
+	(file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
+	(file "templates/focus-areas.org"))
+       ("pb" "Boulders for the Week" entry
+	(file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
+	"* %<%B/Week %V>\n1. %?")
+       ("pr" "New GTD Review" entry
+	(file+olp+datetree "~/org/archive/gtd_review.org")
+	(file "templates/gtd-review.org") :clock-in t)))
 
-  :config
-  (require 'org-habit)
-  (org-babel-do-load-languages 'org-babel-load-languages
-			       '((emacs-lisp . t)
-				 (sql . t)
-				 (shell . t)
-				 (plantuml . t))))
+    :config
+    (require 'org-habit)
+    (require 'ox-rss)
+    (require 'ox-icalendar)
+    (org-babel-do-load-languages 'org-babel-load-languages
+				 '((emacs-lisp . t)
+				   (sql . t)
+				   (shell . t)
+				   (plantuml . t))))
 #+end_src
 
 ** Org Roam
