@@ -563,7 +563,6 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
         (call-interactively #' org-fill-paragraph)
       (call-interactively #'fill-paragraph))))
 
-(define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 #+end_src
 
@@ -1068,6 +1067,7 @@ need them.
 	 ;; I try to track time...
 	 ("C-c C-x C-j" . org-clock-goto)
          :map org-mode-map
+	 ("M-q" . endless/fill-or-unfill)
          ("C-x C-<return>" . org-insert-subheading)
          ("C-S-<return>" . org-insert-todo-subheading)
          ("C-n" . org-next-link)
