@@ -60,12 +60,20 @@ metadata.
       user-login-name "stig")
 #+END_SRC
 
-* Bootstrap configuration
+* Bootstrap config
 
-I'm trialling [[https://github.com/raxod502/straight.el][straight.el]] right now. I like that it should make it
-easier to contribute back to modules I use.
+I'm using =straight.el= to install packages, and =use-package= to
+configure them. Because of that, we need to bootstrap them near the
+start of the config.
 
-** Bootstrap ~straight.el~ itself
+** Bootstrap =straight.el=
+
+One of the things I like about straight is that it makes it easier to
+make local changes to modules, and contribute these back to modules I
+use.
+
+I don't feel the need to specify ~:straigth t~ in every ~use-package~
+stanza, so I specify that to be the default.
 
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
@@ -80,11 +88,15 @@ easier to contribute back to modules I use.
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
 #+end_src
 
-** Install & configure ~use-package~
+** Install =use-package= and friends
 
-Install ~use-package~ and configure it to install packages by default.
+I appreciate that =use-package= makes it easier to write lazy loading
+configuration. I also like that its manual documents all the options
+for configuration in one place.
 
 #+begin_src emacs-lisp
 (straight-use-package 'use-package)
@@ -95,13 +107,6 @@ Install ~use-package~ and configure it to install packages by default.
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
-
-;; No need to use ~:straight t~ for every package.
-(setq straight-use-package-by-default t)
-
-;; Avoid conflicts between multiple Org versions, cf
-;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-(straight-use-package '(org-plus-contrib :includes (org) :local-repo "org"))
 #+end_src
 
 * Configure PATH (and other variables) from shell
