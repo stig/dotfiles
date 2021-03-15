@@ -1445,6 +1445,7 @@ for various commands that do not use ~read-string~ normally.
      "C-r" 'consult-history))
 
   :bind (("M-y" . consult-yank-pop)
+	 ("C-c i" . consult-imenu)
 	 :map shell-mode-map
 	 ("C-r" . consult-history))
   :hook
