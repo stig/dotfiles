@@ -109,6 +109,229 @@ for configuration in one place.
 (require 'bind-key)
 #+end_src
 
+* Better Defaults
+
+** Auto-revert mode
+
+When open files change on disk, I want to revert the corrersponding
+buffer. This is useful when checking out a different branch in Magit,
+and because I use Syncthing to share my Org "Exo Brain" between two
+computers.
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+#+end_src
+
+** Auto-save visited files
+
+Since I sync my Org files with Synchthing I want to make sure to save
+my Org files regularly to avoid lost content.
+
+#+BEGIN_SRC emacs-lisp
+(auto-save-visited-mode)
+#+END_SRC
+
+** Configure Control/Meta/super/hyper keys
+
+#+BEGIN_SRC emacs-lisp
+(setq mac-command-modifier 'meta
+      mac-control-modifier 'control
+      mac-function-modifier 'hyper
+      mac-option-modifier 'super)
+#+END_SRC
+
+** Confirm kill emacs
+
+The default keybinding for this is close to =M-q= which I use for
+reflowing text.
+
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-emacs 'yes-or-no-p)
+#+END_SRC
+
+** Display line numbers
+
+Displaying line numbers is incredibly useful when remotely pairing
+with other people.
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
+#+end_src
+
+** Don't require two spaces to end a sentence
+
+Having this enabled makes it harder to collaborate with others, and
+move sentences around in texts I haven't written.
+
+#+begin_src emacs-lisp
+(setq sentence-end-double-space nil)
+#+end_src
+
+** End all files in a newline
+
+All files should end in a newline. Insert one if there isn't one already.
+
+#+BEGIN_SRC emacs-lisp
+(setq require-final-newline t)
+#+END_SRC
+
+** Ensure we don't use unencrypted auth sources
+
+This could take the form of e.g. saving auth info to =~/.authinfo=, or
+=~/.netrc= rather than =~/.authinfo.gpg=, for example.
+
+#+begin_src emacs-lisp
+(setq auth-sources (quote ("~/.authinfo.gpg")))
+#+end_src
+
+** Eshell
+
+Eshell is great, and its Tramp integration allows me to open remote
+files in local Emacs seamlessly with the =find-file= command. (Which I
+have aliased to =ff=.) Eshell also makes sure that my shell behaves
+the same, and has the same config, whether I am on a local machine or
+a remote one. It is my primary shell nowadays.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-c s" 'eshell)
+#+END_SRC
+
+** GnuPG
+
+Emacs will open =.gpg= files transparently, but I need to install gnupg
+& pinentry for that to work.
+
+#+begin_src emacs-lisp
+(setq epa-pinentry-mode 'loopback)
+#+end_src
+
+** Make 'y' and 'n' satisfy prompts
+
+Answering just 'y' or 'n' will do, rather than having to spell out "yes"
+or "no".
+
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Make Customize settings transient
+Store settings applied via [[info:emacs#Easy Customization][info:emacs#Easy Customization]] in a
+temporary file, so they don't persist across restarts of Emacs. I
+prefer to code my configuration. Credit to Robin Schroer for this
+trick.
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (make-temp-file ""))
+#+END_SRC
+
+** Prefer Ibuffer over Buffer Menu
+One of the key features for me is ibuffer's ability to filter by major mode.
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
+** Prefer YMD for dates in Diary / Calendar
+
+#+BEGIN_SRC emacs-lisp
+(setq calendar-date-style 'iso)
+#+END_SRC
+
+** Save minibuffer history
+
+This allows us to "tap up" in the minibuffer to recall previous items,
+even from a previous session.
+
+#+BEGIN_SRC emacs-lisp
+(savehist-mode 1)
+#+END_SRC
+
+** Save my place in each file
+
+It's nice if Emacs knows where I was last time I opened a file.
+
+#+BEGIN_SRC emacs-lisp
+(save-place-mode 1)
+#+END_SRC
+
+** Show Matching parens
+
+Put the cursor on any of =()[]{}= and Emacs shows the matching
+closing/opening one.
+
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+#+END_SRC
+
+** Simple HTML Renderer (HTML Email)
+
+I use shr for reading HTML mail. I normally use a fullscreen window,
+but I don't like reading HTML mails with lines running all the way
+across. Thus I prefer linebreaks roughly every 80 characters.
+
+#+begin_src emacs-lisp
+(setq shr-width 80)
+#+end_src
+
+** Store backup and auto-save files in a separate folder
+
+I don't like backup and auto-save files all over my disk. This places
+them in a separate directory.
+
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
+
+(setq auto-save-list-file-prefix (expand-file-name "auto-save" user-emacs-directory)
+      auto-save-file-name-transforms `((".*" ,auto-save-list-file-prefix)))
+#+END_SRC
+
+** Support recursive minibuffers
+
+I like to be able to use my kill-ring in the minibuffer.
+
+#+begin_src emacs-lisp
+(setq enable-recursive-minibuffers t)
+#+end_src
+** Transparently open compressed files
+
+I *do* like it when Emacs transparently opens compressed files. It gives
+me the warm fuzzies.
+
+#+BEGIN_SRC emacs-lisp
+(auto-compression-mode t)
+#+END_SRC
+
+** Upcase-dwim and dowcase-dwim
+
+Acts like ~upcase-word~ with no region selected, and ~upcase-region~
+when one is.
+
+#+begin_src emacs-lisp
+(bind-key "M-u" #'upcase-dwim)
+(bind-key "M-l" #'downcase-dwim)
+#+end_src
+** UTF-8: everywhere, always
+
+Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
+
+#+BEGIN_SRC emacs-lisp
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+#+END_SRC
+
+** View Mode
+Navigate read-only buffers up and down with space and backspace.
+
+#+begin_src emacs-lisp
+(setq view-read-only t)
+#+end_src
+** Visual line mode / word wrapping
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'visual-line-mode)
+#+END_SRC
+
 * Configure PATH (and other variables) from shell
 
 I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
@@ -152,11 +375,6 @@ Emacs. Credit to Robin Schroer for this trick.
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 #+end_src
-** Prefer Ibuffer over Buffer Menu
-One of the key features for me is ibuffer's ability to filter by major mode.
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-#+end_src
 ** NVM Support
 NVM is the Node Version Manager. It's annoyingly implemented as shell
 functionality you source, so it won't work in Eshell. Luckily there's
@@ -164,115 +382,11 @@ third-party emacs support.
 #+begin_src emacs-lisp
 (use-package nvm)
 #+end_src
-** Support recursive minibuffers
-
-I like to be able to use my kill-ring in the minibuffer.
-
-#+begin_src emacs-lisp
-(setq enable-recursive-minibuffers t)
-#+end_src
-** Ensure we don't use unencrypted auth sources
-
-This could take the form of e.g. saving auth info to =~/.authinfo=, or
-=~/.netrc= rather than =~/.authinfo.gpg=, for example.
-
-#+begin_src emacs-lisp
-(setq auth-sources (quote ("~/.authinfo.gpg")))
-#+end_src
-
-** Configure Meta/super/hyper keys
-
-#+BEGIN_SRC emacs-lisp
-(setq mac-command-modifier 'meta
-      mac-option-modifier 'super
-      mac-function-modifier 'hyper)
-#+END_SRC
-
-** Confirm kill emacs
-
-The default keybinding for this is close to =M-q= which I use for
-reflowing text.
-
-#+BEGIN_SRC emacs-lisp
-(setq confirm-kill-emacs 'yes-or-no-p)
-#+END_SRC
-
-** Make 'y' and 'n' satisfy prompts
-
-Answering just 'y' or 'n' will do, rather than having to spell out "yes"
-or "no".
-
-#+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-
-** Auto-revert mode
-
-Because I use Syncthing to share files between two computers, I want
-auto-revert mode on.
-
-#+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-#+end_src
-
-** Store backup files in a separate folder
-
-I don't like backup files (those dreaded =foo~= ones) all over my disk.
-This places them in a separate directory.
-
-#+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
-#+END_SRC
-
-** Auto-save visited files
-
-Since I sync my Org files with Synchthing I want to make sure to save
-my Org files regularly to avoid lost content.
-
-Moreover, I don't like auto-save files (those pesky =#foo#= ones) all
-over my disk. This places them in a separate directory.
-
-#+BEGIN_SRC emacs-lisp
-(auto-save-visited-mode)
-(setq sb/auto-save-dir (expand-file-name "auto-save" user-emacs-directory))
-(setq auto-save-list-file-prefix sb/auto-save-dir)
-(setq auto-save-file-name-transforms `((".*" ,sb/auto-save-dir)))
-#+END_SRC
-
 ** Font size and type
 
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :height 150)
 (set-face-attribute 'default nil :font "Jetbrains Mono")
-#+END_SRC
-
-** UTF-8: everywhere, always
-
-Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
-
-#+BEGIN_SRC emacs-lisp
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-#+END_SRC
-
-** End all files in a newline
-
-All files should end in a newline. Insert one if there isn't one already.
-
-#+BEGIN_SRC emacs-lisp
-(setq require-final-newline t)
-#+END_SRC
-
-** Save my place in each file
-
-It's nice if Emacs knows where I was last time I opened a file.
-
-#+BEGIN_SRC emacs-lisp
-(setq-default save-place t)
-(setq save-place-file (concat user-emacs-directory "places"))
 #+END_SRC
 
 ** String Inflection
@@ -387,15 +501,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-** Don't require two spaces to end a sentence
-
-Having this enabled makes it harder to collaborate with others, and
-move sentences around in texts I haven't written.
-
-#+begin_src emacs-lisp
-(setq sentence-end-double-space nil)
-#+end_src
-
 ** Delete buffer and file it is visiting
 
 Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
@@ -434,15 +539,6 @@ kill the message buffer on exit.)
       mail-specify-envelope-from t)
 #+END_SRC
 
-** Display line numbers
-
-Displaying line numbers is incredibly useful when remotely pairing
-with other people.
-
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
-#+end_src
-
 ** Lorem Ipsum input
 
 Useful for quickly filling in placeholder text.
@@ -451,22 +547,6 @@ Useful for quickly filling in placeholder text.
 (use-package lorem-ipsum)
 #+end_src
 
-** View Mode
-
-Navigate read-only buffers up and down with space and backspace.
-
-#+begin_src emacs-lisp
-(setq view-read-only t)
-#+end_src
-** Upcase-dwim and dowcase-dwim
-
-Acts like ~upcase-word~ with no region selected, and ~upcase-region~
-when one is.
-
-#+begin_src emacs-lisp
-(bind-key "M-u" #'upcase-dwim)
-(bind-key "M-l" #'downcase-dwim)
-#+end_src
 * Minor modes
 
 A minor mode provides some functionality that you can turn off or on.
@@ -686,24 +766,6 @@ it are that it provides the following key bindings:
 (use-package counsel-projectile)
 #+END_SRC
 
-** Save minibuffer history
-
-This allows us to "tap up" in the minibuffer to recall previous items,
-even from a previous session.
-
-#+BEGIN_SRC emacs-lisp
-(savehist-mode 1)
-#+END_SRC
-
-** Show Matching parens
-
-This is extremely useful. Put the mark on a paren (any of =()[]{}=,
-actually) and Emacs shows the matching closing/opening one.
-
-#+BEGIN_SRC emacs-lisp
-(show-paren-mode 1)
-#+END_SRC
-
 ** SmartParens
 
 Structural editing is a must when editing lisp, and it has bled
@@ -743,21 +805,6 @@ Invoke swiper (find in current buffer).
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
   :bind (("C-s" . swiper)))
-#+END_SRC
-
-** Transparently open compressed files
-
-I *do* like it when Emacs transparently opens compressed files. It gives
-me the warm fuzzies.
-
-#+BEGIN_SRC emacs-lisp
-(auto-compression-mode t)
-#+END_SRC
-
-** Visual line mode / word wrapping
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'text-mode-hook 'visual-line-mode)
 #+END_SRC
 
 ** Which Key Mode
@@ -1060,17 +1107,6 @@ Even faster than The Silver Searcher, apparently.
   :custom
   ;; I often look for stuff in .circleci/config.yml
   (ripgrep-arguments '("--hidden")))
-#+end_src
-
-** Simple HTML Renderer (HTML Email)
-
-I mostly use shr for reading HTML mail.  I normally use a
-fullscreen window, but I don't like reading HTML mails with lines
-running all the way across.  Thus I prefer linebreaks roughly every
-80 characters.
-
-#+begin_src emacs-lisp
-(setq shr-width 80)
 #+end_src
 
 ** Spell Checking
