@@ -358,6 +358,292 @@ I install this font with Homebrew, from my [[file:Brewfile][Brewfile]].
 (set-face-attribute 'default nil :font "Jetbrains Mono")
 #+END_SRC
 
+* Custom Functions
+** Blogging
+I create blog entries in a directory under =~/blog= and link to them
+from the main index page. It has so far been a manual job, but I have
+finally managed to create a function to automate it a bit.
+
+*** Helper function to get a value from Org keyword element
+
+#+begin_src emacs-lisp
+(defun sb/org-kw-get (key)
+  "Return a lambda that takes an Org keyword element and returns
+its :value property if its :key property matches `key'."
+  `(lambda (kw)
+     (if (equal ,key (org-element-property :key kw))
+         (org-element-property :value kw))))
+#+end_src
+
+*** Create blog post index entry
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/blog-post-index-entry ()
+  "Call in a blog post to get an entry suitable for linking to this
+post from the index page."
+  (interactive)
+  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+         (tree (org-element-parse-buffer))
+         (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+         (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
+    (with-temp-buffer
+      (org-mode)
+      (org-insert-heading)
+      ;; Would have loved to use `org-insert-link' here but
+      ;; I can't stop it from presenting a prompt.
+      (insert "[[file:" path "][" title "]]\n"
+              "#+include: " path "::abstract :only-contents t")
+      ;; Need to go back to the first line to set tags, as
+      ;; org-set-tags assumes point is on a headline.
+      (goto-char (point-min))
+      (org-set-tags categories)
+      ;; Return the contents temporary buffer as a string *without properties*
+      (copy-region-as-kill
+       (point-min) (point-max)))))
+#+END_SRC
+
+*** Create RSS entry
+
+Creating an entry in the RSS feed is another manual step. This way I
+can "soft publish" and publish to RSS separately from the index page.
+
+#+begin_src emacs-lisp
+(defun sb/blog-post-rss-entry ()
+  "Call in a blog post to get an entry suitable for linking to this
+post from the index page."
+  (interactive)
+  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+         (tree (org-element-parse-buffer))
+         (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
+         (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
+    (with-temp-buffer
+      (org-mode)
+      (org-insert-heading)
+      (insert title "\n"
+	      "#+include: " path)
+      (org-set-property "RSS_PERMALINK"
+                        (format "%s.html"
+                                (file-name-sans-extension path)))
+      (copy-region-as-kill
+       (point-min) (point-max)))))
+#+end_src
+
+*** Find drafts
+
+#+begin_src emacs-lisp
+(defun sb/find-drafts ()
+  "Find org files in `~/blog/articles' not already linked from
+              `~/blog/index.org'."
+  (interactive)
+  (let* ((prefix (expand-file-name "~/blog/"))
+         (posts
+          (directory-files-recursively
+           (concat prefix "articles") ".org"))
+         (index-contents (get-string-from-file (concat prefix "index.org")))
+         (drafts (cl-remove-if (lambda (needle)
+                                 (string-match
+                                  (string-remove-prefix prefix needle)
+                                  index-contents))
+                               posts))
+         (buffer-name "*blog drafts*"))
+    (if drafts
+        (progn
+          (with-current-buffer (get-buffer-create buffer-name)
+            (erase-buffer)
+            (org-mode)
+            (insert
+             (mapconcat
+              (lambda (entry)
+                (format "- file:%s" entry))
+              drafts
+              "\n"))
+            (buffer-string))
+          (unless (get-buffer-window buffer-name t)
+            (pop-to-buffer buffer-name nil t))
+          (shrink-window-if-larger-than-buffer
+           (get-buffer-window buffer-name)))
+      (message "No drafts could be found!"))))
+#+end_src
+
+*** Blog server
+
+While noodling around with my blog locally I publish to =~/blog=
+and use a simple Python server to host it.
+
+#+begin_src emacs-lisp
+(defun sb/blog-server ()
+  (interactive)
+  (start-process "Blog Server" "*blog server*"
+                 "python3"
+                 "-m" "http.server"
+                 "--directory" (expand-file-name "~/blog/"))
+  (message "Blog Server started"))
+#+end_src
+
+** Delete buffer and file it is visiting
+
+Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
+
+#+begin_src emacs-lisp
+(defun sb/delete-file-and-buffer ()
+  "Deletes a buffer and the file it's visiting."
+  (interactive)
+  (when-let* ((file-name (buffer-file-name))
+              (really (yes-or-no-p (format "Delete %s? "
+                                           file-name))))
+    (delete-file file-name)
+    (kill-buffer)))
+#+end_src
+
+** Ediff: Automatically Unfold Org files
+
+This snippet makes sure that Org buffers don't start folded, as
+ediff is rather useless in that case. (Credit: Oleh Krehel on
+emacs-orgmode mailing list.)
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-prepare-buffer ()
+  (when (memq major-mode '(org-mode emacs-lisp-mode))
+    (outline-show-all)))
+
+(add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
+#+END_SRC
+
+** Ediff: Picking /both/ sides in a conflict
+
+If both branches add an entry to a list I may want to pick *both*
+sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
+=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
+then A.
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/ediff-copy-both-to-C ()
+  (interactive)
+  (ediff-copy-diff ediff-current-difference nil 'C nil
+                   (concat
+                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                    (ediff-get-region-contents
+                    ediff-current-difference 'B
+                    ediff-control-buffer))))
+
+(defun sb/add-d-to-ediff-mode-map ()
+  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+
+(add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
+#+END_SRC
+
+** Hydra Theme Switching
+
+Switch themes with Hydra! This loads all available themes and
+presents a menu to let you switch between them. The theme switcher
+is bound to =C-c w t=.
+
+The switcher is, regretfully, not automatically updated when
+installing new themes from the package selector menu, so you need to
+evaluate this block again manually.
+
+#+BEGIN_SRC emacs-lisp
+(setq sb/hydra-selectors
+      "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+(defun sb/load-theme-heads (themes)
+  (cl-map 'list
+          (lambda (a b)
+            (list (char-to-string a)
+                  `(sb/load-theme ',b)
+                  (symbol-name b)))
+          sb/hydra-selectors
+          themes))
+
+(defun sb/switch-theme ()
+  (interactive)
+  (call-interactively
+   (eval `(defhydra sb/select-theme (:hint nil :color pink)
+            "Select Theme"
+            ,@(sb/load-theme-heads (custom-available-themes))
+            ("DEL" (sb/disable-all-themes))
+            ("RET" nil "done" :color blue)))))
+#+END_SRC
+
+** Load one theme at a time
+
+For years I thought that theme switching in Emacs was broken---until
+I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
+supports /multiple themes being active at the same time/, which I'm
+sure is convenient sometimes but becomes a right nuisance when
+attempting to switch themes IMO. Add a utility function to disable
+all currently enabled themes first.
+
+#+BEGIN_SRC emacs-lisp
+(defun sb/disable-all-themes ()
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(defun sb/load-theme (the-theme)
+  "Enhance `load-theme' by first disabling enabled themes."
+  (sb/disable-all-themes)
+  (load-theme the-theme t))
+#+END_SRC
+
+** Toggle Window Split function
+
+This function re-arranges horizontally-split windows to be
+vertically-split, and vice versa. I found it on StackOverflow, once
+upon a time but now can't find the link.
+
+#+BEGIN_SRC emacs-lisp
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+(define-key ctl-x-4-map "t" 'toggle-window-split)
+#+END_SRC
+
+** Unfill paragraphs and regions
+
+The default binding for =M-q= fills a paragraph. Very good. But
+sometimes I want to /unfill/, particularly when editing markdown that
+is going to end up on GitHub. Otherwise the result has lots of hard
+linebreaks. This happens every time I edit a PR description in Magit,
+for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
+
+#+begin_src emacs-lisp
+(defun endless/fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command #'endless/fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (if (eq major-mode 'org-mode)
+        (call-interactively #' org-fill-paragraph)
+      (call-interactively #'fill-paragraph))))
+
+(global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
+#+end_src
+
 * Configure PATH (and other variables) from shell
 
 I configure ~PATH~ in ~/etc/paths~ and ~/etc/paths.d/TeX~.
@@ -421,70 +707,6 @@ SNAKE_CASE.
          ("C-c C-x C-u" . string-inflection-upcase)))
 #+end_src
 
-** Unfill paragraphs and regions
-
-The default binding for =M-q= fills a paragraph. Very good. But
-sometimes I want to /unfill/[fn:: Particularly when editing markdown
-that is going to end up on GitHub, as otherwise the result has lots
-of hard linebreaks. This happens every time I edit a PR description
-in Magit, for example.]. [[https://stackoverflow.com/a/2478549/5950][Credit]].
-
-#+begin_src emacs-lisp
-(defun sb/unfill-paragraph ()
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-paragraph nil)))
-
-(defun sb/fill-or-unfill-paragraph (arg)
-  "Fill a paragraph. If called with a `C-u' prefix, /unfill/ a paragraph."
-  (interactive "P")
-  (if arg
-      (sb/unfill-paragraph)
-    (fill-paragraph)))
-
-(bind-key "M-q" 'sb/fill-or-unfill-paragraph)
-
-(defun sb/unfill-region ()
-  (interactive)
-  (let ((fill-column (point-max)))
-    (fill-region (region-beginning) (region-end) nil)))
-#+end_src
-
-** Toggle Window Split function
-
-Sometimes a window is split horizontally, and you would prefer
-vertically. Or vice versa. This function can help! Just don't ask me how
-it works: I found it on StackOverflow. (I think. Again.)
-
-#+BEGIN_SRC emacs-lisp
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(define-key ctl-x-4-map "t" 'toggle-window-split)
-#+END_SRC
-
 ** Diary (Calendar) Functions
 
 Prefer YMD to the /crazy/ american MDY order.
@@ -518,21 +740,6 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 
 #+begin_src emacs-lisp
 (setq epa-pinentry-mode 'loopback)
-#+end_src
-
-** Delete buffer and file it is visiting
-
-Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README.org#delete-buffer-file][sulami]]'s config.
-
-#+begin_src emacs-lisp
-(defun sb/delete-file-and-buffer ()
-  "Deletes a buffer and the file it's visiting."
-  (interactive)
-  (when-let* ((file-name (buffer-file-name))
-              (really (yes-or-no-p (format "Delete %s? "
-                                           file-name))))
-    (delete-file file-name)
-    (kill-buffer)))
 #+end_src
 
 ** Sending mail with MSMTP
@@ -904,48 +1111,6 @@ Each buffer has exactly one major mode. (Though a major mode can be
     (clj-refactor-mode 1)
     (yas-minor-mode 1))
   :hook (clojure-mode . sb/clojure-mode-hook))
-#+END_SRC
-
-** Ediff
-
-Sometimes I have to resolve conflicts. I use Ediff, which I
-(usually) launch from Magit.
-
-*** Automatically Unfold Org files
-
-This snippet makes sure that Org buffers don't start folded, as
-ediff is rather useless in that case. (Credit: Oleh Krehel on
-emacs-orgmode mailing list.)
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/ediff-prepare-buffer ()
-  (when (memq major-mode '(org-mode emacs-lisp-mode))
-    (outline-show-all)))
-
-(add-hook 'ediff-prepare-buffer-hook #'sb/ediff-prepare-buffer)
-#+END_SRC
-
-*** Picking /both/ sides in a conflict
-
-If both branches add an entry to a list I may want to pick *both*
-sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
-=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
-then A.
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/ediff-copy-both-to-C ()
-  (interactive)
-  (ediff-copy-diff ediff-current-difference nil 'C nil
-                   (concat
-                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
-                    (ediff-get-region-contents
-                    ediff-current-difference 'B
-                    ediff-control-buffer))))
-
-(defun sb/add-d-to-ediff-mode-map ()
-  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
-
-(add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
 #+END_SRC
 
 ** Elfeed
@@ -1567,167 +1732,6 @@ all currently enabled themes first.
   (sb/disable-all-themes)
   (load-theme the-theme t))
 #+END_SRC
-
-** Hydra Theme Switching
-
-Switch themes with Hydra! This loads all available themes and
-presents a menu to let you switch between them. The theme switcher
-is bound to =C-c w t=.
-
-The switcher is, regretfully, not automatically updated when
-installing new themes from the package selector menu, so you need to
-evaluate this block again manually.
-
-#+BEGIN_SRC emacs-lisp
-(setq sb/hydra-selectors
-      "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-(defun sb/load-theme-heads (themes)
-  (cl-map 'list
-          (lambda (a b)
-            (list (char-to-string a)
-                  `(sb/load-theme ',b)
-                  (symbol-name b)))
-          sb/hydra-selectors
-          themes))
-
-(defun sb/switch-theme ()
-  (interactive)
-  (call-interactively
-   (eval `(defhydra sb/select-theme (:hint nil :color pink)
-            "Select Theme"
-            ,@(sb/load-theme-heads (custom-available-themes))
-            ("DEL" (sb/disable-all-themes))
-            ("RET" nil "done" :color blue)))))
-#+END_SRC
-
-* Blogging
-I create blog entries in a directory under =~/blog= and link to them
-from the main index page. It has so far been a manual job, but I have
-finally managed to create a function to automate it a bit.
-
-** Helper function to get a value from Org keyword element
-
-#+begin_src emacs-lisp
-(defun sb/org-kw-get (key)
-  "Return a lambda that takes an Org keyword element and returns
-its :value property if its :key property matches `key'."
-  `(lambda (kw)
-     (if (equal ,key (org-element-property :key kw))
-         (org-element-property :value kw))))
-#+end_src
-
-** Create blog post index entry
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/blog-post-index-entry ()
-  "Call in a blog post to get an entry suitable for linking to this
-post from the index page."
-  (interactive)
-  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
-         (tree (org-element-parse-buffer))
-         (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
-         (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
-    (with-temp-buffer
-      (org-mode)
-      (org-insert-heading)
-      ;; Would have loved to use `org-insert-link' here but
-      ;; I can't stop it from presenting a prompt.
-      (insert "[[file:" path "][" title "]]\n"
-              "#+include: " path "::abstract :only-contents t")
-      ;; Need to go back to the first line to set tags, as
-      ;; org-set-tags assumes point is on a headline.
-      (goto-char (point-min))
-      (org-set-tags categories)
-      ;; Return the contents temporary buffer as a string *without properties*
-      (copy-region-as-kill
-       (point-min) (point-max)))))
-#+END_SRC
-
-** Create RSS entry
-
-Creating an entry in the RSS feed is another manual step. This way I
-can "soft publish" and publish to RSS separately from the index page.
-
-#+begin_src emacs-lisp
-(defun sb/blog-post-rss-entry ()
-  "Call in a blog post to get an entry suitable for linking to this
-post from the index page."
-  (interactive)
-  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
-         (tree (org-element-parse-buffer))
-         (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
-         (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
-    (with-temp-buffer
-      (org-mode)
-      (org-insert-heading)
-      (insert title "\n"
-	      "#+include: " path)
-      (org-set-property "RSS_PERMALINK"
-                        (format "%s.html"
-                                (file-name-sans-extension path)))
-      (copy-region-as-kill
-       (point-min) (point-max)))))
-#+end_src
-
-=org-rss= requires these to do its thing:
-
-#+begin_src emacs-lisp
-(require 'ox-icalendar)
-(require 'ox-rss)
-#+end_src
-
-** Find drafts
-
-#+begin_src emacs-lisp
-(defun sb/find-drafts ()
-  "Find org files in `~/blog/articles' not already linked from
-              `~/blog/index.org'."
-  (interactive)
-  (let* ((prefix (expand-file-name "~/blog/"))
-         (posts
-          (directory-files-recursively
-           (concat prefix "articles") ".org"))
-         (index-contents (get-string-from-file (concat prefix "index.org")))
-         (drafts (cl-remove-if (lambda (needle)
-                                 (string-match
-                                  (string-remove-prefix prefix needle)
-                                  index-contents))
-                               posts))
-         (buffer-name "*blog drafts*"))
-    (if drafts
-        (progn
-          (with-current-buffer (get-buffer-create buffer-name)
-            (erase-buffer)
-            (org-mode)
-            (insert
-             (mapconcat
-              (lambda (entry)
-                (format "- file:%s" entry))
-              drafts
-              "\n"))
-            (buffer-string))
-          (unless (get-buffer-window buffer-name t)
-            (pop-to-buffer buffer-name nil t))
-          (shrink-window-if-larger-than-buffer
-           (get-buffer-window buffer-name)))
-      (message "No drafts could be found!"))))
-#+end_src
-
-** Blog server
-
-While noodling around with my blog locally I publish to =~/blog=
-and use a simple Python server to host it.
-
-#+begin_src emacs-lisp
-(defun sb/blog-server ()
-  (interactive)
-  (start-process "Blog Server" "*blog server*"
-                 "python3"
-                 "-m" "http.server"
-                 "--directory" (expand-file-name "~/blog/"))
-  (message "Blog Server started"))
-#+end_src
 
 * Nix
 
