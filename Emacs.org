@@ -28,10 +28,37 @@ bell, and the ~package.el~ subsystem.
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(setq inhibit-startup-screen t)
-(setq visible-bell t)
-(setq package-enable-at-startup nil)
+(setq inhibit-startup-screen t
+      visible-bell t
+      package-enable-at-startup nil)
 #+end_src
+
+* Use lexical bindings
+Using lexical bindings speeds up loading config, if I understand
+correctly.
+#+begin_src emacs-lisp
+;; -*- lexical-binding: t; -*-
+#+end_src
+* Where and who am I?
+
+I use one computer for work, and another for personal stuff. I don't
+have vastly different configs, but I do set some variables
+differently. So here we set a variable to help us determine what
+context we're in later.
+
+#+begin_src emacs-lisp
+(setq sb/home? (string-match "margil" (system-name)))
+#+end_src
+
+Set up my name, email address, and login. I use the email in my
+Notmuch config below, and some of these show up in Org mode's export
+metadata.
+
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Stig Brautaset"
+      user-mail-address (if sb/home? "stig@brautaset.org" "stig@circleci.com")
+      user-login-name "stig")
+#+END_SRC
 
 * Bootstrap configuration
 
@@ -76,16 +103,6 @@ Install ~use-package~ and configure it to install packages by default.
 ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
 (straight-use-package '(org-plus-contrib :includes (org) :local-repo "org"))
 #+end_src
-
-* Introduce Myself
-
-In case something needs my name/email address.
-
-#+BEGIN_SRC emacs-lisp
-(setq user-full-name "Stig Brautaset"
-      user-mail-address "stig@brautaset.org"
-      user-login-name "stig")
-#+END_SRC
 
 * Configure PATH (and other variables) from shell
 
