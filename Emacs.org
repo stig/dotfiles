@@ -917,39 +917,6 @@ it as an interactive macro, where you can constantly see what's being done.
          ("s-p" . mc/mark-previous-like-this)))
 #+END_SRC
 
-** Projectile
-
-I use Projectile to navigate my projects. Some of the things I like about
-it are that it provides the following key bindings:
-
-- =C-c p f= :: Find a file in this project.
-- =C-c p k= :: Close all buffers for this project.
-- =C-c p t= :: This switches from an implementation file to its test file,
-               or vice versa. I use this extensively in Clojure mode. It
-               might not make sense for all languages; YMMV.
-- =C-c p s r= :: Ripgrep for something in this project. If point is at
-                 a token, default to searching for that.
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :diminish
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :custom
-  (projectile-completion-system 'default)
-  (projectile-dynamic-mode-line nil)
-  :config
-
-  ;; I use /usr/local/src on my work laptop in an attempt to avoid the
-  ;; dreaded Sophos Penalty, but ~/src is much more convenient so I
-  ;; use that on my personal machine. I would just set both, but
-  ;; projectile doesn't like it if the directories don't exist.
-  (setq projectile-project-search-path
-	(seq-filter (lambda (e) (file-directory-p e))
-		    '("/usr/local/src" "~/src")))
-
-  (projectile-mode))
-#+END_SRC
-
 ** SmartParens
 
 Structural editing is a must when editing lisp, and it has bled
@@ -1514,6 +1481,45 @@ I love Org's markup so much I wrote a JIRA export backend for it.
   ;; See https://github.com/stig/ox-jira.el/issues/53
   (org-export-with-sub-superscripts '{}))
 #+end_src
+
+* Projectile
+
+I use Projectile to navigate my projects. Some of the things I like about
+it are that it provides the following key bindings:
+
+- =C-c p f= :: Find a file in this project.
+- =C-c p k= :: Close all buffers for this project.
+- =C-c p t= :: This switches from an implementation file to its test file,
+               or vice versa. I use this extensively in Clojure mode. It
+               might not make sense for all languages; YMMV.
+- =C-c p s r= :: Ripgrep for something in this project. If point is at
+                 a token, default to searching for that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :diminish
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :custom
+  (projectile-switch-project-action 'projectile-find-file)
+  (projectile-completion-system 'default)
+  (projectile-project-search-path '("~/src"))
+  :config
+  (defun sulami/projectile-rg ()
+    (interactive)
+    (consult-ripgrep (projectile-project-root)))
+
+  (defun sulami/projectile-rg-thing-at-point ()
+    (interactive)
+    (consult-ripgrep (projectile-project-root)
+                     (thing-at-point 'symbol t)))
+
+  ;; Don't do projectile stuff on remote files
+  ;; from https://github.com/syl20bnr/spacemacs/issues/11381#issuecomment-481239700
+  (defadvice projectile-project-root (around ignore-remote first activate)
+    (unless (file-remote-p default-directory) ad-do-it))
+
+  (projectile-mode))
+#+END_SRC
 
 
 * Selectrum
