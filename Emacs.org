@@ -1601,15 +1601,13 @@ Show incomplete key cheatsheet.
 #+END_SRC
 
 * Whitespace annoyances
-
-This highlights certain whitespace annoyances, and adds a key binding to
-clean it up.
+Highlight certain whitespace annoyances, and clean them up automatically.
 
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
-  :bind ("C-c w" . whitespace-cleanup)
   :custom
   (whitespace-style '(face empty tabs trailing))
+  (whitespace-action '(auto-cleanup))
   :config
   (global-whitespace-mode t))
 #+END_SRC
