@@ -823,24 +823,6 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 (use-package company
   :hook (after-init . global-company-mode))
 #+end_src
-** Counsel
-
-This provides =counsel-find-file=, among others.
-
-#+begin_src emacs-lisp
-(use-package amx) ;; make counsel-M-x work the way I like
-
-(use-package counsel
-  :diminish
-  :after org
-  :demand
-  :bind (("C-c i" . counsel-semantic-or-imenu)
-	 :map org-mode-map
-	 ("C-c i" . counsel-org-goto))
-  :config
-  (counsel-mode 1))
-#+end_src
-
 ** Diff Highlight
 
 #+begin_src emacs-lisp
@@ -898,27 +880,6 @@ clean it up.
   ((typescript-mode . prettier-js-mode)
    (web-mode . prettier-js-mode)))
 #+end_src
-** Ivy
-
-I've long been a happy Helm user, but it confuses me (and is slow!)
-in some situations so I thought I'd try again to see if Ivy fares
-any better.
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :diminish
-  :demand
-  :bind (("C-c C-r" . ivy-resume)
-         ("C-x b" . ivy-switch-buffer)
-         ("C-c v" . ivy-push-view)
-         ("C-c V" . ivy-pop-view))
-  :custom
-  (ivy-use-virtual-buffers t)
-  (ivy-count-format "%d/%d ")
-  :config
-  (ivy-mode 1))
-#+end_src
-
 ** LSP (Language Server Protocol)
 
 LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
@@ -935,7 +896,6 @@ among other things.
   :custom
   (lsp-enable-file-watchers . nil))
 
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
 (use-package lsp-java
@@ -975,7 +935,7 @@ it are that it provides the following key bindings:
   :diminish
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-completion-system 'ivy)
+  (projectile-completion-system 'default)
   (projectile-dynamic-mode-line nil)
   :config
 
@@ -988,8 +948,6 @@ it are that it provides the following key bindings:
 		    '("/usr/local/src" "~/src")))
 
   (projectile-mode))
-
-(use-package counsel-projectile)
 #+END_SRC
 
 ** SmartParens
@@ -1023,15 +981,6 @@ their components.  Useful in anything that looks like Java.
 (use-package subword
   :hook (prog-mode . subword-mode))
 #+end_src
-
-** Swiper
-
-Invoke swiper (find in current buffer).
-
-#+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :bind (("C-s" . swiper)))
-#+END_SRC
 
 ** Which Key Mode
 
@@ -1466,8 +1415,8 @@ paragraphs re-flow properly on GitHub.
   (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
                         (org-agenda-files . (:tag . "recurring"))
 			(org-agenda-files . (:maxlevel . 1))))
-  (org-goto-interface 'outline-path-completion "Make 'org-refile' work better with Ivy")
-  (org-outline-path-complete-in-steps nil "Make 'org-refile' work better with Ivy")
+  (org-goto-interface 'outline-path-completion)
+  (org-outline-path-complete-in-steps nil)
   (org-agenda-include-diary t)
   (org-agenda-files "~/org/org-agenda-files.txt")
 
@@ -1647,7 +1596,6 @@ if it improves how I work.
       :olp ("Jira Tickets"))))
   (org-roam-rename-file-on-title-change t)
   (org-roam-directory "~/org/roam")
-  (org-roam-completion-system 'ivy)
   (org-roam-tag-sources '(prop all-directories))
   ;; The below required due to https://github.com/org-roam/org-roam/issues/597
   (org-roam-index-file "~/org/roam/index.org")
@@ -1709,6 +1657,65 @@ I use org-drill for drilling music theory.
   :custom
   (org-drill-add-random-noise-to-intervals-p t)
   (org-drill-adjust-intervals-for-early-and-late-repetitions-p t))
+#+end_src
+
+* Selectrum
+Incremental searching and selecting.
+#+begin_src emacs-lisp
+(use-package selectrum
+  :hook
+  (after-init . selectrum-mode))
+#+end_src
+** Selectrum Prescient Mode
+Learn which completions I prefer, to improve performance over time.
+#+begin_src emacs-lisp
+(use-package selectrum-prescient
+  :hook
+  (after-init . selectrum-prescient-mode)
+  (after-init . prescient-persist-mode))
+#+end_src
+** Consult
+
+Consult is counsel for selectrum, in that it adds selectrum support
+for various commands that do not use ~read-string~ normally.
+
+#+begin_src emacs-lisp
+(use-package consult
+  :defer t
+  :straight
+  '(consult
+    :type git
+    :host github
+    :repo "minad/consult"
+    :branch "main")
+  :custom
+  (consult-preview-key nil)
+  :config
+  ;; Eshell only defines its locally keymap when you launch it, so we
+  ;; have to add bindings with a hook.
+  (defun sulami/consult-setup-eshell-bindings ()
+    (general-imap
+     :keymaps 'eshell-mode-map
+     "C-r" 'consult-history))
+
+  :bind (("M-y" . consult-yank-pop)
+	 :map shell-mode-map
+	 ("C-r" . consult-history))
+  :hook
+  (eshell-mode . sulami/consult-setup-eshell-bindings))
+#+end_src
+
+** Orderless
+
+This package provides a minibuffer completion style that is
+"whitespace separated words in any order." Very useful if you don't
+know exactly what you're looking for.
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :defer t
+  :custom
+  (completion-styles '(orderless)))
 #+end_src
 
 * Themes
