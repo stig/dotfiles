@@ -13,6 +13,7 @@ cask "mactex-no-gui"
 cask "ngrok"
 cask "platypus"
 cask "refined-github-safari"
+cask "signal"
 cask "slack"
 
 brew "aspell"
@@ -29,6 +30,7 @@ brew "isync", restart_service: true
 brew "jq"
 brew "leiningen"
 brew "msmtp"
+brew "mtr"
 brew "notmuch"
 brew "nvm" # For frontend @work
 brew "pinentry"
