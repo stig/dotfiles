@@ -766,8 +766,7 @@ machine, so I don't have to mark stuff read in multiple places.
   (elfeed-org))
 
 (use-package elfeed
-  :bind (("C-x w" . elfeed)
-         :map elfeed-search-mode-map
+  :bind (:map elfeed-search-mode-map
          ("m" . elfeed-toggle-star) )
   :custom
   (elfeed-db-directory "~/Sync/elfeed")
