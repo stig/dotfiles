@@ -9,6 +9,11 @@ alias dcl='docker-compose logs --follow --tail 10'
 alias dcu=docker-compose up -d
 alias ff=emacsclient
 alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
+
+# Set up Nix stuff
+if [ -e /etc/static/zshrc ]; then
+    . /etc/static/zshrc
+fi
 #+end_src
 
 #+begin_src sh :tangle ~/.zshenv
@@ -30,4 +35,9 @@ export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
 # For NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh" && nvm use default --silent
+
+# Set up nix
+if [ -e /Users/stig/.nix-profile/etc/profile.d/nix.sh ]; then
+    . /Users/stig/.nix-profile/etc/profile.d/nix.sh
+fi
 #+end_src

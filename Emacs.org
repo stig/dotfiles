@@ -793,6 +793,10 @@ variables are available in Eshell. (And elsewhere in Emacs.)
      "LDFLAGS" "CPPFLAGS"
      "EDITOR"
      "JAVA_HOME"
+     "NIX_SSL_CERT_FILE"
+     "NIX_PATH"
+     "NIX_PROFILES"
+     "NIX_USER_PROFILE_DIR"
      "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"))
   :config
   (exec-path-from-shell-initialize))
