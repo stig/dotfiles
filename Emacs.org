@@ -1328,7 +1328,16 @@ Jar to work in the major mode, but it works fine in Org mode.
 
 #+begin_src emacs-lisp
 (use-package plantuml-mode
+  :straight (plantuml-mode :type git
+			   :host github
+			   :repo "stig/plantuml-mode"
+			   :branch "sequence-diagram-indentation-test")
+  :init
+  (defun sb/no-tabs-in-plantuml ()
+    (setq indent-tabs-mode nil))
+  :hook (plantuml-mode . sb/no-tabs-in-plantuml)
   :custom
+  (plantuml-indent-level 4)
   (plantuml-default-exec-mode 'executable)
   (plantuml-font-lock-keywords t))
 
