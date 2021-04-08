@@ -1,8 +1,7 @@
 #+TITLE: My Emacs Setup
 #+AUTHOR: Stig Brautaset
 #+OPTIONS: f:t
-#+PROPERTY: header-args:              :mkdirp yes
-#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent
+#+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent :mkdirp t
 #+STARTUP: content
 * Introduction
 
@@ -15,7 +14,7 @@ I install Emacs itself using Homebrew, along with other tools
 
 * Early Init
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el
+:header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el :results silent :mkdirp t
 :END:
 
 Emacs loads =early-init.el= before loading GUI components. That makes

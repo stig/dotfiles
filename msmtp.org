@@ -5,7 +5,7 @@ Add passwords to Keychain:
 : security add-internet-password -s smtp.gmail.com -r smtp -a stig@circleci.com -w
 : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
 
-#+begin_src conf :tangle ~/.config/msmtp/config
+#+begin_src conf :tangle ~/.config/msmtp/config :mkdirp t
 defaults
 port 587
 tls on
