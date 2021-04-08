@@ -793,7 +793,6 @@ variables are available in Eshell. (And elsewhere in Emacs.)
      "LDFLAGS"
      "CPPFLAGS"
      "EDITOR"
-     "JAVA_HOME"
      "NIX_SSL_CERT_FILE"
      "NIX_PATH"
      "NIX_PROFILES"

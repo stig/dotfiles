@@ -18,7 +18,6 @@ fi
 
 #+begin_src sh :tangle ~/.zshenv
 export EDITOR=emacsclient
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 # Emacs can't find pdflatex without this, for some reason. This
 # *should* be handled by system setup, but I don't have time to debug
