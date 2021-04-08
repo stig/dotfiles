@@ -788,15 +788,18 @@ variables are available in Eshell. (And elsewhere in Emacs.)
   :custom
   (exec-path-from-shell-arguments nil)
   (exec-path-from-shell-variables
-   '("PATH" "MANPATH"
-     "LDFLAGS" "CPPFLAGS"
+   '("PATH"
+     "MANPATH"
+     "LDFLAGS"
+     "CPPFLAGS"
      "EDITOR"
      "JAVA_HOME"
      "NIX_SSL_CERT_FILE"
      "NIX_PATH"
      "NIX_PROFILES"
      "NIX_USER_PROFILE_DIR"
-     "RESTIC_REPOSITORY" "RESTIC_PASSWORD_COMMAND"))
+     "RESTIC_REPOSITORY"
+     "RESTIC_PASSWORD_COMMAND"))
   :config
   (exec-path-from-shell-initialize))
 #+END_SRC
