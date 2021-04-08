@@ -786,6 +786,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
   :custom
+  (exec-path-from-shell-arguments nil)
   (exec-path-from-shell-variables
    '("PATH" "MANPATH"
      "LDFLAGS" "CPPFLAGS"
