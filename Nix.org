@@ -1,0 +1,43 @@
+#+title: Nix Configuration
+
+I'm making another attempt at learning Nix, as it seems incredibly
+useful for managing my environment for different projects.
+
+I'm using [[https://blog.sulami.xyz/posts/nix-for-developers/][Robin Schroer's blog post]] and [[https://ianthehenry.com/posts/how-to-learn-nix/][Ian Henry's stream of
+conciousness]] as my guides. I'll probably check out the manual too, one
+day.
+
+* System configuration
+
+These are the packages I want available in my environment without
+having to call =nix-shell= in a project. After changing this file I
+need to run =darwin-rebuild switch=.
+
+#+begin_src nix :tangle ~/.nixpkgs/darwin-configuration.nix :mkdirp t
+{ config, pkgs, ... }:
+
+{
+  # List packages installed in system profile. To search by name, run:
+  # $ nix-env -qaP | grep wget
+  environment.systemPackages =
+    [
+      pkgs.ripgrep
+      pkgs.curl
+    ];
+  # Use a custom configuration.nix location.
+  # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
+  # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
+
+  # Auto upgrade nix package and the daemon service.
+  # services.nix-daemon.enable = true;
+  # nix.package = pkgs.nix;
+
+  # Create /etc/bashrc that loads the nix-darwin environment.
+  programs.zsh.enable = true;  # default shell on catalina
+  # programs.fish.enable = true;
+
+  # Used for backwards compatibility, please read the changelog before changing.
+  # $ darwin-rebuild changelog
+  system.stateVersion = 4;
+}
+#+end_src
