@@ -1454,17 +1454,15 @@ for various commands that do not use ~read-string~ normally.
   :config
   ;; Eshell only defines its locally keymap when you launch it, so we
   ;; have to add bindings with a hook.
-  (defun sulami/consult-setup-eshell-bindings ()
-    (general-imap
-     :keymaps 'eshell-mode-map
-     "C-r" 'consult-history))
+  (defun sb/consult-setup-eshell-bindings ()
+    (bind-key "C-r" #'consult-history 'eshell-mode-map))
 
   :bind (("M-y" . consult-yank-pop)
 	 ("C-c i" . consult-imenu)
 	 :map shell-mode-map
 	 ("C-r" . consult-history))
   :hook
-  (eshell-mode . sulami/consult-setup-eshell-bindings))
+  (eshell-mode . sb/consult-setup-eshell-bindings))
 #+end_src
 
 ** Orderless
