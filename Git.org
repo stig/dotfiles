@@ -6,3 +6,19 @@ For now this is essentially just a simple global ignore file.
 .DS_Store
 .clj-kondo/
 #+end_src
+
+#+name: email
+#+begin_src emacs-lisp
+user-mail-address
+#+end_src
+
+#+name: name
+#+begin_src emacs-lisp
+user-full-name
+#+end_src
+
+#+begin_src sh :var email=email name=name :results silent
+git config --global user.name "$name"
+git config --global user.email "$email"
+git config --global core.excludesfile ~/.config/git/ignore
+#+end_src
