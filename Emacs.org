@@ -738,7 +738,15 @@ This is the Clojure / ClojureScript REPL I use.
   :config
   (global-diff-hl-mode))
 #+end_src
+* Direnv
+Set environment per directory. The plan is to use this with
+Nix-direnv, to automatically set my PATH for a directory.
 
+#+begin_src emacs-lisp
+(use-package direnv
+ :config
+ (direnv-mode))
+#+end_src
 * Dumb-jump
 
 Trying this out again, now that it registers an xref backend:

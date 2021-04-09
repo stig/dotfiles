@@ -24,6 +24,7 @@ need to run =darwin-rebuild switch=.
       pkgs.aspell
       pkgs.clojure
       pkgs.curl
+      pkgs.direnv
       pkgs.git
       pkgs.gnupg
       pkgs.isync
@@ -31,13 +32,13 @@ need to run =darwin-rebuild switch=.
       pkgs.leiningen
       pkgs.msmtp
       pkgs.mtr
+      pkgs.nix-direnv
       pkgs.notmuch
       pkgs.pinentry
       pkgs.plantuml
       pkgs.postgresql
       pkgs.restic
       pkgs.ripgrep
-
     ];
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
@@ -47,6 +48,17 @@ need to run =darwin-rebuild switch=.
   # services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
+
+  # This is for direnv, to dial back garbage collection
+  nix.extraOptions = ''
+    keep-outputs = true
+    keep-derivations = true
+  '';
+
+  environment.pathsToLink = [
+    "/share/nix-direnv"
+  ];
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
   # programs.fish.enable = true;
@@ -55,4 +67,10 @@ need to run =darwin-rebuild switch=.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 }
+#+end_src
+
+This makes direnv do nixy things, I think?
+
+#+begin_src sh :tangle ~/.direnvrc
+source /run/current-system/sw/share/nix-direnv/direnvrc
 #+end_src
