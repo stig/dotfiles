@@ -21,8 +21,23 @@ need to run =darwin-rebuild switch=.
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [
-      pkgs.ripgrep
+      pkgs.aspell
+      pkgs.clojure
       pkgs.curl
+      pkgs.git
+      pkgs.gnupg
+      pkgs.isync
+      pkgs.jq
+      pkgs.leiningen
+      pkgs.msmtp
+      pkgs.mtr
+      pkgs.notmuch
+      pkgs.pinentry
+      pkgs.plantuml
+      pkgs.postgresql
+      pkgs.restic
+      pkgs.ripgrep
+
     ];
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
