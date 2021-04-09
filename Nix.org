@@ -25,6 +25,7 @@ need to run =darwin-rebuild switch=.
       pkgs.clojure
       pkgs.curl
       pkgs.direnv
+      pkgs.emacs
       pkgs.git
       pkgs.gnupg
       pkgs.isync
