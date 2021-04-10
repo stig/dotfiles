@@ -42,6 +42,7 @@ need to run =darwin-rebuild switch=.
       pkgs.postgresql
       pkgs.restic
       pkgs.ripgrep
+      pkgs.texlive.combined.scheme-full
     ];
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
