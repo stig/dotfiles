@@ -4,64 +4,6 @@
 I use Restic to back up to an S3 bucket. I don't want to have to run
 it manually, so I use a LaunchAgent to schedule backups regularly.
 
-#+BEGIN_SRC sh :tangle ~/Library/Scripts/restic-backup :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
-set -euo pipefail
-export RESTIC_REPOSITORY="s3:s3.amazonaws.com/brautaset-backups"
-export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
-
-echo "****************************************************************"
-echo -n "Backup running @ "
-date
-echo
-
-restic backup \
-       $HOME/.mail \
-       $HOME/org \
-       $HOME/Sync \
-       --exclude $HOME/.mail/.notmuch/xapian/ \
-       --verbose
-#+END_SRC
-
-* LaunchAgent
-
-#+begin_src xml :tangle ~/Library/LaunchAgents/org.brautaset.restic-backup.plist :mkdirp t
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>EnvironmentVariables</key>
-    <dict>
-      <key>PATH</key>
-      <string>/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/User/stig/Library/Scripts</string>
-    </dict>
-    <key>KeepAlive</key>
-    <false/>
-    <key>Label</key>
-    <string>org.brautaset.restic-backup</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>/Users/stig/Library/Scripts/restic-backup</string>
-    </array>
-    <key>StartInterval</key>
-    <integer>600</integer>
-    <key>RunAtLoad</key>
-    <true />
-    <key>StandardErrorPath</key>
-    <string>/Users/stig/Library/Logs/org.brautaset.restic-backup/errors.txt</string>
-    <key>StandardOutPath</key>
-    <string>/Users/stig/Library/Logs/org.brautaset.restic-backup/output.txt</string>
-  </dict>
-</plist>
-#+end_src
-
-* (Re)Start the service
-
-#+begin_src sh :results silent
-launchctl unload ~/Library/LaunchAgents/org.brautaset.restic-backup.plist || true
-launchctl load ~/Library/LaunchAgents/org.brautaset.restic-backup.plist
-#+end_src
-
-
-* Set password
+I configure the LaunchAgent using [[file:Nix.org][Nix]].
 
 : security add-generic-password -a s3.amazonaws.com/brautaset-backups -D 'restic backup password' -s restic -w

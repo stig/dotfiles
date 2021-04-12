@@ -72,6 +72,20 @@ need to run =darwin-rebuild switch=.
     serviceConfig.StandardOutPath   = "/Users/stig/Library/Logs/mbsync/stdout.log";
   };
 
+  launchd.user.agents.restic = {
+    path                            = [ pkgs.restic ];
+    environment                     = {
+      NIX_SSL_CERT_FILE       = "/etc/ssl/certs/ca-certificates.crt";
+      RESTIC_REPOSITORY       = "s3:s3.amazonaws.com/brautaset-backups";
+      RESTIC_PASSWORD_COMMAND = "/usr/bin/security find-generic-password -s restic -w";
+    };
+    command                         = "restic backup $HOME/.mail $HOME/org $HOME/Sync --exclude $HOME/.mail/.notmuch/xapian --verbose";
+    serviceConfig.RunAtLoad         = true;
+    serviceConfig.StartInterval     = 600;
+    serviceConfig.StandardErrorPath = "/Users/stig/Library/Logs/restic/stderr.log";
+    serviceConfig.StandardOutPath   = "/Users/stig/Library/Logs/restic/stdout.log";
+  };
+
   # This is for direnv, to dial back garbage collection
   nix.extraOptions = ''
     keep-outputs = true
