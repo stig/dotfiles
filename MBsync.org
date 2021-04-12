@@ -16,7 +16,7 @@ Host mail.gandi.net
 User stig@brautaset.org
 SSLType IMAPS
 AuthMechs LOGIN
-PassCmd "security find-generic-password -s mbsync-gandi-password -w"
+PassCmd "/usr/bin/security find-generic-password -s mbsync-gandi-password -w"
 PipelineDepth 1
 
 MaildirStore local
@@ -72,7 +72,7 @@ To rotate password:
 IMAPStore remote
 Host imap.gmail.com
 User stig@circleci.com
-PassCmd "security find-generic-password -s mbsync-gmail-password -w"
+PassCmd "/usr/bin/security find-generic-password -s mbsync-gmail-password -w"
 SSLType IMAPS
 AuthMechs PLAIN
 # The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.

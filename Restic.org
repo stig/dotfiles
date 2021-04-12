@@ -14,12 +14,12 @@ echo -n "Backup running @ "
 date
 echo
 
-/usr/local/bin/restic backup \
-                      $HOME/.mail \
-		      $HOME/org \
-		      $HOME/Sync \
-		      --exclude $HOME/.mail/.notmuch/xapian/ \
-		      --verbose
+restic backup \
+       $HOME/.mail \
+       $HOME/org \
+       $HOME/Sync \
+       --exclude $HOME/.mail/.notmuch/xapian/ \
+       --verbose
 #+END_SRC
 
 * LaunchAgent
