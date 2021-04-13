@@ -1,13 +1,20 @@
 #+title: My Configuration
 
-This is my configuration. To be honest it's centred around [[file:Emacs.org][Emacs]],
-with smatterings of other stuff.
+This is my configuration. It's centred around [[file:Emacs.org][Emacs]], with smatterings
+of other stuff.
 
-* Install Homebrew & packages
+* Install Nix & Homebrew
 
-#+begin_src sh :tangle brew-bootstrap.sh :tangle-mode (identity #o755)
+#+begin_src sh :tangle bootstrap.sh :tangle-mode (identity #o755)
+# Install Homebrew
 which brew || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew bundle
+
+# Install Nix
+sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+
+# Install Nix-Darwin
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+yes | ./result/bin/darwin-installer
 #+end_src
 
 * Tangle other config files
