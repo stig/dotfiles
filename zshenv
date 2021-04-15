@@ -1,17 +1,3 @@
-#+title: Zsh setup
-
-I mainly use Emacs' Eshell, but when I do find myself in Zsh I don't
-want to be without these aliases.
-
-#+begin_src sh :tangle ~/.zshrc
-alias dc=docker-compose
-alias dcl='docker-compose logs --follow --tail 10'
-alias dcu=docker-compose up -d
-alias ff=emacsclient
-alias dps="docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
-#+end_src
-
-#+begin_src sh :tangle ~/.zshenv
 export EDITOR=emacsclient
 
 # Emacs can't find pdflatex without this, for some reason. This
@@ -25,4 +11,3 @@ fi
 # For interacting with backup snapshots using restic
 export RESTIC_REPOSITORY="s3:s3.amazonaws.com/brautaset-backups"
 export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
-#+end_src
