@@ -1,9 +1,0 @@
-#+title: Restic
-#+subtitle: Backups--I have them?
-
-I use Restic to back up to an S3 bucket. I don't want to have to run
-it manually, so I use a LaunchAgent to schedule backups regularly.
-
-I configure the LaunchAgent using [[file:Nix.org][Nix]].
-
-: security add-generic-password -a s3.amazonaws.com/brautaset-backups -D 'restic backup password' -s restic -w

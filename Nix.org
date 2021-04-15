@@ -72,6 +72,12 @@ need to run =darwin-rebuild switch=.
     serviceConfig.StandardOutPath   = "/Users/stig/Library/Logs/mbsync/stdout.log";
   };
 
+
+  # I use Restic to back up to an S3 bucket. I don't want to have to run
+  # it manually, so I use this LaunchAgent to schedule backups regularly.
+  # To update password, run this:
+  # security add-generic-password -a s3.amazonaws.com/brautaset-backups -D 'restic backup password' -s restic -w
+
   launchd.user.agents.restic = {
     path                            = [ pkgs.restic ];
     environment                     = {
