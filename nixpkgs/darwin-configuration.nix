@@ -1,24 +1,8 @@
-#+title: Nix Configuration
-
-I'm making another attempt at learning Nix, as it seems incredibly
-useful for managing my environment for different projects.
-
-I'm using [[https://blog.sulami.xyz/posts/nix-for-developers/][Robin Schroer's blog post]] and [[https://ianthehenry.com/posts/how-to-learn-nix/][Ian Henry's stream of
-conciousness]] as my guides. I'll probably check out the manual too, one
-day.
-
-* System configuration
-
-These are the packages I want available in my environment without
-having to call =nix-shell= in a project. After changing this file I
-need to run =darwin-rebuild switch=.
-
-#+begin_src nix :tangle ~/.nixpkgs/darwin-configuration.nix :mkdirp t
 { config, pkgs, ... }:
 
 {
   # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
+  # $ nix search <name>
   environment.systemPackages =
     [
       pkgs.aspell
@@ -110,10 +94,3 @@ need to run =darwin-rebuild switch=.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 }
-#+end_src
-
-This makes direnv do nixy things, I think?
-
-#+begin_src sh :tangle ~/.direnvrc
-source /run/current-system/sw/share/nix-direnv/direnvrc
-#+end_src
