@@ -6,6 +6,9 @@
   environment.systemPackages =
     [
       pkgs.aspell
+      pkgs.aspellDicts.en
+      pkgs.aspellDicts.en-science
+      pkgs.aspellDicts.en-computers
       pkgs.clj-kondo
       pkgs.clojure
       pkgs.curl
