@@ -12,3 +12,5 @@ ln -vsf $(pwd)/gnupg/* ~/.gnupg
 
 mkdir -p ~/.nixpkgs
 ln -vsf $(pwd)/nixpkgs/* ~/.nixpkgs
+
+which brew || ./install-brew.sh
