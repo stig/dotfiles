@@ -36,6 +36,7 @@
 
   imports = [
     ./fonts.nix
+    ./homebrew.nix
     ./mbsync-agent.nix
     ./restic-agent.nix
   ];
