@@ -20,5 +20,7 @@
     "signal"
     "slack"
     "spotify"
+    "syncthing"
+    "zoom"
   ];
 }
