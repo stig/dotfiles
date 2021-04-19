@@ -8,6 +8,7 @@
     pkgs.aspellDicts.en
     pkgs.aspellDicts.en-computers
     pkgs.aspellDicts.en-science
+    pkgs.awscli
     pkgs.clj-kondo
     pkgs.clojure
     pkgs.curl
@@ -28,6 +29,7 @@
     pkgs.postgresql
     pkgs.restic
     pkgs.ripgrep
+    pkgs.shellcheck
     pkgs.texlive.combined.scheme-full
   ];
   # Use a custom configuration.nix location.
