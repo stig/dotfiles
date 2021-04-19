@@ -41,6 +41,7 @@
     ./homebrew.nix
     ./mbsync-agent.nix
     ./restic-agent.nix
+    ./settings.nix
   ];
 
   # Auto upgrade nix package and the daemon service.
