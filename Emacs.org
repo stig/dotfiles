@@ -1355,7 +1355,7 @@ Jar to work in the major mode, but it works fine in Org mode.
   :after org
   :straight nil
   :custom
-  (org-plantuml-jar-path "/usr/local/opt/plantuml/libexec/plantuml.jar"))
+  (org-plantuml-exec-mode 'plantuml))
 #+end_src
 
 * Projectile
