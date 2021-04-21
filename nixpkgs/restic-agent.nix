@@ -17,7 +17,7 @@ restic forget --keep-daily 14 --keep-weekly 4 --keep-monthly 12 --keep-yearly 5 
 restic prune --max-unused 10% 2>&1 | ts
 ";
     serviceConfig.RunAtLoad         = true;
-    serviceConfig.StartInterval     = 600;
+    serviceConfig.StartInterval     = 3600;
     serviceConfig.StandardOutPath   = "/Users/stig/Library/Logs/restic/backup.log";
   };
 
