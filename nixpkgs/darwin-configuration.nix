@@ -20,6 +20,7 @@
     pkgs.jetbrains-mono
     pkgs.jq
     pkgs.leiningen
+    pkgs.moreutils
     pkgs.msmtp
     pkgs.mtr
     pkgs.nix-direnv
