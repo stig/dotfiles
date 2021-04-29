@@ -11,3 +11,6 @@ fi
 # For interacting with backup snapshots using restic
 export RESTIC_REPOSITORY="s3:s3.amazonaws.com/brautaset-backups"
 export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
+
+# Don't auto-update brew
+export HOMEBREW_NO_AUTO_UPDATE=1
