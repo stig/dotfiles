@@ -113,6 +113,7 @@ notmuch tag --batch <<EOF
 +solve -- tag:new to:solve@brautaset.org
 
 +to_confirm -inbox -- tag:new from:auto-confirm@amazon.co.uk
++to_confirm -inbox -- tag:new from:bonjour@mademoisellemacaron.co.uk
 
 EOF
 #+END_SRC
