@@ -13,7 +13,7 @@
     };
     script                          = "
 restic backup $HOME/.mail $HOME/org $HOME/Sync --exclude $HOME/.mail/.notmuch/xapian --verbose 2>&1 | ts
-restic forget --keep-daily 14 --keep-weekly 4 --keep-monthly 12 --keep-yearly 5 --quiet 2>&1 | ts
+restic forget --compact --keep-daily 14 --keep-weekly 4 --keep-monthly 12 --keep-yearly 5 --quiet 2>&1 | ts
 restic prune --max-unused 10% 2>&1 | ts
 ";
     serviceConfig.RunAtLoad         = true;
