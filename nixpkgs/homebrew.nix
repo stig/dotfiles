@@ -9,6 +9,7 @@
 
   homebrew.casks = [
     "alfred"
+    "discord"
     "docker"
     "minecraft"
     "signal"
