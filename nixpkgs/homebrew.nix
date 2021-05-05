@@ -9,6 +9,7 @@
 
   homebrew.casks = [
     "alfred"
+    "dash"
     "discord"
     "docker"
     "minecraft"
@@ -28,6 +29,7 @@
     Pocket = 568494494;
     "Refined GitHub" = 1519867270;
     "Save to Pocket" = 1477385213;
+    "Speedtest by Ookla" = 1153157709;
     Slack = 803453959;
     WhatsApp = 1147396723;
   };
