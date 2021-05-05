@@ -1322,6 +1322,15 @@ it as a resource in Org roam.
      )))
 #+end_src
 
+* Org Superstar
+
+This hides leading stars in Org headlines, and uses UTF symbols to
+make them a bit prettier.
+
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :hook (org-mode . org-superstar-mode))
+#+end_src
 * Orgalist
 Edit "Org-like" lists in non-Org buffers.
 #+begin_src emacs-lisp
