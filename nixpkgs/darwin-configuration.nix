@@ -17,7 +17,6 @@
     pkgs.git
     pkgs.gnupg
     pkgs.isync
-    pkgs.jetbrains-mono
     pkgs.jq
     pkgs.leiningen
     pkgs.moreutils
