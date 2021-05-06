@@ -522,8 +522,8 @@ then A.
                    (concat
                     (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
                     (ediff-get-region-contents
-                    ediff-current-difference 'B
-                    ediff-control-buffer))))
+                     ediff-current-difference 'B
+                     ediff-control-buffer))))
 
 (defun sb/add-d-to-ediff-mode-map ()
   (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
@@ -744,8 +744,8 @@ Nix-direnv, to automatically set my PATH for a directory.
 
 #+begin_src emacs-lisp
 (use-package direnv
- :config
- (direnv-mode))
+  :config
+  (direnv-mode))
 #+end_src
 * Dumb-jump
 
@@ -1072,147 +1072,147 @@ support. I also have to load some modules so they're available when I
 need them.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org
-    ;; Avoid conflicts between multiple Org versions, cf
-    ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-    :straight (org-plus-contrib :includes (org) :local-repo "org")
-    :bind (("C-c l" . org-store-link)
-	   ("C-c a" . org-agenda)
-	   ("C-c c" . org-capture)
-	   ;; I try to track time...
-	   ("C-c C-x C-j" . org-clock-goto)
-	   :map org-mode-map
-	   ("M-q" . endless/fill-or-unfill)
-	   ("C-x C-<return>" . org-insert-subheading)
-	   ("C-S-<return>" . org-insert-todo-subheading)
-	   ("C-n" . org-next-link)
-	   ("C-p" . org-previous-link))
+(use-package org
+  ;; Avoid conflicts between multiple Org versions, cf
+  ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
+  :straight (org-plus-contrib :includes (org) :local-repo "org")
+  :bind (("C-c l" . org-store-link)
+	 ("C-c a" . org-agenda)
+	 ("C-c c" . org-capture)
+	 ;; I try to track time...
+	 ("C-c C-x C-j" . org-clock-goto)
+	 :map org-mode-map
+	 ("M-q" . endless/fill-or-unfill)
+	 ("C-x C-<return>" . org-insert-subheading)
+	 ("C-S-<return>" . org-insert-todo-subheading)
+	 ("C-n" . org-next-link)
+	 ("C-p" . org-previous-link))
 
-    :mode (("\\.org\\'" . org-mode)
-	   ("\\.org_archive\\'" . org-mode))
+  :mode (("\\.org\\'" . org-mode)
+	 ("\\.org_archive\\'" . org-mode))
 
-    :custom
-    ;; Whitespace and edits
-    (org-adapt-indentation nil)
-    (org-src-preserve-indentation nil)
-    (org-edit-src-content-indentation 0)
-    (org-hide-emphasis-markers nil)
-    (org-link-file-path-type 'relative)
-    (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
-    (org-catch-invisible-edits 'smart)
-    (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
-    (org-export-with-section-numbers nil)
-    (org-export-with-toc nil)
-    (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  :custom
+  ;; Whitespace and edits
+  (org-adapt-indentation nil)
+  (org-src-preserve-indentation nil)
+  (org-edit-src-content-indentation 0)
+  (org-hide-emphasis-markers nil)
+  (org-link-file-path-type 'relative)
+  (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
+  (org-catch-invisible-edits 'smart)
+  (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
+  (org-export-with-section-numbers nil)
+  (org-export-with-toc nil)
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-    (org-table-header-line-p t)
+  (org-table-header-line-p t)
 
-    (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
-			 (sequence "PROJ(p)" "|" "COMPLETE")
-			 (sequence "|" "CANCELLED")))
+  (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
+		       (sequence "PROJ(p)" "|" "COMPLETE")
+		       (sequence "|" "CANCELLED")))
 
-    (org-tag-alist '(("@work" . ?w)
-		     ("@home" . ?h)
-		     ("proj" . ?p)
-		     ("someday" . ?s)
-		     ("noexport" . ?n)
-		     ("toil" . ?t)
-		     ("meeting" . ?m)
-		     ("brag" . ?b)
-		     ("achievement" . ?a)
-		     ("inbox" . ?i)
-		     ("interrupt" . ?I)
-		     ("note" . ?N)))
+  (org-tag-alist '(("@work" . ?w)
+		   ("@home" . ?h)
+		   ("proj" . ?p)
+		   ("someday" . ?s)
+		   ("noexport" . ?n)
+		   ("toil" . ?t)
+		   ("meeting" . ?m)
+		   ("brag" . ?b)
+		   ("achievement" . ?a)
+		   ("inbox" . ?i)
+		   ("interrupt" . ?I)
+		   ("note" . ?N)))
 
-    (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
+  (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
-    (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
-    (org-refile-allow-creating-parent-nodes 'confirm)
-    (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
-			  (org-agenda-files . (:tag . "recurring"))
-			  (org-agenda-files . (:maxlevel . 1))))
-    (org-goto-interface 'outline-path-completion)
-    (org-outline-path-complete-in-steps nil)
-    (org-agenda-include-diary t)
-    (org-agenda-files "~/org/org-agenda-files.txt")
+  (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
+			(org-agenda-files . (:tag . "recurring"))
+			(org-agenda-files . (:maxlevel . 1))))
+  (org-goto-interface 'outline-path-completion)
+  (org-outline-path-complete-in-steps nil)
+  (org-agenda-include-diary t)
+  (org-agenda-files "~/org/org-agenda-files.txt")
 
-    (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
-    (org-agenda-tags-todo-honor-ignore-options t)
-    (org-agenda-todo-ignore-scheduled 'future)
-    (org-agenda-todo-ignore-deadlines 'far)
-    (org-agenda-todo-ignore-with-date 'future)
-    (org-agenda-todo-ignore-timestamp 'future)
-    (org-agenda-skip-deadline-prewarning-if-scheduled t)
-    (org-agenda-skip-timestamp-if-done t)
-    (org-agenda-skip-scheduled-if-done t)
-    (org-agenda-skip-deadline-if-done t)
-    (org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
+  (org-agenda-tags-todo-honor-ignore-options t)
+  (org-agenda-todo-ignore-scheduled 'future)
+  (org-agenda-todo-ignore-deadlines 'far)
+  (org-agenda-todo-ignore-with-date 'future)
+  (org-agenda-todo-ignore-timestamp 'future)
+  (org-agenda-skip-deadline-prewarning-if-scheduled t)
+  (org-agenda-skip-timestamp-if-done t)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown t)
 
-    (org-agenda-custom-commands
-     `(("d" "Day Agenda & Top Tasks"
-	((agenda "")
-	 (tags-todo "-PRIORITY=\"C\"/TODO"))
-	((org-agenda-span 'day)
-	 ;; Exclude @home tasks when I'm on my  work machine, and vice versa
-	 (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
-					 "-someday"
-					 "-inbox"))))
-       ("g" . "Getting Things Done")
-       ("gA" "Agenda minus recurring tasks"
-	agenda ""
-	((org-agenda-tag-filter-preset '("-recurring"))))
-       ("gi" "Inbox" tags "inbox")
-       ("gs" "Someday"
-	((todo "PROJ")
-	 (tags-todo "-proj/TODO"))
-	((org-agenda-tag-filter-preset '("+someday"))))
-       ("gc" "Review for Tasks Complete"
-	todo "TODO"
-	((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
-       ("gw" "Waiting tasks" todo "WAITING")
-       ("ga" "Archivable"
-	((tags "-proj-gtd/DONE")
-	 (tags "-proj-gtd/CANCELLED")))
-       ("gp" "Projects" tags-todo "-someday/PROJ")))
+  (org-agenda-custom-commands
+   `(("d" "Day Agenda & Top Tasks"
+      ((agenda "")
+       (tags-todo "-PRIORITY=\"C\"/TODO"))
+      ((org-agenda-span 'day)
+       ;; Exclude @home tasks when I'm on my  work machine, and vice versa
+       (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
+				       "-someday"
+				       "-inbox"))))
+     ("g" . "Getting Things Done")
+     ("gA" "Agenda minus recurring tasks"
+      agenda ""
+      ((org-agenda-tag-filter-preset '("-recurring"))))
+     ("gi" "Inbox" tags "inbox")
+     ("gs" "Someday"
+      ((todo "PROJ")
+       (tags-todo "-proj/TODO"))
+      ((org-agenda-tag-filter-preset '("+someday"))))
+     ("gc" "Review for Tasks Complete"
+      todo "TODO"
+      ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
+     ("gw" "Waiting tasks" todo "WAITING")
+     ("ga" "Archivable"
+      ((tags "-proj-gtd/DONE")
+       (tags "-proj-gtd/CANCELLED")))
+     ("gp" "Projects" tags-todo "-someday/PROJ")))
 
-    (org-default-notes-file
-     (let ((name (downcase (car (split-string (system-name) "\\.")))))
-       (expand-file-name (format "%s.org" name) "~/org")))
+  (org-default-notes-file
+   (let ((name (downcase (car (split-string (system-name) "\\.")))))
+     (expand-file-name (format "%s.org" name) "~/org")))
 
-    (org-capture-templates
-     `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
-					    (if sb/home? "@home" "@work")))
-       ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
-							(if sb/home? "@home" "@work")))
+  (org-capture-templates
+   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
+					  (if sb/home? "@home" "@work")))
+     ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
+						      (if sb/home? "@home" "@work")))
 
-       ("u" "Utility Metres")
-       ("ug" "New Gas Meter Reading" table-line
-	(file "~/org/notes/gas-consumption.org")
-	(file "templates/gas-consumption.org"))
-       ("ue" "New Electricity Meter Reading" table-line
-	(file "~/org/notes/electricity-consumption.org")
-	(file "templates/electricity-consumption.org"))
+     ("u" "Utility Metres")
+     ("ug" "New Gas Meter Reading" table-line
+      (file "~/org/notes/gas-consumption.org")
+      (file "templates/gas-consumption.org"))
+     ("ue" "New Electricity Meter Reading" table-line
+      (file "~/org/notes/electricity-consumption.org")
+      (file "templates/electricity-consumption.org"))
 
-       ("p" "Productivity")
-       ("pf" "Decide Focus Areas" entry
-	(file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
-	(file "templates/focus-areas.org"))
-       ("pb" "Boulders for the Week" entry
-	(file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
-	"* %<%B/Week %V>\n1. %?")
-       ("pr" "New GTD Review" entry
-	(file+olp+datetree "~/org/archive/gtd_review.org")
-	(file "templates/gtd-review.org") :clock-in t)))
+     ("p" "Productivity")
+     ("pf" "Decide Focus Areas" entry
+      (file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
+      (file "templates/focus-areas.org"))
+     ("pb" "Boulders for the Week" entry
+      (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
+      "* %<%B/Week %V>\n1. %?")
+     ("pr" "New GTD Review" entry
+      (file+olp+datetree "~/org/archive/gtd_review.org")
+      (file "templates/gtd-review.org") :clock-in t)))
 
-    :config
-    (require 'org-habit)
-    (require 'ox-rss)
-    (require 'ox-icalendar)
-    (org-babel-do-load-languages 'org-babel-load-languages
-				 '((emacs-lisp . t)
-				   (sql . t)
-				   (shell . t)
-				   (plantuml . t))))
+  :config
+  (require 'org-habit)
+  (require 'ox-rss)
+  (require 'ox-icalendar)
+  (org-babel-do-load-languages 'org-babel-load-languages
+			       '((emacs-lisp . t)
+				 (sql . t)
+				 (shell . t)
+				 (plantuml . t))))
 #+end_src
 
 ** Ox: GitHub Flavour Markdown
