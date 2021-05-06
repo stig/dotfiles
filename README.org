@@ -11,13 +11,13 @@ of other stuff.
 
 * Regenerate install-brew.sh
 
-#+begin_src sh
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > brew-install.sh
+#+begin_src sh :results silent
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > install-brew.sh
 #+end_src
 
 * Regenerate install-nix.sh
 
-#+begin_src sh
+#+begin_src sh :results silent
 curl -fsSL https://nixos.org/nix/install > install-nix.sh
 #+end_src
 
