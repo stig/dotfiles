@@ -37,11 +37,11 @@
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
 
   imports = [
+    ./agents/brew.nix
+    ./agents/mbsync.nix
+    ./agents/restic.nix
     ./fonts.nix
     ./homebrew.nix
-    ./mbsync-agent.nix
-    ./restic-agent.nix
-    ./agents/brew.nix
     ./settings.nix
   ];
 
