@@ -3,35 +3,36 @@
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix search <name>
-  environment.systemPackages = [
-    pkgs.aspell
-    pkgs.aspellDicts.en
-    pkgs.aspellDicts.en-computers
-    pkgs.aspellDicts.en-science
-    pkgs.awscli
-    pkgs.clj-kondo
-    pkgs.clojure
-    pkgs.curl
-    pkgs.direnv
-    pkgs.emacs
-    pkgs.git
-    pkgs.gnupg
-    pkgs.isync
-    pkgs.jq
-    pkgs.leiningen
-    pkgs.moreutils
-    pkgs.msmtp
-    pkgs.mtr
-    pkgs.nix-direnv
-    pkgs.notmuch
-    pkgs.pinentry
-    pkgs.plantuml
-    pkgs.postgresql
-    pkgs.restic
-    pkgs.ripgrep
-    pkgs.shellcheck
-    pkgs.texlive.combined.scheme-full
+  environment.systemPackages = with pkgs; [
+    aspell
+    aspellDicts.en
+    aspellDicts.en-computers
+    aspellDicts.en-science
+    awscli
+    clj-kondo
+    clojure
+    curl
+    direnv
+    emacs
+    git
+    gnupg
+    isync
+    jq
+    leiningen
+    moreutils
+    msmtp
+    mtr
+    nix-direnv
+    notmuch
+    pinentry
+    plantuml
+    postgresql
+    restic
+    ripgrep
+    shellcheck
+    texlive.combined.scheme-full
   ];
+
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
