@@ -41,6 +41,7 @@
     ./homebrew.nix
     ./mbsync-agent.nix
     ./restic-agent.nix
+    ./agents/brew.nix
     ./settings.nix
   ];
 
