@@ -3,6 +3,7 @@
 {
 
   system.defaults.NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
+  system.defaults.NSGlobalDomain._HIHideMenuBar = false;
 
   system.defaults.dock.autohide = true;
   system.defaults.dock.mru-spaces = false;
