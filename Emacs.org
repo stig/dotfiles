@@ -1352,6 +1352,8 @@ Jar to work in the major mode, but it works fine in Org mode.
 			   :host github
 			   :repo "stig/plantuml-mode"
 			   :branch "sequence-diagram-indentation-test")
+
+  :mode "\\.puml\\'"
   :init
   (defun sb/no-tabs-in-plantuml ()
     (setq indent-tabs-mode nil))
@@ -1364,8 +1366,8 @@ Jar to work in the major mode, but it works fine in Org mode.
 (use-package ob-plantuml
   :after org
   :straight nil
-  :custom
-  (org-plantuml-exec-mode 'plantuml))
+  :init
+  (setq org-plantuml-exec-mode 'plantuml))
 #+end_src
 
 * Projectile
