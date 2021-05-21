@@ -12,6 +12,7 @@
     "dash"
     "discord"
     "docker"
+    "firefox"
     "minecraft"
     "signal"
     "spotify"
