@@ -747,6 +747,10 @@ Nix-direnv, to automatically set my PATH for a directory.
   :config
   (direnv-mode))
 #+end_src
+* Docker
+#+begin_src emacs-lisp
+(use-package docker)
+#+end_src
 * Dumb-jump
 
 Trying this out again, now that it registers an xref backend:
