@@ -32,5 +32,6 @@
     "Speedtest by Ookla" = 1153157709;
     Slack = 803453959;
     WhatsApp = 1147396723;
+    Xcode = 497799835;
   };
 }
