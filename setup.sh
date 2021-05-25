@@ -4,6 +4,9 @@ ln -vsf $(pwd)/zshenv ~/.zshenv
 ln -vsf $(pwd)/aspell.conf ~/.aspell.conf
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
 
+mkdir -p ~/.config/emacs/straight
+ln -vsf $(pwd)/emacs/straight/* ~/.config/emacs/straight
+
 mkdir -p ~/.config/msmtp
 ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
 
