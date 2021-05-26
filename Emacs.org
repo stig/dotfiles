@@ -909,7 +909,7 @@ and can reply to it from there.
 
 #+begin_src emacs-lisp
 (use-package ol-notmuch
-  :straight org-plus-contrib
+  :straight org-contrib
   :after (org notmuch))
 #+end_src
 
@@ -1079,7 +1079,7 @@ need them.
 (use-package org
   ;; Avoid conflicts between multiple Org versions, cf
   ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-  :straight (org-plus-contrib :includes (org) :local-repo "org")
+  :straight org
   :bind (("C-c l" . org-store-link)
 	 ("C-c a" . org-agenda)
 	 ("C-c c" . org-capture)
