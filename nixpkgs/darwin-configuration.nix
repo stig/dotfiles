@@ -42,7 +42,6 @@
     ./agents/mbsync.nix
     ./agents/restic.nix
     ./fonts.nix
-    ./homebrew.nix
     ./settings.nix
   ];
 

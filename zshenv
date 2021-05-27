@@ -14,3 +14,6 @@ export RESTIC_PASSWORD_COMMAND="security find-generic-password -s restic -w"
 
 # Don't auto-update brew
 export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Use "brew bundle" from anywhere
+export HOMEBREW_BUNDLE_FILE=~/.Brewfile

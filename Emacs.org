@@ -805,6 +805,8 @@ variables are available in Eshell. (And elsewhere in Emacs.)
      "LDFLAGS"
      "CPPFLAGS"
      "EDITOR"
+     "HOMEBREW_BUNDLE_FILE"
+     "HOMEBREW_NO_AUTO_UPDATE"
      "NIX_SSL_CERT_FILE"
      "NIX_PATH"
      "NIX_PROFILES"

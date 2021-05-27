@@ -3,6 +3,7 @@
 ln -vsf $(pwd)/zshenv ~/.zshenv
 ln -vsf $(pwd)/aspell.conf ~/.aspell.conf
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
+ln -vsf $(pwd)/Brewfile ~/.Brewfile
 
 mkdir -p ~/.config/emacs/straight
 ln -vsf $(pwd)/emacs/straight/* ~/.config/emacs/straight
