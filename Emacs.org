@@ -929,8 +929,10 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
 among other things.
 
 #+begin_src emacs-lisp
-;; Important for lsp performance
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024))
+(setq gc-cons-threshold (* 100 1000 1000))
+(setq lsp-log-io nil)
 
 (use-package lsp-mode
   :hook ((clojure-mode . lsp)
