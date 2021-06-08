@@ -61,9 +61,9 @@ mv_without_uid () {
 }
 
 # Delete old deleted and spam messages
-notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0 rm -v
-notmuch search --output=files --format=text0 -- tag:spam date:..6w | xargs -0 rm -v
-notmuch search --output=files --format=text0 -- tag:lists and not tag:archived and date:..6w | xargs -0 rm -v
+notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0 rm -fv
+notmuch search --output=files --format=text0 -- tag:spam date:..6w | xargs -0 rm -fv
+notmuch search --output=files --format=text0 -- tag:lists and not tag:archived and date:..6w | xargs -0 rm -fv
 
 # Move deleted messages
 notmuch search --output=files -- tag:deleted and not folder:Trash | mv_without_uid ~/.mail/Trash
