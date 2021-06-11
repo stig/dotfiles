@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-ln -vsf $(pwd)/zshenv ~/.zshenv
-ln -vsf $(pwd)/aspell.conf ~/.aspell.conf
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
 ln -vsf $(pwd)/Brewfile ~/.Brewfile
 

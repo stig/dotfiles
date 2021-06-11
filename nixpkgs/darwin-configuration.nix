@@ -59,6 +59,23 @@
     "/share/nix-direnv"
   ];
 
+  environment.variables = {
+    JAVA_HOME = "/run/current-system/sw";
+    ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
+
+    EDITOR = "emacsclient";
+
+    # For interacting with backup snapshots using restic
+    RESTIC_REPOSITORY = "s3:s3.amazonaws.com/brautaset-backups";
+    RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
+
+    # Don't auto-update brew
+    HOMEBREW_NO_AUTO_UPDATE = "1";
+
+    # Use "brew bundle" from anywhere
+    HOMEBREW_BUNDLE_FILE = "~/.Brewfile";
+  };
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
   # programs.fish.enable = true;
