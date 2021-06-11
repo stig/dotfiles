@@ -69,9 +69,6 @@
     RESTIC_REPOSITORY = "s3:s3.amazonaws.com/brautaset-backups";
     RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
 
-    # Don't auto-update brew
-    HOMEBREW_NO_AUTO_UPDATE = "1";
-
     # Use "brew bundle" from anywhere
     HOMEBREW_BUNDLE_FILE = "~/.Brewfile";
   };
