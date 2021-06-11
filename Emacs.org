@@ -1577,6 +1577,11 @@ their components.  Useful in anything that looks like Java.
   :hook (prog-mode . subword-mode))
 #+end_src
 
+* Sudo-edit
+Allows me to switch to root for editing a file. (Usually =/etc/hosts=.)
+#+begin_src emacs-lisp
+(use-package sudo-edit)
+#+end_src
 * Tramp
 
 Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]].
