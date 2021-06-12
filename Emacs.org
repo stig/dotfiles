@@ -926,17 +926,17 @@ among other things.
 (setq lsp-log-io nil)
 
 (use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
   :hook ((clojure-mode . lsp)
+	 (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :custom
   (lsp-enable-file-watchers . nil))
 
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-(use-package lsp-java
-  :commands lsp
-  :hook (java-mode . lsp))
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
 #+end_src
 
 * Magit & Forge
