@@ -717,6 +717,20 @@ This is the Clojure / ClojureScript REPL I use.
   (cider-font-lock-dynamically '(macro core function var)))
 #+END_SRC
 
+** kaocha runner
+For running kaucha test using CIDER
+#+begin_src emacs-lisp
+(use-package kaocha-runner
+  :init
+  (bind-keys :prefix-map ar-emacs-kaocha-prefix-map
+             :prefix "C-c k"
+             ("t" . kaocha-runner-run-test-at-point)
+             ("r" . kaocha-runner-run-tests)
+             ("a" . kaocha-runner-run-all-tests)
+             ("w" . kaocha-runner-show-warnings)
+             ("h" . kaocha-runner-hide-windows)))
+#+end_src
+
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
 (use-package company
