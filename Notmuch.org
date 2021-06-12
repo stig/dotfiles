@@ -79,8 +79,9 @@ notmuch search --output=files -- not tag:inbox and folder:INBOX | mv_without_uid
 # Remove 'new' tag for old messages
 notmuch tag -new -- tag:new
 
-# Synchronise local mailbox with upstream
-mbsync -aq
+# Pull new messages from upstream;
+# Let hourly job handle updating upstream with local changes
+mbsync --all --quiet --pull --new
 #+END_SRC
 
 * Script to run immediately after checking for new mail
