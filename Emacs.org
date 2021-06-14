@@ -121,15 +121,6 @@ computers.
 (global-auto-revert-mode 1)
 #+end_src
 
-** Auto-save visited files
-
-Since I sync my Org files with Synchthing I want to make sure to save
-my Org files regularly to avoid lost content.
-
-#+BEGIN_SRC emacs-lisp
-(auto-save-visited-mode)
-#+END_SRC
-
 ** Configure Control/Meta/super/hyper keys
 
 #+BEGIN_SRC emacs-lisp
