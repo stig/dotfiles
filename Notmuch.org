@@ -75,7 +75,7 @@ notmuch search --output=files -- tag:spam and not folder:Spam | mv_without_uid ~
 notmuch search --output=files -- not tag:spam and folder:Spam | mv_without_uid ~/.mail/INBOX
 
 # Archive messages
-notmuch search --output=files -- tag:archived not folder:Archive | mv_without_uid ~/.mail/Archive
+notmuch search --output=files -- not tag:inbox and folder:INBOX | mv_without_uid ~/.mail/Archive
 
 # Remove 'new' tag for old messages
 notmuch tag -new -- tag:new
