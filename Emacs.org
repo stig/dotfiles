@@ -1411,9 +1411,10 @@ it are that it provides the following key bindings:
   :diminish
   :bind-keymap ("C-c p" . projectile-command-map)
   :custom
-  (projectile-switch-project-action 'projectile-find-file)
   (projectile-completion-system 'default)
+  (projectile-create-missing-test-files t)
   (projectile-project-search-path '("~/src"))
+  (projectile-switch-project-action 'projectile-find-file)
   :config
   (defun sulami/projectile-rg ()
     (interactive)
