@@ -1,5 +1,18 @@
 #!/bin/zsh
 
+case $(hostname) in
+    Pearmain.local)
+	MBSYNC_CONFIG=$(pwd)/mbsync/work
+	;;
+    Margil.local)
+	MBSYNC_CONFIG=$(pwd)/mbsync/personal
+	;;
+    *)
+	echo "Where am I running?"
+	exit 1
+	;;
+esac
+
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
 ln -vsf $(pwd)/Brewfile ~/.Brewfile
 
@@ -14,6 +27,8 @@ ln -vsf $(pwd)/gnupg/* ~/.gnupg
 
 mkdir -p ~/.nixpkgs
 ln -vsf $(pwd)/nixpkgs/* ~/.nixpkgs
+
+ln -vsf "$MBSYNC_CONFIG" ~/.mbsyncrc
 
 which brew || ./install-brew.sh
 which mas || brew install mas

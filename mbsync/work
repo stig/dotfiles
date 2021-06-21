@@ -1,0 +1,50 @@
+# -*- mode: conf -*-
+# To rotate password:
+# security delete-generic-password -s mbsync-gmail-password
+# security add-generic-password -a stig@circleci.com -s mbsync-gmail-password -w APP-SPECIFIC-PASSWORD
+
+IMAPStore remote
+Host imap.gmail.com
+User stig@circleci.com
+PassCmd "/usr/bin/security find-generic-password -s mbsync-gmail-password -w"
+SSLType IMAPS
+AuthMechs PLAIN
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
+#CertificateFile ~/.cert/imap.gmail.com.pem
+#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+
+MaildirStore local
+Subfolders Verbatim
+Path ~/.mail/
+Inbox ~/.mail/INBOX
+
+Channel inbox
+Far :remote:
+Near :local:
+SyncState *
+Expunge Both
+
+Channel sent
+Far :remote:"[Gmail]/Sent Mail"
+Near :local:Sent
+SyncState *
+Expunge Both
+
+Channel archive
+Far :remote:History
+Near :local:Archive
+SyncState *
+Expunge Both
+
+Channel trash
+Far :remote:"[Gmail]/Trash"
+Near :local:Trash
+SyncState *
+Expunge Both
+
+Channel spam
+Far :remote:"[Gmail]/Spam"
+Near :local:Spam
+SyncState *
+Expunge Both
