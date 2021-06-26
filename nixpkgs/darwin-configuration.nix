@@ -11,6 +11,7 @@
     awscli
     clj-kondo
     clojure
+    clojure-lsp
     curl
     direnv
     emacs
