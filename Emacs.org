@@ -225,6 +225,11 @@ One of the key features for me is ibuffer's ability to filter by major mode.
 (setq calendar-date-style 'iso)
 #+END_SRC
 
+** Spell check comments & strings in code
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+#+end_src
+
 ** Save minibuffer history
 
 This allows us to "tap up" in the minibuffer to recall previous items,
