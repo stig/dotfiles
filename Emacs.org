@@ -823,19 +823,20 @@ variables are available in Eshell. (And elsewhere in Emacs.)
   :custom
   (exec-path-from-shell-arguments nil)
   (exec-path-from-shell-variables
-   '("PATH"
-     "MANPATH"
-     "LDFLAGS"
+   '("ASPELL_CONF"
      "CPPFLAGS"
      "EDITOR"
      "HOMEBREW_BUNDLE_FILE"
      "HOMEBREW_NO_AUTO_UPDATE"
-     "NIX_SSL_CERT_FILE"
+     "LDFLAGS"
+     "MANPATH"
      "NIX_PATH"
      "NIX_PROFILES"
+     "NIX_SSL_CERT_FILE"
      "NIX_USER_PROFILE_DIR"
-     "RESTIC_REPOSITORY"
-     "RESTIC_PASSWORD_COMMAND"))
+     "PATH"
+     "RESTIC_PASSWORD_COMMAND"
+     "RESTIC_REPOSITORY"))
   :config
   (exec-path-from-shell-initialize))
 #+END_SRC
