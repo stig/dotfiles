@@ -681,7 +681,9 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 #+end_src
 * Clojure
 
-For editing clojure files.
+Clojure is the main programming language I use at work.
+
+** Clojure Mode
 
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
