@@ -6,8 +6,6 @@
   environment.systemPackages = with pkgs; [
     aspell
     aspellDicts.en
-    aspellDicts.en-computers
-    aspellDicts.en-science
     awscli
     clj-kondo
     clojure
