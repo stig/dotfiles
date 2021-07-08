@@ -1186,14 +1186,18 @@ need them.
   (org-agenda-skip-scheduled-if-deadline-is-shown t)
 
   (org-agenda-custom-commands
-   `(("d" "Day Agenda & Top Tasks"
+   `(("d" "Day Agenda & Priority Tasks"
       ((agenda "")
-       (tags-todo "-PRIORITY=\"C\"/TODO"))
+       (tags-todo "PRIORITY=\"A\"/TODO"))
       ((org-agenda-span 'day)
        ;; Exclude @home tasks when I'm on my  work machine, and vice versa
        (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
 				       "-someday"
 				       "-inbox"))))
+     ("x" "E[x]tra tasks" tags-todo ,(concat (if sb/home? "-@work" "-@home")
+					     "-someday"
+					     "-inbox"
+					     "/TODO"))
      ("g" . "Getting Things Done")
      ("gA" "Agenda minus recurring tasks"
       agenda ""
