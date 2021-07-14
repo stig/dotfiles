@@ -1054,6 +1054,8 @@ folder.
 
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
+  :load-path "/nix/store/z739yicixjfc6a1m22534zni5lz05w9m-notmuch-0.32.1-emacs/share/emacs/site-lisp/"
+  :straight nil
   :demand
   :hook
   (notmuch-message-mode . turn-off-auto-fill)

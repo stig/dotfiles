@@ -22,7 +22,7 @@
     msmtp
     mtr
     nix-direnv
-    notmuch
+    (notmuch.override { withEmacs = true;})
     pinentry
     plantuml
     postgresql
