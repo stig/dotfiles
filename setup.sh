@@ -25,8 +25,7 @@ ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
 mkdir -p ~/.gnupg
 ln -vsf $(pwd)/gnupg/* ~/.gnupg
 
-mkdir -p ~/.nixpkgs
-ln -vsf $(pwd)/nixpkgs/* ~/.nixpkgs
+ln -vsf $(pwd)/nixpkgs ~/.nixpkgs
 
 ln -vsf "$MBSYNC_CONFIG" ~/.mbsyncrc
 
