@@ -788,6 +788,13 @@ Trying this out again, now that it registers an xref backend:
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 #+end_src
+* Edit Indirect
+To edit code examples in a separate buffer from Markdown. (Similar to
+code blocks in Org.)
+
+#+begin_src emacs-lisp
+(use-package edit-indirect)
+#+end_src
 
 * Elfeed
 Elfeed is an Emacs (RSS & Atom) feed reader. ~org-elfeed~ is an
