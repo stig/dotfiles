@@ -30,6 +30,7 @@
     ripgrep
     shellcheck
     texlive.combined.scheme-full
+    yq
   ];
 
   # Use a custom configuration.nix location.
