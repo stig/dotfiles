@@ -724,7 +724,7 @@ This is the Clojure / ClojureScript REPL I use.
   (cider-redirect-server-output-to-repl nil)
   (cider-prefer-local-resources t)
   (cider-auto-track-ns-form-changes t)
-  (cider-repl-pop-to-buffer-on-connect nil)
+  (cider-repl-pop-to-buffer-on-connect t)
   (cider-eldoc-display-context-dependent-info t)
   (cider-font-lock-dynamically '(macro core function var)))
 #+END_SRC
