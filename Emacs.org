@@ -1301,44 +1301,26 @@ if it improves how I work.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :ensure t
+  :init
+  (setq org-roam-directory "~/org/roam")
   :custom
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
-   '(("d" "Journal" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %?\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Journal"))
-     ("l" "Lab Notes" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %?\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Lab Notes"))
-     ("m" "Most Important Thing" entry #'org-roam-capture--get-point
-      "* %<%H:%M> %? :mit:\n"
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Most Important Thing"))
-     ("j" "Jira entry" entry #'org-roam-capture--get-point
-      (file "templates/jira.org")
-      :file-name "daily/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: %<%Yw%V>\n\n"
-      :olp ("Jira Tickets"))))
-  (org-roam-rename-file-on-title-change t)
-  (org-roam-directory "~/org/roam")
-  (org-roam-tag-sources '(prop all-directories))
-  ;; The below required due to https://github.com/org-roam/org-roam/issues/597
-  (org-roam-index-file "~/org/roam/index.org")
+   '(("d" "Journal" entry "* %?"
+      :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Journal")))
+     ("m" "Most Important Thing" entry "* %? :mit:"
+      :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Most Important Thing(s)")))
+     ("j" "Jira entry" entry (file "templates/jira.org")
+      :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Jira tickets")))))
+
   :bind ((("C-c n d" . org-roam-dailies-capture-today)
-	  ("C-c n l" . org-roam)
-	  ("C-c n j" . org-roam-jump-to-index)
-	  ("C-c n b" . org-roam-db-build-cache)
-	  ("C-c n f" . org-roam-find-file)
-	  ("C-c n g" . org-roam-graph))
+	  ("C-c n c" . org-roam-node-capture)
+          ("C-c n f" . org-roam-node-find)
+	  ("C-c n r" . org-roam-node-random))
 	 :map org-mode-map
-	 (("C-c n i" . org-roam-insert))
-	 (("C-c n I" . org-roam-insert-immediate))))
+	 (("C-c n i" . org-roam-node-insert)))
+  :config
+  (org-roam-setup))
 #+end_src
 
 ** Org Roam Protocol
@@ -1354,15 +1336,14 @@ it as a resource in Org roam.
   (server-start)
   :custom
   (org-roam-capture-ref-templates
-   '(("r" "ref" plain #'org-roam-capture--get-point ""
-      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+title: ${title}\n#+roam_key: ${ref}"
+   '(("r" "ref" plain "%?"
+      :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
+			 "#+title: ${title}\n")
       :unnarrowed t)
-     ("rs" "ref" plain #'org-roam-capture--get-point ""
-      :file-name "website/%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+title: ${title}\n#+roam_key: ${ref}\n\n${selection}"
-      :unnarrowed t)
-     )))
+     ("rs" "ref" plain "%?"
+      :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
+			 "#+title: ${title}\n\n${selection}\n%?")
+      :unnarrowed t))))
 #+end_src
 
 * Org Superstar
