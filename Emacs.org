@@ -1321,6 +1321,8 @@ it as a resource in Org roam.
       :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Journal")))
      ("m" "Most Important Thing" entry "* %? :mit:"
       :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Most Important Thing(s)")))
+     ("a" "Achievements" entry "* %? :brag:"
+      :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Achievements")))
      ("j" "Jira entry" entry (file "templates/jira.org")
       :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Jira tickets")))))
 
