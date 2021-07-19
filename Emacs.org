@@ -1299,9 +1299,13 @@ I use org-drill for drilling music theory.
 modelled after the Zettelkasten method. I'm excited to try it and see
 if it improves how I work.
 
+This allows me to capture links to websites from my browser, and store
+it as a resource in Org roam.
+
 #+begin_src emacs-lisp
 (use-package org-roam
   :init
+  (setq org-roam-v2-ack t)
   (setq org-roam-directory "~/org/roam")
   :custom
   (org-roam-dailies-directory "daily/")
@@ -1313,28 +1317,6 @@ if it improves how I work.
      ("j" "Jira entry" entry (file "templates/jira.org")
       :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n" ("Jira tickets")))))
 
-  :bind ((("C-c n d" . org-roam-dailies-capture-today)
-	  ("C-c n c" . org-roam-node-capture)
-          ("C-c n f" . org-roam-node-find)
-	  ("C-c n r" . org-roam-node-random))
-	 :map org-mode-map
-	 (("C-c n i" . org-roam-node-insert)))
-  :config
-  (org-roam-setup))
-#+end_src
-
-** Org Roam Protocol
-
-This allows me to capture links to websites from my browser, and store
-it as a resource in Org roam.
-
-#+begin_src emacs-lisp
-(use-package org-roam-protocol
-  :after org-roam
-  :straight nil
-  :init
-  (server-start)
-  :custom
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
       :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
@@ -1343,7 +1325,23 @@ it as a resource in Org roam.
      ("rs" "ref" plain "%?"
       :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
 			 "#+title: ${title}\n\n${selection}\n%?")
-      :unnarrowed t))))
+      :unnarrowed t)))
+
+  :bind ((("C-c n d" . org-roam-dailies-capture-today)
+	  ("C-c n c" . org-roam-node-capture)
+          ("C-c n f" . org-roam-node-find)
+	  ("C-c n r" . org-roam-node-random))
+	 :map org-mode-map
+	 (("C-c n i" . org-roam-node-insert)))
+  :config
+  (org-roam-setup))
+
+(add-to-list 'display-buffer-alist
+             '("\\*org-roam\\*"
+               (display-buffer-in-direction)
+               (direction . right)
+               (window-width . 0.33)
+               (window-height . fit-window-to-buffer)))
 #+end_src
 
 * Org Superstar
@@ -1463,6 +1461,13 @@ Even faster than The Silver Searcher, apparently.
   (ripgrep-arguments '("--hidden")))
 #+end_src
 
+* Server Start
+
+This is necessary for =emacsclient= and therefore =org-roam-protocol=.
+#+begin_src emacs-lisp
+(unless (server-running-p)
+  (server-start))
+#+end_src
 * Selectrum
 Incremental searching and selecting.
 #+begin_src emacs-lisp
