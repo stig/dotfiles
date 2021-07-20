@@ -58,7 +58,7 @@
  ("org" . "604bfd9d755770e12c368c15148780ec723211df")
  ("org-contrib" . "fc81309cf6756607a836f93049a9393c2967c4e0")
  ("org-drill" . "bf8fe812d44a3ce3e84361fb39b8ef28ca10fd0c")
- ("org-roam" . "23605546d881e9ea54e88c43976ba7e66c30d6ea")
+ ("org-roam" . "7d5b7e61855e6db536e6f59ae00a169c31a61ac9")
  ("org-superstar-mode" . "9d64c42e5029910153ec74cb9b5747b074281140")
  ("orgalist" . "1e0a8fb4d77113e140a678140a939e22ebf0df4d")
  ("ox-gfm" . "99f93011b069e02b37c9660b8fcb45dab086a07f")
@@ -97,5 +97,6 @@
  ("with-editor" . "5519b6a67ecd66865b4fdd5447425eee900c54f4")
  ("writegood-mode" . "ed42d918d98826ad88928b7af9f2597502afc6b0")
  ("yaml-mode" . "3a57058468211f3cb18e71aecc630dcacb87636b")
+ ("yaml.el" . "69c699a15af342199d0dbbbe7676a85487781ae7")
  ("yasnippet" . "5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6"))
 :beta
