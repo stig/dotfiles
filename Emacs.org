@@ -1345,7 +1345,7 @@ it as a resource in Org roam.
       :unnarrowed t)))
 
   :bind ((("C-c n d" . org-roam-dailies-capture-today)
-	  ("C-c n c" . org-roam-node-capture)
+	  ("C-c n c" . org-roam-capture)
           ("C-c n f" . org-roam-node-find)
 	  ("C-c n r" . org-roam-node-random))
 	 :map org-mode-map
