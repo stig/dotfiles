@@ -1316,6 +1316,14 @@ it as a resource in Org roam.
   (setq org-roam-v2-ack t)
   (setq org-roam-directory "~/org/roam")
   :custom
+  (org-roam-capture-templates
+   '(("d" "Default" plain "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("j" "Jira entry" plain (file "templates/jira.org")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+			 "#+title: ${title}\n")
+      :unnarrowed t)))
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
    '(("d" "Journal" entry "* %?"
@@ -1329,11 +1337,7 @@ it as a resource in Org roam.
      ("a" "Achievements" entry "* %? :brag:"
       :if-new (file+head+olp "%<%Y-%m-%d>.org"
 			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
-			     ("Achievements")))
-     ("j" "Jira entry" entry (file "templates/jira.org")
-      :if-new (file+head+olp "%<%Y-%m-%d>.org"
-			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
-			     ("Jira tickets")))))
+			     ("Achievements")))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
