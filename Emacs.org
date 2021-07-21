@@ -1323,6 +1323,10 @@ it as a resource in Org roam.
      ("j" "Jira entry" plain (file "templates/jira.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
 			 "#+title: ${title}\n")
+      :unnarrowed t)
+     ("m" "Meeting" plain (file "templates/meeting.org")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+			 "#+title: ${title}\n")
       :unnarrowed t)))
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
