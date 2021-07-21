@@ -1311,6 +1311,7 @@ it as a resource in Org roam.
 
 #+begin_src emacs-lisp
 (use-package org-roam
+  :demand
   :init
   (setq org-roam-v2-ack t)
   (setq org-roam-directory "~/org/roam")
