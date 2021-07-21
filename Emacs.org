@@ -1502,9 +1502,8 @@ Learn which completions I prefer, to improve performance over time.
   (after-init . prescient-persist-mode))
 #+end_src
 ** Consult
-
-Consult is counsel for selectrum, in that it adds selectrum support
-for various commands that do not use ~read-string~ normally.
+Adds selectrum support for some commands that do not use ~read-string~
+normally.
 
 #+begin_src emacs-lisp
 (use-package consult
