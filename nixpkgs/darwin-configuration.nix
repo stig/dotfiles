@@ -62,6 +62,7 @@
   environment.variables = {
     JAVA_HOME = "/run/current-system/sw";
     ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
+    NOTMUCH_EMACS = "${pkgs.notmuch.emacs}/share/emacs/site-lisp/";
 
     EDITOR = "emacsclient";
 
