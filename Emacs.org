@@ -846,7 +846,6 @@ variables are available in Eshell. (And elsewhere in Emacs.)
      "NIX_PROFILES"
      "NIX_SSL_CERT_FILE"
      "NIX_USER_PROFILE_DIR"
-     "NOTMUCH_EMACS"
      "PATH"
      "RESTIC_PASSWORD_COMMAND"
      "RESTIC_REPOSITORY"))
@@ -1062,7 +1061,7 @@ folder.
 
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
-  :load-path (lambda () (getenv "NOTMUCH_EMACS"))
+  :load-path "notmuch"
   :straight nil
   :demand
   :hook

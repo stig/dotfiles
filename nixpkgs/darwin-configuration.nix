@@ -62,7 +62,6 @@
   environment.variables = {
     JAVA_HOME = "/run/current-system/sw";
     ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
-    NOTMUCH_EMACS = "${pkgs.notmuch.emacs}/share/emacs/site-lisp/";
 
     EDITOR = "emacsclient";
 
@@ -73,6 +72,15 @@
     # Use "brew bundle" from anywhere
     HOMEBREW_BUNDLE_FILE = "~/.Brewfile";
   };
+
+  # Notmuch is sensitive to version differences between the emacs
+  # package and the cli, so they recommend against installing notmuch
+  # from melpa. We can easily use the version that ships with Emacs by
+  # linking it into Emacs' site-lisp directory.
+  system.activationScripts.postActivation.text = ''
+    rm -f ${pkgs.emacs}/share/emacs/site-lisp/notmuch
+    ln -s ${pkgs.notmuch.emacs}/share/emacs/site-lisp ${pkgs.emacs}/share/emacs/site-lisp/notmuch
+  '';
 
   # Workaround so Alfred can find Emacs, cf
   # https://github.com/LnL7/nix-darwin/issues/139#issuecomment-748845477
