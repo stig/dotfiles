@@ -1249,6 +1249,11 @@ need them.
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
 
+     ("b" "Things to Brag about!" entry
+      (file+olp+datetree "~/org/bragging.org")
+      "* %?"
+      :time-prompt t)
+
      ("p" "Productivity")
      ("pf" "Decide Focus Areas" entry
       (file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
