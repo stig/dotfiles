@@ -759,6 +759,12 @@ For running kaucha test using CIDER
 (use-package company
   :hook (after-init . global-company-mode))
 #+end_src
+* CSV Mode
+Useful for removing columns from a CSV file, for example. Or lining up
+columns by width, for easier viewing.
+#+begin_src emacs-lisp
+(use-package csv-mode)
+#+end_src
 * Diff Highlight
 
 #+begin_src emacs-lisp
