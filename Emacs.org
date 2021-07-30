@@ -1257,7 +1257,7 @@ need them.
       (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
       "* %<%B/Week %V>\n1. %?")
      ("pr" "New GTD Review" entry
-      (file+olp+datetree "~/org/archive/gtd_review.org")
+      (file "~/org/gtd_review.org")
       (file "templates/gtd-review.org") :clock-in t)))
 
   :config
