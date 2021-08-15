@@ -23,4 +23,5 @@ user-full-name
 git config --global user.name "$name"
 git config --global user.email "$email"
 git config --global core.excludesfile ~/.config/git/ignore
+git config --global core.pager ""
 #+end_src
