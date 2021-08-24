@@ -1368,8 +1368,8 @@ it as a resource in Org roam.
 			 "#+title: ${title}\n\n${selection}\n%?")
       :unnarrowed t)))
 
-  :bind ((("C-c n d" . org-roam-dailies-capture-today)
-          ("C-c n f" . org-roam-node-find)
+  :bind-keymap ("C-c d" . org-roam-dailies-map)
+  :bind ((("C-c n f" . org-roam-node-find)
 	  ("C-c n r" . org-roam-ref-add))
 	 :map org-mode-map
 	 (("C-c n i" . org-roam-node-insert)))
