@@ -60,6 +60,9 @@ mv_without_uid () {
     done
 }
 
+# Delete drafts immediately
+notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm -fv
+
 # Delete old deleted and spam messages
 notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0 rm -fv
 notmuch search --output=files --format=text0 -- tag:spam date:..6w | xargs -0 rm -fv
