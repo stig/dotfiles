@@ -24,4 +24,5 @@ git config --global user.name "$name"
 git config --global user.email "$email"
 git config --global core.excludesfile ~/.config/git/ignore
 git config --global core.pager ""
+git config --global rerere.enabled true
 #+end_src
