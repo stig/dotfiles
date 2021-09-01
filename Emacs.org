@@ -148,6 +148,16 @@ with other people.
 (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
 #+end_src
 
+** Disable "Pass Command To System" in the Emacs Macport
+
+After switching to the Macport of Emacs my xref keybinding for finding
+references to the symbol at point (=S-C-?=) stopped working. This made
+it work again. ([[https://emacs.stackexchange.com/a/14825/10625][Credit]].)
+
+#+begin_src emacs-lisp
+(setq mac-pass-command-to-system nil)
+#+end_src
+
 ** Don't require two spaces to end a sentence
 
 Having this enabled makes it harder to collaborate with others, and

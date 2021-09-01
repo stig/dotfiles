@@ -12,7 +12,7 @@
     clojure-lsp
     curl
     direnv
-    emacs
+    emacsMacport
     git
     gnupg
     isync
@@ -78,8 +78,8 @@
   # from melpa. We can easily use the version that ships with Emacs by
   # linking it into Emacs' site-lisp directory.
   system.activationScripts.postActivation.text = ''
-    rm -f ${pkgs.emacs}/share/emacs/site-lisp/notmuch
-    ln -s ${pkgs.notmuch.emacs}/share/emacs/site-lisp ${pkgs.emacs}/share/emacs/site-lisp/notmuch
+    rm -f ${pkgs.emacsMacport}/share/emacs/site-lisp/notmuch
+    ln -s ${pkgs.notmuch.emacs}/share/emacs/site-lisp ${pkgs.emacsMacport}/share/emacs/site-lisp/notmuch
   '';
 
   # Workaround so Alfred can find Emacs, cf
