@@ -719,13 +719,6 @@ Gives automatic linting for Clojure code.
 This is the Clojure / ClojureScript REPL I use.
 #+BEGIN_SRC emacs-lisp
 (use-package cider
-  :hook ((cider-mode . sb/unload-cider-jumps)
-	 (cider-repl-mode . sb/unload-cider-jumps))
-  :config
-  (defun sb/unload-cider-jumps ()
-    ;; I prefer lsp's jumps, so kindly don't steal them
-    (define-key cider-mode-map (kbd "M-.") nil)
-    (define-key cider-mode-map (kbd "M-,") nil))
   :custom
   (cider-prompt-for-symbol nil)
   (cider-redirect-server-output-to-repl nil)

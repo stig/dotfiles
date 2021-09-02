@@ -4,7 +4,7 @@
  ("adoc-mode" . "745884359a1b8826ede2c4cfd2f0b5478953ac40")
  ("avy" . "e92cb37457b43336b765630dbfbea8ba4be601fa")
  ("cfrs" . "2cb7f1cbf9292b0efe167ef372cfb5a7600564eb")
- ("cider" . "fe8cf244fd3426261f9f630c981a6296afd433a4")
+ ("cider" . "b9c0138c81d538b1904477eec17c5377e5ead361")
  ("clj-refactor.el" . "466822ff6f9da584f7cf72c868017b8840574dbd")
  ("clojure-mode" . "3e426b3a479f479963f2c7d1147cc826ed1a0ee1")
  ("closql" . "e2687e7ff958a19e6e5d6552c4e0b7b33c424bab")
