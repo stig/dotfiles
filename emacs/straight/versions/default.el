@@ -10,6 +10,7 @@
  ("closql" . "e2687e7ff958a19e6e5d6552c4e0b7b33c424bab")
  ("company-mode" . "d77184094b9a45b204813d824918e1ec2aac8504")
  ("consult" . "5fb6248c8e12630ce1247985c67ea28ae4077e4f")
+ ("csv-mode" . "8da54e8b4ef9e5fe8a0afa147c625ced603dc0aa")
  ("dash.el" . "2675596b9ac1c4b9d47b93e227f06f8ec6755ec6")
  ("diff-hl" . "d225def4a473a16ac994124e063695ef9cef3308")
  ("diminish.el" . "6ec6ebc391371418efc6c98d70b013f34af5a2ee")
