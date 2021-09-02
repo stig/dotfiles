@@ -15,7 +15,7 @@
  ("diff-hl" . "d225def4a473a16ac994124e063695ef9cef3308")
  ("diminish.el" . "6ec6ebc391371418efc6c98d70b013f34af5a2ee")
  ("docker-tramp.el" . "aaee11cedf7b4c31700f24a1fd88dcef9c2a7c3d")
- ("docker.el" . "9bcefbe54dbed4d364286fe65a87872e763ff7dc")
+ ("docker.el" . "a13ff981746fc69b0b0607e55346ef85207d6ea7")
  ("dumb-jump" . "542e72d3feba986a12119f6def515ef1347cb4ca")
  ("edit-indirect" . "bdc8f542fe8430ba55f9a24a7910639d4c434422")
  ("el-get" . "463f5e985fc53300f87ab7eb054d1738fc6ac93b")
