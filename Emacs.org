@@ -1352,11 +1352,7 @@ it as a resource in Org roam.
      ("m" "Most Important Thing" entry "* %? :mit:"
       :if-new (file+head+olp "%<%Y-%m-%d>.org"
 			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
-			     ("Most Important Thing(s)")))
-     ("a" "Achievements" entry "* %? :brag:"
-      :if-new (file+head+olp "%<%Y-%m-%d>.org"
-			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
-			     ("Achievements")))))
+			     ("Most Important Thing(s)")))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
