@@ -1203,9 +1203,10 @@ need them.
   (org-agenda-custom-commands
    `(("d" "Day Agenda & Priority Tasks"
       ((agenda "")
+       (tags-todo "mit")
        (tags-todo "PRIORITY=\"A\"/TODO"))
       ((org-agenda-span 'day)
-       ;; Exclude @home tasks when I'm on my  work machine, and vice versa
+       ;; Exclude @home tasks when I'm on my work machine, and vice versa
        (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
 				       "-someday"
 				       "-inbox"))))
@@ -1349,7 +1350,7 @@ it as a resource in Org roam.
       :if-new (file+head+olp "%<%Y-%m-%d>.org"
 			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
 			     ("Journal")))
-     ("m" "Most Important Thing" entry "* %? :mit:"
+     ("m" "Most Important Thing" entry "* TODO %? :mit:"
       :if-new (file+head+olp "%<%Y-%m-%d>.org"
 			     "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
 			     ("Most Important Thing(s)")))))
