@@ -1329,10 +1329,12 @@ it as a resource in Org roam.
 
 #+begin_src emacs-lisp
 (use-package org-roam
+  :straight (:host github :repo "org-roam/org-roam" :files (:defaults "extensions/*"))
   :demand
   :init
   (setq org-roam-v2-ack t)
   (setq org-roam-directory "~/org/roam")
+  (require 'org-roam-dailies)
   :custom
   (org-roam-capture-templates
    '(("d" "Default" plain "%?"

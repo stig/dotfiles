@@ -59,7 +59,7 @@
  ("org" . "604bfd9d755770e12c368c15148780ec723211df")
  ("org-contrib" . "fc81309cf6756607a836f93049a9393c2967c4e0")
  ("org-drill" . "bf8fe812d44a3ce3e84361fb39b8ef28ca10fd0c")
- ("org-roam" . "7d5b7e61855e6db536e6f59ae00a169c31a61ac9")
+ ("org-roam" . "1795039ab93ef19611dbb3fca21c4211c4e655a9")
  ("org-superstar-mode" . "9d64c42e5029910153ec74cb9b5747b074281140")
  ("orgalist" . "1e0a8fb4d77113e140a678140a939e22ebf0df4d")
  ("ox-gfm" . "99f93011b069e02b37c9660b8fcb45dab086a07f")
