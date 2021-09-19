@@ -1203,7 +1203,6 @@ need them.
   (org-agenda-custom-commands
    `(("d" "Day Agenda & Priority Tasks"
       ((agenda "")
-       (tags-todo "mit")
        (tags-todo "PRIORITY=\"A\"/TODO"))
       ((org-agenda-span 'day)
        ;; Exclude @home tasks when I'm on my work machine, and vice versa
