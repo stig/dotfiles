@@ -1236,7 +1236,10 @@ need them.
      (expand-file-name (format "%s.org" name) "~/org")))
 
   (org-capture-templates
-   `(("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
+   `(("m" "Most Important Thing" entry
+      (file+olp+datetree "mit.org")
+      "* TODO %^{Do Today}\n%t\n\n%i%?")
+     ("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
 					  (if sb/home? "@home" "@work")))
      ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
 						      (if sb/home? "@home" "@work")))
@@ -1349,9 +1352,7 @@ it as a resource in Org roam.
   (org-roam-dailies-capture-templates
    (let ((template (f-read-text "~/org/templates/org-roam-daily.org")))
      `(("d" "Journal" entry "* %?"
-	:if-new (file+head+olp "%<%Y-%m-%d>.org" ,template ("Journal")))
-       ("m" "Most Important Thing" entry "* TODO %? :mit:"
-	:if-new (file+head+olp "%<%Y-%m-%d>.org" ,template ("Most Important Thing(s)"))))))
+	:if-new (file+head "%<%Y-%m-%d>.org" ,template)))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
