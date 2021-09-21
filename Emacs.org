@@ -1252,6 +1252,10 @@ need them.
       (file "~/org/notes/electricity-consumption.org")
       (file "templates/electricity-consumption.org"))
 
+     ("w" "Weekly summary" entry
+      (file+olp "weekly-summaries.org" "2021")
+      (file "templates/weekly-summary.org"))
+
      ("b" "Things to Brag about!" entry
       (file+olp+datetree "~/org/bragging.org")
       "* %?"
