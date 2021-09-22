@@ -1367,7 +1367,8 @@ it as a resource in Org roam.
   :bind ((("C-c n f" . org-roam-node-find)
 	  ("C-c n r" . org-roam-ref-add))
 	 :map org-mode-map
-	 (("C-c n i" . org-roam-node-insert)))
+	 (("C-c n i" . org-roam-node-insert)
+	  ("C-c n t" . org-roam-tag-add)))
   :config
   (org-roam-setup)
   (require 'org-roam-protocol))
