@@ -1102,7 +1102,7 @@ third-party emacs support.
 #+begin_src emacs-lisp
 (use-package nvm)
 #+end_src
-* Org
+* Org mode
 
 The Org manual expects the =C-c {l,a,c}= keybindings to be available
 in any mode, so define them globally. I prefer to follow conventions.
@@ -1287,7 +1287,7 @@ need them.
 				 (plantuml . t))))
 #+end_src
 
-** Ox: GitHub Flavour Markdown
+* Org mode exporter: GitHub Flavour Markdown
 GitHub unfortunately doesn't properly ignore linebreaks in Markdown,
 so I use the =gfm= exporter, rather than the standard Markdown one, as
 this deletes linebreaks. This means the rendered paragraphs re-flow
@@ -1296,7 +1296,7 @@ properly on GitHub.
 #+begin_src emacs-lisp
 (use-package ox-gfm)
 #+end_src
-** Ox: Jira
+* Org mode exporter: Jira
 I love Org's markup so much I wrote a JIRA export backend for it.
 #+begin_src emacs-lisp
 (use-package ox-jira
