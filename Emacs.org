@@ -1384,6 +1384,12 @@ it as a resource in Org roam.
                (window-height . fit-window-to-buffer)))
 #+end_src
 
+* Org Mime
+For sending HTML emails.
+
+#+begin_src emacs-lisp
+(use-package org-mime)
+#+end_src
 * Org Superstar
 
 This hides leading stars in Org headlines, and uses UTF symbols to
