@@ -1225,8 +1225,8 @@ need them.
       ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
      ("gw" "Waiting tasks" todo "WAITING")
      ("ga" "Archivable"
-      ((tags "-proj-gtd/DONE")
-       (tags "-proj-gtd/CANCELLED")))
+      ((tags "-proj-gtd-mit/DONE")
+       (tags "-proj-gtd-mit/CANCELLED")))
      ("gp" "Projects" tags-todo "-someday/PROJ")))
 
   (org-default-notes-file
