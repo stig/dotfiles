@@ -1124,9 +1124,6 @@ need them.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  ;; Avoid conflicts between multiple Org versions, cf
-  ;; https://www.reddit.com/r/emacs/comments/g61lyn/help_needed_orgpriorityhighest/fpria2d/
-  :straight org
   :bind (("C-c l" . org-store-link)
 	 ("C-c a" . org-agenda)
 	 ("C-c c" . org-capture)
