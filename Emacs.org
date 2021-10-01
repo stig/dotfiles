@@ -1249,7 +1249,8 @@ need them.
 
      ("w" "Weekly summary" entry
       (file+olp "weekly-summaries.org" "2021")
-      (file "templates/weekly-summary.org"))
+      (file "templates/weekly-summary.org")
+      :clock-in t)
 
      ("b" "Things to Brag about!" entry
       (file+olp+datetree "~/org/bragging.org")
@@ -1260,7 +1261,8 @@ need them.
       (function (lambda ()
 		  (find-file (format "~/blog/content/posts/000-DRAFT-%#x.org"
 				     (time-convert nil 'integer)))))
-      (file "templates/post.org"))
+      (file "templates/post.org")
+      :clock-in t)
 
      ("p" "Productivity")
      ("pf" "Decide Focus Areas" entry
@@ -1268,10 +1270,12 @@ need them.
       (file "templates/focus-areas.org"))
      ("pb" "Boulders for the Month" entry
       (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
-      "* %<%B>\n1. %?")
+      "* %<%B>\n1. %?"
+      :clock-in t)
      ("pr" "New GTD Review" entry
       (file "~/org/gtd_review.org")
-      (file "templates/gtd-review.org") :clock-in t)))
+      (file "templates/gtd-review.org")
+      :clock-in t)))
 
   :config
   (require 'org-habit)
@@ -1340,13 +1344,16 @@ it as a resource in Org roam.
   (org-roam-capture-templates
    '(("d" "Default" plain "%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :clock-in t)
      ("j" "Jira entry" plain (file "templates/jira.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
+      :unnarrowed t
+      :clock-in t)
      ("m" "Meeting" plain (file "templates/meeting.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
+      :unnarrowed t
+      :clock-in t)))
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
    (let ((template (f-read-text "~/org/templates/org-roam-daily.org")))
