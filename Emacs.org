@@ -1279,7 +1279,6 @@ need them.
 
   :config
   (require 'org-habit)
-  (require 'ox-rss)
   (require 'ox-icalendar)
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((emacs-lisp . t)
@@ -1314,6 +1313,10 @@ I love Org's markup so much I wrote a JIRA export backend for it.
   (org-export-with-sub-superscripts '{}))
 #+end_src
 
+* Org mode exporter: RSS
+#+begin_src emacs-lisp
+(use-package ox-rss :straight org-contrib)
+#+end_src
 * Org Drill (for learning new things)
 
 I use org-drill for drilling music theory.
