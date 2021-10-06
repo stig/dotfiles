@@ -1730,6 +1730,15 @@ Highlight certain whitespace annoyances, and clean them up automatically.
   (global-whitespace-mode t))
 #+END_SRC
 
+* Winner Mode
+Allow undoing changes to window layout. Keybindings:
+
+- =C-c <left>= to undo
+- =C-c <right>= to redo (while undoing)
+
+#+begin_src emacs-lisp
+(winner-mode)
+#+end_src
 * Writegood Mode
 
 I'm not a great writer. I need all the crutches I can get. Lucklily,
