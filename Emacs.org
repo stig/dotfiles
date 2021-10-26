@@ -1350,22 +1350,18 @@ it as a resource in Org roam.
   (org-roam-capture-templates
    '(("d" "Default" plain "%?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t
-      :clock-in t)
+      :unnarrowed t)
      ("j" "Jira entry" plain (file "templates/jira.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t
-      :clock-in t)
+      :unnarrowed t)
      ("m" "Meeting" plain (file "templates/meeting.org")
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t
-      :clock-in t)))
+      :unnarrowed t)))
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
    (let ((template (f-read-text "~/org/templates/org-roam-daily.org")))
      `(("d" "Journal" entry "* %?"
-	:if-new (file+head "%<%Y-%m-%d>.org" ,template)
-	:clock-in t))))
+	:if-new (file+head "%<%Y-%m-%d>.org" ,template)))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
