@@ -139,15 +139,6 @@ reflowing text.
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
-** Display line numbers
-
-Displaying line numbers is incredibly useful when remotely pairing
-with other people.
-
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
-#+end_src
-
 ** Disable "Pass Command To System" in the Emacs Macport
 
 After switching to the Macport of Emacs my xref keybinding for finding
@@ -156,6 +147,15 @@ it work again. ([[https://emacs.stackexchange.com/a/14825/10625][Credit]].)
 
 #+begin_src emacs-lisp
 (setq mac-pass-command-to-system nil)
+#+end_src
+
+** Display line numbers
+
+Displaying line numbers is incredibly useful when remotely pairing
+with other people.
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
 #+end_src
 
 ** Don't require two spaces to end a sentence
@@ -223,11 +223,6 @@ One of the key features for me is ibuffer's ability to filter by major mode.
 (setq calendar-date-style 'iso)
 #+END_SRC
 
-** Spell check comments & strings in code
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-#+end_src
-
 ** Save minibuffer history
 
 This allows us to "tap up" in the minibuffer to recall previous items,
@@ -262,6 +257,11 @@ across. Thus I prefer linebreaks roughly every 80 characters.
 
 #+begin_src emacs-lisp
 (setq shr-width 80)
+#+end_src
+
+** Spell check comments & strings in code
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 ** Store backup files in a separate folder
