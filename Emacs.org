@@ -184,18 +184,6 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
 
-** Eshell
-
-Eshell is great, and its Tramp integration allows me to open remote
-files in local Emacs seamlessly with the =find-file= command. (Which I
-have aliased to =ff=.) Eshell also makes sure that my shell behaves
-the same, and has the same config, whether I am on a local machine or
-a remote one. It is my primary shell nowadays.
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "C-c s" 'eshell)
-#+END_SRC
-
 ** GnuPG
 
 Emacs will open =.gpg= files transparently, but I need to install gnupg
