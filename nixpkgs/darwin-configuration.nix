@@ -16,6 +16,7 @@
     emacsMacport
     git
     gnupg
+    graphviz
     isync
     jq
     leiningen
@@ -32,6 +33,7 @@
     shellcheck
     texlive.combined.scheme-full
     yq
+    zprint
   ];
 
   # Use a custom configuration.nix location.
