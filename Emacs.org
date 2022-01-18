@@ -1148,8 +1148,7 @@ need them.
 
 (setq org-capture-templates
       `(("m" "Most Important Thing" entry
-	 (file+olp+datetree "mit.org")
-	 "* TODO %^{Do Today}\n%t\n\n%i%?")
+	 (file "") ,"* TODO %? :mit:@work:\nSCHEDULED: %t")
 	("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
 					     (if sb/home? "@home" "@work")))
 	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
