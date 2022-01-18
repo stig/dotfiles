@@ -1157,7 +1157,9 @@ need them.
 	("w" "Weekly summary" entry
 	 (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
 	 (file "Templates/weekly-summary.org")
-	 :clock-in t)
+	 :clock-in t
+         :clock-keep t
+         :jump-to-captured t)
 
 	("b" "Things to Brag about!" entry
 	 (file+olp+datetree "bragging.org")
