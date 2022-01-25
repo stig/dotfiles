@@ -112,9 +112,9 @@ for configuration in one place.
 
 ** Auto-revert mode
 
-When open files change on disk, I want to revert the corrersponding
+When open files change on disk, I want to revert the corresponding
 buffer. This is useful when checking out a different branch in Magit,
-and because I use Syncthing to share my Org "Exo Brain" between two
+and because I use iCloud Drive to share my Org "Exo Brain" between
 computers.
 
 #+begin_src emacs-lisp

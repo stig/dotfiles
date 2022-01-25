@@ -8,7 +8,6 @@ cask "firefox"
 cask "minecraft"
 cask "signal"
 cask "spotify"
-cask "syncthing"
 cask "zoom"
 
 mas "1Password", id: 1333542190;
