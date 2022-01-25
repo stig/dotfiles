@@ -1302,39 +1302,11 @@ it as a resource in Org roam.
 
 #+begin_src emacs-lisp
 (use-package org-roam
-  :straight (:host github :repo "org-roam/org-roam" :files (:defaults "extensions/*"))
   :demand
-  :init
-  (setq org-roam-v2-ack t)
-  (setq org-roam-directory "~/org/roam")
-  (require 'org-roam-dailies)
   :custom
-  (org-roam-capture-templates
-   '(("d" "Default" plain "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("j" "Jira entry" plain (file "templates/jira.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)
-     ("m" "Meeting" plain (file "templates/meeting.org")
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
-  (org-roam-dailies-directory "daily/")
-  (org-roam-dailies-capture-templates
-   (let ((template (f-read-text "~/org/templates/org-roam-daily.org")))
-     `(("d" "Journal" entry "* %?"
-	:if-new (file+head "%<%Y-%m-%d>.org" ,template)))))
-
-  (org-roam-capture-ref-templates
-   '(("r" "ref" plain "%?"
-      :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
-			 "#+title: ${title}\n")
-      :unnarrowed t)
-     ("rs" "ref" plain "%?"
-      :if-new (file+head "website/%<%Y%m%d%H%M%S>-${slug}.org"
-			 "#+title: ${title}\n\n${selection}\n%?")
-      :unnarrowed t)))
-
+  (org-roam-directory (file-truename "~/Documents/Roam"))
+  (org-roam-dailies-directory "Daily/")
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
   :bind-keymap ("C-c d" . org-roam-dailies-map)
   :bind ((("C-c n f" . org-roam-node-find)
 	  ("C-c n r" . org-roam-ref-add))
@@ -1342,15 +1314,9 @@ it as a resource in Org roam.
 	 (("C-c n i" . org-roam-node-insert)
 	  ("C-c n t" . org-roam-tag-add)))
   :config
-  (org-roam-setup)
+  (org-roam-db-autosync-mode)
+  (require 'org-roam-dailies)
   (require 'org-roam-protocol))
-
-(add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
-               (display-buffer-in-direction)
-               (direction . right)
-               (window-width . 0.33)
-               (window-height . fit-window-to-buffer)))
 #+end_src
 
 * Org Mime
