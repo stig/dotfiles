@@ -202,14 +202,14 @@ or "no".
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-** Make Customize settings transient
-Store settings applied via [[info:emacs#Easy Customization][info:emacs#Easy Customization]] in a
-temporary file, so they don't persist across restarts of Emacs. I
-prefer to code my configuration. Credit to Robin Schroer for this
-trick.
+** Put Customize settings in a separate file
+I prefer to code my configuration, most of the time, but sometimes
+it's good enough. I do want them in a separate file though.
 
 #+BEGIN_SRC emacs-lisp
-(setq custom-file (make-temp-file ""))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 #+END_SRC
 
 ** Prefer Ibuffer over Buffer Menu
