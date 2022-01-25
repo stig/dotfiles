@@ -1148,7 +1148,8 @@ need them.
   (org-goto-interface 'outline-path-completion)
   (org-outline-path-complete-in-steps nil)
   (org-agenda-include-diary t)
-  (org-agenda-files "~/org/org-agenda-files.txt")
+  (org-directory "~/Documents/Agenda")
+  (org-agenda-files "~/Documents/Agenda/org-agenda-files.txt")
 
   (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
   (org-agenda-tags-todo-honor-ignore-options t)
@@ -1193,7 +1194,7 @@ need them.
 
   (org-default-notes-file
    (let ((name (downcase (car (split-string (system-name) "\\.")))))
-     (expand-file-name (format "%s.org" name) "~/org")))
+     (expand-file-name (format "%s.org" name) org-directory)))
 
   (org-capture-templates
    `(("m" "Most Important Thing" entry
@@ -1204,21 +1205,13 @@ need them.
      ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
 						      (if sb/home? "@home" "@work")))
 
-     ("u" "Utility Metres")
-     ("ug" "New Gas Meter Reading" table-line
-      (file "~/org/notes/gas-consumption.org")
-      (file "templates/gas-consumption.org"))
-     ("ue" "New Electricity Meter Reading" table-line
-      (file "~/org/notes/electricity-consumption.org")
-      (file "templates/electricity-consumption.org"))
-
      ("w" "Weekly summary" entry
-      (file+olp "weekly-summaries.org" "2021")
-      (file "templates/weekly-summary.org")
+      (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
+      (file "Templates/weekly-summary.org")
       :clock-in t)
 
      ("b" "Things to Brag about!" entry
-      (file+olp+datetree "~/org/bragging.org")
+      (file+olp+datetree "bragging.org")
       "* %?"
       :time-prompt t)
 
@@ -1226,20 +1219,20 @@ need them.
       (function (lambda ()
 		  (find-file (format "~/blog/content/posts/000-DRAFT-%#x.org"
 				     (time-convert nil 'integer)))))
-      (file "templates/post.org")
+      (file "Templates/post.org")
       :clock-in t)
 
      ("p" "Productivity")
      ("pf" "Decide Focus Areas" entry
-      (file+olp "~/org/focus-areas.org" ,(format-time-string "%Y"))
-      (file "templates/focus-areas.org"))
+      (file+olp "focus-areas.org" ,(format-time-string "%Y"))
+      (file "Templates/focus-areas.org"))
      ("pb" "Boulders for the Month" entry
-      (file+olp "~/org/boulders.org" ,(format-time-string "%Y"))
+      (file+olp "boulders.org" ,(format-time-string "%Y"))
       "* %<%B>\n1. %?"
       :clock-in t)
      ("pr" "New GTD Review" entry
-      (file "~/org/gtd_review.org")
-      (file "templates/gtd-review.org")
+      (file "gtd_review.org")
+      (file "Templates/gtd-review.org")
       :clock-in t)))
 
   :config
