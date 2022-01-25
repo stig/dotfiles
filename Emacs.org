@@ -212,13 +212,7 @@ it's good enough. I do want them in a separate file though.
   (load custom-file))
 #+END_SRC
 
-** Prefer Ibuffer over Buffer Menu
-One of the key features for me is ibuffer's ability to filter by major mode.
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-#+end_src
 ** Prefer YMD for dates in Diary / Calendar
-
 #+BEGIN_SRC emacs-lisp
 (setq calendar-date-style 'iso)
 #+END_SRC
