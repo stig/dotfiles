@@ -775,15 +775,15 @@ machine, so I don't have to mark stuff read in multiple places.
 #+BEGIN_SRC emacs-lisp
 (use-package elfeed-org
   :custom
-  (rmh-elfeed-org-files `("~/org/elfeed.org"))
+  (rmh-elfeed-org-files `("~/Documents/Elfeed/feeds.org"))
   :config
   (elfeed-org))
 
 (use-package elfeed
   :bind (:map elfeed-search-mode-map
-         ("m" . elfeed-toggle-star) )
+              ("m" . elfeed-toggle-star) )
   :custom
-  (elfeed-db-directory "~/Sync/elfeed")
+  (elfeed-db-directory "~/Documents/Elfeed/db")
   :config
   (defalias 'elfeed-toggle-star
     (elfeed-expose #'elfeed-search-toggle-all 'star)))
