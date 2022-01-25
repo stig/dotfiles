@@ -540,7 +540,7 @@ evaluate this block again manually.
   (cl-map 'list
           (lambda (a b)
             (list (char-to-string a)
-                  `(sb/load-theme ',b)
+                  `(load-theme ',b)
                   (symbol-name b)))
           sb/hydra-selectors
           themes))
@@ -551,28 +551,8 @@ evaluate this block again manually.
    (eval `(defhydra sb/select-theme (:hint nil :color pink)
             "Select Theme"
             ,@(sb/load-theme-heads (custom-available-themes))
-            ("DEL" (sb/disable-all-themes))
+            ("DEL" (mapc #'disable-theme custom-enabled-themes))
             ("RET" nil "done" :color blue)))))
-#+END_SRC
-
-** Load one theme at a time
-
-For years I thought that theme switching in Emacs was broken---until
-I read Greg Hendershott's [[http://www.greghendershott.com/2017/02/emacs-themes.html][emacs themes]] blog post. It turns out Emacs
-supports /multiple themes being active at the same time/, which I'm
-sure is convenient sometimes but becomes a right nuisance when
-attempting to switch themes IMO. Add a utility function to disable
-all currently enabled themes first.
-
-#+BEGIN_SRC emacs-lisp
-(defun sb/disable-all-themes ()
-  (interactive)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(defun sb/load-theme (the-theme)
-  "Enhance `load-theme' by first disabling enabled themes."
-  (sb/disable-all-themes)
-  (load-theme the-theme t))
 #+END_SRC
 
 ** Toggle Window Split function
