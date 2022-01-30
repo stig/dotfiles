@@ -688,8 +688,8 @@ assume it's something weird we do in our project(s).
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
-(use-package company
-  :hook (after-init . global-company-mode))
+(straight-use-package 'company)
+(add-hook 'after-init-hook #'global-company-mode)
 #+end_src
 * CSV Mode
 Useful for removing columns from a CSV file, for example. Or lining up
