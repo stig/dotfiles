@@ -620,11 +620,6 @@ to swap between two frames there.
 	 ("M-`" . ace-window)))
 #+end_src
 
-* AsciiDoc
-#+begin_src emacs-lisp
-(use-package adoc-mode
-  :mode ("\\.adoc\\'" . adoc-mode))
-#+end_src
 * Bug Reference Mode
 Automatically create JIRA links for things that looks like them. For
 this I've adapted snippets from Alex ter Weele and Robin Schroer.
