@@ -649,15 +649,7 @@ Clojure is the main programming language I use at work.
 ** Clojure Mode
 
 #+BEGIN_SRC emacs-lisp
-(use-package clojure-mode
-  :config
-  (put-clojure-indent 'as-> ':defn)
-  (put-clojure-indent 'run ':defn)
-  (put-clojure-indent 'dosync ':defn)
-  (put-clojure-indent 'speculate 1)
-  (put-clojure-indent 'doseq ':defn)
-  (put-clojure-indent 'wrap-with-timing ':defn)
-  (put-clojure-indent 'wrap-with-per-call-timing ':defn))
+(straight-use-package 'clojure-mode)
 #+END_SRC
 
 ** clj-kondo
