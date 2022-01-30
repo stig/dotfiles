@@ -702,9 +702,8 @@ Set environment per directory. The plan is to use this with
 Nix-direnv, to automatically set my PATH for a directory.
 
 #+begin_src emacs-lisp
-(use-package direnv
-  :config
-  (direnv-mode))
+(straight-use-package 'direnv)
+(add-hook 'after-init-hook #'direnv-mode)
 #+end_src
 * Docker
 #+begin_src emacs-lisp
