@@ -695,7 +695,7 @@ assume it's something weird we do in our project(s).
 Useful for removing columns from a CSV file, for example. Or lining up
 columns by width, for easier viewing.
 #+begin_src emacs-lisp
-(use-package csv-mode)
+(straight-use-package 'csv-mode)
 #+end_src
 * Diff Highlight
 
@@ -715,7 +715,7 @@ Nix-direnv, to automatically set my PATH for a directory.
 #+end_src
 * Docker
 #+begin_src emacs-lisp
-(use-package docker)
+(straight-use-package 'docker)
 #+end_src
 * Dumb-jump
 
@@ -731,7 +731,7 @@ To edit code examples in a separate buffer from Markdown. (Similar to
 code blocks in Org.)
 
 #+begin_src emacs-lisp
-(use-package edit-indirect)
+(straight-use-package 'edit-indirect)
 #+end_src
 
 * Elfeed
@@ -873,7 +873,7 @@ HugSQL files.
 This makes Org-mode source blocks do syntax highlighting of JSON
 documents, which I like.
 #+begin_src emacs-lisp
-(use-package json-mode)
+(straight-use-package 'json-mode)
 #+end_src
 * Link to Notmuch emails from Org
 
@@ -894,7 +894,7 @@ and can reply to it from there.
 Useful for quickly filling in placeholder text.
 
 #+begin_src emacs-lisp
-(use-package lorem-ipsum)
+(straight-use-package 'lorem-ipsum)
 #+end_src
 
 * LSP (Language Server Protocol)
@@ -936,7 +936,7 @@ requests on GitHub / GitLab etc.
   :bind (("C-S-s-m" . magit-status)
 	 ("C-S-s-b" . magit-blame-addition)))
 
-(use-package forge)
+(straight-use-package 'forge)
 #+END_SRC
 
 * Markdown
@@ -1034,7 +1034,7 @@ NVM is the Node Version Manager. It's annoyingly implemented as shell
 functionality you source, so it won't work in Eshell. Luckily there's
 third-party emacs support.
 #+begin_src emacs-lisp
-(use-package nvm)
+(straight-use-package 'nvm)
 #+end_src
 * Org mode
 
@@ -1222,7 +1222,7 @@ this deletes linebreaks. This means the rendered paragraphs re-flow
 properly on GitHub.
 
 #+begin_src emacs-lisp
-(use-package ox-gfm)
+(straight-use-package 'ox-gfm)
 #+end_src
 * Org mode exporter: Jira
 I love Org's markup so much I wrote a JIRA export backend for it.
@@ -1243,7 +1243,7 @@ I love Org's markup so much I wrote a JIRA export backend for it.
 
 * Org mode exporter: RSS
 #+begin_src emacs-lisp
-(use-package ox-rss :straight org-contrib)
+(straight-use-package 'org-contrib)
 #+end_src
 * Org Drill (for learning new things)
 
@@ -1286,7 +1286,7 @@ it as a resource in Org roam.
 For sending HTML emails.
 
 #+begin_src emacs-lisp
-(use-package org-mime)
+(straight-use-package 'org-mime)
 #+end_src
 * Org Superstar
 
@@ -1409,6 +1409,7 @@ Even faster than The Silver Searcher, apparently.
 
 This is necessary for =emacsclient= and therefore =org-roam-protocol=.
 #+begin_src emacs-lisp
+(require 'server)
 (unless (server-running-p)
   (server-start))
 #+end_src
@@ -1519,7 +1520,7 @@ is incredibly useful even when writing prose.
 I use aspell, with British English dictionary.
 
 #+BEGIN_SRC emacs-lisp
-(use-package ispell)
+(straight-use-package 'ispell)
 #+END_SRC
 
 * String Inflection
@@ -1528,7 +1529,7 @@ Sometimes I need to swap between CamelCase and snake_case, or even
 SNAKE_CASE.
 
 #+begin_src emacs-lisp
-(use-package string-inflection)
+(straight-use-package 'string-inflection)
 #+end_src
 
 * Subword
@@ -1544,7 +1545,7 @@ their components.  Useful in anything that looks like Java.
 * Sudo-edit
 Allows me to switch to root for editing a file. (Usually =/etc/hosts=.)
 #+begin_src emacs-lisp
-(use-package sudo-edit)
+(straight-use-package 'sudo-edit)
 #+end_src
 * Tramp
 
@@ -1646,7 +1647,7 @@ This helps highlight passive voice, weasel words, etc in writing.
 CircleCI and CloudFormation loves YAML.
 
 #+BEGIN_SRC emacs-lisp
-(use-package yaml-mode)
+(straight-use-package 'yaml-mode)
 #+END_SRC
 
 * YAS
