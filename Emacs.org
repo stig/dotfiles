@@ -697,13 +697,6 @@ columns by width, for easier viewing.
 #+begin_src emacs-lisp
 (straight-use-package 'csv-mode)
 #+end_src
-* Diff Highlight
-
-#+begin_src emacs-lisp
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode))
-#+end_src
 * Direnv
 Set environment per directory. The plan is to use this with
 Nix-direnv, to automatically set my PATH for a directory.
