@@ -323,9 +323,8 @@ Right now I'm experimenting with "Material Light" theme. I like that
 it's got a light background, and muted colours.
 
 #+begin_src emacs-lisp
-(use-package material-theme
-  :config
-  (load-theme 'material-light t))
+(straight-use-package 'material-theme)
+(load-theme 'material-light t)
 #+end_src
 
 ** Font size
