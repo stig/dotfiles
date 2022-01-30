@@ -714,9 +714,8 @@ Nix-direnv, to automatically set my PATH for a directory.
 Trying this out again, now that it registers an xref backend:
 
 #+begin_src emacs-lisp
-(use-package dumb-jump
-  :init
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+(straight-use-package 'dumb-jump)
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
 #+end_src
 * Edit Indirect
 To edit code examples in a separate buffer from Markdown. (Similar to
