@@ -645,57 +645,46 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 * Clojure
 
 Clojure is the main programming language I use at work.
-
 ** Clojure Mode
+The major-mode I use for editing Clojure.
 
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'clojure-mode)
 #+END_SRC
-
 ** clj-kondo
-Gives automatic linting for Clojure code.
+A great Clojure linter.
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck-clj-kondo)
+(straight-use-package 'flycheck-clj-kondo)
 #+END_SRC
-
 ** CIDER
-This is the Clojure / ClojureScript REPL I use.
+A great Clojure REPL.
 #+BEGIN_SRC emacs-lisp
-(use-package cider
-  :custom
-  (cider-prompt-for-symbol nil)
-  (cider-redirect-server-output-to-repl nil)
-  (cider-prefer-local-resources t)
-  (cider-auto-track-ns-form-changes t)
-  (cider-repl-pop-to-buffer-on-connect t)
-  (cider-eldoc-display-context-dependent-info t)
-  (cider-font-lock-dynamically '(macro core function var)))
+(straight-use-package 'cider)
+(setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
-
-** kaocha runner
-For running kaucha test using CIDER
+** kaocha-runner
+Lets me run test using kaocha-runner in CIDER.
 #+begin_src emacs-lisp
-(use-package kaocha-runner
-  :init
-  (bind-keys :prefix-map ar-emacs-kaocha-prefix-map
-             :prefix "C-c k"
-             ("t" . kaocha-runner-run-test-at-point)
-             ("r" . kaocha-runner-run-tests)
-             ("a" . kaocha-runner-run-all-tests)
-             ("w" . kaocha-runner-show-warnings)
-             ("h" . kaocha-runner-hide-windows)))
+(straight-use-package 'kaocha-runner)
+(with-eval-after-load "clojure-mode"
+  (define-key clojure-mode-map (kbd "C-c k t") 'kaocha-runner-run-test-at-point)
+  (define-key clojure-mode-map (kbd "C-c k r") 'kaocha-runner-run-tests)
+  (define-key clojure-mode-map (kbd "C-c k a") 'kaocha-runner-run-all-tests)
+  (define-key clojure-mode-map (kbd "C-c k w") 'kaocha-runner-show-warnings)
+  (define-key clojure-mode-map (kbd "C-c k h") 'kaocha-runner-hide-windows))
 #+end_src
-
-** Refactoring support
+** clj-refactor
+Additional refactoring support. I've honestly struggled to get this to
+work properly recently, but it's probably not the tool's fault. I
+assume it's something weird we do in our project(s).
 #+begin_src emacs-lisp
-(use-package clj-refactor
-  :init
-  (defun sb/clj-refactor-setup ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c C-m"))
-  :hook (clojure-mode . sb/clj-refactor-setup))
+(straight-use-package 'clj-refactor)
+(defun sb/clj-refactor-setup ()
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ;; for adding require/use/import statements
+  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (cljr-add-keybindings-with-prefix "C-c C-m"))
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
