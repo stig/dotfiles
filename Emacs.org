@@ -614,9 +614,9 @@ this mainly when resolving conflicts in ediff merge, since I need
 to swap between two frames there.
 
 #+begin_src emacs-lisp
-(use-package ace-window
-  :bind (("C-S-s-<tab>" . ace-window) ; aka Meh-<tab>
-	 ("M-`" . ace-window)))
+(straight-use-package 'ace-window)
+(global-set-key (kbd "C-S-s-<tab>") 'ace-window)
+(global-set-key (kbd "M-`") 'ace-window)
 #+end_src
 
 * Bug Reference Mode
