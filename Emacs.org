@@ -1331,18 +1331,17 @@ We use protobufs for service-to-service communication at work. Stolen
 from Robin Schroer.
 
 #+BEGIN_SRC emacs-lisp
-(use-package protobuf-mode
-  :defer t
-  :init
-  (defun sulami/init-protobuf-imenu ()
-    "Sets up imenu support for Protobuf.
+(straight-use-package 'protobuf-mode)
+
+(defun sulami/init-protobuf-imenu ()
+  "Sets up imenu support for Protobuf.
 
 Stolen from Spacemacs."
-    (setq
-     imenu-generic-expression
-     '((nil "^[[:space:]]*\\(message\\|service\\|enum\\)[[:space:]]+\\([[:alnum:]]+\\)" 2))))
-  :hook
-  (protobuf-mode . sulami/init-protobuf-imenu))
+  (setq
+   imenu-generic-expression
+   '((nil "^[[:space:]]*\\(message\\|service\\|enum\\)[[:space:]]+\\([[:alnum:]]+\\)" 2))))
+
+(add-hook 'protobuf-mode-hook #'sulami/init-protobuf-imenu)
 #+END_SRC
 
 * Ripgrep
