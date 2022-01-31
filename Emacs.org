@@ -1444,18 +1444,15 @@ ability to remove surrounding parens / quotes with ~sp-splice-sexp~
 is incredibly useful even when writing prose.
 
 #+BEGIN_SRC emacs-lisp
-(use-package smartparens-config
-  :straight smartparens
-  :demand
-  :custom
-  (sp-base-key-bindings 'sp)
-  (sp-show-pair-from-inside t)
-  :config
-  (sp-local-pair 'text-mode "'" nil :actions :rem)
-  (show-smartparens-global-mode t))
-(add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
-(add-hook 'org-mode-hook 'turn-on-smartparens-strict-mode)
+(straight-use-package 'smartparens)
+(require 'smartparens-config)
+(setq sp-base-key-bindings 'sp)
+(setq sp-show-pair-from-inside t)
+
+(sp-local-pair 'text-mode "'" nil :actions :rem)
+(show-smartparens-global-mode t)
+
+(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
 #+END_SRC
 
 * Spell Checking
