@@ -1265,27 +1265,24 @@ I sometimes need to draw UML diagrams. For some reason I can't get the
 Jar to work in the major mode, but it works fine in Org mode.
 
 #+begin_src emacs-lisp
-(use-package plantuml-mode
-  :straight (plantuml-mode :type git
-			   :host github
-			   :repo "stig/plantuml-mode"
-			   :branch "sequence-diagram-indentation-test")
+(straight-use-package '(plantuml-mode
+			:type git
+			:host github
+			:repo "stig/plantuml-mode"
+			:branch "sequence-diagram-indentation-test"))
 
-  :mode "\\.puml\\'"
-  :init
-  (defun sb/no-tabs-in-plantuml ()
-    (setq indent-tabs-mode nil))
-  :hook (plantuml-mode . sb/no-tabs-in-plantuml)
-  :custom
-  (plantuml-indent-level 4)
-  (plantuml-default-exec-mode 'executable)
-  (plantuml-font-lock-keywords t))
+(add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 
-(use-package ob-plantuml
-  :after org
-  :straight nil
-  :init
-  (setq org-plantuml-exec-mode 'plantuml))
+(defun sb/no-tabs-in-plantuml ()
+  (setq indent-tabs-mode nil))
+(add-hook 'plantuml-mode-hook #'sb/no-tabs-in-plantuml)
+
+(setq plantuml-indent-level 4
+      plantuml-default-exec-mode 'executable
+      plantuml-font-lock-keywords t)
+
+(require 'ob-plantuml)
+(setq org-plantuml-exec-mode 'plantuml)
 #+end_src
 
 * Projectile
