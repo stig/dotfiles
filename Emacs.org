@@ -1478,8 +1478,8 @@ Treats CapitalizedWords as separate, so we can move forward by
 their components.  Useful in anything that looks like Java.
 
 #+begin_src emacs-lisp
-(use-package subword
-  :hook (prog-mode . subword-mode))
+(straight-use-package 'subword)
+(add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
 * Sudo-edit
