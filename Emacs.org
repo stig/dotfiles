@@ -787,37 +787,30 @@ Hit ~C-=~ multiple times to expand the highlighted region.
 * Frontend Development
 ** Prettier.js
 #+begin_src emacs-lisp
-(use-package prettier-js
-  :defer t
-  :hook
-  ((typescript-mode . prettier-js-mode)
-   (web-mode . prettier-js-mode)))
+(straight-use-package 'prettier-js)
+(add-hook 'typescript-mode-hook #'prettier-js-mode)
+(add-hook 'web-mode-hook #'prettier-js-mode)
 #+end_src
 ** Typescript
 Credit to Robin Schroer.
 #+begin_src emacs-lisp
-(use-package typescript-mode
-  :mode "\\.tsx\\'"
-  :defer t
-  :custom
-  (typescript-indent-level 2))
+(straight-use-package 'typescript-mode)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(setq typescript-indent-level 2)
 #+end_src
 
 ** Typescript Interactive Development Environment (TIDE)
 Credit to Robin Schroer.
 #+begin_src emacs-lisp
-(use-package tide
-  :defer t
-  :config
-  (defun sulami/tide-setup ()
-    (when (equal "tsx"
-                 (file-name-extension buffer-file-name))
-      (tide-setup)
-      (flycheck-mode +1)
-      (eldoc-mode +1)))
-  :hook
-  ((typescript-mode . sulami/tide-setup)
-   (web-mode . sulami/tide-setup)))
+(straight-use-package 'tide)
+(defun sulami/tide-setup ()
+  (when (equal "tsx"
+	       (file-name-extension buffer-file-name))
+    (tide-setup)
+    (flycheck-mode +1)
+    (eldoc-mode +1)))
+(add-hook 'typescript-mode-hook #'sulami/tide-setup)
+(add-hook 'web-mode-hook #'sulami/tide-setup)
 #+end_src
 * Git Link
 
