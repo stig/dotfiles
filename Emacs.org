@@ -927,11 +927,7 @@ multiple edits in the same buffer, using several cursors. You can think of
 it as an interactive macro, where you can constantly see what's being done.
 
 #+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
-  :bind (("C-c M-e" . mc/edit-lines)
-         ("C-c M-a" . mc/mark-all-dwim)
-         ("s-n" . mc/mark-next-like-this)
-         ("s-p" . mc/mark-previous-like-this)))
+(straight-use-package 'multiple-cursors)
 #+END_SRC
 
 * Nix
