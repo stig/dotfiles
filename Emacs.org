@@ -909,15 +909,16 @@ I'm a sucker for lists, and I want to be able to reorder list items
 easily and have them renumbered automatically.
 
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
+(straight-use-package 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+(setq markdown-fontify-code-blocks-natively t)
+(setq markdown-asymmetric-header t)
+
+(with-eval-after-load "markdown-mode"
   ;; I essentially don't use Markdown
   ;; outside GitHub any more
-  :mode ("\\.md\\'" . gfm-mode)
-  :bind (("M-<up>" . markdown-move-list-item-up)
-         ("M-<down>" . markdown-move-list-item-down))
-  :custom
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-asymmetric-header t))
+  (define-key markdown-mode-map (kbd "M-<up>") #'markdown-move-list-item-up)
+  (define-key markdown-mode-map (kbd "M-<down>") #'markdown-move-list-item-down))
 #+END_SRC
 * Multiple Cursors
 
