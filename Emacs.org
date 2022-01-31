@@ -952,39 +952,34 @@ Notmuch works pretty well for me out of the box.
 Notmuch's Emacs bindings are closely tied to the binary programs, so
 they (strongly) recommend that you don't install Notmuch from ELPA.
 
-I configure Notmuch to save a copy of outgoing mail into my sent mail
-folder.
+I configure Notmuch to Bcc me on outgoing mail.
 
 #+BEGIN_SRC emacs-lisp
-(use-package notmuch
-  :load-path "notmuch"
-  :straight nil
-  :demand
-  :hook
-  (notmuch-message-mode . turn-off-auto-fill)
-  :custom
-  (message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
-  (notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
-  (notmuch-search-oldest-first nil)
-  (notmuch-address-use-company nil)
-  (notmuch-hello-thousands-separator ",")
-  (notmuch-mua-cite-function (quote message-cite-original-without-signature))
-  (notmuch-fcc-dirs nil)
-  (notmuch-saved-searches
-   `((:name "Inbox" :query "tag:inbox" :key "i")
-     (:name "Flagged" :query "tag:flagged" :key "f")
-     (:name "Drafts" :query "tag:draft" :key "d")
-     (:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
-     (:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree)))
-  (notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-			 ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
-  (notmuch-tagging-keys
-   (quote
-    (("a" notmuch-archive-tags "Archive")
-     ("r" notmuch-show-mark-read-tags "Mark read")
-     ("f" ("+flagged") "Flag")
-     ("s" ("+spam") "Mark as spam")
-     ("d" ("+deleted") "Delete")))))
+(require 'notmuch)
+(add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
+(setq message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
+(setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
+(setq notmuch-search-oldest-first nil)
+(setq notmuch-address-use-company nil)
+(setq notmuch-hello-thousands-separator ",")
+(setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
+(setq notmuch-fcc-dirs nil)
+(setq notmuch-saved-searches
+      (quote
+       ((:name "Inbox" :query "tag:inbox" :key "i")
+	(:name "Flagged" :query "tag:flagged" :key "f")
+	(:name "Drafts" :query "tag:draft" :key "d")
+	(:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree))))
+(setq notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread))
+			    ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
+(setq notmuch-tagging-keys
+      (quote
+       (("a" notmuch-archive-tags "Archive")
+	("r" notmuch-show-mark-read-tags "Mark read")
+	("f" ("+flagged") "Flag")
+	("s" ("+spam") "Mark as spam")
+	("d" ("+deleted") "Delete"))))
 #+END_SRC
 
 * NVM Support
