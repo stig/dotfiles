@@ -1299,30 +1299,31 @@ it are that it provides the following key bindings:
                  a token, default to searching for that.
 
 #+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :diminish
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :custom
-  (projectile-completion-system 'default)
-  (projectile-create-missing-test-files t)
-  (projectile-project-search-path '("~/src"))
-  (projectile-switch-project-action 'projectile-find-file)
-  :config
-  (defun sulami/projectile-rg ()
-    (interactive)
-    (consult-ripgrep (projectile-project-root)))
+(straight-use-package 'projectile)
+(require 'projectile)
 
-  (defun sulami/projectile-rg-thing-at-point ()
-    (interactive)
-    (consult-ripgrep (projectile-project-root)
-                     (thing-at-point 'symbol t)))
+(global-set-key (kbd "C-c p") #'projectile-command-map)
 
-  ;; Don't do projectile stuff on remote files
-  ;; from https://github.com/syl20bnr/spacemacs/issues/11381#issuecomment-481239700
-  (defadvice projectile-project-root (around ignore-remote first activate)
-    (unless (file-remote-p default-directory) ad-do-it))
+(setq projectile-completion-system 'default
+      projectile-create-missing-test-files 'projectile-find-file
+      projectile-project-search-path '("~/src")
+      projectile-switch-project-action 'projectile-find-file)
 
-  (projectile-mode))
+(defun sulami/projectile-rg ()
+  (interactive)
+  (consult-ripgrep (projectile-project-root)))
+
+(defun sulami/projectile-rg-thing-at-point ()
+  (interactive)
+  (consult-ripgrep (projectile-project-root)
+		   (thing-at-point 'symbol t)))
+
+;; Don't do projectile stuff on remote files
+;; from https://github.com/syl20bnr/spacemacs/issues/11381#issuecomment-481239700
+(defadvice projectile-project-root (around ignore-remote first activate)
+  (unless (file-remote-p default-directory) ad-do-it))
+
+(projectile-mode)
 #+END_SRC
 
 * Protobuf Mode
