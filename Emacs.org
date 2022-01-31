@@ -752,26 +752,23 @@ Copy ~PATH~ and certain other variables from my login shell so these
 variables are available in Eshell. (And elsewhere in Emacs.)
 
 #+BEGIN_SRC emacs-lisp
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-arguments nil)
-  (exec-path-from-shell-variables
-   '("ASPELL_CONF"
-     "CPPFLAGS"
-     "EDITOR"
-     "HOMEBREW_BUNDLE_FILE"
-     "HOMEBREW_NO_AUTO_UPDATE"
-     "LDFLAGS"
-     "MANPATH"
-     "NIX_PATH"
-     "NIX_PROFILES"
-     "NIX_SSL_CERT_FILE"
-     "NIX_USER_PROFILE_DIR"
-     "PATH"
-     "RESTIC_PASSWORD_COMMAND"
-     "RESTIC_REPOSITORY"))
-  :config
-  (exec-path-from-shell-initialize))
+(straight-use-package 'exec-path-from-shell)
+(setq exec-path-from-shell-variables
+      '("ASPELL_CONF"
+	"CPPFLAGS"
+	"EDITOR"
+	"HOMEBREW_BUNDLE_FILE"
+	"HOMEBREW_NO_AUTO_UPDATE"
+	"LDFLAGS"
+	"MANPATH"
+	"NIX_PATH"
+	"NIX_PROFILES"
+	"NIX_SSL_CERT_FILE"
+	"NIX_USER_PROFILE_DIR"
+	"PATH"
+	"RESTIC_PASSWORD_COMMAND"
+	"RESTIC_REPOSITORY"))
+(add-hook 'after-init-hook #'exec-path-from-shell-initialize)
 #+END_SRC
 
 * Expand Region
