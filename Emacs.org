@@ -938,11 +938,8 @@ There are two distinct parts here:
 - =nix-sandbox= :: Used to make other commands Nix-aware
 
 #+begin_src emacs-lisp
-(use-package nix-mode
-  :defer t)
-
-(use-package nix-sandbox
-  :defer t)
+(straight-use-package 'nix-mode)
+(straight-use-package 'nix-sandbox)
 #+end_src
 * Notmuch
 
