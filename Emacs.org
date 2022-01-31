@@ -289,8 +289,8 @@ Acts like ~upcase-word~ with no region selected, and ~upcase-region~
 when one is.
 
 #+begin_src emacs-lisp
-(bind-key "M-u" #'upcase-dwim)
-(bind-key "M-l" #'downcase-dwim)
+(global-set-key (kbd "M-u") #'upcase-dwim)
+(global-set-key (kbd "M-l") #'downcase-dwim)
 #+end_src
 ** UTF-8: everywhere, always
 
