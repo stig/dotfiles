@@ -780,9 +780,8 @@ Hit ~C-=~ multiple times to expand the highlighted region.
 * Flycheck
 
 #+begin_src emacs-lisp
-(use-package flycheck-mode
-  :straight flycheck
-  :hook clojure-mode)
+(straight-use-package 'flycheck)
+(add-hook 'clojure-mode-hook #'flycheck-mode)
 #+end_src
 
 * Frontend Development
