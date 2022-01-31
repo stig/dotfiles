@@ -1544,9 +1544,9 @@ the entire matched line by hitting =C-c C-d=.
 Show incomplete key cheatsheet.
 
 #+BEGIN_SRC emacs-lisp
-(use-package which-key
-  :config
-  (which-key-mode))
+(straight-use-package 'which-key)
+(require 'which-key)
+(which-key-mode)
 #+END_SRC
 
 * Whitespace annoyances
