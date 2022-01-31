@@ -1255,10 +1255,8 @@ make them a bit prettier.
 * Orgalist
 Edit "Org-like" lists in non-Org buffers.
 #+begin_src emacs-lisp
-(use-package orgalist
-  :after org
-  :hook
-  (message-mode . orgalist-mode))
+(straight-use-package 'orgalist)
+(add-hook 'message-mode-hook #'orgalist-mode)
 #+end_src
 
 * PlantUML
