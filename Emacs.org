@@ -1509,18 +1509,18 @@ feature set. The hierachical inheritance is what really sold me, as it
 works really well with REST APIs to reduce boilerplate.
 
 #+begin_src emacs-lisp
-(use-package verb
-  :init
-  (defun sb/api-token-for-host (host)
-    "Return a token for the specified host."
-    (let ((found (nth 0 (auth-source-search :host host :create nil))))
-      (when found
-	(let ((secret (plist-get found :secret)))
-	  (if (functionp secret)
-	      (funcall secret)
-	    secret)))))
-  :config
+(straight-use-package 'verb)
+(with-eval-after-load "org"
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+
+(defun sb/api-token-for-host (host)
+  "Return a token for the specified host."
+  (let ((found (nth 0 (auth-source-search :host host :create nil))))
+    (when found
+      (let ((secret (plist-get found :secret)))
+	(if (functionp secret)
+	    (funcall secret)
+	  secret)))))
 #+end_src
 
 * Wgrep (aka "writable grep")
