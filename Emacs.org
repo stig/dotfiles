@@ -177,6 +177,11 @@ or "no".
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
+** Prefer YMD for dates in Diary / Calendar
+#+BEGIN_SRC emacs-lisp
+(setq calendar-date-style 'iso)
+#+END_SRC
+
 ** Put Customize settings in a separate file
 I prefer to code my configuration, most of the time, but sometimes
 it's good enough. I do want them in a separate file though.
@@ -185,11 +190,6 @@ it's good enough. I do want them in a separate file though.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-#+END_SRC
-
-** Prefer YMD for dates in Diary / Calendar
-#+BEGIN_SRC emacs-lisp
-(setq calendar-date-style 'iso)
 #+END_SRC
 
 ** Save minibuffer history
