@@ -774,8 +774,8 @@ variables are available in Eshell. (And elsewhere in Emacs.)
 * Expand Region
 Hit ~C-=~ multiple times to expand the highlighted region.
 #+begin_src emacs-lisp
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
+(straight-use-package 'expand-region)
+(global-set-key (kbd "C-=") #'er/expand-region)
 #+end_src
 * Flycheck
 
