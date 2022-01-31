@@ -1189,18 +1189,11 @@ properly on GitHub.
 * Org mode exporter: Jira
 I love Org's markup so much I wrote a JIRA export backend for it.
 #+begin_src emacs-lisp
-(use-package ox-jira
-  ;; Need to specify the branch here because of
-  ;; https://github.com/raxod502/straight.el/issues/279
-  :straight (ox-jira :type git
-		     :host github
-		     :repo "stig/ox-jira.el"
-		     :branch "trunk")
+(straight-use-package 'ox-jira)
 
-  :custom
-  ;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
-  ;; See https://github.com/stig/ox-jira.el/issues/53
-  (org-export-with-sub-superscripts '{}))
+;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
+;; See https://github.com/stig/ox-jira.el/issues/53
+(setq org-export-with-sub-superscripts '{})
 #+end_src
 
 * Org mode exporter: RSS
