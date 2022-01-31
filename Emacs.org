@@ -1366,45 +1366,40 @@ This is necessary for =emacsclient= and therefore =org-roam-protocol=.
 * Selectrum
 Incremental searching and selecting.
 #+begin_src emacs-lisp
-(use-package selectrum
-  :hook
-  (after-init . selectrum-mode))
+(straight-use-package 'selectrum)
+(add-hook 'after-init-hook #'selectrum-mode)
 #+end_src
 ** Selectrum Prescient Mode
 Learn which completions I prefer, to improve performance over time.
 #+begin_src emacs-lisp
-(use-package selectrum-prescient
-  :hook
-  (after-init . selectrum-prescient-mode)
-  (after-init . prescient-persist-mode))
+(straight-use-package 'selectrum-prescient)
+(require 'selectrum-prescient)
+(add-hook 'after-init-hook #'selectrum-prescient-mode)
+
+(require 'prescient)
+(add-hook 'after-init-hook #'prescient-persist-mode)
 #+end_src
 ** Consult
 Adds selectrum support for some commands that do not use ~read-string~
 normally.
 
 #+begin_src emacs-lisp
-(use-package consult
-  :defer t
-  :straight
-  '(consult
-    :type git
-    :host github
-    :repo "minad/consult"
-    :branch "main")
-  :custom
-  (consult-preview-key nil)
-  :config
-  ;; Eshell only defines its locally keymap when you launch it, so we
-  ;; have to add bindings with a hook.
-  (defun sb/consult-setup-eshell-bindings ()
-    (bind-key "C-r" #'consult-history 'eshell-mode-map))
+(straight-use-package '(consult
+			:type git
+			:host github
+			:repo "minad/consult"
+			:branch "main"))
 
-  :bind (("M-y" . consult-yank-pop)
-	 ("C-c i" . consult-imenu)
-	 :map shell-mode-map
-	 ("C-r" . consult-history))
-  :hook
-  (eshell-mode . sb/consult-setup-eshell-bindings))
+(global-set-key (kbd "M-y") #'consult-yank-pop)
+(global-set-key (kbd "C-c i") #'consult-imenu)
+
+(setq consult-preview-key nil)
+
+;; Eshell only defines its locally keymap when you launch it, so we
+;; have to add bindings with a hook.
+(defun sb/consult-setup-eshell-bindings ()
+  (define-key eshell-mode-map (kbd "C-r") #'consult-history))
+(add-hook 'eshell-mode-hook #'sb/consult-setup-eshell-bindings)
 #+end_src
 
 ** Orderless
@@ -1414,10 +1409,8 @@ This package provides a minibuffer completion style that is
 know exactly what you're looking for.
 
 #+begin_src emacs-lisp
-(use-package orderless
-  :defer t
-  :custom
-  (completion-styles '(orderless)))
+(straight-use-package 'orderless)
+(setq completion-styles '(orderless))
 #+end_src
 
 * Sending mail with MSMTP
