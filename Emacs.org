@@ -1010,162 +1010,171 @@ support. I also have to load some modules so they're available when I
 need them.
 
 #+BEGIN_SRC emacs-lisp
-(use-package org
-  :bind (("C-c l" . org-store-link)
-	 ("C-c a" . org-agenda)
-	 ("C-c c" . org-capture)
-	 ;; I try to track time...
-	 ("C-c C-x C-j" . org-clock-goto)
-	 :map org-mode-map
-	 ("M-q" . endless/fill-or-unfill)
-	 ("C-x C-<return>" . org-insert-subheading)
-	 ("C-S-<return>" . org-insert-todo-subheading)
-	 ("C-n" . org-next-link)
-	 ("C-p" . org-previous-link))
+(straight-use-package 'org)
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
-  :mode (("\\.org\\'" . org-mode)
-	 ("\\.org_archive\\'" . org-mode))
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'org-capture)
 
-  :custom
-  ;; Whitespace and edits
-  (org-adapt-indentation nil)
-  (org-src-preserve-indentation nil)
-  (org-edit-src-content-indentation 0)
-  (org-hide-emphasis-markers nil)
-  (org-link-file-path-type 'relative)
-  (org-log-into-drawer t "When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer")
-  (org-catch-invisible-edits 'smart)
-  (org-export-copy-to-kill-ring 'if-interactive "If running interactively, I want export to copy to the kill-ring")
-  (org-export-with-section-numbers nil)
-  (org-export-with-toc nil)
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+(with-eval-after-load "org"
+  (define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
+  (define-key org-mode-map (kbd "C-x C-<return>") #'org-insert-subheading)
+  (define-key org-mode-map (kbd "C-S-<return>") #'org-insert-todo-subheading)
+  (define-key org-mode-map (kbd "C-n") #'org-next-link)
+  (define-key org-mode-map (kbd "C-p") #'org-previous-link))
 
-  (org-table-header-line-p t)
+;; don't indent relative to headline
+(setq org-adapt-indentation nil)
 
-  (org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
-		       (sequence "PROJ(p)" "|" "COMPLETE")
-		       (sequence "|" "CANCELLED")))
+;; no initial indent in source code
+(setq org-edit-src-content-indentation 0)
 
-  (org-tag-alist '(("@home" . ?h)
-		   ("@work" . ?w)
-		   ("achievement" . ?a)
-		   ("brag" . ?b)
-		   ("inbox" . ?i)
-		   ("interrupt" . ?I)
-		   ("meeting" . ?M)
-		   ("mit" . ?m)
-		   ("noexport" . ?n)
-		   ("note" . ?N)
-		   ("proj" . ?p)
-		   ("someday" . ?s)
-		   ("toil" . ?t)))
+;; hiding the emphasis markers impairs editing next to them
+(setq org-hide-emphasis-markers nil)
 
-  (org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
+;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
+(setq org-log-into-drawer t)
+(setq org-catch-invisible-edits 'smart)
 
-  (org-refile-use-outline-path 'file "Allow refiling to sub-paths")
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  (org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
-			(org-agenda-files . (:tag . "recurring"))
-			(org-agenda-files . (:maxlevel . 1))
-			(nil . (:maxlevel . 4))))
-  (org-goto-interface 'outline-path-completion)
-  (org-outline-path-complete-in-steps nil)
-  (org-agenda-include-diary t)
-  (org-directory "~/Documents/Agenda")
-  (org-agenda-files "~/Documents/Agenda/org-agenda-files.txt")
+;; If running interactively, I want export to copy to the kill-ring
+(setq org-export-copy-to-kill-ring 'if-interactive)
 
-  (org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
-  (org-agenda-tags-todo-honor-ignore-options t)
-  (org-agenda-todo-ignore-scheduled 'future)
-  (org-agenda-todo-ignore-deadlines 'far)
-  (org-agenda-todo-ignore-with-date 'future)
-  (org-agenda-todo-ignore-timestamp 'future)
-  (org-agenda-skip-deadline-prewarning-if-scheduled t)
-  (org-agenda-skip-timestamp-if-done t)
-  (org-agenda-skip-scheduled-if-done t)
-  (org-agenda-skip-deadline-if-done t)
-  (org-agenda-skip-scheduled-if-deadline-is-shown t)
+;; I don't normally  want section numbers in exports
+(setq org-export-with-section-numbers nil)
 
-  (org-agenda-custom-commands
-   `(("d" "Day Agenda" agenda ""
-      ((org-agenda-span 'day)
-       ;; Exclude @home tasks when I'm on my work machine, and vice versa
-       (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
-				       "-someday"
-				       "-inbox"))))
-     ("x" "E[x]tra tasks" tags-todo ,(concat (if sb/home? "-@work" "-@home")
-					     "-someday"
-					     "-inbox"
-					     "/TODO"))
-     ("g" . "Getting Things Done")
-     ("gA" "Agenda minus recurring tasks"
-      agenda ""
-      ((org-agenda-tag-filter-preset '("-recurring"))))
-     ("gi" "Inbox" tags "inbox")
-     ("gs" "Someday"
-      ((todo "PROJ")
-       (tags-todo "-proj/TODO"))
-      ((org-agenda-tag-filter-preset '("+someday"))))
-     ("gc" "Review for Tasks Complete"
-      todo "TODO"
-      ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
-     ("gw" "Waiting tasks" todo "WAITING")
-     ("ga" "Archivable"
-      ((tags "-proj-gtd-mit/DONE")
-       (tags "-proj-gtd-mit/CANCELLED")))
-     ("gp" "Projects" tags-todo "-someday/PROJ")))
+;; Omit TOC unless I explicitly put it in
+(setq org-export-with-toc nil)
+(setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
-  (org-default-notes-file
-   (let ((name (downcase (car (split-string (system-name) "\\.")))))
-     (expand-file-name (format "%s.org" name) org-directory)))
+(setq org-table-header-line-p t)
 
-  (org-capture-templates
-   `(("m" "Most Important Thing" entry
-      (file+olp+datetree "mit.org")
-      "* TODO %^{Do Today}\n%t\n\n%i%?")
-     ("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
-					  (if sb/home? "@home" "@work")))
-     ("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
-						      (if sb/home? "@home" "@work")))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
+			  (sequence "PROJ(p)" "|" "COMPLETE")
+			  (sequence "|" "CANCELLED")))
 
-     ("w" "Weekly summary" entry
-      (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
-      (file "Templates/weekly-summary.org")
-      :clock-in t)
+(setq org-tag-alist '(("@home" . ?h)
+		      ("@work" . ?w)
+		      ("achievement" . ?a)
+		      ("brag" . ?b)
+		      ("inbox" . ?i)
+		      ("interrupt" . ?I)
+		      ("meeting" . ?M)
+		      ("mit" . ?m)
+		      ("noexport" . ?n)
+		      ("note" . ?N)
+		      ("proj" . ?p)
+		      ("someday" . ?s)
+		      ("toil" . ?t)))
 
-     ("b" "Things to Brag about!" entry
-      (file+olp+datetree "bragging.org")
-      "* %?"
-      :time-prompt t)
+(setq org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
-     ("B" "Blog Post" plain
-      (function (lambda ()
-		  (find-file (format "~/blog/content/posts/000-DRAFT-%#x.org"
-				     (time-convert nil 'integer)))))
-      (file "Templates/post.org")
-      :clock-in t)
+;; Allow refiling to sub-paths
+(setq org-refile-use-outline-path 'file)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+(setq org-refile-targets '((org-agenda-files . (:todo . "PROJ"))
+			   (org-agenda-files . (:tag . "recurring"))
+			   (org-agenda-files . (:maxlevel . 1))
+			   (nil . (:maxlevel . 4))))
+(setq org-goto-interface 'outline-path-completion)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-agenda-include-diary t)
+(setq org-directory "~/Documents/Agenda")
+(setq org-agenda-files "~/Documents/Agenda/org-agenda-files.txt")
 
-     ("p" "Productivity")
-     ("pf" "Decide Focus Areas" entry
-      (file+olp "focus-areas.org" ,(format-time-string "%Y"))
-      (file "Templates/focus-areas.org"))
-     ("pb" "Boulders for the Month" entry
-      (file+olp "boulders.org" ,(format-time-string "%Y"))
-      "* %<%B>\n1. %?"
-      :clock-in t)
-     ("pr" "New GTD Review" entry
-      (file "gtd_review.org")
-      (file "Templates/gtd-review.org")
-      :clock-in t)))
+(setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
+(setq org-agenda-tags-todo-honor-ignore-options t)
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-todo-ignore-deadlines 'far)
+(setq org-agenda-todo-ignore-with-date 'future)
+(setq org-agenda-todo-ignore-timestamp 'future)
+(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
+(setq org-agenda-skip-timestamp-if-done t)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
+(setq org-agenda-skip-scheduled-if-deadline-is-shown t)
 
-  :config
-  (require 'org-habit)
-  (require 'ox-icalendar)
-  (org-babel-do-load-languages 'org-babel-load-languages
-			       '((emacs-lisp . t)
-				 (sql . t)
-				 (shell . t)
-				 (plantuml . t))))
+(setq org-agenda-custom-commands
+      `(("d" "Day Agenda" agenda ""
+	 ((org-agenda-span 'day)
+	  ;; Exclude @home tasks when I'm on my work machine, and vice versa
+	  (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
+					  "-someday"
+					  "-inbox"))))
+	("x" "E[x]tra tasks" tags-todo ,(concat (if sb/home? "-@work" "-@home")
+						"-someday"
+						"-inbox"
+						"/TODO"))
+	("g" . "Getting Things Done")
+	("gA" "Agenda minus recurring tasks"
+	 agenda ""
+	 ((org-agenda-tag-filter-preset '("-recurring"))))
+	("gi" "Inbox" tags "inbox")
+	("gs" "Someday"
+	 ((todo "PROJ")
+	  (tags-todo "-proj/TODO"))
+	 ((org-agenda-tag-filter-preset '("+someday"))))
+	("gc" "Review for Tasks Complete"
+	 todo "TODO"
+	 ((org-agenda-tag-filter-preset '("-someday" "-recurring" "-gtd"))))
+	("gw" "Waiting tasks" todo "WAITING")
+	("ga" "Archivable"
+	 ((tags "-proj-gtd-mit/DONE")
+	  (tags "-proj-gtd-mit/CANCELLED")))
+	("gp" "Projects" tags-todo "-someday/PROJ")))
+
+(setq org-default-notes-file
+      (let ((name (downcase (car (split-string (system-name) "\\.")))))
+	(expand-file-name (format "%s.org" name) org-directory)))
+
+(setq org-capture-templates
+      `(("m" "Most Important Thing" entry
+	 (file+olp+datetree "mit.org")
+	 "* TODO %^{Do Today}\n%t\n\n%i%?")
+	("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
+					     (if sb/home? "@home" "@work")))
+	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
+							 (if sb/home? "@home" "@work")))
+
+	("w" "Weekly summary" entry
+	 (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
+	 (file "Templates/weekly-summary.org")
+	 :clock-in t)
+
+	("b" "Things to Brag about!" entry
+	 (file+olp+datetree "bragging.org")
+	 "* %?"
+	 :time-prompt t)
+
+	("B" "Blog Post" plain
+	 (function (lambda ()
+		     (find-file (format "~/blog/content/posts/000-DRAFT-%#x.org"
+					(time-convert nil 'integer)))))
+	 (file "Templates/post.org")
+	 :clock-in t)
+
+	("p" "Productivity")
+	("pf" "Decide Focus Areas" entry
+	 (file+olp "focus-areas.org" ,(format-time-string "%Y"))
+	 (file "Templates/focus-areas.org"))
+	("pb" "Boulders for the Month" entry
+	 (file+olp "boulders.org" ,(format-time-string "%Y"))
+	 "* %<%B>\n1. %?"
+	 :clock-in t)
+	("pr" "New GTD Review" entry
+	 (file "gtd_review.org")
+	 (file "Templates/gtd-review.org")
+	 :clock-in t)))
+
+(require 'org-habit)
+(require 'ox-icalendar)
+
+(org-babel-do-load-languages 'org-babel-load-languages
+			     '((emacs-lisp . t)
+			       (sql . t)
+			       (shell . t)
+			       (plantuml . t)))
 #+end_src
 
 * Org mode exporter: GitHub Flavour Markdown
