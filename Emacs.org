@@ -1578,8 +1578,8 @@ Emacs has them.
 This helps highlight passive voice, weasel words, etc in writing.
 
 #+BEGIN_SRC emacs-lisp
-(use-package writegood-mode
-  :hook text-mode)
+(straight-use-package 'writegood-mode)
+(add-hook 'text-mode-hook #'writegood-mode)
 #+END_SRC
 
 * YAML
