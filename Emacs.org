@@ -896,9 +896,9 @@ Forge is an extension to Magit that lets me create & manipulate pull
 requests on GitHub / GitLab etc.
 
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :bind (("C-S-s-m" . magit-status)
-	 ("C-S-s-b" . magit-blame-addition)))
+(straight-use-package 'magit)
+(global-set-key (kbd "C-S-s-m") #'magit-status)
+(global-set-key (kbd "C-S-s-b") #'magit-blame-addition)
 
 (straight-use-package 'forge)
 #+END_SRC
