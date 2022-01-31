@@ -875,18 +875,15 @@ among other things.
 (setq gc-cons-threshold (* 100 1000 1000))
 (setq lsp-log-io nil)
 
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook ((clojure-mode . lsp)
-	 (java-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-  :custom
-  (lsp-enable-file-watchers . nil))
+(straight-use-package 'lsp-mode)
+(setq lsp-keymap-prefix "C-c l")
+(setq lsp-enable-file-watchers nil)
 
-(use-package lsp-treemacs
-  :commands lsp-treemacs-errors-list)
+(add-hook 'clojure-mode-hook #'lsp)
+(add-hook 'java-mode-hook #'lsp)
+(add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+
+(straight-use-package 'lsp-treemacs)
 #+end_src
 
 * Magit & Forge
