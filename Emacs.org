@@ -1349,10 +1349,10 @@ Stolen from Spacemacs."
 Even faster than The Silver Searcher, apparently.
 
 #+begin_src emacs-lisp
-(use-package ripgrep
-  :custom
-  ;; I often look for stuff in .circleci/config.yml
-  (ripgrep-arguments '("--hidden")))
+(straight-use-package 'ripgrep)
+
+;; I often look for stuff in .circleci/config.yml
+(setq ripgrep-arguments '("--hidden"))
 #+end_src
 
 * Server Start
