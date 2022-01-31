@@ -1210,30 +1210,31 @@ I use org-drill for drilling music theory.
 (setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t)
 #+end_src
 * Org Roam
-[[https://github.com/org-roam/org-roam][Org-roam]] is a new one for me. It's meant to be an "exo-brain",
-modelled after the Zettelkasten method. I'm excited to try it and see
-if it improves how I work.
+[[https://github.com/org-roam/org-roam][Org-roam]] is meant to be an "exo-brain", modelled after the
+Zettelkasten method. I like aspects of it, and especially excited
+about the simplification in v2.
 
 This allows me to capture links to websites from my browser, and store
 it as a resource in Org roam.
 
 #+begin_src emacs-lisp
-(use-package org-roam
-  :demand
-  :custom
-  (org-roam-directory (file-truename "~/Documents/Roam"))
-  (org-roam-dailies-directory "Daily/")
-  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
-  :bind-keymap ("C-c d" . org-roam-dailies-map)
-  :bind ((("C-c n f" . org-roam-node-find)
-	  ("C-c n r" . org-roam-ref-add))
-	 :map org-mode-map
-	 (("C-c n i" . org-roam-node-insert)
-	  ("C-c n t" . org-roam-tag-add)))
-  :config
-  (org-roam-db-autosync-mode)
-  (require 'org-roam-dailies)
-  (require 'org-roam-protocol))
+(straight-use-package 'org-roam)
+(require 'org-roam)
+(require 'org-roam-dailies)
+(require 'org-roam-protocol)
+
+(setq org-roam-directory (file-truename "~/Documents/Roam"))
+(setq org-roam-dailies-directory "Daily/")
+(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
+
+(global-set-key (kbd "C-c d") #'org-roam-dailies-map)
+(global-set-key (kbd "C-c n f") #'org-roam-node-find)
+(global-set-key (kbd "C-c n r") #'org-roam-ref-add)
+
+(define-key org-mode-map (kbd "C-c n i") #'org-roam-node-insert)
+(define-key org-mode-map (kbd "C-c n t") #'org-roam-tag-add)
+
+(org-roam-db-autosync-mode)
 #+end_src
 
 * Org Mime
