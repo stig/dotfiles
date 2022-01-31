@@ -9,8 +9,8 @@ This is my Emacs configuration. Is a [[http://orgmode.org/worg/org-contrib/babel
 prose interspersed with code blocks. I edit this file, and /tangle/ it
 into [[file:../../../../../Users/stig/.config/emacs/init.el][init.el]] (and other config files) by hitting =C-c C-v C-t=.
 
-I install Emacs itself using Homebrew, along with other tools
-(~ripgrep~, etc) using a [[file:Brewfile][Brewfile]].
+I install Emacs itself using nixpkgs, along with other tools
+(~ripgrep~, etc).
 
 * Early Init
 :PROPERTIES:
