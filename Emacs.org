@@ -818,9 +818,8 @@ Lets me link to a file location on GitHub/Bitbucket/GitLab
 from a local git repository.
 
 #+BEGIN_SRC emacs-lisp
-(use-package git-link
-  :after magit
-  :bind ("C-c g l" . git-link))
+(straight-use-package 'git-link)
+(global-set-key (kbd "C-c g l") #'git-link)
 #+END_SRC
 
 * HugSQL
