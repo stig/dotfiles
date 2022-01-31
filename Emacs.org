@@ -1594,7 +1594,7 @@ CircleCI and CloudFormation loves YAML.
 A templating engine for Emacs.
 
 #+begin_src emacs-lisp
-(use-package yasnippet
-  :config
-  (yas-global-mode))
+(straight-use-package 'yasnippet)
+(require 'yasnippet)
+(yas-global-mode)
 #+end_src
