@@ -218,16 +218,6 @@ closing/opening one.
 (show-paren-mode 1)
 #+END_SRC
 
-** Simple HTML Renderer (HTML Email)
-
-I use shr for reading HTML mail. I normally use a fullscreen window,
-but I don't like reading HTML mails with lines running all the way
-across. Thus I prefer linebreaks roughly every 80 characters.
-
-#+begin_src emacs-lisp
-(setq shr-width 80)
-#+end_src
-
 ** Spell check comments & strings in code
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
@@ -717,6 +707,102 @@ machine, so I don't have to mark stuff read in multiple places.
 (setq elfeed-db-directory "~/Documents/Elfeed/db")
 #+END_SRC
 
+* Email
+** Notmuch
+
+I like to use Emacs for /all/ writing, including email. I don't want a
+separate program to read and write emails, so it follows I must /read/
+email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
+
+Notmuch works pretty well for me out of the box.
+
+Notmuch's Emacs bindings are closely tied to the binary programs, so
+they (strongly) recommend that you don't install Notmuch from ELPA.
+
+I configure Notmuch to Bcc me on outgoing mail.
+
+#+BEGIN_SRC emacs-lisp
+(require 'notmuch)
+(add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
+(setq message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
+(setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
+(setq notmuch-search-oldest-first nil)
+(setq notmuch-address-use-company nil)
+(setq notmuch-hello-thousands-separator ",")
+(setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
+(setq notmuch-fcc-dirs nil)
+(setq notmuch-saved-searches
+      (quote
+       ((:name "Inbox" :query "tag:inbox" :key "i")
+	(:name "Flagged" :query "tag:flagged" :key "f")
+	(:name "Drafts" :query "tag:draft" :key "d")
+	(:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
+	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree))))
+(setq notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread))
+			    ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
+(setq notmuch-tagging-keys
+      (quote
+       (("a" notmuch-archive-tags "Archive")
+	("r" notmuch-show-mark-read-tags "Mark read")
+	("f" ("+flagged") "Flag")
+	("s" ("+spam") "Mark as spam")
+	("d" ("+deleted") "Delete"))))
+#+END_SRC
+
+** Sending mail with MSMTP
+
+MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
+to use from the "from" address.
+
+Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
+section in the msmtp documentation for details.
+
+: security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
+
+Finally we have to tell Emacs to use msmtp to send mail.  (And to
+kill the message buffer on exit.)
+
+#+BEGIN_SRC emacs-lisp
+(setq sendmail-program "msmtp"
+      message-send-mail-function 'message-send-mail-with-sendmail
+      message-kill-buffer-on-exit t
+      message-directory "~/.mail"
+      message-sendmail-envelope-from 'header
+      mail-envelope-from 'header
+      mail-specify-envelope-from t)
+#+END_SRC
+
+** Link to Notmuch emails from Org
+
+I don't like using my email inbox as a todo list. When I receive an
+email I need to act on but /can't yet/ for some reason, I link to it
+from my Org mode agenda and archive it. When Org agenda prompts me I
+can click on the link and immediately get to the mail in my archive,
+and can reply to it from there.
+
+#+begin_src emacs-lisp
+(straight-use-package 'org-contrib)
+(with-eval-after-load "notmuch"
+  (with-eval-after-load "org"
+    (require 'ol-notmuch)))
+#+end_src
+
+** Org Mime
+For sending HTML emails.
+
+#+begin_src emacs-lisp
+(straight-use-package 'org-mime)
+#+end_src
+** Simple HTML Renderer (HTML Email)
+
+I use shr for reading HTML mail. I normally use a fullscreen window,
+but I don't like reading HTML mails with lines running all the way
+across. Thus I prefer linebreaks roughly every 80 characters.
+
+#+begin_src emacs-lisp
+(setq shr-width 80)
+#+end_src
+
 * Exec Path From Shell
 
 The GUI Emacs gets exec path from the system, rather than the login
@@ -816,21 +902,6 @@ documents, which I like.
 #+begin_src emacs-lisp
 (straight-use-package 'json-mode)
 #+end_src
-* Link to Notmuch emails from Org
-
-I don't like using my email inbox as a todo list. When I receive an
-email I need to act on but /can't yet/ for some reason, I link to it
-from my Org mode agenda and archive it. When Org agenda prompts me I
-can click on the link and immediately get to the mail in my archive,
-and can reply to it from there.
-
-#+begin_src emacs-lisp
-(straight-use-package 'org-contrib)
-(with-eval-after-load "notmuch"
-  (with-eval-after-load "org"
-    (require 'ol-notmuch)))
-#+end_src
-
 * Lorem Ipsum placeholder text
 
 Useful for quickly filling in placeholder text.
@@ -916,47 +987,6 @@ There are two distinct parts here:
 (straight-use-package 'nix-mode)
 (straight-use-package 'nix-sandbox)
 #+end_src
-* Notmuch
-
-I like to use Emacs for /all/ writing, including email. I don't want a
-separate program to read and write emails, so it follows I must /read/
-email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
-
-Notmuch works pretty well for me out of the box.
-
-Notmuch's Emacs bindings are closely tied to the binary programs, so
-they (strongly) recommend that you don't install Notmuch from ELPA.
-
-I configure Notmuch to Bcc me on outgoing mail.
-
-#+BEGIN_SRC emacs-lisp
-(require 'notmuch)
-(add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
-(setq message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
-(setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
-(setq notmuch-search-oldest-first nil)
-(setq notmuch-address-use-company nil)
-(setq notmuch-hello-thousands-separator ",")
-(setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
-(setq notmuch-fcc-dirs nil)
-(setq notmuch-saved-searches
-      (quote
-       ((:name "Inbox" :query "tag:inbox" :key "i")
-	(:name "Flagged" :query "tag:flagged" :key "f")
-	(:name "Drafts" :query "tag:draft" :key "d")
-	(:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
-	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree))))
-(setq notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-			    ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
-(setq notmuch-tagging-keys
-      (quote
-       (("a" notmuch-archive-tags "Archive")
-	("r" notmuch-show-mark-read-tags "Mark read")
-	("f" ("+flagged") "Flag")
-	("s" ("+spam") "Mark as spam")
-	("d" ("+deleted") "Delete"))))
-#+END_SRC
-
 * NVM Support
 NVM is the Node Version Manager. It's annoyingly implemented as shell
 functionality you source, so it won't work in Eshell. Luckily there's
@@ -1212,12 +1242,6 @@ it as a resource in Org roam.
 (org-roam-db-autosync-mode)
 #+end_src
 
-* Org Mime
-For sending HTML emails.
-
-#+begin_src emacs-lisp
-(straight-use-package 'org-mime)
-#+end_src
 * Org Superstar
 
 This hides leading stars in Org headlines, and uses UTF symbols to
@@ -1387,29 +1411,6 @@ know exactly what you're looking for.
 (straight-use-package 'orderless)
 (setq completion-styles '(orderless))
 #+end_src
-
-* Sending mail with MSMTP
-
-MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
-to use from the "from" address.
-
-Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
-section in the msmtp documentation for details.
-
-: security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
-
-Finally we have to tell Emacs to use msmtp to send mail.  (And to
-kill the message buffer on exit.)
-
-#+BEGIN_SRC emacs-lisp
-(setq sendmail-program "msmtp"
-      message-send-mail-function 'message-send-mail-with-sendmail
-      message-kill-buffer-on-exit t
-      message-directory "~/.mail"
-      message-sendmail-envelope-from 'header
-      mail-envelope-from 'header
-      mail-specify-envelope-from t)
-#+END_SRC
 
 * SmartParens
 
