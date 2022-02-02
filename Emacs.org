@@ -83,6 +83,15 @@ use.
   (load bootstrap-file nil 'nomessage))
 #+end_src
 
+* Keeping the modeline uncluttered
+
+With a lot of packages my modeline got cluttered. Diminish lets me
+hide some lighters from the modeline. Install the package early, so we
+can call its function at the point of installing a package.
+
+#+begin_src emacs-lisp
+(straight-use-package 'diminish)
+#+end_src
 * Better Defaults
 
 ** Auto-revert mode
@@ -279,6 +288,8 @@ Navigate read-only buffers up and down with space and backspace.
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'text-mode-hook 'visual-line-mode)
+
+(diminish 'visual-line-mode)
 #+END_SRC
 
 * Appearance
@@ -655,6 +666,8 @@ assume it's something weird we do in our project(s).
 #+begin_src emacs-lisp
 (straight-use-package 'company)
 (add-hook 'after-init-hook #'global-company-mode)
+
+(diminish 'company-mode)
 #+end_src
 * CSV Mode
 Useful for removing columns from a CSV file, for example. Or lining up
@@ -1429,6 +1442,9 @@ is incredibly useful even when writing prose.
 (show-smartparens-global-mode t)
 
 (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+
+(diminish 'smartparens-mode)
+(diminish 'smartparens-strict-mode)
 #+END_SRC
 
 * Spell Checking
@@ -1521,8 +1537,9 @@ Show incomplete key cheatsheet.
 
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'which-key)
-(require 'which-key)
 (which-key-mode)
+
+(diminish 'which-key-mode)
 #+END_SRC
 
 * Whitespace annoyances
@@ -1532,9 +1549,9 @@ Highlight certain whitespace annoyances, and clean them up automatically.
 (straight-use-package 'whitespace)
 (setq whitespace-style '(face empty tabs trailing))
 (setq whitespace-action '(auto-cleanup))
+(global-whitespace-mode)
 
-(require 'whitespace)
-(global-whitespace-mode t)
+(diminish 'global-whitespace-mode)
 #+END_SRC
 
 * Winner Mode
@@ -1556,6 +1573,8 @@ This helps highlight passive voice, weasel words, etc in writing.
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'writegood-mode)
 (add-hook 'text-mode-hook #'writegood-mode)
+
+(diminish 'writegood-mode)
 #+END_SRC
 
 * YAML
@@ -1571,6 +1590,7 @@ A templating engine for Emacs.
 
 #+begin_src emacs-lisp
 (straight-use-package 'yasnippet)
-(require 'yasnippet)
 (yas-global-mode)
+
+(diminish 'yas-minor-mode)
 #+end_src
