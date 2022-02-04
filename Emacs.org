@@ -1147,13 +1147,12 @@ need them.
       (let ((name (downcase (car (split-string (system-name) "\\.")))))
 	(expand-file-name (format "%s.org" name) org-directory)))
 
+(setq sb/tag (if sb/home? "@home" "@work"))
+
 (setq org-capture-templates
-      `(("m" "Most Important Thing" entry
-	 (file "") ,"* TODO %? :mit:@work:\nSCHEDULED: %t")
-	("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:"
-					     (if sb/home? "@home" "@work")))
-	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a "
-							 (if sb/home? "@home" "@work")))
+      `(("d" "Do ASAP" entry (file "") ,(format "* TODO %%? :%s:\nSCHEDULED: %%t" sb/tag))
+	("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:" sb/tag))
+	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/tag))
 
 	("w" "Weekly summary" entry
 	 (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
