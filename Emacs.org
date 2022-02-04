@@ -1455,6 +1455,7 @@ useful even in text mode.
 (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
 
+(define-key smartparens-mode-map (kbd "s-u") 'sp-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
 
 (define-key smartparens-mode-map (kbd "M-j") 'sp-join-sexp)
