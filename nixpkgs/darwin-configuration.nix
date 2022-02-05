@@ -24,6 +24,7 @@
     mtr
     nix-direnv
     notmuch
+    openjdk17
     pinentry
     plantuml
     postgresql
