@@ -6,7 +6,6 @@ For now this is essentially just a simple global ignore file.
 .DS_Store
 .clj-kondo/.cache/
 .lsp/
-shell.nix
 #+end_src
 
 #+name: email
