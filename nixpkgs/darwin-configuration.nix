@@ -9,7 +9,6 @@
     awscli
     clj-kondo
     clojure
-    clojure-lsp
     coreutils
     curl
     direnv
