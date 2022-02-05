@@ -686,6 +686,8 @@ Nix-direnv, to automatically set my PATH for a directory.
 * Docker
 #+begin_src emacs-lisp
 (straight-use-package 'docker)
+(straight-use-package 'dockerfile-mode)
+(straight-use-package 'docker-compose-mode)
 #+end_src
 * Dumb-jump
 
