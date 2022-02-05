@@ -30,8 +30,10 @@
     postgresql
     restic
     ripgrep
+    rnix-lsp
     shellcheck
     texlive.combined.scheme-full
+    yaml-language-server
     yq
     zprint
   ];
