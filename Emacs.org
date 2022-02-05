@@ -941,11 +941,34 @@ among other things.
 (setq lsp-keymap-prefix "C-c l")
 (setq lsp-enable-file-watchers nil)
 
-(add-hook 'clojure-mode-hook #'lsp)
-(add-hook 'java-mode-hook #'lsp)
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
-(straight-use-package 'lsp-treemacs)
+(add-hook 'clojure-mode-hook #'lsp)
+(add-hook 'dockerfile-mode-hook #'lsp)
+(add-hook 'json-mode-hook #'lsp)
+(add-hook 'nix-mode-hook #'lsp)
+(add-hook 'shell-mode-hook #'lsp)
+(add-hook 'yaml-mode-hook #'lsp)
+
+;; Higher-level UI modules for LSP mode, e.g. flycheck support & code lenses.
+(straight-use-package 'lsp-ui)
+#+end_src
+
+LSP for Java requires a bit more setup.
+
+#+begin_src emacs-lisp
+(straight-use-package 'lsp-java)
+(add-hook 'java-mode-hook #'lsp)
+
+;; Debug Adapter Protocol, similar to LSP but for debug server.
+(straight-use-package 'dap-mode)
+#+end_src
+
+Docker also, apparently.
+
+#+begin_src emacs-lisp
+(straight-use-package 'lsp-docker)
+(add-hook 'dockerfile-mode-hook #'lsp)
 #+end_src
 
 * Magit & Forge
