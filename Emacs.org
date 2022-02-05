@@ -1000,6 +1000,11 @@ There are two distinct parts here:
 #+begin_src emacs-lisp
 (straight-use-package 'nix-mode)
 (straight-use-package 'nix-sandbox)
+
+(straight-use-package 'company-nixos-options)
+(with-eval-after-load "company-mode"
+  (add-to-list 'company-backends 'company-nixos-options))
+
 #+end_src
 * NVM Support
 NVM is the Node Version Manager. It's annoyingly implemented as shell
