@@ -660,7 +660,7 @@ assume it's something weird we do in our project(s).
   (yas-minor-mode 1) ;; for adding require/use/import statements
   ;; This choice of keybinding leaves cider-macroexpand-1 unbound
   (cljr-add-keybindings-with-prefix "C-c C-m"))
-(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+(add-hook 'clojure-mode-hook #'sb/clj-refactor-setup)
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
