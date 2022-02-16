@@ -964,13 +964,6 @@ LSP for Java requires a bit more setup.
 (straight-use-package 'dap-mode)
 #+end_src
 
-Docker also, apparently.
-
-#+begin_src emacs-lisp
-(straight-use-package 'lsp-docker)
-(add-hook 'dockerfile-mode-hook #'lsp)
-#+end_src
-
 * Magit & Forge
 
 I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day. I rarely use the git
