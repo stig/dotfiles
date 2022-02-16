@@ -23,3 +23,4 @@ mas "Save to Pocket", id: 1477385213;
 mas "Speedtest by Ookla", id: 1153157709;
 mas "Slack", id: 803453959;
 mas "WhatsApp", id: 1147396723;
+mas "Refined GitHub", id: 1519867270;
