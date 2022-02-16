@@ -1,5 +1,7 @@
 tap "homebrew/cask"
 
+brew "mas"
+
 cask "alfred"
 cask "dash"
 cask "discord"
