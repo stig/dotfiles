@@ -23,6 +23,7 @@
     msmtp
     mtr
     nix-direnv
+    nodejs
     notmuch
     openjdk17
     pinentry
