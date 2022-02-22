@@ -1148,6 +1148,10 @@ need them.
 						"-someday"
 						"-inbox"
 						"/TODO"))
+	("G" "Goals" tags-todo ,(concat (if sb/home? "-@work" "-@home")
+					"+goal"
+					"/TODO")
+	 ((org-agenda-tags-todo-honor-ignore-options nil)))
 	("g" . "Getting Things Done")
 	("gA" "Agenda minus recurring tasks"
 	 agenda ""
