@@ -1594,6 +1594,7 @@ Highlight certain whitespace annoyances, and clean them up automatically.
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'whitespace)
 (setq whitespace-style '(face empty tabs trailing))
+(global-set-key (kbd "C-x w") #'whitespace-cleanup)
 (global-whitespace-mode)
 
 (diminish 'global-whitespace-mode)
