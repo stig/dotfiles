@@ -13,7 +13,6 @@ cask "spotify"
 cask "zoom"
 
 mas "1Password", id: 1333542190;
-mas "Fantastical", id: 975937182;
 mas "Horo", id: 1437226581;
 mas "Kindle", id: 405399194;
 mas "NextDNS", id: 1464122853;
