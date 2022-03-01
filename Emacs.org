@@ -935,11 +935,9 @@ among other things.
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024))
 (setq gc-cons-threshold (* 100 1000 1000))
-(setq lsp-log-io nil)
 
 (straight-use-package 'lsp-mode)
 (setq lsp-keymap-prefix "C-c l")
-(setq lsp-enable-file-watchers nil)
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
