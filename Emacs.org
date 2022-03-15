@@ -936,6 +936,9 @@ among other things.
 (setq read-process-output-max (* 1024 1024))
 (setq gc-cons-threshold (* 100 1000 1000))
 
+(setq max-lisp-eval-depth 2000)
+(setq max-specpdl-size 3200)
+
 (straight-use-package 'lsp-mode)
 (setq lsp-keymap-prefix "C-c l")
 
