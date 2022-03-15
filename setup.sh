@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 case $(hostname) in
-    Pearmain.local)
+    cci-stig-*)
 	MBSYNC_CONFIG=$(pwd)/mbsync/work
 	;;
     Margil.local)
