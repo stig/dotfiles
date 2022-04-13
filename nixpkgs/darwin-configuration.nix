@@ -35,7 +35,6 @@
     texlive.combined.scheme-full
     yaml-language-server
     yq
-    zprint
   ];
 
   # Use a custom configuration.nix location.
