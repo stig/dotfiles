@@ -11,7 +11,6 @@
     clojure
     coreutils
     curl
-    direnv
     emacsMacport
     git
     gnupg
@@ -19,6 +18,7 @@
     isync
     jq
     leiningen
+    lorri
     moreutils
     msmtp
     mtr
@@ -102,6 +102,8 @@
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
   # programs.fish.enable = true;
+
+  services.lorri.enable = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
