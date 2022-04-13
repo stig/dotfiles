@@ -7,7 +7,6 @@
     aspell
     aspellDicts.en
     awscli
-    clj-kondo
     clojure
     coreutils
     curl
