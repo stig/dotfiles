@@ -1526,6 +1526,10 @@ Allows me to switch to root for editing a file. (Usually =/etc/hosts=.)
 #+begin_src emacs-lisp
 (straight-use-package 'sudo-edit)
 #+end_src
+* Terraform Mode
+#+begin_src emacs-lisp
+(straight-use-package 'terraform-mode)
+#+end_src
 * Tramp
 
 Trying to speed up Tramp over SSH with these settings from the [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][FAQ]].
