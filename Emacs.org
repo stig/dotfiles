@@ -1283,7 +1283,17 @@ it as a resource in Org roam.
 
 (org-roam-db-autosync-mode)
 #+end_src
+* Org Roam UI
+This is a web app that lets you browse your Org Roam exo-brain in a
+browser. I don't launch it automatically.
 
+#+begin_src emacs-lisp
+(straight-use-package 'org-roam-ui)
+(setq org-roam-ui-sync-theme t
+      org-roam-ui-follow t
+      org-roam-ui-update-on-save t
+      org-roam-ui-open-on-start t)
+#+end_src
 * Org Superstar
 
 This hides leading stars in Org headlines, and uses UTF symbols to
