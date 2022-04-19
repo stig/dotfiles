@@ -7,7 +7,7 @@
 set -u
 
 abort() {
-  printf "%s\n" "$@"
+  printf "%s\n" "$@" >&2
   exit 1
 }
 
@@ -256,7 +256,7 @@ ring_bell() {
 wait_for_user() {
   local c
   echo
-  echo "Press ${tty_bold}RETURN${tty_reset} to continue or any other key to abort:"
+  echo "Press ${tty_bold}RETURN${tty_reset}/${tty_bold}ENTER${tty_reset} to continue or any other key to abort:"
   getc c
   # we test for \r and \n because some stuff does \r instead
   if ! [[ "${c}" == $'\r' || "${c}" == $'\n' ]]
@@ -759,6 +759,12 @@ then
   additional_shellenv_commands+=("export HOMEBREW_CORE_GIT_REMOTE=\"${HOMEBREW_CORE_GIT_REMOTE}\"")
 fi
 
+if [[ -n "${HOMEBREW_INSTALL_FROM_API-}" ]]
+then
+  ohai "HOMEBREW_INSTALL_FROM_API is set."
+  echo "Homebrew/homebrew-core will not be tapped during this ${tty_bold}install${tty_reset} run."
+fi
+
 if [[ -z "${NONINTERACTIVE-}" ]]
 then
   ring_bell
@@ -916,7 +922,16 @@ ohai "Downloading and installing Homebrew..."
     fi
   fi
 
-  if [[ ! -d "${HOMEBREW_CORE}" ]]
+  if [[ -n "${HOMEBREW_INSTALL_FROM_API-}" ]]
+  then
+    # shellcheck disable=SC2016
+    ohai 'Skip tapping homebrew/core because `$HOMEBREW_INSTALL_FROM_API` is set.'
+    # Unset HOMEBREW_DEVELOPER since it is no longer needed and causes warnings during brew update below
+    if [[ -n "${HOMEBREW_ON_LINUX-}" && (-n "${HOMEBREW_CURL_PATH-}" || -n "${HOMEBREW_GIT_PATH-}") ]]
+    then
+      export -n HOMEBREW_DEVELOPER
+    fi
+  elif [[ ! -d "${HOMEBREW_CORE}" ]]
   then
     ohai "Tapping homebrew/core"
     (
