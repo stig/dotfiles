@@ -1,6 +1,6 @@
 {pkgs, ...}:
 {
-  fonts.enableFontDir = true;
+  fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
     jetbrains-mono
     dejavu_fonts
