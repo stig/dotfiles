@@ -1281,7 +1281,17 @@ it as a resource in Org roam.
 (define-key org-mode-map (kbd "C-c n i") #'org-roam-node-insert)
 (define-key org-mode-map (kbd "C-c n t") #'org-roam-tag-add)
 
-(org-roam-db-autosync-mode)
+(add-hook 'after-init-hook #'org-roam-db-autosync-mode)
+
+(defun sb/org-roam-node-random ()
+  "Open a random Org Roam Node (ignoring Dailies)"
+  (interactive)
+  (org-roam-node-random nil
+			(lambda (roam-node)
+			  (not
+			   (org-roam-dailies--daily-note-p
+			    (org-roam-node-file roam-node))))))
+
 #+end_src
 * Org Roam UI
 This is a web app that lets you browse your Org Roam exo-brain in a
