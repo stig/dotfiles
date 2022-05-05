@@ -1268,18 +1268,15 @@ it as a resource in Org roam.
 #+begin_src emacs-lisp
 (straight-use-package 'org-roam)
 (require 'org-roam)
-(require 'org-roam-dailies)
 (require 'org-roam-protocol)
 
 (setq org-roam-directory (file-truename "~/Documents/Org"))
-(setq org-roam-dailies-directory "Daily/")
 (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
 
 (setq org-roam-capture-templates '(("d" "default" plain "%?" :target
 				    (file+head "Roam/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
 				    :unnarrowed t)))
 
-(global-set-key (kbd "C-c d") #'org-roam-dailies-map)
 (global-set-key (kbd "C-c n f") #'org-roam-node-find)
 (global-set-key (kbd "C-c n r") #'org-roam-ref-add)
 
@@ -1298,6 +1295,17 @@ it as a resource in Org roam.
 			    (org-roam-node-file roam-node))))))
 
 #+end_src
+* Org Roam Dailies
+
+I use org roam dailies for my daily notes. It integrates nicely with
+Roam, so I can "promote" notes from my daily files to my main Roam db.
+
+#+begin_src elisp
+(require 'org-roam-dailies)
+(setq org-roam-dailies-directory "Daily/")
+(global-set-key (kbd "C-c d") #'org-roam-dailies-map)
+#+end_src
+
 * Org Roam UI
 This is a web app that lets you browse your Org Roam exo-brain in a
 browser. I don't launch it automatically.
