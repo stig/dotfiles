@@ -1123,8 +1123,8 @@ need them.
 (setq org-goto-interface 'outline-path-completion)
 (setq org-outline-path-complete-in-steps nil)
 (setq org-agenda-include-diary t)
-(setq org-directory "~/Documents/Agenda")
-(setq org-agenda-files "~/Documents/Agenda/org-agenda-files.txt")
+(setq org-directory "~/Documents/Org")
+(setq org-agenda-files "~/Documents/Org/Agenda/org-agenda-files.txt")
 
 (setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
 (setq org-agenda-tags-todo-honor-ignore-options t)
@@ -1172,8 +1172,9 @@ need them.
 	("gp" "Projects" tags-todo "-someday/PROJ")))
 
 (setq org-default-notes-file
-      (let ((name (downcase (car (split-string (system-name) "\\.")))))
-	(expand-file-name (format "%s.org" name) org-directory)))
+      (let ((name (downcase (car (split-string (system-name) "\\."))))
+	    (dir (expand-file-name "Agenda" org-directory)))
+	(expand-file-name (format "%s.org" name) dir)))
 
 (setq sb/tag (if sb/home? "@home" "@work"))
 
@@ -1270,9 +1271,13 @@ it as a resource in Org roam.
 (require 'org-roam-dailies)
 (require 'org-roam-protocol)
 
-(setq org-roam-directory (file-truename "~/Documents/Roam"))
+(setq org-roam-directory (file-truename "~/Documents/Org"))
 (setq org-roam-dailies-directory "Daily/")
 (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
+
+(setq org-roam-capture-templates '(("d" "default" plain "%?" :target
+				    (file+head "Roam/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+				    :unnarrowed t)))
 
 (global-set-key (kbd "C-c d") #'org-roam-dailies-map)
 (global-set-key (kbd "C-c n f") #'org-roam-node-find)
