@@ -10,6 +10,7 @@
     clojure
     coreutils
     curl
+    direnv
     emacs
     git
     gnupg
