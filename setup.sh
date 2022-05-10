@@ -25,6 +25,13 @@ ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
 mkdir -p ~/.gnupg
 ln -vsf $(pwd)/gnupg/* ~/.gnupg
 
+if [ -L ~/.nixpkgs ] ; then
+    rm ~/.nixpkgs
+elif [ -e ~/.nixpkgs ] ; then
+    echo "~/.nixpkgs exists but is not a symlink"
+    exit 1
+fi
+
 ln -vsf $(pwd)/nixpkgs ~/.nixpkgs
 
 ln -vsf "$MBSYNC_CONFIG" ~/.mbsyncrc
