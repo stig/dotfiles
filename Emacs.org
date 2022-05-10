@@ -1300,7 +1300,7 @@ it as a resource in Org roam.
 I use org roam dailies for my daily notes. It integrates nicely with
 Roam, so I can "promote" notes from my daily files to my main Roam db.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (require 'org-roam-dailies)
 (setq org-roam-dailies-directory "Daily/")
 (global-set-key (kbd "C-c d") #'org-roam-dailies-map)
