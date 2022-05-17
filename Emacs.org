@@ -1184,7 +1184,7 @@ need them.
 	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/tag))
 
 	("w" "Weekly summary" entry
-	 (file+olp "weekly-summaries.org" ,(format-time-string "%Y"))
+	 (file ,(format "weekly-summaries/%s.org" (format-time-string "%Y")))
 	 (file "Templates/weekly-summary.org")
 	 :clock-in t
          :clock-keep t
