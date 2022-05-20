@@ -96,13 +96,12 @@ can call its function at the point of installing a package.
 
 ** Auto-revert mode
 
-When open files change on disk, I want to revert the corresponding
-buffer. This is useful when checking out a different branch in Magit,
-and because I use iCloud Drive to share my Org "Exo Brain" between
-computers.
+When open Org mode files change on disk, I want to revert the
+corresponding buffer. This is useful because I use iCloud Drive to
+share my Org Agenda and Org Roam "Exo Brain" between computers.
 
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
+(add-hook 'org-mode-hook #'auto-revert-mode)
 #+end_src
 
 ** Configure Control/Meta/super/hyper keys
