@@ -933,7 +933,11 @@ among other things.
 #+begin_src emacs-lisp
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024))
+
+(setq after-init/gc-cons-threshold gc-cons-threshold)
 (setq gc-cons-threshold (* 100 1000 1000))
+(add-hook 'after-init-hook (lambda ()
+			     (setq gc-cons-threshold after-init/gc-cons-threshold)))
 
 (setq max-lisp-eval-depth 2000)
 (setq max-specpdl-size 3200)
