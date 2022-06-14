@@ -313,7 +313,7 @@ I like big fonts, and I cannot lie.
 
 I install this font with Homebrew, from my [[file:Brewfile][Brewfile]].
 #+BEGIN_SRC emacs-lisp
-(set-face-attribute 'default nil :font "Jetbrains Mono")
+(set-face-attribute 'default nil :font "Jetbrains Mono NL")
 #+END_SRC
 
 * Custom Functions
