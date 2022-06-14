@@ -311,7 +311,7 @@ I like big fonts, and I cannot lie.
 
 ** Font
 
-I install this font with Homebrew, from my [[file:Brewfile][Brewfile]].
+I install this font with Nix.
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil :font "Jetbrains Mono NL")
 #+END_SRC
