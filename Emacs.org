@@ -606,6 +606,8 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 	 ;; capture an empty group first.
 	 (group "")
          (group
+	  ;; Jira projects have at least 2 characters, hence we call
+	  ;; any + one-or-more to avoid false positives.
 	  (any upper)
 	  (one-or-more upper)
           "-"
@@ -613,9 +615,8 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 	bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
 
 (add-hook 'bug-reference-mode-hook 'sb/bug-reference-setup)
-(add-hook 'org-mode-hook 'bug-reference-mode)
-(add-hook 'clojure-mode-hook 'bug-reference-mode)
-(add-hook 'markdown-mode-hook 'bug-reference-mode)
+(add-hook 'text-mode-hook 'bug-reference-mode)
+(add-hook 'prog-mode-hook 'bug-reference-mode)
 #+end_src
 * Clojure
 
