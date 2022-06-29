@@ -1379,6 +1379,14 @@ it are that it provides the following key bindings:
 (straight-use-package 'projectile)
 (require 'projectile)
 
+;; Register project type for non-standard Clojure projects with weird
+;; test file names. Override the project type in .dir-locals.el.
+(projectile-register-project-type 'lein-legacy '("project.clj" ".projectile-lein-legacy")
+                                  :project-file "project.clj"
+                                  :compile "lein compile"
+                                  :test "lein test"
+                                  :test-prefix "test_")
+
 (global-set-key (kbd "C-c p") #'projectile-command-map)
 
 (setq projectile-completion-system 'default
