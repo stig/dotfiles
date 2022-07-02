@@ -632,25 +632,21 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 * Clojure
 
 Clojure is the main programming language I use at work.
-** Clojure Mode
-The major-mode I use for editing Clojure.
+
+I use Clojure Mode augmented by flycheck-clj-kondo. I use CIDER as my
+primary REPL.
 
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'clojure-mode)
-#+END_SRC
-** clj-kondo
-A great Clojure linter.
-#+BEGIN_SRC emacs-lisp
+
 (straight-use-package 'flycheck-clj-kondo)
-#+END_SRC
-** CIDER
-A great Clojure REPL.
-#+BEGIN_SRC emacs-lisp
+
 (straight-use-package 'cider)
 (setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
-** kaocha-runner
-Lets me run test using kaocha-runner in CIDER.
+
+Kaocha-runner lets me run test using kaocha-runner in CIDER.
+
 #+begin_src emacs-lisp
 (straight-use-package 'kaocha-runner)
 (with-eval-after-load "clojure-mode"
@@ -660,10 +656,11 @@ Lets me run test using kaocha-runner in CIDER.
   (define-key clojure-mode-map (kbd "C-c k w") 'kaocha-runner-show-warnings)
   (define-key clojure-mode-map (kbd "C-c k h") 'kaocha-runner-hide-windows))
 #+end_src
-** clj-refactor
+
 Additional refactoring support. I've honestly struggled to get this to
-work properly recently, but it's probably not the tool's fault. I
+work properly at times, but it's probably not the tool's fault. I
 assume it's something weird we do in our project(s).
+
 #+begin_src emacs-lisp
 (straight-use-package 'clj-refactor)
 (defun sb/clj-refactor-setup ()
