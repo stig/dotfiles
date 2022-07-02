@@ -32,6 +32,17 @@ bell, and the ~package.el~ subsystem.
       package-enable-at-startup nil)
 #+end_src
 
+Let's also set some performance tuning options here.
+
+#+begin_src emacs-lisp
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setq read-process-output-max (* 1024 1024))
+(setq gc-cons-threshold (* 100 1000 1000))
+
+(setq max-lisp-eval-depth 2000)
+(setq max-specpdl-size 3200)
+#+end_src
+
 * Use lexical bindings
 Using lexical bindings speeds up loading config, if I understand
 correctly.
@@ -932,17 +943,6 @@ LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
 among other things.
 
 #+begin_src emacs-lisp
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq read-process-output-max (* 1024 1024))
-
-(setq after-init/gc-cons-threshold gc-cons-threshold)
-(setq gc-cons-threshold (* 100 1000 1000))
-(add-hook 'after-init-hook (lambda ()
-			     (setq gc-cons-threshold after-init/gc-cons-threshold)))
-
-(setq max-lisp-eval-depth 2000)
-(setq max-specpdl-size 3200)
-
 (straight-use-package 'lsp-mode)
 (setq lsp-keymap-prefix "C-c l")
 
