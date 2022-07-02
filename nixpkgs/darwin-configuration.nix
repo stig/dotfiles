@@ -8,6 +8,7 @@
     aspellDicts.en
     awscli
     clojure
+    clj-kondo
     coreutils
     curl
     direnv
