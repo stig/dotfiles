@@ -954,19 +954,6 @@ among other things.
 (add-hook 'nix-mode-hook #'lsp)
 (add-hook 'shell-mode-hook #'lsp)
 (add-hook 'yaml-mode-hook #'lsp)
-
-;; Higher-level UI modules for LSP mode, e.g. flycheck support & code lenses.
-(straight-use-package 'lsp-ui)
-#+end_src
-
-LSP for Java requires a bit more setup.
-
-#+begin_src emacs-lisp
-(straight-use-package 'lsp-java)
-(add-hook 'java-mode-hook #'lsp)
-
-;; Debug Adapter Protocol, similar to LSP but for debug server.
-(straight-use-package 'dap-mode)
 #+end_src
 
 * Magit & Forge
