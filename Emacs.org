@@ -865,13 +865,6 @@ Hit ~C-=~ multiple times to expand the highlighted region.
 (straight-use-package 'expand-region)
 (global-set-key (kbd "C-=") #'er/expand-region)
 #+end_src
-* Flycheck
-
-#+begin_src emacs-lisp
-(straight-use-package 'flycheck)
-(add-hook 'clojure-mode-hook #'flycheck-mode)
-#+end_src
-
 * Frontend Development
 ** Prettier.js
 #+begin_src emacs-lisp
@@ -895,7 +888,6 @@ Credit to Robin Schroer.
   (when (equal "tsx"
 	       (file-name-extension buffer-file-name))
     (tide-setup)
-    (flycheck-mode +1)
     (eldoc-mode +1)))
 (add-hook 'typescript-mode-hook #'sulami/tide-setup)
 (add-hook 'web-mode-hook #'sulami/tide-setup)
