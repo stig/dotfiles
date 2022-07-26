@@ -3,7 +3,6 @@
 #+OPTIONS: f:t
 #+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent :mkdirp t
 #+STARTUP: content
-* Introduction
 
 This is my Emacs configuration. Is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document:
 prose interspersed with code blocks. I edit this file, and /tangle/ it
