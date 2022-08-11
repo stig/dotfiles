@@ -94,6 +94,13 @@ else
   ohai 'Running in non-interactive mode because `$NONINTERACTIVE` is set.'
 fi
 
+# USER isn't always set so provide a fall back for the installer and subprocesses.
+if [[ -z "${USER-}" ]]
+then
+  USER="$(chomp "$(id -un)")"
+  export USER
+fi
+
 # First check OS.
 OS="$(uname)"
 if [[ "${OS}" == "Linux" ]]
@@ -129,6 +136,7 @@ then
   CHGRP=("/usr/bin/chgrp")
   GROUP="admin"
   TOUCH=("/usr/bin/touch")
+  INSTALL=("/usr/bin/install" -d -o "root" -g "wheel" -m "0755")
 else
   UNAME_MACHINE="$(uname -m)"
 
@@ -143,6 +151,7 @@ else
   CHGRP=("/bin/chgrp")
   GROUP="$(id -gn)"
   TOUCH=("/bin/touch")
+  INSTALL=("/usr/bin/install" -d -o "${USER}" -g "${GROUP}" -m "0755")
 fi
 CHMOD=("/bin/chmod")
 MKDIR=("/bin/mkdir" "-p")
@@ -409,13 +418,6 @@ EOABORT
   )"
 fi
 
-# USER isn't always set so provide a fall back for the installer and subprocesses.
-if [[ -z "${USER-}" ]]
-then
-  USER="$(chomp "$(id -un)")"
-  export USER
-fi
-
 # Invalidate sudo timestamp before exiting (if it wasn't active before).
 if [[ -x /usr/bin/sudo ]] && ! /usr/bin/sudo -n -v 2>/dev/null
 then
@@ -584,7 +586,7 @@ Your Mac OS X version is too old. See:
   ${tty_underline}https://github.com/mistydemeo/tigerbrew${tty_reset}
 EOABORT
     )"
-  elif version_lt "${macos_version}" "10.10"
+  elif version_lt "${macos_version}" "10.11"
   then
     abort "Your OS X version is too old."
   elif version_ge "${macos_version}" "${MACOS_NEWEST_UNSUPPORTED}" ||
@@ -794,13 +796,7 @@ then
     execute_sudo "${CHGRP[@]}" "${GROUP}" "${chgrps[@]}"
   fi
 else
-  execute_sudo "${MKDIR[@]}" "${HOMEBREW_PREFIX}"
-  if [[ -z "${HOMEBREW_ON_LINUX-}" ]]
-  then
-    execute_sudo "${CHOWN[@]}" "root:wheel" "${HOMEBREW_PREFIX}"
-  else
-    execute_sudo "${CHOWN[@]}" "${USER}:${GROUP}" "${HOMEBREW_PREFIX}"
-  fi
+  execute_sudo "${INSTALL[@]}" "${HOMEBREW_PREFIX}"
 fi
 
 if [[ "${#mkdirs[@]}" -gt 0 ]]
@@ -1007,7 +1003,10 @@ case "${SHELL}" in
     shell_profile="${HOME}/.profile"
     ;;
 esac
-if [[ "${UNAME_MACHINE}" == "arm64" ]] || [[ -n "${HOMEBREW_ON_LINUX-}" ]]
+
+# `which` is a shell function defined above.
+# shellcheck disable=SC2230
+if [[ "$(which brew)" != "${HOMEBREW_PREFIX}/bin/brew" ]]
 then
   cat <<EOS
 - Run these two commands in your terminal to add Homebrew to your ${tty_bold}PATH${tty_reset}:
