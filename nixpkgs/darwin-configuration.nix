@@ -21,7 +21,6 @@
     jq
     leiningen
     lorri
-    mongodb
     moreutils
     msmtp
     mtr
