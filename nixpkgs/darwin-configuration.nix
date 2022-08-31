@@ -20,7 +20,6 @@
     isync
     jq
     leiningen
-    lorri
     moreutils
     msmtp
     mtr
