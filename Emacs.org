@@ -610,19 +610,16 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 #+begin_src emacs-lisp
 (defun sb/bug-reference-setup ()
   (setq bug-reference-bug-regexp
-	(rx
-	 ;; bug-reference assumes the first capture group is something
-	 ;; like "Bug-" that should be thrown away, so we deliberately
-	 ;; capture an empty group first.
-	 (group "")
+        (rx
          (group
-	  ;; Jira projects have at least 2 characters, hence we call
-	  ;; any + one-or-more to avoid false positives.
-	  (any upper)
-	  (one-or-more upper)
-          "-"
-          (any "1-9") (zero-or-more digit)))
-	bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
+          (group
+           ;; Jira projects have at least 2 characters, hence we call
+           ;; any + one-or-more to avoid false positives.
+           (any upper)
+           (one-or-more upper)
+           "-"
+           (any "1-9") (zero-or-more digit))))
+        bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
 
 (add-hook 'bug-reference-mode-hook 'sb/bug-reference-setup)
 (add-hook 'text-mode-hook 'bug-reference-mode)
