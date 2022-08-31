@@ -48,7 +48,6 @@
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
 
   imports = [
-    ./agents/brew.nix
     ./agents/mbsync.nix
     ./agents/restic.nix
     ./fonts.nix
@@ -78,9 +77,6 @@
     # For interacting with backup snapshots using restic
     RESTIC_REPOSITORY = "s3:s3.amazonaws.com/brautaset-backups";
     RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
-
-    # Use "brew bundle" from anywhere
-    HOMEBREW_BUNDLE_FILE = "~/.Brewfile";
   };
 
   # Notmuch is sensitive to version differences between the emacs

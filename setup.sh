@@ -14,7 +14,6 @@ case $(hostname) in
 esac
 
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
-ln -vsf $(pwd)/Brewfile ~/.Brewfile
 
 mkdir -p ~/.config/emacs/straight
 ln -vsf $(pwd)/emacs/straight/* ~/.config/emacs/straight
@@ -36,8 +35,6 @@ ln -vsf $(pwd)/nixpkgs ~/.nixpkgs
 
 ln -vsf "$MBSYNC_CONFIG" ~/.mbsyncrc
 
-which brew || ./install-brew.sh
-which mas || brew install mas
 which nix-env || ./install-nix.sh --darwin-use-unencrypted-nix-store-volume
 which darwin-rebuild || {
     nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer

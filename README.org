@@ -3,16 +3,19 @@
 This is my configuration. It's centred around [[file:Emacs.org][Emacs]], with smatterings
 of other stuff.
 
-* Link config files + Install Homebrew & Nix
+* (Maybe) Install from App Store
+
+- 1Password
+- Slack
+- Zoom
+- Horo
+- Refined GitHub (Safari Extention)
+- Okta (Safari Extention)
+
+* Link config files + Install Nix
 
 #+begin_src sh
 ./setup.sh
-#+end_src
-
-* Regenerate install-brew.sh
-
-#+begin_src sh :results silent
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > install-brew.sh
 #+end_src
 
 * Regenerate install-nix.sh

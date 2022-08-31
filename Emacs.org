@@ -830,7 +830,7 @@ across. Thus I prefer linebreaks roughly every 80 characters.
 
 The GUI Emacs gets exec path from the system, rather than the login
 shell. We have to load ~PATH~ et. al. from the shell to get access to
-programs installed by Homebrew.
+programs installed by Nix.
 
 Copy ~PATH~ and certain other variables from my login shell so these
 variables are available in Eshell. (And elsewhere in Emacs.)
@@ -841,9 +841,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
       '("ASPELL_CONF"
 	"CPPFLAGS"
 	"EDITOR"
-	"HOMEBREW_BUNDLE_FILE"
-	"HOMEBREW_NO_AUTO_UPDATE"
-	"LDFLAGS"
+        "LDFLAGS"
 	"MANPATH"
 	"NIX_PATH"
 	"NIX_PROFILES"
