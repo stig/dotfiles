@@ -801,7 +801,7 @@ can click on the link and immediately get to the mail in my archive,
 and can reply to it from there.
 
 #+begin_src emacs-lisp
-(straight-use-package 'org-contrib)
+(straight-use-package 'ol-notmuch)
 (with-eval-after-load "notmuch"
   (with-eval-after-load "org"
     (require 'ol-notmuch)))
