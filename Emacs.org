@@ -938,6 +938,7 @@ among other things.
 (add-hook 'nix-mode-hook #'lsp)
 (add-hook 'shell-mode-hook #'lsp)
 (add-hook 'yaml-mode-hook #'lsp)
+(add-hook 'typescript-mode-hook #'lsp)
 #+end_src
 
 * Magit & Forge
