@@ -3,7 +3,7 @@
 # security delete-generic-password -s mbsync-gmail-password
 # security add-generic-password -a stig@circleci.com -s mbsync-gmail-password -w APP-SPECIFIC-PASSWORD
 
-IMAPStore remote
+IMAPStore work-remote
 Host imap.gmail.com
 User stig@circleci.com
 PassCmd "/usr/bin/security find-generic-password -s mbsync-gmail-password -w"
@@ -14,37 +14,37 @@ AuthMechs PLAIN
 #CertificateFile ~/.cert/imap.gmail.com.pem
 #CertificateFile ~/.cert/Equifax_Secure_CA.pem
 
-MaildirStore local
+MaildirStore work-local
 Subfolders Verbatim
-Path ~/.mail/
-Inbox ~/.mail/INBOX
+Path ~/.mail/work/
+Inbox ~/.mail/work/INBOX
 
 Channel inbox
-Far :remote:
-Near :local:
+Far :work-remote:
+Near :work-local:
 SyncState *
 Expunge Both
 
 Channel sent
-Far :remote:"[Gmail]/Sent Mail"
-Near :local:Sent
+Far :work-remote:"[Gmail]/Sent Mail"
+Near :work-local:Sent
 SyncState *
 Expunge Both
 
 Channel archive
-Far :remote:History
-Near :local:Archive
+Far :work-remote:History
+Near :work-local:Archive
 SyncState *
 Expunge Both
 
 Channel trash
-Far :remote:"[Gmail]/Trash"
-Near :local:Trash
+Far :work-remote:"[Gmail]/Trash"
+Near :work-local:Trash
 SyncState *
 Expunge Both
 
 Channel spam
-Far :remote:"[Gmail]/Spam"
-Near :local:Spam
+Far :work-remote:"[Gmail]/Spam"
+Near :work-local:Spam
 SyncState *
 Expunge Both

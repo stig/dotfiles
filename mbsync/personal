@@ -3,7 +3,7 @@
 # security delete-generic-password -s mbsync-gandi-password
 # security add-generic-password -a stig@brautaset.org -s mbsync-gandi-password -w APP-SPECIFIC-PASSWORD
 
-IMAPStore remote
+IMAPStore personal-remote
 Host mail.gandi.net
 User stig@brautaset.org
 SSLType IMAPS
@@ -11,44 +11,37 @@ AuthMechs LOGIN
 PassCmd "/usr/bin/security find-generic-password -s mbsync-gandi-password -w"
 PipelineDepth 1
 
-MaildirStore local
+MaildirStore personal-local
 Subfolders Verbatim
-Path ~/.mail/
-Inbox ~/.mail/INBOX
+Path ~/.mail/home/
+Inbox ~/.mail/home/INBOX
 
 Channel inbox
-Far :remote:
-Near :local:
+Far :personal-remote:
+Near :personal-local:
 SyncState *
 Expunge Both
 
 Channel sent
-Far :remote:Sent
-Near :local:Sent
+Far :personal-remote:Sent
+Near :personal-local:Sent
 SyncState *
 Expunge Both
 
 Channel archive
-Far :remote:Archive
-Near :local:Archive
+Far :personal-remote:Archive
+Near :personal-local:Archive
 SyncState *
 Expunge Both
 
 Channel trash
-Far :remote:Trash
-Near :local:Trash
+Far :personal-remote:Trash
+Near :personal-local:Trash
 SyncState *
 Expunge Both
 
 Channel spam
-Far :remote:Junk
-Near :local:Spam
-SyncState *
-Expunge Both
-
-Channel lists
-Far :remote:
-Near :local:
-Patterns org-mode
+Far :personal-remote:Junk
+Near :personal-local:Spam
 SyncState *
 Expunge Both
