@@ -1148,9 +1148,7 @@ need them.
 	("gp" "Projects" tags-todo "-someday/PROJ")))
 
 (setq org-default-notes-file
-      (let ((name (downcase (car (split-string (system-name) "\\."))))
-	    (dir (expand-file-name "Agenda" org-directory)))
-	(expand-file-name (format "%s.org" name) dir)))
+      (expand-file-name "Agenda/agenda.org" org-directory))
 
 (setq sb/tag (if sb/home? "@home" "@work"))
 
