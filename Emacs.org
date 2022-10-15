@@ -739,12 +739,9 @@ Notmuch works pretty well for me out of the box.
 Notmuch's Emacs bindings are closely tied to the binary programs, so
 they (strongly) recommend that you don't install Notmuch from ELPA.
 
-I configure Notmuch to Bcc me on outgoing mail.
-
 #+BEGIN_SRC emacs-lisp
 (require 'notmuch)
 (add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
-(setq message-default-mail-headers (format "Bcc: %s\n" user-mail-address))
 (setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
 (setq notmuch-search-oldest-first nil)
 (setq notmuch-address-use-company nil)
@@ -756,8 +753,8 @@ I configure Notmuch to Bcc me on outgoing mail.
        ((:name "Inbox" :query "tag:inbox" :key "i")
 	(:name "Flagged" :query "tag:flagged" :key "f")
 	(:name "Drafts" :query "tag:draft" :key "d")
-	(:name "Recent" :query "date:2d.. and not tag:lists" :key "r" :search-type tree)
-	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:lists and tag:unread" :key "t" :search-type tree))))
+	(:name "Recent" :query "date:7d.. and not tag:lists" :key "r" :search-type tree)
+	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:unread" :key "t" :search-type tree))))
 (setq notmuch-tag-formats '(("unread" (propertize tag 'face 'notmuch-tag-unread))
 			    ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
 (setq notmuch-tagging-keys

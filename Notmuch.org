@@ -5,23 +5,8 @@ nice Emacs client.
 
 * Configuring Notmuch
 
-For work/life balance I add my work tag to excluded mail, to avoid
-seeing work mail on my personal machine.
-
-#+name: primary-email
-#+begin_src emacs-lisp
-(if (string-match "margil" (system-name))
-    "stig@brautaset.org"
-  "stig@circleci.com")
-#+end_src
-
-#+name: other-email
-#+begin_src emacs-lisp
-(if (string-match "margil" (system-name))
-    "stig@circleci.com"
-  "stig@brautaset.org")
-#+end_src
-
+I no longer have two separate machines, but I rarely send work mail so
+configure my private address to be the primary one.
 
 #+begin_src conf :tangle ~/.notmuch-config :noweb yes :noweb yes
 [database]
@@ -29,8 +14,8 @@ path=/Users/stig/.mail
 
 [user]
 name=Stig Brautaset
-primary_email=<<primary-email()>>
-other_email=<<other-email()>>
+primary_email=stig@brautaset.org
+other_email=stig@circleci.com
 
 [new]
 tags=new
@@ -68,16 +53,24 @@ notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0
 notmuch search --output=files --format=text0 -- tag:spam date:..3w | xargs -0 rm -fv
 
 # Move deleted messages
-notmuch search --output=files -- tag:deleted and not folder:Trash | mv_without_uid ~/.mail/Trash
+notmuch search --output=files -- path:'home/**' and tag:deleted and not folder:home/Trash | mv_without_uid ~/.mail/home/Trash
+notmuch search --output=files -- path:'work/**' and tag:deleted and not folder:work/Trash | mv_without_uid ~/.mail/work/Trash
 
 # Move spam messages
-notmuch search --output=files -- tag:spam and not folder:Spam | mv_without_uid ~/.mail/Spam
+notmuch search --output=files -- path:'home/**' and tag:spam and not folder:home/Spam | mv_without_uid ~/.mail/home/Spam
+notmuch search --output=files -- path:'work/**' and tag:spam and not folder:work/Spam | mv_without_uid ~/.mail/work/Spam
 
 # Move incorrectly-tagged spam OUT of Spam folder
-notmuch search --output=files -- not tag:spam and folder:Spam | mv_without_uid ~/.mail/INBOX
+notmuch search --output=files -- not tag:spam and folder:home/Spam | mv_without_uid ~/.mail/home/INBOX
+notmuch search --output=files -- not tag:spam and folder:work/Spam | mv_without_uid ~/.mail/work/INBOX
 
 # Archive messages
-notmuch search --output=files -- not tag:inbox and folder:INBOX | mv_without_uid ~/.mail/Archive
+notmuch search --output=files -- not tag:inbox and folder:home/INBOX | mv_without_uid ~/.mail/home/Archive
+notmuch search --output=files -- not tag:inbox and folder:work/INBOX | mv_without_uid ~/.mail/work/Archive
+
+# Tag messages
+notmuch tag +home -- tag:new and path:'home/**'
+notmuch tag +work -- tag:new and path:'work/**'
 
 # Remove 'new' tag for old messages
 notmuch tag -new -- tag:new
@@ -111,9 +104,6 @@ notmuch tag --batch <<EOF
 
 +sent -inbox -- tag:new from:stig@brautaset.org
 +sent -inbox -- tag:new from:stig@circleci.com
-
-+fam   -- tag:new to:fam@brautaset.org
-+solve -- tag:new to:solve@brautaset.org
 
 +to_confirm -inbox -- tag:new from:auto-confirm@amazon.co.uk
 +to_confirm -inbox -- tag:new from:bonjour@mademoisellemacaron.co.uk

@@ -1,18 +1,5 @@
 #!/bin/zsh
 
-case $(hostname) in
-    cci-stig-*)
-	MBSYNC_CONFIG=$(pwd)/mbsync/work
-	;;
-    Margil.local)
-	MBSYNC_CONFIG=$(pwd)/mbsync/personal
-	;;
-    *)
-	echo "Where am I running?"
-	exit 1
-	;;
-esac
-
 ln -vsf $(pwd)/direnvrc ~/.direnvrc
 
 mkdir -p ~/.config/emacs/straight
@@ -33,7 +20,7 @@ fi
 
 ln -vsf $(pwd)/nixpkgs ~/.nixpkgs
 
-ln -vsf "$MBSYNC_CONFIG" ~/.mbsyncrc
+(cd $(pwd)/mbsync ; cat personal work > ~/.mbsyncrc)
 
 which nix-env || ./install-nix.sh --darwin-use-unencrypted-nix-store-volume
 which darwin-rebuild || {
