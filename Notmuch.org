@@ -99,11 +99,14 @@ a week, to make sure I don't miss checking up on missed orders.
 
 #+BEGIN_SRC sh :tangle ~/.mail/.notmuch/hooks/post-new :shebang #!/bin/zsh :tangle-mode (identity #o755) :mkdirp t
 notmuch tag --batch <<EOF
-+inbox -- tag:new folder:INBOX
-+spam  -- tag:new folder:Spam
++inbox +home -- tag:new folder:home/INBOX
++inbox +work -- tag:new folder:work/INBOX
 
-+sent -inbox -- tag:new from:stig@brautaset.org
-+sent -inbox -- tag:new from:stig@circleci.com
++spam +home  -- tag:new folder:home/Spam
++spam +work  -- tag:new folder:work/Spam
+
++sent -inbox +home -- tag:new from:stig@brautaset.org
++sent -inbox +work -- tag:new from:stig@circleci.com
 
 +to_confirm -inbox -- tag:new from:auto-confirm@amazon.co.uk
 +to_confirm -inbox -- tag:new from:bonjour@mademoisellemacaron.co.uk
