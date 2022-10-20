@@ -747,7 +747,8 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (setq notmuch-address-use-company nil)
 (setq notmuch-hello-thousands-separator ",")
 (setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
-(setq notmuch-fcc-dirs nil)
+(setq notmuch-fcc-dirs '(("stig@brautaset.org" . "home/Sent +sent")
+			 ("stig@circleci.com" . "work/Sent +sent")))
 (setq notmuch-saved-searches
       (quote
        ((:name "Inbox" :query "tag:inbox" :key "i")
