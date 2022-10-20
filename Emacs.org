@@ -744,7 +744,6 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (add-hook 'notmuch-message-mode-hook #'turn-off-auto-fill)
 (setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
 (setq notmuch-search-oldest-first nil)
-(setq notmuch-address-use-company nil)
 (setq notmuch-hello-thousands-separator ",")
 (setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
 (setq notmuch-fcc-dirs '(("stig@brautaset.org" . "home/Sent +sent")
