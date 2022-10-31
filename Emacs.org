@@ -1447,17 +1447,7 @@ normally.
 			:host github
 			:repo "minad/consult"
 			:branch "main"))
-
-(global-set-key (kbd "M-y") #'consult-yank-pop)
 (global-set-key (kbd "C-c i") #'consult-imenu)
-
-(setq consult-preview-key nil)
-
-;; Eshell only defines its locally keymap when you launch it, so we
-;; have to add bindings with a hook.
-(defun sb/consult-setup-eshell-bindings ()
-  (define-key eshell-mode-map (kbd "C-r") #'consult-history))
-(add-hook 'eshell-mode-hook #'sb/consult-setup-eshell-bindings)
 #+end_src
 
 ** Orderless
