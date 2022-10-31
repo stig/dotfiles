@@ -1481,14 +1481,6 @@ useful even in text mode.
 (diminish 'smartparens-strict-mode)
 #+END_SRC
 
-* Spell Checking
-
-I use aspell, with British English dictionary.
-
-#+BEGIN_SRC emacs-lisp
-(straight-use-package 'ispell)
-#+END_SRC
-
 * String Inflection
 
 Sometimes I need to swap between CamelCase and snake_case, or even
