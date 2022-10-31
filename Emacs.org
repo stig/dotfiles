@@ -104,16 +104,6 @@ can call its function at the point of installing a package.
 #+end_src
 * Better Defaults
 
-** Auto-revert mode
-
-When open Org mode files change on disk, I want to revert the
-corresponding buffer. This is useful because I use iCloud Drive to
-share my Org Agenda and Org Roam "Exo Brain" between computers.
-
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook #'auto-revert-mode)
-#+end_src
-
 ** Configure Control/Meta/super/hyper keys
 
 #+BEGIN_SRC emacs-lisp
