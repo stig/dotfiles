@@ -11,7 +11,7 @@ into [[file:../../../../../Users/stig/.config/emacs/init.el][init.el]] (and othe
 I install Emacs itself using nixpkgs, along with other tools
 (~ripgrep~, etc).
 
-* Early Init
+* Early Initialisation
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el :results silent :mkdirp t
 :END:
@@ -216,8 +216,9 @@ closing/opening one.
 (show-paren-mode 1)
 #+END_SRC
 
-** Spell check comments & strings in code
+** Spell check as I write (including comments & strings in code)
 #+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'flyspell-mode)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
