@@ -122,16 +122,6 @@ reflowing text.
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
-** Disable "Pass Command To System" in the Emacs Macport
-
-After switching to the Macport of Emacs my xref keybinding for finding
-references to the symbol at point (=S-C-?=) stopped working. This made
-it work again. ([[https://emacs.stackexchange.com/a/14825/10625][Credit]].)
-
-#+begin_src emacs-lisp
-(setq mac-pass-command-to-system nil)
-#+end_src
-
 ** Display line numbers
 
 Displaying line numbers is incredibly useful when remotely pairing
