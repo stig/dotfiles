@@ -1491,7 +1491,7 @@ I use aspell, with British English dictionary.
 * String Inflection
 
 Sometimes I need to swap between CamelCase and snake_case, or even
-SNAKE_CASE.
+SCREAMING_SNAKE_CASE.
 
 #+begin_src emacs-lisp
 (straight-use-package 'string-inflection)
@@ -1589,20 +1589,6 @@ Allow undoing changes to window layout. Keybindings:
 #+begin_src emacs-lisp
 (winner-mode)
 #+end_src
-* Writegood Mode
-
-I'm not a great writer. I need all the crutches I can get. Lucklily,
-Emacs has them.
-
-This helps highlight passive voice, weasel words, etc in writing.
-
-#+BEGIN_SRC emacs-lisp
-(straight-use-package 'writegood-mode)
-(add-hook 'text-mode-hook #'writegood-mode)
-
-(diminish 'writegood-mode)
-#+END_SRC
-
 * YAML
 CircleCI and CloudFormation loves YAML.
 
