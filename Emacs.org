@@ -907,8 +907,6 @@ among other things.
 (straight-use-package 'lsp-mode)
 (setq lsp-keymap-prefix "C-c l")
 
-(add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-
 (add-hook 'clojure-mode-hook #'lsp)
 (add-hook 'dockerfile-mode-hook #'lsp)
 (add-hook 'json-mode-hook #'lsp)
@@ -1569,17 +1567,6 @@ the entire matched line by hitting =C-c C-d=.
 			      :host github
 			      :repo "mhayashi1120/Emacs-wgrep"))
 #+end_src
-
-* Which Key Mode
-
-Show incomplete key cheatsheet.
-
-#+BEGIN_SRC emacs-lisp
-(straight-use-package 'which-key)
-(which-key-mode)
-
-(diminish 'which-key-mode)
-#+END_SRC
 
 * Whitespace annoyances
 Highlight certain whitespace annoyances, and clean them up automatically.
