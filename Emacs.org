@@ -122,6 +122,11 @@ reflowing text.
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+END_SRC
 
+** Diminish Auto-revert and Eldoc mode
+#+begin_src emacs-lisp
+(diminish 'auto-revert-mode)
+(diminish 'eldoc-mode)
+#+end_src
 ** Display line numbers
 
 Displaying line numbers is incredibly useful when remotely pairing
@@ -617,6 +622,7 @@ primary REPL.
 (straight-use-package 'clojure-mode)
 
 (straight-use-package 'flycheck-clj-kondo)
+(diminish 'flycheck-mode)
 
 (straight-use-package 'cider)
 (setq cider-eldoc-display-context-dependent-info t)
@@ -1044,6 +1050,7 @@ need them.
 (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
 (setq org-table-header-line-p t)
+(diminish 'org-table-header-line-mode)
 
 (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
 			  (sequence "PROJ(p)" "|" "COMPLETE")
