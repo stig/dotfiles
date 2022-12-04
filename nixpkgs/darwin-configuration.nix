@@ -86,20 +86,7 @@
     ln -s ${pkgs.notmuch.emacs}/share/emacs/site-lisp ${pkgs.emacs}/share/emacs/site-lisp/notmuch
   '';
 
-  # Workaround so Alfred can find Emacs, cf
-  # https://github.com/LnL7/nix-darwin/issues/139#issuecomment-748845477
-  system.activationScripts.applications.text = pkgs.lib.mkForce (''
-    rm -rf ~/Applications/Nix\ Apps
-    mkdir -p ~/Applications/Nix\ Apps
-    for app in $(find ${config.system.build.applications}/Applications -maxdepth 1 -type l); do
-      src="$(/usr/bin/stat -f%Y "$app")"
-      cp -r "$src" ~/Applications/Nix\ Apps
-    done
-  '');
-
-  # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
-  # programs.fish.enable = true;
 
   services.lorri.enable = true;
 
