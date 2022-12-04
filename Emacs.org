@@ -162,6 +162,12 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 (setq auth-sources (quote ("~/.authinfo.gpg")))
 #+end_src
 
+** Flymake key bindings
+#+begin_src emacs-lisp
+(require 'flymake)
+(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+#+end_src
 ** GnuPG
 
 Emacs will open =.gpg= files transparently, but I need to install gnupg
@@ -625,14 +631,14 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 
 Clojure is the main programming language I use at work.
 
-I use Clojure Mode augmented by flycheck-clj-kondo. I use CIDER as my
+I use Clojure Mode augmented by flymake-kondor. I use CIDER as my
 primary REPL.
 
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'clojure-mode)
 
-(straight-use-package 'flycheck-clj-kondo)
-(diminish 'flycheck-mode)
+(straight-use-package 'flymake-kondor)
+(add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
 (straight-use-package 'cider)
 (setq cider-eldoc-display-context-dependent-info t)
