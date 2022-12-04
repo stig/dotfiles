@@ -910,17 +910,24 @@ Useful for quickly filling in placeholder text.
 LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
 among other things.
 
-#+begin_src emacs-lisp
-(straight-use-package 'lsp-mode)
-(setq lsp-keymap-prefix "C-c l")
+It needs Yasnippets to be initialized first, if it's going to use it.
 
-(add-hook 'clojure-mode-hook #'lsp)
-(add-hook 'dockerfile-mode-hook #'lsp)
-(add-hook 'json-mode-hook #'lsp)
-(add-hook 'nix-mode-hook #'lsp)
-(add-hook 'shell-mode-hook #'lsp)
-(add-hook 'yaml-mode-hook #'lsp)
-(add-hook 'typescript-mode-hook #'lsp)
+#+begin_src emacs-lisp
+(straight-use-package 'eglot)
+
+(require 'eglot)
+(define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
+(define-key eglot-mode-map (kbd "C-c i") 'eglot-code-action-inline)
+(define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+(define-key eglot-mode-map (kbd "C-c h") 'eldoc)
+
+(add-hook 'clojure-mode-hook #'eglot-ensure)
+(add-hook 'dockerfile-mode-hook #'eglot-ensure)
+(add-hook 'json-mode-hook #'eglot-ensure)
+(add-hook 'nix-mode-hook #'eglot-ensure)
+(add-hook 'shell-mode-hook #'eglot-ensure)
+(add-hook 'typescript-mode-hook #'eglot-ensure)
+(add-hook 'yaml-mode-hook #'eglot-ensure)
 #+end_src
 
 * Magit & Forge
