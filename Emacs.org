@@ -578,6 +578,16 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 #+end_src
 
+* YAS
+
+A templating engine for Emacs. It needs to be initialized before Eglot.
+
+#+begin_src emacs-lisp
+(straight-use-package 'yasnippet)
+(yas-global-mode)
+
+(diminish 'yas-minor-mode)
+#+end_src
 * Ace Window
 
 This lets me rapidly switch to a different frame/window.  I use
@@ -1592,13 +1602,3 @@ CircleCI and CloudFormation loves YAML.
 (straight-use-package 'yaml-mode)
 #+END_SRC
 
-* YAS
-
-A templating engine for Emacs.
-
-#+begin_src emacs-lisp
-(straight-use-package 'yasnippet)
-(yas-global-mode)
-
-(diminish 'yas-minor-mode)
-#+end_src
