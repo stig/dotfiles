@@ -590,7 +590,7 @@ A templating engine for Emacs. It needs to be initialized before Eglot.
 
 #+begin_src emacs-lisp
 (straight-use-package 'yasnippet)
-(yas-global-mode)
+(add-hook 'prog-mode-hook #'yas-minor-mode)
 
 (diminish 'yas-minor-mode)
 #+end_src
