@@ -1172,9 +1172,6 @@ need them.
 	 (file "Templates/gtd-review.org")
 	 :clock-in t)))
 
-(require 'org-habit)
-(require 'ox-icalendar)
-
 (org-babel-do-load-languages 'org-babel-load-languages
 			     '((emacs-lisp . t)
 			       (sql . t)
