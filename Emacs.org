@@ -1159,15 +1159,7 @@ need them.
 	 (file "Templates/post.org")
 	 :clock-in t)
 
-	("p" "Productivity")
-	("pf" "Decide Focus Areas" entry
-	 (file+olp "focus-areas.org" ,(format-time-string "%Y"))
-	 (file "Templates/focus-areas.org"))
-	("pb" "Boulders for the Month" entry
-	 (file+olp "boulders.org" ,(format-time-string "%Y"))
-	 "* %<%B>\n1. %?"
-	 :clock-in t)
-	("pr" "New GTD Review" entry
+        ("r" "New GTD Review" entry
 	 (file "gtd_review.org")
 	 (file "Templates/gtd-review.org")
 	 :clock-in t)))
