@@ -48,7 +48,6 @@
   imports = [
     ./agents/mbsync.nix
     ./agents/restic.nix
-    ./msmtp.nix
     ./fonts.nix
     ./settings.nix
   ];
