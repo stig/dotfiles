@@ -25,6 +25,7 @@
     mtr
     nix-direnv
     nodejs
+    nodePackages.bash-language-server
     notmuch
     openjdk17
     pinentry
