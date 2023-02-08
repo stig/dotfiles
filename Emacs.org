@@ -1367,19 +1367,9 @@ it are that it provides the following key bindings:
 
 (global-set-key (kbd "C-c p") #'projectile-command-map)
 
-(setq projectile-completion-system 'default
-      projectile-create-missing-test-files 'projectile-find-file
+(setq projectile-create-missing-test-files 'projectile-find-file
       projectile-project-search-path '("~/src")
       projectile-switch-project-action 'projectile-find-file)
-
-(defun sulami/projectile-rg ()
-  (interactive)
-  (consult-ripgrep (projectile-project-root)))
-
-(defun sulami/projectile-rg-thing-at-point ()
-  (interactive)
-  (consult-ripgrep (projectile-project-root)
-		   (thing-at-point 'symbol t)))
 
 ;; Don't do projectile stuff on remote files
 ;; from https://github.com/syl20bnr/spacemacs/issues/11381#issuecomment-481239700
