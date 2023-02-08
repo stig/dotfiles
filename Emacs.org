@@ -924,7 +924,6 @@ It needs Yasnippets to be initialized first, if it's going to use it.
 
 (require 'eglot)
 (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
-(define-key eglot-mode-map (kbd "C-c i") 'eglot-code-action-inline)
 (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
 (define-key eglot-mode-map (kbd "C-c h") 'eldoc)
 
