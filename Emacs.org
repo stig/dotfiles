@@ -48,16 +48,7 @@ correctly.
 #+begin_src emacs-lisp
 ;; -*- lexical-binding: t; -*-
 #+end_src
-* Where and who am I?
-
-I use one computer for work, and another for personal stuff. I don't
-have vastly different configs, but I do set some variables
-differently. So here we set a variable to help us determine what
-context we're in later.
-
-#+begin_src emacs-lisp
-(setq sb/home? (string-match "margil" (system-name)))
-#+end_src
+* Who am I?
 
 Set up my name, email address, and login. I use the email in my
 Notmuch config below, and some of these show up in Org mode's export
@@ -65,7 +56,7 @@ metadata.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Stig Brautaset"
-      user-mail-address (if sb/home? "stig@brautaset.org" "stig@circleci.com")
+      user-mail-address "stig@brautaset.org"
       user-login-name "stig")
 #+END_SRC
 
@@ -1121,19 +1112,11 @@ need them.
 (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
 
 (setq org-agenda-custom-commands
-      `(("d" "Day Agenda" agenda ""
+      '(("d" "Day Agenda" agenda ""
 	 ((org-agenda-span 'day)
-	  ;; Exclude @home tasks when I'm on my work machine, and vice versa
-	  (org-agenda-tag-filter-preset '(,(if sb/home? "-@work" "-@home")
-					  "-someday"
-					  "-inbox"))))
-	("x" "E[x]tra tasks" tags-todo ,(concat (if sb/home? "-@work" "-@home")
-						"-someday"
-						"-inbox"
-						"/TODO"))
-	("G" "Goals" tags-todo ,(concat (if sb/home? "-@work" "-@home")
-					"+goal"
-					"/TODO")
+	  (org-agenda-tag-filter-preset '("-someday" "-inbox"))))
+	("x" "E[x]tra tasks" tags-todo "-someday-inbox/TODO")
+	("G" "Goals" tags-todo "+goal/TODO"
 	 ((org-agenda-tags-todo-honor-ignore-options nil)))
 	("g" . "Getting Things Done")
 	("gA" "Agenda minus recurring tasks"
@@ -1156,12 +1139,10 @@ need them.
 (setq org-default-notes-file
       (expand-file-name "Agenda/agenda.org" org-directory))
 
-(setq sb/tag (if sb/home? "@home" "@work"))
-
 (setq org-capture-templates
-      `(("d" "Do ASAP" entry (file "") ,(format "* TODO %%? :%s:\nSCHEDULED: %%t" sb/tag))
-	("t" "TODO" entry (file "") ,(format "* TODO %%? :inbox:%s:" sb/tag))
-	("l" "TODO with [l]ink" entry (file "") ,(format "* TODO %%? :inbox:%s:\ncf %%a " sb/tag))
+      `(("d" "Do ASAP" entry (file "") "* TODO %?\nSCHEDULED: %t")
+	("t" "TODO" entry (file "") "* TODO %? :inbox:")
+	("l" "TODO with [l]ink" entry (file "") "* TODO %? :inbox:\ncf %a ")
 
 	("w" "Weekly summary" entry
 	 (file ,(format "weekly-summaries/%s.org" (format-time-string "%Y")))
