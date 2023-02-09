@@ -1196,15 +1196,6 @@ Roam, so I can "promote" notes from my daily files to my main Roam db.
 (global-set-key (kbd "C-c d") #'org-roam-dailies-map)
 #+end_src
 
-* Org Superstar
-
-This hides leading stars in Org headlines, and uses UTF symbols to
-make them a bit prettier.
-
-#+begin_src emacs-lisp
-(straight-use-package 'org-superstar)
-(add-hook 'org-mode-hook #'org-superstar-mode)
-#+end_src
 * Orgalist
 Edit "Org-like" lists in non-Org buffers.
 #+begin_src emacs-lisp
