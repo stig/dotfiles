@@ -60,39 +60,6 @@ metadata.
       user-login-name "stig")
 #+END_SRC
 
-* Bootstrap =straight.el=
-
-I'm using =straight.el= to install packages. This requires a bootstrap
-near the start of the config.
-
-One of the things I like about straight is that it makes it easier to
-make local changes to modules, and contribute these back to modules I
-use.
-
-#+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-#+end_src
-
-* Keeping the modeline uncluttered
-
-With a lot of packages my modeline got cluttered. Diminish lets me
-hide some lighters from the modeline. Install the package early, so we
-can call its function at the point of installing a package.
-
-#+begin_src emacs-lisp
-(straight-use-package 'diminish)
-#+end_src
 * Better Defaults
 
 ** Configure Control/Meta/super/hyper keys
@@ -115,6 +82,7 @@ reflowing text.
 
 ** Diminish Auto-revert and Eldoc mode
 #+begin_src emacs-lisp
+(require 'diminish)
 (diminish 'auto-revert-mode)
 (diminish 'eldoc-mode)
 #+end_src
@@ -582,10 +550,10 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 
 * YAS
 
-A templating engine for Emacs. It needs to be initialized before Eglot.
+A templating engine for Emacs. 
 
 #+begin_src emacs-lisp
-(straight-use-package 'yasnippet)
+(require 'yasnippet)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
 
 (diminish 'yas-minor-mode)
@@ -597,7 +565,7 @@ this mainly when resolving conflicts in ediff merge, since I need
 to swap between two frames there.
 
 #+begin_src emacs-lisp
-(straight-use-package 'ace-window)
+(require 'ace-window)
 (global-set-key (kbd "C-S-s-<tab>") 'ace-window)
 (global-set-key (kbd "M-`") 'ace-window)
 #+end_src
@@ -631,20 +599,18 @@ I use Clojure Mode augmented by flymake-kondor. I use CIDER as my
 primary REPL.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'clojure-mode)
-
-(straight-use-package 'flymake-kondor)
+(require 'clojure-mode)
+(require 'flymake-kondor)
 (add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
-(straight-use-package 'cider)
 (setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
 
 Kaocha-runner lets me run test using kaocha-runner in CIDER.
 
 #+begin_src emacs-lisp
-(straight-use-package 'kaocha-runner)
 (with-eval-after-load "clojure-mode"
+  (require 'kaocha-runner)
   (define-key clojure-mode-map (kbd "C-c k t") 'kaocha-runner-run-test-at-point)
   (define-key clojure-mode-map (kbd "C-c k r") 'kaocha-runner-run-tests)
   (define-key clojure-mode-map (kbd "C-c k a") 'kaocha-runner-run-all-tests)
@@ -656,8 +622,11 @@ Additional refactoring support. I've honestly struggled to get this to
 work properly at times, but it's probably not the tool's fault. I
 assume it's something weird we do in our project(s).
 
+I still keep it around for its "magic requires", which I very much
+appreciate. I should improve this though.
+
 #+begin_src emacs-lisp
-(straight-use-package 'clj-refactor)
+(require 'clj-refactor)
 (defun sb/clj-refactor-setup ()
   (clj-refactor-mode 1)
   (yas-minor-mode 1) ;; for adding require/use/import statements
@@ -668,7 +637,7 @@ assume it's something weird we do in our project(s).
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
-(straight-use-package 'company)
+(require 'company)
 (add-hook 'after-init-hook #'global-company-mode)
 
 (diminish 'company-mode)
@@ -677,28 +646,26 @@ assume it's something weird we do in our project(s).
 Useful for removing columns from a CSV file, for example. Or lining up
 columns by width, for easier viewing.
 #+begin_src emacs-lisp
-(straight-use-package 'csv-mode)
+(require 'csv-mode)
 #+end_src
 * Direnv
 Set environment per directory. The plan is to use this with
 Nix-direnv, to automatically set my PATH for a directory.
 
 #+begin_src emacs-lisp
-(straight-use-package 'direnv)
+(require 'direnv)
 (add-hook 'after-init-hook #'direnv-mode)
 #+end_src
 * Docker
 #+begin_src emacs-lisp
-(straight-use-package 'docker)
-(straight-use-package 'dockerfile-mode)
-(straight-use-package 'docker-compose-mode)
+(require 'docker)
 #+end_src
 * Dumb-jump
 
 Trying this out again, now that it registers an xref backend:
 
 #+begin_src emacs-lisp
-(straight-use-package 'dumb-jump)
+(require 'dumb-jump)
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
 #+end_src
 * Edit Indirect
@@ -706,7 +673,7 @@ To edit code examples in a separate buffer from Markdown. (Similar to
 code blocks in Org.)
 
 #+begin_src emacs-lisp
-(straight-use-package 'edit-indirect)
+(require 'edit-indirect)
 #+end_src
 
 * Elfeed
@@ -718,11 +685,12 @@ I keep my Elfeed DB in a folder that I sync between my work and home
 machine, so I don't have to mark stuff read in multiple places.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'elfeed-org)
+(require 'elfeed)
+(require 'elfeed-org)
+
 (setq rmh-elfeed-org-files '("~/Documents/Elfeed/feeds.org"))
 (add-hook 'after-init-hook #'elfeed-org)
 
-(straight-use-package 'elfeed)
 (setq elfeed-db-directory "~/Documents/Elfeed/db")
 #+END_SRC
 
@@ -797,7 +765,6 @@ can click on the link and immediately get to the mail in my archive,
 and can reply to it from there.
 
 #+begin_src emacs-lisp
-(straight-use-package 'ol-notmuch)
 (with-eval-after-load "notmuch"
   (with-eval-after-load "org"
     (require 'ol-notmuch)))
@@ -807,7 +774,7 @@ and can reply to it from there.
 For sending HTML emails.
 
 #+begin_src emacs-lisp
-(straight-use-package 'org-mime)
+(require 'org-mime)
 #+end_src
 ** Simple HTML Renderer (HTML Email)
 
@@ -829,7 +796,7 @@ Copy ~PATH~ and certain other variables from my login shell so these
 variables are available in Eshell. (And elsewhere in Emacs.)
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'exec-path-from-shell)
+(require 'exec-path-from-shell)
 (setq exec-path-from-shell-variables
       '("ASPELL_CONF"
 	"CPPFLAGS"
@@ -850,7 +817,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
 * Expand Region
 Hit ~C-=~ multiple times to expand the highlighted region.
 #+begin_src emacs-lisp
-(straight-use-package 'expand-region)
+(require 'expand-region)
 (global-set-key (kbd "C-=") #'er/expand-region)
 #+end_src
 * Git Link
@@ -859,7 +826,7 @@ Lets me link to a file location on GitHub/Bitbucket/GitLab
 from a local git repository.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'git-link)
+(require 'git-link)
 (global-set-key (kbd "C-c g l") #'git-link)
 #+END_SRC
 
@@ -880,22 +847,19 @@ HugSQL files.
 This makes Org-mode source blocks do syntax highlighting of JSON
 documents, which I like.
 #+begin_src emacs-lisp
-(straight-use-package 'json-mode)
+(require 'json-mode)
 #+end_src
 * LSP (Language Server Protocol)
 
 LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
 among other things.
 
-It needs Yasnippets to be initialized first, if it's going to use it.
-
 #+begin_src emacs-lisp
-(straight-use-package 'eglot)
-
-(require 'eglot)
-(define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
-(define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
-(define-key eglot-mode-map (kbd "C-c h") 'eldoc)
+(with-eval-after-load "yasnippet"
+  (require 'eglot)
+  (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+  (define-key eglot-mode-map (kbd "C-c h") 'eldoc))
 
 (add-hook 'clojure-mode-hook #'eglot-ensure)
 (add-hook 'dockerfile-mode-hook #'eglot-ensure)
@@ -916,11 +880,10 @@ Forge is an extension to Magit that lets me create & manipulate pull
 requests on GitHub / GitLab etc.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'magit)
+(require 'magit)
+(require 'forge)
 (global-set-key (kbd "C-S-s-m") #'magit-status)
 (global-set-key (kbd "C-S-s-b") #'magit-blame-addition)
-
-(straight-use-package 'forge)
 #+END_SRC
 
 * Markdown
@@ -929,7 +892,7 @@ I'm a sucker for lists, and I want to be able to reorder list items
 easily and have them renumbered automatically.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'markdown-mode)
+(require 'markdown-mode)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 (setq markdown-fontify-code-blocks-natively t)
 (setq markdown-asymmetric-header t)
@@ -947,7 +910,7 @@ multiple edits in the same buffer, using several cursors. You can think of
 it as an interactive macro, where you can constantly see what's being done.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'multiple-cursors)
+(require 'multiple-cursors)
 #+END_SRC
 
 * Nix
@@ -958,13 +921,8 @@ There are two distinct parts here:
 - =nix-sandbox= :: Used to make other commands Nix-aware
 
 #+begin_src emacs-lisp
-(straight-use-package 'nix-mode)
-(straight-use-package 'nix-sandbox)
-
-(straight-use-package 'company-nixos-options)
-(with-eval-after-load "company-mode"
-  (add-to-list 'company-backends 'company-nixos-options))
-
+(require 'nix-mode)
+(require 'nix-sandbox)
 #+end_src
 * Org mode
 
@@ -987,7 +945,6 @@ support. I also have to load some modules so they're available when I
 need them.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'org)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
@@ -1146,10 +1103,9 @@ This allows me to capture links to websites from my browser, and store
 it as a resource in Org roam.
 
 #+begin_src emacs-lisp
-(straight-use-package 'emacsql-sqlite3)
+(require 'emacsql-sqlite3)
 (setq org-roam-database-connector 'sqlite3)
 
-(straight-use-package 'org-roam)
 (require 'org-roam)
 (require 'org-roam-protocol)
 
@@ -1192,34 +1148,31 @@ Roam, so I can "promote" notes from my daily files to my main Roam db.
 * Orgalist
 Edit "Org-like" lists in non-Org buffers.
 #+begin_src emacs-lisp
-(straight-use-package 'orgalist)
+(require 'orgalist)
 (add-hook 'message-mode-hook #'orgalist-mode)
 #+end_src
 
 * PlantUML
 
-I sometimes need to draw UML diagrams. For some reason I can't get the
-Jar to work in the major mode, but it works fine in Org mode.
+I sometimes need to draw UML diagrams, both on their own and embedded
+in Org documents.
 
 #+begin_src emacs-lisp
-(straight-use-package '(plantuml-mode
-			:type git
-			:host github
-			:repo "stig/plantuml-mode"
-			:branch "sequence-diagram-indentation-test"))
+(require 'plantuml-mode)
+(require 'ob-plantuml)
 
 (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
 
-(defun sb/no-tabs-in-plantuml ()
-  (setq indent-tabs-mode nil))
-(add-hook 'plantuml-mode-hook #'sb/no-tabs-in-plantuml)
-
 (setq plantuml-indent-level 4
       plantuml-default-exec-mode 'executable
-      plantuml-font-lock-keywords t)
+      plantuml-font-lock-keywords t
 
-(require 'ob-plantuml)
-(setq org-plantuml-exec-mode 'plantuml)
+      org-plantuml-exec-mode 'plantuml)
+
+(defun sb/no-tabs-in-plantuml ()
+  (setq indent-tabs-mode nil))
+
+(add-hook 'plantuml-mode-hook #'sb/no-tabs-in-plantuml)
 #+end_src
 
 * Prescient
@@ -1228,8 +1181,6 @@ Prescient remembers what you selected before, and learns over time, so
 it completes better over time.
 
 #+begin_src emacs-lisp
-(straight-use-package 'prescient)
-
 (require 'prescient)
 (prescient-persist-mode)
 
@@ -1251,7 +1202,6 @@ it are that it provides the following key bindings:
                  a token, default to searching for that.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'projectile)
 (require 'projectile)
 
 ;; Register project type for non-standard Clojure projects with weird
@@ -1281,8 +1231,7 @@ We use protobufs for service-to-service communication at work. Stolen
 from Robin Schroer.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'protobuf-mode)
-
+(require 'protobuf-mode)
 (defun sulami/init-protobuf-imenu ()
   "Sets up imenu support for Protobuf.
 
@@ -1299,8 +1248,7 @@ Stolen from Spacemacs."
 Even faster than The Silver Searcher, apparently.
 
 #+begin_src emacs-lisp
-(straight-use-package 'ripgrep)
-
+(require 'ripgrep)
 ;; I often look for stuff in .circleci/config.yml,
 ;; Yet I don't want stuff from my git history.
 ;; cf https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
@@ -1323,7 +1271,6 @@ remove surrounding parens / quotes with ~sp-unwrap-sexp~ is incredibly
 useful even in text mode.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'smartparens)
 (require 'smartparens-config)
 
 (add-hook 'text-mode-hook #'smartparens-mode)
@@ -1362,7 +1309,7 @@ Sometimes I need to swap between CamelCase and snake_case, or even
 SCREAMING_SNAKE_CASE.
 
 #+begin_src emacs-lisp
-(straight-use-package 'string-inflection)
+(require 'string-inflection)
 #+end_src
 
 * Subword
@@ -1371,18 +1318,18 @@ Treats CapitalizedWords as separate, so we can move forward by
 their components.  Useful in anything that looks like Java.
 
 #+begin_src emacs-lisp
-(straight-use-package 'subword)
+(require 'subword)
 (add-hook 'prog-mode-hook #'subword-mode)
 #+end_src
 
 * Sudo-edit
 Allows me to switch to root for editing a file. (Usually =/etc/hosts=.)
 #+begin_src emacs-lisp
-(straight-use-package 'sudo-edit)
+(require 'sudo-edit)
 #+end_src
 * Terraform Mode
 #+begin_src emacs-lisp
-(straight-use-package 'terraform-mode)
+(require 'terraform-mode)
 #+end_src
 * Verb
 
@@ -1393,7 +1340,7 @@ feature set. The hierachical inheritance is what really sold me, as it
 works really well with REST APIs to reduce boilerplate.
 
 #+begin_src emacs-lisp
-(straight-use-package 'verb)
+(require 'verb)
 (with-eval-after-load "org"
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
@@ -1411,7 +1358,7 @@ works really well with REST APIs to reduce boilerplate.
 Highlight certain whitespace annoyances, and clean them up automatically.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'whitespace)
+(require 'whitespace)
 (setq whitespace-style '(face empty tabs trailing))
 (global-set-key (kbd "C-x w") #'whitespace-cleanup)
 (global-whitespace-mode)
@@ -1432,6 +1379,6 @@ Allow undoing changes to window layout. Keybindings:
 CircleCI and CloudFormation loves YAML.
 
 #+BEGIN_SRC emacs-lisp
-(straight-use-package 'yaml-mode)
+(require 'yaml-mode)
 #+END_SRC
 

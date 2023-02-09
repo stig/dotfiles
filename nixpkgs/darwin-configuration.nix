@@ -13,7 +13,62 @@
     coreutils
     curl
     direnv
-    emacs
+    ((emacsPackagesFor emacs).emacsWithPackages (epkgs: (with epkgs; [
+      ace-window
+      cider
+      clj-refactor
+      clojure-mode
+      company
+      csv-mode
+      diminish
+      direnv
+      docker
+      docker-compose-mode
+      dockerfile-mode
+      dumb-jump
+      edit-indirect
+      eglot
+      elfeed
+      elfeed-org
+      emacsql-sqlite3
+      exec-path-from-shell
+      expand-region
+      flymake-kondor
+      forge
+      git-link
+      htmlize
+      json-mode
+      kaocha-runner
+      lorem-ipsum
+      magit
+      markdown-mode
+      multiple-cursors
+      nix-mode
+      nix-sandbox
+      nvm
+      ol-notmuch
+      org-mime
+      org-roam
+      org-superstar
+      orgalist
+      ox-gfm
+      plantuml-mode
+      prescient
+      prettier-js
+      projectile
+      protobuf-mode
+      ripgrep
+      smartparens
+      string-inflection
+      sudo-edit
+      terraform-mode
+      tide
+      typescript-mode
+      verb
+      wgrep
+      yaml-mode
+      yasnippet
+    ])))
     git
     gnupg
     graphviz
