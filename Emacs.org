@@ -299,16 +299,6 @@ Navigate read-only buffers up and down with space and backspace.
 #+END_SRC
 
 * Appearance
-** Default Theme
-
-Right now I'm experimenting with "Material Light" theme. I like that
-it's got a light background, and muted colours.
-
-#+begin_src emacs-lisp
-(straight-use-package 'material-theme)
-(load-theme 'material-light t)
-#+end_src
-
 ** Font size
 
 I like big fonts, and I cannot lie.
