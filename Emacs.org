@@ -498,6 +498,7 @@ installing new themes from the package selector menu, so you need to
 evaluate this block again manually.
 
 #+BEGIN_SRC emacs-lisp
+(require 'hydra)
 (setq sb/hydra-selectors
       "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
