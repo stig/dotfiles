@@ -881,14 +881,6 @@ documents, which I like.
 #+begin_src emacs-lisp
 (straight-use-package 'json-mode)
 #+end_src
-* Lorem Ipsum placeholder text
-
-Useful for quickly filling in placeholder text.
-
-#+begin_src emacs-lisp
-(straight-use-package 'lorem-ipsum)
-#+end_src
-
 * LSP (Language Server Protocol)
 
 LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
