@@ -1427,22 +1427,6 @@ works really well with REST APIs to reduce boilerplate.
 	  secret)))))
 #+end_src
 
-* Wgrep (aka "writable grep")
-
-~wgrep~ mode is pretty close to magic. When in a buffer showing
-grep/ag/ripgrep results, I can hit =C-c C-p= to let me /edit the
-results of the search right from the results buffer!/ I can then
-hit =C-x C-s= to save the results.
-
-Hitting =C-c C-p= while already in writable grep mode I can delete
-the entire matched line by hitting =C-c C-d=.
-
-#+begin_src emacs-lisp
-(straight-use-package '(wgrep :type git
-			      :host github
-			      :repo "mhayashi1120/Emacs-wgrep"))
-#+end_src
-
 * Whitespace annoyances
 Highlight certain whitespace annoyances, and clean them up automatically.
 
