@@ -4,9 +4,9 @@
 #+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent :mkdirp t
 #+STARTUP: content
 
-This is my Emacs configuration. Is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document:
+This is my Emacs configuration. It is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document:
 prose interspersed with code blocks. I edit this file, and /tangle/ it
-into [[file:../../../../../Users/stig/.config/emacs/init.el][init.el]] (and other config files) by hitting =C-c C-v C-t=.
+into [[file:~/.config/emacs/init.el][init.el]] (and [[/Users/stig/.config/emacs/early-init.el][early-init.el]]) by hitting =C-c C-v C-t=.
 
 I install Emacs itself using nixpkgs, along with other tools
 (~ripgrep~, etc).
