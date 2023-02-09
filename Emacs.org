@@ -852,33 +852,6 @@ Hit ~C-=~ multiple times to expand the highlighted region.
 (straight-use-package 'expand-region)
 (global-set-key (kbd "C-=") #'er/expand-region)
 #+end_src
-* Frontend Development
-** Prettier.js
-#+begin_src emacs-lisp
-(straight-use-package 'prettier-js)
-(add-hook 'typescript-mode-hook #'prettier-js-mode)
-(add-hook 'web-mode-hook #'prettier-js-mode)
-#+end_src
-** Typescript
-Credit to Robin Schroer.
-#+begin_src emacs-lisp
-(straight-use-package 'typescript-mode)
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-(setq typescript-indent-level 2)
-#+end_src
-
-** Typescript Interactive Development Environment (TIDE)
-Credit to Robin Schroer.
-#+begin_src emacs-lisp
-(straight-use-package 'tide)
-(defun sulami/tide-setup ()
-  (when (equal "tsx"
-	       (file-name-extension buffer-file-name))
-    (tide-setup)
-    (eldoc-mode +1)))
-(add-hook 'typescript-mode-hook #'sulami/tide-setup)
-(add-hook 'web-mode-hook #'sulami/tide-setup)
-#+end_src
 * Git Link
 
 Lets me link to a file location on GitHub/Bitbucket/GitLab
@@ -999,13 +972,6 @@ There are two distinct parts here:
 (with-eval-after-load "company-mode"
   (add-to-list 'company-backends 'company-nixos-options))
 
-#+end_src
-* NVM Support
-NVM is the Node Version Manager. It's annoyingly implemented as shell
-functionality you source, so it won't work in Eshell. Luckily there's
-third-party emacs support.
-#+begin_src emacs-lisp
-(straight-use-package 'nvm)
 #+end_src
 * Org mode
 
