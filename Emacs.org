@@ -1144,38 +1144,6 @@ need them.
 			       (plantuml . t)))
 #+end_src
 
-* Org mode exporter: GitHub Flavour Markdown
-GitHub unfortunately doesn't properly ignore linebreaks in Markdown,
-so I use the =gfm= exporter, rather than the standard Markdown one, as
-this deletes linebreaks. This means the rendered paragraphs re-flow
-properly on GitHub.
-
-#+begin_src emacs-lisp
-(straight-use-package 'ox-gfm)
-#+end_src
-* Org mode exporter: Jira
-I love Org's markup so much I wrote a JIRA export backend for it.
-#+begin_src emacs-lisp
-(straight-use-package 'ox-jira)
-
-;; This lets foo_bar through "unmolested", while foo_{1} uses a subscript
-;; See https://github.com/stig/ox-jira.el/issues/53
-(setq org-export-with-sub-superscripts '{})
-#+end_src
-
-* Org mode exporter: RSS
-#+begin_src emacs-lisp
-(straight-use-package 'org-contrib)
-#+end_src
-* Org Drill (for learning new things)
-
-I use org-drill for drilling music theory.
-
-#+begin_src emacs-lisp
-(straight-use-package 'org-drill)
-(setq org-drill-add-random-noise-to-intervals-p t)
-(setq org-drill-adjust-intervals-for-early-and-late-repetitions-p t)
-#+end_src
 * Org Roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is meant to be an "exo-brain", modelled after the
 Zettelkasten method. I like aspects of it, and especially excited
