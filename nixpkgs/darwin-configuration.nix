@@ -68,7 +68,13 @@
       wgrep
       yaml-mode
       yasnippet
-    ])))
+    ]) ++ [
+      # Notmuch is sensitive to version differences between notmuch.el
+      # and the notmuch cli, so it's not recommended to install it
+      # from MELPA. This installs the version that ships alongside the
+      # notmuch binary.
+      notmuch
+    ]))
     git
     gnupg
     graphviz
@@ -132,15 +138,6 @@
     RESTIC_REPOSITORY = "s3:s3.amazonaws.com/brautaset-backups";
     RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
   };
-
-  # Notmuch is sensitive to version differences between the emacs
-  # package and the cli, so they recommend against installing notmuch
-  # from melpa. We can use the version that ships with notmuch by
-  # linking it into Emacs' site-lisp directory.
-  system.activationScripts.postActivation.text = ''
-    rm -f ${pkgs.emacs}/share/emacs/site-lisp/notmuch
-    ln -s ${pkgs.notmuch.emacs}/share/emacs/site-lisp ${pkgs.emacs}/share/emacs/site-lisp/notmuch
-  '';
 
   programs.zsh.enable = true;  # default shell on catalina
 
