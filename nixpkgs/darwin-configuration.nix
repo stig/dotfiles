@@ -30,7 +30,7 @@
       eglot
       elfeed
       elfeed-org
-      emacsql-sqlite3
+      emacsql-sqlite
       exec-path-from-shell
       expand-region
       flymake-kondor

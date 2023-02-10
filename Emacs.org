@@ -1103,9 +1103,6 @@ This allows me to capture links to websites from my browser, and store
 it as a resource in Org roam.
 
 #+begin_src emacs-lisp
-(require 'emacsql-sqlite3)
-(setq org-roam-database-connector 'sqlite3)
-
 (require 'org-roam)
 (require 'org-roam-protocol)
 
