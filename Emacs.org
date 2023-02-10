@@ -550,7 +550,7 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 
 * YAS
 
-A templating engine for Emacs. 
+A templating engine for Emacs.
 
 #+begin_src emacs-lisp
 (require 'yasnippet)
@@ -626,14 +626,14 @@ I still keep it around for its "magic requires", which I very much
 appreciate. I should improve this though.
 
 #+begin_src emacs-lisp
-(require 'clj-refactor)
-(defun sb/clj-refactor-setup ()
-  (clj-refactor-mode 1)
-  (yas-minor-mode 1) ;; for adding require/use/import statements
-  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-  (cljr-add-keybindings-with-prefix "C-c C-m"))
-(add-hook 'clojure-mode-hook #'sb/clj-refactor-setup)
-(add-hook 'cider-repl-mode-hook #'sb/clj-refactor-setup)
+(with-eval-after-load "clojure-mode"
+  (with-eval-after-load "yasnippet"
+    (require 'clj-refactor)
+
+    (define-key clojure-mode-map (kbd "C-c C-r h") #'hydra-cljr-help-menu/body)
+
+    (add-hook 'clojure-mode-hook #'clj-refactor-mode)
+    (add-hook 'cider-repl-mode-hook #'clj-refactor-mode)))
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
@@ -857,8 +857,8 @@ among other things.
 #+begin_src emacs-lisp
 (with-eval-after-load "yasnippet"
   (require 'eglot)
-  (define-key eglot-mode-map (kbd "C-c r") 'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c o") 'eglot-code-action-organize-imports)
+  (define-key eglot-mode-map (kbd "C-c r r") 'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c r o") 'eglot-code-action-organize-imports)
   (define-key eglot-mode-map (kbd "C-c h") 'eldoc))
 
 (add-hook 'clojure-mode-hook #'eglot-ensure)
