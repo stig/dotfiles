@@ -603,6 +603,7 @@ primary REPL.
 (require 'flymake-kondor)
 (add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
+(setq cider-use-xref nil) ;; eglot's xref works a lot better
 (setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
 
