@@ -639,8 +639,7 @@ appreciate. I should improve this though.
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
 (require 'company)
-(add-hook 'after-init-hook #'global-company-mode)
-
+(global-company-mode)
 (diminish 'company-mode)
 #+end_src
 * CSV Mode
