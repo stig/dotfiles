@@ -850,10 +850,7 @@ documents, which I like.
 #+begin_src emacs-lisp
 (require 'json-mode)
 #+end_src
-* LSP (Language Server Protocol)
-
-LSP is useful for =M-.= (~find-definitions~) and =M-?= (~find-references~),
-among other things.
+* Language Server Protocol (Eglot)
 
 #+begin_src emacs-lisp
 (with-eval-after-load "yasnippet"
