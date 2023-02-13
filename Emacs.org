@@ -681,9 +681,6 @@ Elfeed is an Emacs (RSS & Atom) feed reader. ~org-elfeed~ is an
 extension that stores the feed config in =elfeed.org= rather than
 =custom.el=.
 
-I keep my Elfeed DB in a folder that I sync between my work and home
-machine, so I don't have to mark stuff read in multiple places.
-
 #+BEGIN_SRC emacs-lisp
 (require 'elfeed)
 (require 'elfeed-org)
@@ -931,11 +928,6 @@ I use Org Agenda for keeping track of my TODOs. I configure TODO list
 and tag search to ignore future scheduled, deadlined, and timestamped
 issues. These will show in the Agenda eventually anyway.
 
-Set up capture templates to automatically tag tasks with ~@work~ and
-~@home~ tags, based on which machine I am on. It's not always correct,
-but usually I am in a work frame of mind on my work computer and vice
-versa.
-
 Org Babel is magical: execute code from different languages in the
 same file, and capture the output! I list the languages I want to
 support. I also have to load some modules so they're available when I
@@ -986,9 +978,7 @@ need them.
 			  (sequence "PROJ(p)" "|" "COMPLETE")
 			  (sequence "|" "CANCELLED")))
 
-(setq org-tag-alist '(("@home" . ?h)
-		      ("@work" . ?w)
-		      ("achievement" . ?a)
+(setq org-tag-alist '(("achievement" . ?a)
 		      ("brag" . ?b)
 		      ("inbox" . ?i)
 		      ("interrupt" . ?I)
