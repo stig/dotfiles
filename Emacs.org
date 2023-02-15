@@ -603,6 +603,9 @@ primary REPL.
 (require 'flymake-kondor)
 (add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
+(with-eval-after-load "eglot"
+  (add-hook 'clojure-mode-hook #'eglot-ensure))
+
 (setq cider-use-xref nil) ;; eglot's xref works a lot better
 (setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
@@ -659,6 +662,9 @@ Nix-direnv, to automatically set my PATH for a directory.
 * Docker
 #+begin_src emacs-lisp
 (require 'docker)
+
+(with-eval-after-load "eglot"
+  (add-hook 'dockerfile-mode-hook #'eglot-ensure))
 #+end_src
 * Dumb-jump
 
@@ -845,23 +851,21 @@ This makes Org-mode source blocks do syntax highlighting of JSON
 documents, which I like.
 #+begin_src emacs-lisp
 (require 'json-mode)
+
+(with-eval-after-load "eglot"
+  (add-hook 'json-mode-hook #'eglot-ensure))
 #+end_src
 * Language Server Protocol (Eglot)
 
 #+begin_src emacs-lisp
 (with-eval-after-load "yasnippet"
   (require 'eglot)
-  (define-key eglot-mode-map (kbd "C-c r r") 'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c r o") 'eglot-code-action-organize-imports)
-  (define-key eglot-mode-map (kbd "C-c h") 'eldoc))
 
-(add-hook 'clojure-mode-hook #'eglot-ensure)
-(add-hook 'dockerfile-mode-hook #'eglot-ensure)
-(add-hook 'json-mode-hook #'eglot-ensure)
-(add-hook 'nix-mode-hook #'eglot-ensure)
-(add-hook 'shell-mode-hook #'eglot-ensure)
-(add-hook 'typescript-mode-hook #'eglot-ensure)
-(add-hook 'yaml-mode-hook #'eglot-ensure)
+  (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c e a") 'eglot-code-actions)
+  (define-key eglot-mode-map (kbd "C-c h") 'eldoc)
+
+  (add-hook 'shell-mode-hook #'eglot-ensure))
 #+end_src
 
 * Magit & Forge
@@ -917,6 +921,9 @@ There are two distinct parts here:
 #+begin_src emacs-lisp
 (require 'nix-mode)
 (require 'nix-sandbox)
+
+(with-eval-after-load "eglot"
+  (add-hook 'nix-mode-hook #'eglot-ensure))
 #+end_src
 * Org mode
 
@@ -1364,5 +1371,8 @@ CircleCI and CloudFormation loves YAML.
 
 #+BEGIN_SRC emacs-lisp
 (require 'yaml-mode)
+
+(with-eval-after-load "eglot"
+  (add-hook 'yaml-mode-hook #'eglot-ensure))
 #+END_SRC
 
