@@ -1239,11 +1239,14 @@ Stolen from Spacemacs."
 Even faster than The Silver Searcher, apparently.
 
 #+begin_src emacs-lisp
-(require 'ripgrep)
+(require 'rg)
+(setq rg-executable "/run/current-system/sw/bin/rg")
+(rg-enable-default-bindings)
+
 ;; I often look for stuff in .circleci/config.yml,
 ;; Yet I don't want stuff from my git history.
 ;; cf https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
-(setq ripgrep-arguments '("--hidden" "--glob '!.git'"))
+(setq rg-command-line-flags '("--glob='!.git'"))
 #+end_src
 
 * Server Start

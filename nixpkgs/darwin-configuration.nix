@@ -56,7 +56,7 @@
       prescient
       projectile
       protobuf-mode
-      ripgrep
+      rg
       smartparens
       string-inflection
       sudo-edit
