@@ -833,6 +833,13 @@ from a local git repository.
 (global-set-key (kbd "C-c g l") #'git-link)
 #+END_SRC
 
+* Go
+I sometimes must interact with Go at work.
+#+begin_src emacs-lisp
+(with-eval-after-load "eglot"
+  (require 'go-mode)
+  (add-hook 'go-mode-hook #'eglot-ensure))
+#+end_src
 * HugSQL
 HugSQL is a great abstraction for using SQL from Clojure. Robin's
 imenu integration makes it easy to search for "functions" in the

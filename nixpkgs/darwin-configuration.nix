@@ -36,6 +36,7 @@
       flymake-kondor
       forge
       git-link
+      go-mode
       htmlize
       json-mode
       kaocha-runner
@@ -74,6 +75,8 @@
     ]))
     git
     gnupg
+    go
+    gopls # go language server
     graphviz
     isync
     jq
