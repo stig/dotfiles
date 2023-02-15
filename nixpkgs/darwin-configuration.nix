@@ -54,7 +54,6 @@
       ox-gfm
       plantuml-mode
       prescient
-      prettier-js
       projectile
       protobuf-mode
       ripgrep
@@ -62,8 +61,6 @@
       string-inflection
       sudo-edit
       terraform-mode
-      tide
-      typescript-mode
       verb
       wgrep
       yaml-mode
