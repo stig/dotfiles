@@ -891,6 +891,14 @@ requests on GitHub / GitLab etc.
 (require 'forge)
 (global-set-key (kbd "C-S-s-m") #'magit-status)
 (global-set-key (kbd "C-S-s-b") #'magit-blame-addition)
+
+(with-eval-after-load "project"
+  (define-key project-prefix-map "m" #'magit-status)
+
+  ;; Replace vc-el with Magit in project commands
+  (setq project-switch-commands
+	(remove '(project-vc-dir "VC-Dir") project-switch-commands))
+  (add-to-list 'project-switch-commands '(magit-status "Magit" nil) t))
 #+END_SRC
 
 * Markdown
