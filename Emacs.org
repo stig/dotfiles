@@ -581,10 +581,12 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
           (group
            ;; Jira projects have at least 2 characters, hence we call
            ;; any + one-or-more to avoid false positives.
+	   symbol-start
            (any upper)
            (one-or-more upper)
            "-"
-           (any "1-9") (zero-or-more digit))))
+           (any "1-9") (zero-or-more digit)
+	   symbol-end)))
         bug-reference-url-format "https://circleci.atlassian.net/browse/%s"))
 
 (add-hook 'bug-reference-mode-hook 'sb/bug-reference-setup)
