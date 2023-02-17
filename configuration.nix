@@ -4,8 +4,6 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix search <name>
   environment.systemPackages = with pkgs; [
-    aspell
-    aspellDicts.en
     awscli
     clj-kondo
     clojure
@@ -137,7 +135,6 @@
 
   environment.variables = {
     JAVA_HOME = "/run/current-system/sw";
-    ASPELL_CONF = "dict-dir ${pkgs.aspellDicts.en}/lib/aspell";
 
     EDITOR = "emacsclient";
 
