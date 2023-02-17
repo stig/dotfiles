@@ -1,6 +1,5 @@
 { pkgs, ... }: {
   home.stateVersion = "22.11";
-  programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
     (aspellWithDicts (ps: [ps.en]))
@@ -10,7 +9,6 @@
     clojure-lsp
     coreutils
     curl
-    direnv
     ((emacsPackagesFor emacs).emacsWithPackages (epkgs: (with epkgs; [
       ace-window
       cider
@@ -82,7 +80,6 @@
     moreutils
     msmtp
     mtr
-    nix-direnv
     nodejs
     nodePackages.bash-language-server
     notmuch
@@ -100,4 +97,12 @@
     yaml-language-server
     yq
   ];
+
+  programs = {
+    direnv.enable = true;
+    direnv.nix-direnv.enable = true;
+    home-manager.enable = true;
+    zsh.enable = true;
+  };
+
 }
