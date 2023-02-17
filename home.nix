@@ -69,7 +69,6 @@
       # notmuch binary.
       notmuch
     ]))
-    git
     gnupg
     go
     gopls # go language server
@@ -101,6 +100,20 @@
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
+    git = {
+      enable = true;
+      userName = "Stig Brautaset";
+      userEmail = "stig@brautaset.org";
+      extraConfig = {
+        core.pager = "";
+        rerere.enabled = true;
+      };
+      ignores = [
+        ".DS_Store"
+        ".clj-kondo/.cache/"
+        ".lsp/"
+      ];
+    };
     home-manager.enable = true;
     zsh.enable = true;
   };
