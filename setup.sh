@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-ln -vsf $(pwd)/direnvrc ~/.direnvrc
-
 mkdir -p ~/.config/msmtp
 ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
 
