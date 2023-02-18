@@ -117,11 +117,13 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
-
-  # This is for direnv, to dial back garbage collection
   nix.extraOptions = ''
+    # dial back garbage collection for direnv
     keep-outputs = true
     keep-derivations = true
+
+    # enable flakes
+    experimental-features = nix-command flakes
   '';
 
   environment.pathsToLink = [
