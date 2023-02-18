@@ -1,4 +1,0 @@
-#+title: Mbsync
-
-I use =mbsync= (from the isync suite) to sync mail from my IMAP server
-to my local machine.
