@@ -76,7 +76,6 @@
     jq
     leiningen
     moreutils
-    msmtp
     mtr
     nodejs
     nodePackages.bash-language-server
@@ -95,6 +94,22 @@
     yaml-language-server
     yq
   ];
+
+  accounts.email = {
+    accounts.personal = {
+      address = "stig@brautaset.org";
+      msmtp.enable = true;
+      primary = true;
+      smtp.host = "mail.gandi.net";
+      userName = "stig@brautaset.org";
+    };
+    accounts.work = {
+      address = "stig@circleci.com";
+      msmtp.enable = true;
+      smtp.host = "smtp.gmail.com";
+      userName = "stig@circleci.com";
+    };
+  };
 
   home.file."${config.xdg.dataHome}/gnupg/.gpg-agent.conf".text = ''
     allow-emacs-pinentry
@@ -123,6 +138,7 @@
       homedir = "${config.xdg.dataHome}/gnupg";
     };
     home-manager.enable = true;
+    msmtp.enable = true;
     zsh.enable = true;
   };
 

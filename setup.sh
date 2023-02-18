@@ -1,8 +1,5 @@
 #!/bin/zsh
 
-mkdir -p ~/.config/msmtp
-ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
-
 if [ -L ~/.config/nixpkgs ] ; then
     rm ~/.config/nixpkgs
 elif [ -e ~/.config/nixpkgs ] ; then
