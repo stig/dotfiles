@@ -98,14 +98,35 @@
   accounts.email = {
     accounts.personal = {
       address = "stig@brautaset.org";
+      imap.host = "mail.gandi.net";
+      maildir.path = "home";
+      mbsync = {
+        enable = true;
+        create = "maildir"; # don't automatically create mailboxes
+        expunge = "both";
+        extraConfig.account.PipelineDepth = 10;
+        extraConfig.account.Timeout = 60;
+      };
       msmtp.enable = true;
+      passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gandi-password -w";
       primary = true;
       smtp.host = "mail.gandi.net";
       userName = "stig@brautaset.org";
     };
+
     accounts.work = {
       address = "stig@circleci.com";
+      imap.host = "imap.gmail.com";
+      maildir.path = "work";
+      mbsync = {
+        enable = true;
+        create = "maildir";
+        expunge = "both";
+        extraConfig.account.PipelineDepth = 10;
+        extraConfig.account.Timeout = 60;
+      };
       msmtp.enable = true;
+      passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gmail-password -w";
       smtp.host = "smtp.gmail.com";
       userName = "stig@circleci.com";
     };
@@ -138,6 +159,7 @@
       homedir = "${config.xdg.dataHome}/gnupg";
     };
     home-manager.enable = true;
+    mbsync.enable = true;
     msmtp.enable = true;
     zsh.enable = true;
   };
