@@ -3,7 +3,6 @@
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    aspell
-    aspellDicts.en
+    (aspellWithDicts (ps: [ps.en]))
   ];
 }

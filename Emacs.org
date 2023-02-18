@@ -803,8 +803,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
 #+BEGIN_SRC emacs-lisp
 (require 'exec-path-from-shell)
 (setq exec-path-from-shell-variables
-      '("ASPELL_CONF"
-	"CPPFLAGS"
+      '("CPPFLAGS"
 	"EDITOR"
         "LDFLAGS"
 	"MANPATH"
