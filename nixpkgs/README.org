@@ -8,5 +8,5 @@ Henry's stream of conciousness]] as my guides. I'll probably check out
 the manual too, one day.
 
 For the home-manager stuff, I've used Ju Liu's [[https://juliu.is/tidying-your-home-with-nix/][Tidying up your $HOME
-with Nix]] post as a reference.
-
+with Nix]] post as a reference. The home-manager manual also lent some
+help to integrating home-manager and nix-darwin.
