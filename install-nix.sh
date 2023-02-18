@@ -26,38 +26,38 @@ require_util() {
 
 case "$(uname -s).$(uname -m)" in
     Linux.x86_64)
-        hash=21f14aecde1f00e7c463f75ddb819a03109e1ef108b82c4305c0bb6fa58a01a0
-        path=ack4h7n5kyyk6hz5778qar4irh0i9lda/nix-2.10.3-x86_64-linux.tar.xz
+        hash=beaec0f28899c22f33adbe30e4ecfceef87b797278c5210ee693e22e9719dfb4
+        path=fxvid1mwg2z80lcw0523wiiwv671r0ji/nix-2.13.2-x86_64-linux.tar.xz
         system=x86_64-linux
         ;;
     Linux.i?86)
-        hash=29fdf58e3194c7fb9c4aa171aedc1fbe42da34c1e996845f025dce16ea3e8a1c
-        path=yhipirvqxnldx5gk8z9gz3r3bbm556dy/nix-2.10.3-i686-linux.tar.xz
+        hash=6039e18a94ca822a5403471ba2fa00ea7d9e9c04734222a63408faeb4329e127
+        path=zz8z04v5q6m1mf4qw2v2rgqydi7836ad/nix-2.13.2-i686-linux.tar.xz
         system=i686-linux
         ;;
     Linux.aarch64)
-        hash=0f135aa6ab94b24d1e0dcac37ec16b0beffde4d0bb767eb8ec1b1055c1c9316a
-        path=apnk89xmzr3bf3zbqh5xa3b4hg6197w3/nix-2.10.3-aarch64-linux.tar.xz
+        hash=4ae275a46a2441d3459ae389a90ce6e8f7eff12c2a084b2d003ba6f8d0899603
+        path=15ibgj3h767d392m685iyxl1jm392gmj/nix-2.13.2-aarch64-linux.tar.xz
         system=aarch64-linux
         ;;
-    Linux.armv6l_linux)
-        hash=fcc45b9c8b67c6fe744dfa88fa697892be5bc9bd4082617c26b8a57ada1ee4f5
-        path=03k0b9hyiq4pzi9vpn3y9pfp388gg5l5/nix-2.10.3-armv6l-linux.tar.xz
+    Linux.armv6l)
+        hash=1125d25163a2f9801a07ac30a94d0afce70077822861dfbb8af0c837d18af311
+        path=ravm1dlbmw9v0ln3q0d4h8bp7x6w3ybl/nix-2.13.2-armv6l-linux.tar.xz
         system=armv6l-linux
         ;;
-    Linux.armv7l_linux)
-        hash=44bef998a033a8411d3daa8895064b633f8014da720aa2f0c7187cab386a6a75
-        path=3cxqaqihixswaazsz0nraw082n6hqp9h/nix-2.10.3-armv7l-linux.tar.xz
+    Linux.armv7l)
+        hash=41c6e05a09358465a30cbbc54e3c1daae7a7a0e27f011747a2b113cf2a5a9dab
+        path=580bgh3frkh2pw43wqgh175jw9rq71mk/nix-2.13.2-armv7l-linux.tar.xz
         system=armv7l-linux
         ;;
     Darwin.x86_64)
-        hash=41c9044520a721b4c89e1b7ad2846d4b5cfc47c566cf7caf6abefeed971a24cf
-        path=f0na06dyd5b4vmk6gxfjgsg0r1brd9r5/nix-2.10.3-x86_64-darwin.tar.xz
+        hash=f55b40bc0630c7503cc0258076d7ba2d854771e4e12f098815316485768feef2
+        path=f4kwqapn0nmxffffxbhi2pzaddn8gdps/nix-2.13.2-x86_64-darwin.tar.xz
         system=x86_64-darwin
         ;;
     Darwin.arm64|Darwin.aarch64)
-        hash=dc24287a383dbb28f06c5cdec537709843f259819dd1518c0e0df44870df5b38
-        path=czpf9w60r6v4bkxh54dzahm4psnrycc7/nix-2.10.3-aarch64-darwin.tar.xz
+        hash=3ec2420a34732130a20fb3f360c294ac8fb17fbeba505ecfbbd75ef0e60d04e0
+        path=nksfwg252vagxdsyq6b6r9bdq824d02m/nix-2.13.2-aarch64-darwin.tar.xz
         system=aarch64-darwin
         ;;
     *) oops "sorry, there is no binary distribution of Nix for your platform";;
@@ -71,10 +71,10 @@ if [ "${1:-}" = "--tarball-url-prefix" ]; then
     url=${2}/${path}
     shift 2
 else
-    url=https://releases.nixos.org/nix/nix-2.10.3/nix-2.10.3-$system.tar.xz
+    url=https://releases.nixos.org/nix/nix-2.13.2/nix-2.13.2-$system.tar.xz
 fi
 
-tarball=$tmpDir/nix-2.10.3-$system.tar.xz
+tarball=$tmpDir/nix-2.13.2-$system.tar.xz
 
 require_util tar "unpack the binary tarball"
 if [ "$(uname -s)" != "Darwin" ]; then
@@ -89,7 +89,7 @@ else
     oops "you don't have wget or curl installed, which I need to download the binary tarball"
 fi
 
-echo "downloading Nix 2.10.3 binary tarball for $system from '$url' to '$tmpDir'..."
+echo "downloading Nix 2.13.2 binary tarball for $system from '$url' to '$tmpDir'..."
 fetch "$url" "$tarball" || oops "failed to download '$url'"
 
 if command -v sha256sum > /dev/null 2>&1; then
