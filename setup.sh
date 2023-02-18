@@ -23,3 +23,6 @@ which darwin-rebuild || {
     nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
     (echo n ; yes) | ./result/bin/darwin-installer
 }
+
+echo "now run:"
+echo "darwin-rebuild switch --flake nixpkgs/"

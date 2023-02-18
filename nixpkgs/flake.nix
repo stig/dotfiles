@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration";
+  description = "Home Manager & Nix Darwin configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -8,16 +8,27 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, ... }: let
-    arch = "aarch64-darwin";
-  in {
-    defaultPackage.${arch} = home-manager.defaultPackage.${arch};
-
-    homeConfigurations.stig = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.${arch};
-      modules = [ ./home.nix ];
+  outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
+    darwinConfigurations = {
+      cci-stig-9c7j1 = darwin.lib.darwinSystem {
+        system  = "aarch64-darwin";
+        modules = [
+          ./darwin/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.stig = import ./home.nix;
+          }
+        ];
+      };
     };
   };
 }

@@ -107,6 +107,11 @@
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
 
+  users.users.stig = {
+    name = "stig";
+    home = "/Users/stig";
+  };
+
   imports = [
     ./agents/mbsync.nix
     ./agents/restic.nix
