@@ -42,7 +42,8 @@
     RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
   };
 
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.gnupg.agent.enable = true;
+  programs.zsh.enable = true;
   
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

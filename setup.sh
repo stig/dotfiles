@@ -3,9 +3,6 @@
 mkdir -p ~/.config/msmtp
 ln -vsf $(pwd)/msmtp/* ~/.config/msmtp
 
-mkdir -p ~/.gnupg
-ln -vsf $(pwd)/gnupg/* ~/.gnupg
-
 if [ -L ~/.config/nixpkgs ] ; then
     rm ~/.config/nixpkgs
 elif [ -e ~/.config/nixpkgs ] ; then

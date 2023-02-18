@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   home.stateVersion = "22.11";
 
   home.packages = with pkgs; [
@@ -69,7 +69,6 @@
       # notmuch binary.
       notmuch
     ]))
-    gnupg
     go
     gopls # go language server
     graphviz
@@ -97,6 +96,11 @@
     yq
   ];
 
+  home.file."${config.xdg.dataHome}/gnupg/.gpg-agent.conf".text = ''
+    allow-emacs-pinentry
+    allow-loopback-pinentry
+  '';
+
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
@@ -113,6 +117,10 @@
         ".clj-kondo/.cache/"
         ".lsp/"
       ];
+    };
+    gpg = {
+      enable = true;
+      homedir = "${config.xdg.dataHome}/gnupg";
     };
     home-manager.enable = true;
     zsh.enable = true;
