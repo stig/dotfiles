@@ -14,7 +14,7 @@ elif [ -e ~/.config/nixpkgs ] ; then
     echo "~/.config/nixpkgs exists but is not a symlink"
     exit 1
 fi
-ln -vsf $(pwd)/nixpkgs ~/.config/nixpkgs
+ln -vsf $(pwd) ~/.config/nixpkgs
 
 (cd $(pwd)/mbsync ; cat personal work > ~/.mbsyncrc)
 
@@ -25,4 +25,4 @@ which darwin-rebuild || {
 }
 
 echo "now run:"
-echo "darwin-rebuild switch --flake nixpkgs/"
+echo "darwin-rebuild switch --flake ."

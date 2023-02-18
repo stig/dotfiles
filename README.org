@@ -45,3 +45,13 @@ files after checking out.
 			 (buffer-file-name))))
     (org-babel-tangle-file org-file)))
 #+end_src
+
+* Credits
+
+For the darwin parts I've used [[https://blog.sulami.xyz/posts/nix-for-developers/][Robin Schroer's blog post]] and [[https://ianthehenry.com/posts/how-to-learn-nix/][Ian
+Henry's stream of conciousness]] as my guides. I'll probably check out
+the manual too, one day.
+
+For the home-manager stuff, I've used Ju Liu's [[https://juliu.is/tidying-your-home-with-nix/][Tidying up your $HOME
+with Nix]] post as a reference. The home-manager manual also lent some
+help to integrating home-manager and nix-darwin.
