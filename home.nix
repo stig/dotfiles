@@ -17,11 +17,8 @@
     pinentry
     plantuml
     postgresql
-    rabbitmq-server
-    redis
     ripgrep
     rnix-lsp
-    shellcheck
     texlive.combined.scheme-full
     yaml-language-server
     yq
