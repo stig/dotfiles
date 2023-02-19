@@ -32,8 +32,6 @@
   ];
 
   environment.variables = {
-    JAVA_HOME = "/run/current-system/sw";
-
     EDITOR = "emacsclient";
   };
 
