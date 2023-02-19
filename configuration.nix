@@ -31,10 +31,6 @@
     "/share/nix-direnv"
   ];
 
-  environment.variables = {
-    EDITOR = "emacsclient";
-  };
-
   programs.gnupg.agent.enable = true;
   programs.zsh.enable = true;
   

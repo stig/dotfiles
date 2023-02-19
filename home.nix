@@ -9,66 +9,6 @@
     clojure-lsp
     coreutils
     curl
-    ((emacsPackagesFor emacs).emacsWithPackages (epkgs: (with epkgs; [
-      ace-window
-      cider
-      clj-refactor
-      clojure-mode
-      company
-      csv-mode
-      diminish
-      direnv
-      docker
-      docker-compose-mode
-      dockerfile-mode
-      dumb-jump
-      edit-indirect
-      eglot
-      elfeed
-      elfeed-org
-      emacsql-sqlite
-      exec-path-from-shell
-      expand-region
-      flymake-kondor
-      forge
-      git-link
-      go-mode
-      htmlize
-      json-mode
-      kaocha-runner
-      lorem-ipsum
-      magit
-      markdown-mode
-      multiple-cursors
-      nix-mode
-      nix-sandbox
-      nvm
-      ol-notmuch
-      org-mime
-      org-roam
-      org-superstar
-      orgalist
-      ox-gfm
-      plantuml-mode
-      prescient
-      projectile
-      protobuf-mode
-      rg
-      smartparens
-      string-inflection
-      sudo-edit
-      terraform-mode
-      verb
-      wgrep
-      yaml-mode
-      yasnippet
-    ]) ++ [
-      # Notmuch is sensitive to version differences between notmuch.el
-      # and the notmuch cli, so it's not recommended to install it
-      # from MELPA. This installs the version that ships alongside the
-      # notmuch binary.
-      notmuch
-    ]))
     go
     gopls # go language server
     graphviz
@@ -136,10 +76,71 @@
     allow-emacs-pinentry
     allow-loopback-pinentry
   '';
+  
+  home.sessionVariables = {
+    EDITOR = "emacsclient";
+  };
 
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
+    emacs = {
+      enable = true;
+      extraPackages = epkgs: (with epkgs; [
+        ace-window
+        cider
+        clj-refactor
+        clojure-mode
+        company
+        csv-mode
+        diminish
+        direnv
+        docker
+        docker-compose-mode
+        dockerfile-mode
+        dumb-jump
+        edit-indirect
+        eglot
+        elfeed
+        elfeed-org
+        emacsql-sqlite
+        exec-path-from-shell
+        expand-region
+        flymake-kondor
+        forge
+        git-link
+        go-mode
+        htmlize
+        json-mode
+        kaocha-runner
+        lorem-ipsum
+        magit
+        markdown-mode
+        multiple-cursors
+        nix-mode
+        nix-sandbox
+        nvm
+        ol-notmuch
+        org-mime
+        org-roam
+        org-superstar
+        orgalist
+        ox-gfm
+        plantuml-mode
+        prescient
+        projectile
+        protobuf-mode
+        rg
+        smartparens
+        string-inflection
+        sudo-edit
+        terraform-mode
+        verb
+        wgrep
+        yaml-mode
+        yasnippet
+      ]);
+    };
     git = {
       enable = true;
       userName = "Stig Brautaset";
