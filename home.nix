@@ -9,8 +9,6 @@
     clojure-lsp
     coreutils
     curl
-    go
-    gopls # go language server
     graphviz
     isync
     jq
