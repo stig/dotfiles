@@ -813,9 +813,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
 	"NIX_SSL_CERT_FILE"
 	"NIX_USER_PROFILE_DIR"
 	"PATH"
-        "PGDATABASE" "PGHOST"
-	"RESTIC_PASSWORD_COMMAND"
-	"RESTIC_REPOSITORY"))
+        "PGDATABASE" "PGHOST"))
 (add-hook 'after-init-hook #'exec-path-from-shell-initialize)
 #+END_SRC
 

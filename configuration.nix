@@ -11,7 +11,6 @@
 
   imports = [
     ./agents/mbsync.nix
-    ./agents/restic.nix
     ./fonts.nix
     ./settings.nix
   ];
@@ -36,10 +35,6 @@
     JAVA_HOME = "/run/current-system/sw";
 
     EDITOR = "emacsclient";
-
-    # For interacting with backup snapshots using restic
-    RESTIC_REPOSITORY = "s3:s3.amazonaws.com/brautaset-backups";
-    RESTIC_PASSWORD_COMMAND = "security find-generic-password -s restic -w";
   };
 
   programs.gnupg.agent.enable = true;

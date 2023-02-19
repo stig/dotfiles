@@ -85,7 +85,6 @@
     postgresql
     rabbitmq-server
     redis
-    restic
     ripgrep
     rnix-lsp
     shellcheck
