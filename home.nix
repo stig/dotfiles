@@ -79,7 +79,6 @@
     mtr
     nodejs
     nodePackages.bash-language-server
-    notmuch
     openjdk17
     pinentry
     plantuml
@@ -108,6 +107,8 @@
         extraConfig.account.Timeout = 60;
       };
       msmtp.enable = true;
+      notmuch.enable = true;
+      realName = "Stig Brautaset";
       passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gandi-password -w";
       primary = true;
       smtp.host = "mail.gandi.net";
@@ -126,6 +127,7 @@
         extraConfig.account.Timeout = 60;
       };
       msmtp.enable = true;
+      notmuch.enable = true;
       passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gmail-password -w";
       smtp.host = "smtp.gmail.com";
       userName = "stig@circleci.com";
@@ -161,6 +163,25 @@
     home-manager.enable = true;
     mbsync.enable = true;
     msmtp.enable = true;
+    notmuch = {
+      enable = true;
+      new = {
+        tags = ["new"];
+        ignore = [
+          ".DS_Store"
+          ".isyncuidmap.db"
+          ".mbsyncstate"
+          ".mbsyncstate.journal"
+          ".mbsyncstate.lock"
+          ".mbsyncstate.new"
+          ".uidvalidity"
+        ];
+      };
+      hooks = {
+        preNew = (builtins.readFile ./notmuch/pre-new-hook.sh);
+        postNew = (builtins.readFile ./notmuch/post-new-hook.sh);
+      };
+    };
     zsh.enable = true;
   };
 
