@@ -16,7 +16,6 @@
     jq
     leiningen
     moreutils
-    mtr
     nodejs
     nodePackages.bash-language-server
     pinentry
