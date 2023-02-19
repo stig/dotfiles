@@ -16,7 +16,6 @@
     jq
     leiningen
     moreutils
-    mtr
     nodePackages.bash-language-server
     pinentry
     plantuml
