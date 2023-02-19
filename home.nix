@@ -79,7 +79,6 @@
     mtr
     nodejs
     nodePackages.bash-language-server
-    openjdk17
     pinentry
     plantuml
     postgresql
