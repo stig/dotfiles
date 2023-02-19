@@ -20,7 +20,7 @@
       cci-stig-9c7j1 = darwin.lib.darwinSystem {
         system  = "aarch64-darwin";
         modules = [
-          ./darwin/configuration.nix
+          ./configuration.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
