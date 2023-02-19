@@ -17,7 +17,6 @@
     leiningen
     moreutils
     mtr
-    nodejs
     nodePackages.bash-language-server
     pinentry
     plantuml
