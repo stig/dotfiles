@@ -717,12 +717,13 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (setq notmuch-multipart/alternative-discouraged '("text/x-amp-html" "text/plain" "text/html"))
 (setq notmuch-search-oldest-first nil)
 (setq notmuch-hello-thousands-separator ",")
+(setq notmuch-archive-tags (list "-inbox" "+archived"))
 (setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
 (setq notmuch-fcc-dirs '(("stig@brautaset.org" . "home/Sent +sent")
-			 ("stig@circleci.com" . "work/Sent +sent")))
+			 ("stig@circleci.com" . "\"work/[GMAIL]/Sent Mail\" +sent")))
 (setq notmuch-saved-searches
       (quote
-       ((:name "Inbox" :query "tag:inbox" :key "i")
+       ((:name "Inbox" :query "folder:/Inbox/" :key "i")
 	(:name "Flagged" :query "tag:flagged" :key "f")
 	(:name "Drafts" :query "tag:draft" :key "d")
 	(:name "Recent" :query "date:7d.. and not tag:lists" :key "r" :search-type tree)
@@ -755,7 +756,7 @@ kill the message buffer on exit.)
 (setq sendmail-program "msmtp"
       message-send-mail-function 'message-send-mail-with-sendmail
       message-kill-buffer-on-exit t
-      message-directory "~/.mail"
+      message-directory "~/Maildir"
       message-sendmail-envelope-from 'header
       mail-envelope-from 'header
       mail-specify-envelope-from t)
