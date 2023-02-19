@@ -3,7 +3,6 @@
 
   home.packages = with pkgs; [
     (aspellWithDicts (ps: [ps.en]))
-    awscli
     clj-kondo
     clojure
     clojure-lsp
