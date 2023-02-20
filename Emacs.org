@@ -816,7 +816,7 @@ variables are available in Eshell. (And elsewhere in Emacs.)
         "PGDATABASE" "PGHOST"
 	"RESTIC_PASSWORD_COMMAND"
 	"RESTIC_REPOSITORY"))
-(add-hook 'after-init-hook #'exec-path-from-shell-initialize)
+(exec-path-from-shell-initialize)
 #+END_SRC
 
 * Expand Region
@@ -1253,17 +1253,19 @@ Stolen from Spacemacs."
 
 * Ripgrep
 
-Even faster than The Silver Searcher, apparently.
+I have to delay the setup until after nix paths have loaded, otherwise
+~executable-find~ can't find my ~rg~ executable.
+
+I often look for stuff in "hidden" files like =circleci/config.yml=,
+yet I don't want hits stuff from my git history, so explicitly ignore
+that directory rather than all "hidden" files. ([[https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044][ref]])
 
 #+begin_src emacs-lisp
 (require 'rg)
-(setq rg-executable "/run/current-system/sw/bin/rg")
-(rg-enable-default-bindings)
 
-;; I often look for stuff in .circleci/config.yml,
-;; Yet I don't want stuff from my git history.
-;; cf https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
 (setq rg-command-line-flags '("--glob='!.git'"))
+
+(rg-enable-default-bindings)
 #+end_src
 
 * Server Start
