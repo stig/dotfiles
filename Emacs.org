@@ -548,6 +548,19 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 (global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
 #+end_src
 
+* Exec Path From Shell
+
+The GUI Emacs gets exec path from the system, rather than the login
+shell. We have to load ~PATH~ et. al. from the shell to get access to
+programs installed by Nix.
+
+Copy ~PATH~ and ~MANPATH~ from my login shell so these
+variables are available in Eshell. (And elsewhere in Emacs.)
+
+#+BEGIN_SRC emacs-lisp
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+#+END_SRC
 * YAS
 
 A templating engine for Emacs.
@@ -791,31 +804,6 @@ across. Thus I prefer linebreaks roughly every 80 characters.
 #+begin_src emacs-lisp
 (setq shr-width 80)
 #+end_src
-
-* Exec Path From Shell
-
-The GUI Emacs gets exec path from the system, rather than the login
-shell. We have to load ~PATH~ et. al. from the shell to get access to
-programs installed by Nix.
-
-Copy ~PATH~ and certain other variables from my login shell so these
-variables are available in Eshell. (And elsewhere in Emacs.)
-
-#+BEGIN_SRC emacs-lisp
-(require 'exec-path-from-shell)
-(setq exec-path-from-shell-variables
-      '("CPPFLAGS"
-	"EDITOR"
-        "LDFLAGS"
-	"MANPATH"
-	"NIX_PATH"
-	"NIX_PROFILES"
-	"NIX_SSL_CERT_FILE"
-	"NIX_USER_PROFILE_DIR"
-	"PATH"
-        "PGDATABASE" "PGHOST"))
-(exec-path-from-shell-initialize)
-#+END_SRC
 
 * Expand Region
 Hit ~C-=~ multiple times to expand the highlighted region.
