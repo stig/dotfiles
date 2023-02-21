@@ -109,7 +109,6 @@
         multiple-cursors
         nix-mode
         nix-sandbox
-        nvm
         ol-notmuch
         org-mime
         org-roam
