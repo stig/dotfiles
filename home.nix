@@ -138,6 +138,7 @@
       extraConfig = {
         core.pager = "";
         rerere.enabled = true;
+        github.user = "stig";
       };
       ignores = [
         ".DS_Store"
