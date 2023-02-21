@@ -67,11 +67,6 @@
     };
   };
 
-  home.file."${config.xdg.dataHome}/gnupg/.gpg-agent.conf".text = ''
-    allow-emacs-pinentry
-    allow-loopback-pinentry
-  '';
-  
   home.sessionVariables = {
     EDITOR = "emacsclient";
   };
@@ -150,10 +145,7 @@
         ".lsp/"
       ];
     };
-    gpg = {
-      enable = true;
-      homedir = "${config.xdg.dataHome}/gnupg";
-    };
+    gpg.enable = true;
     home-manager.enable = true;
     mbsync.enable = true;
     msmtp.enable = true;
