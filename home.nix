@@ -15,7 +15,7 @@
     jq
     leiningen
     moreutils
-    nodejs
+    nodejs # for Alfred Jira Plugin
     nodePackages.bash-language-server
     pinentry
     plantuml
