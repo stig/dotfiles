@@ -8,8 +8,8 @@
     clojure-lsp
     coreutils
     curl
-    go
-    gopls # go language server
+    go # required for eglot-go to follow installed libraries.
+    gopls # go language server -- also required for eglot-go.
     graphviz
     isync
     jq
