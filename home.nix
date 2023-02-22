@@ -27,6 +27,11 @@
     yq
   ];
 
+  home.file.".mailcap".text = ''
+    image/*; open %s
+    application/pdf; open %s
+  '';
+
   accounts.email = {
     accounts.personal = {
       address = "stig@brautaset.org";
