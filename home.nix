@@ -32,6 +32,8 @@
     application/pdf; open %s
   '';
 
+  home.file.".lein/profiles.clj".source = ./lein-profiles.clj;
+
   accounts.email = {
     accounts.personal = {
       address = "stig@brautaset.org";
