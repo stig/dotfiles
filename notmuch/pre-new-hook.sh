@@ -16,8 +16,8 @@ mv_without_uid () {
 }
 
 # Archive messages
-notmuch search --output=files -- tag:home and tag:archived and folder:/Inbox/ | mv_without_uid home/Archive
-notmuch search --output=files -- tag:work and tag:archived and folder:/Inbox/ | mv_without_uid 'work/[Gmail]/All Mail'
+notmuch search --output=files -- tag:archived and folder:home/Inbox | mv_without_uid home/Archive
+notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid 'work/[Gmail]/All Mail'
 
 # Thou shalt not suffer a deleted draft to live
 notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 echo rm -fv
