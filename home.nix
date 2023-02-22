@@ -34,7 +34,6 @@
       maildir.path = "home";
       mbsync = {
         enable = true;
-        create = "maildir"; # don't automatically create mailboxes
         expunge = "both";
         extraConfig.account.PipelineDepth = 10;
         extraConfig.account.Timeout = 60;
@@ -54,7 +53,6 @@
       maildir.path = "work";
       mbsync = {
         enable = true;
-        create = "maildir";
         expunge = "both";
         extraConfig.account.PipelineDepth = 10;
         extraConfig.account.Timeout = 60;
