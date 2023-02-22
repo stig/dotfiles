@@ -31,12 +31,12 @@ notmuch search --output=files -- tag:home and tag:deleted and not folder:/Delete
 notmuch search --output=files -- tag:work and tag:deleted and not folder:/Deleted.Messages/ | mv_without_uid 'work/Deleted Messages'
 
 # Move spam messages
-notmuch search --output=files -- tag:home and tag:spam and not folder:/Junk/ | mv_without_uid home/Junk
-notmuch search --output=files -- tag:work and tag:spam and not folder:/Spam/ | mv_without_uid 'work/[Gmail]/Spam'
+notmuch search --output=files -- tag:spam and folder:home/Inbox | mv_without_uid home/Junk
+notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid 'work/[Gmail]/Spam'
 
 # Move incorrectly-tagged spam OUT of Spam folder
-notmuch search --output=files -- not tag:spam and folder:/Junk/ | mv_without_uid home/Inbox
-notmuch search --output=files -- not tag:spam and folder:/Spam/ | mv_without_uid work/Inbox
+notmuch search --output=files -- not tag:spam and folder:home/Junk | mv_without_uid home/Inbox
+notmuch search --output=files -- not tag:spam and folder:'work/[Gmail]/Spam' | mv_without_uid work/Inbox
 
 # Remove 'new' tag for old messages
 notmuch tag -new -- tag:new
