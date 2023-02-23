@@ -38,9 +38,6 @@ notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid
 notmuch search --output=files -- not tag:spam and folder:home/Junk | mv_without_uid home/Inbox
 notmuch search --output=files -- not tag:spam and folder:'work/[Gmail]/Spam' | mv_without_uid work/Inbox
 
-# Remove 'new' tag for old messages
-notmuch tag -new -- tag:new
-
 # Pull new messages from upstream
 # Let the hourly job handle updating upstream with local changes
 mbsync --all --quiet --pull --new

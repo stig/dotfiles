@@ -157,7 +157,6 @@
     notmuch = {
       enable = true;
       new = {
-        tags = ["new"];
         ignore = [
           ".DS_Store"
           ".isyncuidmap.db"
