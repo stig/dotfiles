@@ -15,26 +15,26 @@ mv_without_uid () {
     done
 }
 
-# Archive messages
-notmuch search --output=files -- tag:archived and folder:home/Inbox | mv_without_uid home/Archive
-notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid 'work/[Gmail]/All Mail'
+echo "Delete discarded drafts..."
+notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 rm -fv
 
-# Thou shalt not suffer a deleted draft to live
-notmuch search --output=files --format=text0 -- tag:deleted and tag:draft | xargs -0 echo rm -fv
-
-# Delete old deleted and spam messages
+echo "Delete old discarded messages..."
 notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0 rm -fv
 notmuch search --output=files --format=text0 -- tag:spam date:..3w | xargs -0 rm -fv
 
-# Move deleted messages
-notmuch search --output=files -- tag:home and tag:deleted and not folder:/Deleted.Messages/ | mv_without_uid 'home/Deleted Messages'
-notmuch search --output=files -- tag:work and tag:deleted and not folder:/Deleted.Messages/ | mv_without_uid 'work/Deleted Messages'
+echo "Move deleted messages out of inbox..."
+notmuch search --output=files -- tag:deleted and folder:home/Inbox | mv_without_uid 'home/Deleted Messages'
+notmuch search --output=files -- tag:deleted and folder:work/Inbox | mv_without_uid 'work/Deleted Messages'
 
-# Move spam messages
+echo "Move archived messages out of inbox..."
+notmuch search --output=files -- tag:archived and folder:home/Inbox | mv_without_uid home/Archive
+notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid 'work/[Gmail]/All Mail'
+
+echo "Move spam messages out of inbox..."
 notmuch search --output=files -- tag:spam and folder:home/Inbox | mv_without_uid home/Junk
 notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid 'work/[Gmail]/Spam'
 
-# Move incorrectly-tagged spam OUT of Spam folder
+echo "Move non-spam out of spam folder..."
 notmuch search --output=files -- not tag:spam and folder:home/Junk | mv_without_uid home/Inbox
 notmuch search --output=files -- not tag:spam and folder:'work/[Gmail]/Spam' | mv_without_uid work/Inbox
 
