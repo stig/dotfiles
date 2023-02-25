@@ -736,7 +736,8 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 			 ("stig@circleci.com" . "\"work/[GMAIL]/Sent Mail\" +sent")))
 (setq notmuch-saved-searches
       (quote
-       ((:name "Inbox" :query "folder:/Inbox/" :key "i")
+       ((:name "Personal Inbox" :query "tag:personal and tag:inbox" :key "h")
+	(:name "Work Inbox" :query "tag:work and tag:inbox" :key "w")
 	(:name "Flagged" :query "tag:flagged" :key "f")
 	(:name "Drafts" :query "tag:draft" :key "d")
 	(:name "Recent" :query "date:7d.. and not tag:lists" :key "r" :search-type tree)
