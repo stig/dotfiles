@@ -12,17 +12,53 @@ of other stuff.
 - Refined GitHub (Safari Extention)
 - Okta (Safari Extention)
 
-* Link config files + Install Nix
+* Nix
 
-#+begin_src sh
-./setup.sh
+** Setup =~/.config/nixpkgs=
+
+#+begin_src sh :results silent
+if [ -L ~/.config/nixpkgs ] ; then
+    rm ~/.config/nixpkgs
+elif [ -e ~/.config/nixpkgs ] ; then
+    echo "~/.config/nixpkgs exists but is not a symlink"
+    exit 1
+fi
+ln -vsf $(pwd) ~/.config/nixpkgs
 #+end_src
 
-* Regenerate install-nix.sh
+** Install Nix
+
+Run this from a terminal:
+
+: ./install-nix.sh --darwin-use-unencrypted-nix-store-volume
+
+To regenerate install-nix.sh:
 
 #+begin_src sh :results silent
 curl -fsSL https://nixos.org/nix/install > install-nix.sh
 #+end_src
+
+** Install nix-darwin
+
+Run this from a terminal, and be prepared to answer "yes" to every question.
+
+: nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+: ./result/bin/darwin-installer
+
+** Install home-manager
+
+Run from a terminal:
+
+: nix build --no-link <flake-uri>#homeConfigurations.stig.activationPackage
+: "$(nix path-info <flake-uri>#homeConfigurations.stig.activationPackage)"/activate
+
+** Daily Usage
+
+1. If changing =configuration.nix=:
+   : darwin-rebuild switch --flake .
+
+2. (more common) if changing only =home.nix=:
+   : home-manager switch --flake .#stig
 
 * Regenerate install-brew.sh
 

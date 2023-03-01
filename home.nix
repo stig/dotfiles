@@ -1,6 +1,9 @@
 { pkgs, config, ... }: {
   home.stateVersion = "22.11";
 
+  home.username = "stig";
+  home.homeDirectory = "/Users/stig";
+
   home.packages = with pkgs; [
     (aspellWithDicts (ps: [ps.en]))
     clj-kondo
