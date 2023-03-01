@@ -127,14 +127,6 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
 (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
 #+end_src
-** Fido mode
-I used to use Helm, then Ivy, then Selectrum. Now I'm trying the
-built-in fido-mode, which is an enhanced icomplete-mode.
-
-#+begin_src emacs-lisp
-(fido-mode)
-(fido-vertical-mode)
-#+end_src
 ** GnuPG
 
 Emacs will open =.gpg= files transparently, but I need to install gnupg
@@ -180,7 +172,7 @@ This allows us to "tap up" in the minibuffer to recall previous items,
 even from a previous session.
 
 #+BEGIN_SRC emacs-lisp
-(savehist-mode 1)
+(savehist-mode)
 #+END_SRC
 
 ** Save my place in each file
@@ -1345,6 +1337,12 @@ works really well with REST APIs to reduce boilerplate.
 	  secret)))))
 #+end_src
 
+* Vertico: Vertical Selection (e.g. in minibuffer)
+#+begin_src emacs-lisp
+(require 'vertico)
+(vertico-mode)
+(setq vertico-resize t)
+#+end_src
 * Whitespace annoyances
 Highlight certain whitespace annoyances, and clean them up automatically.
 

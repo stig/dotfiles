@@ -133,6 +133,7 @@
         sudo-edit
         terraform-mode
         verb
+        vertico
         wgrep
         yaml-mode
         yasnippet
