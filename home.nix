@@ -114,6 +114,7 @@
         kaocha-runner
         lorem-ipsum
         magit
+        marginalia
         markdown-mode
         multiple-cursors
         nix-mode

@@ -875,6 +875,12 @@ requests on GitHub / GitLab etc.
   (add-to-list 'project-switch-commands '(magit-status "Magit" nil) t))
 #+END_SRC
 
+* Marginalia
+Provide more information in Minibuffer margins
+#+begin_src emacs-lisp
+(require 'marginalia)
+(marginalia-mode)
+#+end_src
 * Markdown
 
 I'm a sucker for lists, and I want to be able to reorder list items
