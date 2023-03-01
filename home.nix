@@ -47,6 +47,21 @@
         expunge = "both";
         extraConfig.account.PipelineDepth = 10;
         extraConfig.account.Timeout = 60;
+
+        groups.personal.channels.inbox.farPattern = "";
+        groups.personal.channels.inbox.nearPattern = "";
+
+        groups.personal.channels.archive.farPattern = "Archive";
+        groups.personal.channels.archive.nearPattern = "Archive";
+
+        groups.personal.channels.sent.farPattern = "Sent Messages";
+        groups.personal.channels.sent.nearPattern = "Sent";
+
+        groups.personal.channels.junk.farPattern = "Junk";
+        groups.personal.channels.junk.nearPattern = "Spam";
+
+        groups.personal.channels.trash.farPattern = "Deleted Messages";
+        groups.personal.channels.trash.nearPattern = "Trash";
       };
       msmtp.enable = true;
       notmuch.enable = true;
@@ -66,6 +81,22 @@
         expunge = "both";
         extraConfig.account.PipelineDepth = 10;
         extraConfig.account.Timeout = 60;
+
+        groups.work.channels.inbox.farPattern = "";
+        groups.work.channels.inbox.nearPattern = "";
+
+        groups.work.channels.archive.farPattern = "[Gmail]/All Mail";
+        groups.work.channels.archive.nearPattern = "Archive";
+
+        groups.work.channels.sent.farPattern = "[Gmail]/Sent Mail";
+        groups.work.channels.sent.nearPattern = "Sent";
+
+        groups.work.channels.spam.farPattern = "[Gmail]/Spam";
+        groups.work.channels.spam.nearPattern = "Spam";
+
+        groups.work.channels.trash.farPattern = "[Gmail]/Trash";
+        groups.work.channels.trash.nearPattern = "Trash";
+
       };
       msmtp.enable = true;
       notmuch.enable = true;
@@ -159,6 +190,9 @@
     gpg.enable = true;
     home-manager.enable = true;
     mbsync.enable = true;
+    mbsync.extraConfig = ''
+      SyncState *
+    '';
     msmtp.enable = true;
     notmuch = {
       enable = true;

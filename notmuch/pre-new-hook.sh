@@ -23,20 +23,20 @@ notmuch search --output=files --format=text0 -- tag:deleted date:..6w | xargs -0
 notmuch search --output=files --format=text0 -- tag:spam date:..3w | xargs -0 rm -fv
 
 echo "Move deleted messages out of inbox..."
-notmuch search --output=files -- tag:deleted and folder:home/Inbox | mv_without_uid 'home/Deleted Messages'
-notmuch search --output=files -- tag:deleted and folder:work/Inbox | mv_without_uid 'work/Deleted Messages'
+notmuch search --output=files -- tag:deleted and folder:home/Inbox | mv_without_uid home/Trash
+notmuch search --output=files -- tag:deleted and folder:work/Inbox | mv_without_uid work/Trash
 
 echo "Move archived messages out of inbox..."
 notmuch search --output=files -- tag:archived and folder:home/Inbox | mv_without_uid home/Archive
-notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid 'work/[Gmail]/All Mail'
+notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid work/Archive
 
 echo "Move spam messages out of inbox..."
-notmuch search --output=files -- tag:spam and folder:home/Inbox | mv_without_uid home/Junk
-notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid 'work/[Gmail]/Spam'
+notmuch search --output=files -- tag:spam and folder:home/Inbox | mv_without_uid home/Spam
+notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid work/Spam
 
 echo "Move non-spam out of spam folder..."
-notmuch search --output=files -- not tag:spam and folder:home/Junk | mv_without_uid home/Inbox
-notmuch search --output=files -- not tag:spam and folder:'work/[Gmail]/Spam' | mv_without_uid work/Inbox
+notmuch search --output=files -- not tag:spam and folder:home/Spam | mv_without_uid home/Inbox
+notmuch search --output=files -- not tag:spam and folder:work/Spam | mv_without_uid work/Inbox
 
 # Pull new messages from upstream
 # Let the hourly job handle updating upstream with local changes

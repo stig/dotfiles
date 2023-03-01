@@ -728,8 +728,8 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (setq notmuch-hello-thousands-separator ",")
 (setq notmuch-archive-tags (list "-inbox" "+archived"))
 (setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
-(setq notmuch-fcc-dirs '(("stig@brautaset.org" . "\"home/Sent Messages\" +sent")
-			 ("stig@circleci.com" . "\"work/[GMAIL]/Sent Mail\" +sent")))
+(setq notmuch-fcc-dirs '(("stig@brautaset.org" . "home/Sent +sent")
+			 ("stig@circleci.com" . "work/Sent +sent")))
 (setq notmuch-saved-searches
       (quote
        ((:name "Personal Inbox" :query "tag:personal and tag:inbox" :key "h")
