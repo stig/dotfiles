@@ -90,6 +90,7 @@
         clj-refactor
         clojure-mode
         company
+        consult
         csv-mode
         diminish
         direnv

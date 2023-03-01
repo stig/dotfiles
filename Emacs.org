@@ -136,10 +136,14 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-** Imenu
+** Consult
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c i") #'imenu)
+(require 'consult)
+(global-set-key (kbd "C-c r") #'consult-ripgrep)
+
+(require 'consult-imenu)
+(global-set-key (kbd "C-c i") #'consult-imenu)
 #+end_src
 
 ** Make 'y' and 'n' satisfy prompts
