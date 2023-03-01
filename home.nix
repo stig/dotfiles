@@ -118,13 +118,13 @@
         nix-mode
         nix-sandbox
         ol-notmuch
+        orderless
         org-mime
         org-roam
         org-superstar
         orgalist
         ox-gfm
         plantuml-mode
-        prescient
         projectile
         protobuf-mode
         rg

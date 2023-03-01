@@ -912,6 +912,15 @@ There are two distinct parts here:
 (with-eval-after-load "eglot"
   (add-hook 'nix-mode-hook #'eglot-ensure))
 #+end_src
+* Orderless
+#+begin_src emacs-lisp
+(require 'orderless)
+
+(setq completion-styles '(orderless basic)
+      completion-category-defaults nil
+      completion-category-overrides '((file (styles partial-completion))))
+#+end_src
+
 * Org mode
 
 The Org manual expects the =C-c {l,a,c}= keybindings to be available
@@ -1151,19 +1160,6 @@ in Org documents.
   (setq indent-tabs-mode nil))
 
 (add-hook 'plantuml-mode-hook #'sb/no-tabs-in-plantuml)
-#+end_src
-
-* Prescient
-
-Prescient remembers what you selected before, and learns over time, so
-it completes better over time.
-
-#+begin_src emacs-lisp
-(require 'prescient)
-(prescient-persist-mode)
-
-(setq completion-styles '(prescient basic))
-(setq completion-category-overrides '((file (styles basic partial-completion))))
 #+end_src
 
 * Projectile
