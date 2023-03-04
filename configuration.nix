@@ -5,7 +5,6 @@
   environment.darwinConfig = "$HOME/.config/nixpkgs/configuration.nix";
 
   imports = [
-    ./agents/mbsync.nix
     ./fonts.nix
     ./settings.nix
   ];

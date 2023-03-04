@@ -3,7 +3,7 @@ echo "Hello from $0"
 set -euo pipefail
 IFS=$'\n\t'
 
-# Run first to ensure statistics are up to date
+# Update paths to messages that might have moved
 notmuch new --no-hooks
 
 # Strip UIDs from filenames when moving mails so that mbsync doesn't
@@ -38,6 +38,5 @@ echo "Move non-spam out of spam folder..."
 notmuch search --output=files -- not tag:spam and folder:home/Spam | mv_without_uid home/Inbox
 notmuch search --output=files -- not tag:spam and folder:work/Spam | mv_without_uid work/Inbox
 
-# Pull new messages from upstream
-# Let the hourly job handle updating upstream with local changes
-mbsync --all --quiet --pull --new
+echo "Sync messages with upstream..."
+mbsync --all
