@@ -729,15 +729,15 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (setq notmuch-archive-tags (list "-inbox" "+archived"))
 (setq notmuch-mua-cite-function (quote message-cite-original-without-signature))
 (setq notmuch-fcc-dirs '(("stig@brautaset.org" . "home/Sent +sent")
+			 ("sonar_columns_0n@icloud.com" . "icloud/Sent +sent")
 			 ("stig@circleci.com" . "work/Sent +sent")))
 (setq notmuch-saved-searches
       (quote
-       ((:name "Personal Inbox" :query "tag:personal and tag:inbox" :key "h")
-	(:name "Work Inbox" :query "tag:work and tag:inbox" :key "w")
-	(:name "Flagged" :query "tag:flagged" :key "f")
+       ((:name "Personal Inbox" :query "tag:personal and tag:inbox" :key "h" :search-type tree)
+	(:name "Work Inbox" :query "tag:work and tag:inbox" :key "w" :search-type tree)
+	(:name "Flagged" :query "tag:flagged" :key "f" :search-type tree)
 	(:name "Drafts" :query "tag:draft" :key "d")
-	(:name "Recent" :query "date:7d.. and not tag:lists" :key "r" :search-type tree)
-	(:name "My Threads" :query "thread:\"{from:stig}\" and tag:unread" :key "t" :search-type tree))))
+	(:name "Recent" :query "date:7d.. and not tag:lists" :key "r" :search-type tree))))
 #+END_SRC
 
 ** Sending mail with MSMTP

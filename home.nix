@@ -72,6 +72,41 @@
       userName = "stig@brautaset.org";
     };
 
+    accounts.icloud = {
+      address = "sonar_columns_0n@icloud.com";
+      imap.host = "imap.mail.me.com";
+      maildir.path = "icloud";
+      mbsync = {
+        enable = true;
+        expunge = "both";
+        extraConfig.account.PipelineDepth = 10;
+        extraConfig.account.Timeout = 60;
+
+        groups.icloud.channels.inbox.farPattern = "";
+        groups.icloud.channels.inbox.nearPattern = "";
+
+        groups.icloud.channels.archive.farPattern = "Archive";
+        groups.icloud.channels.archive.nearPattern = "Archive";
+
+        groups.icloud.channels.sent.farPattern = "Sent Messages";
+        groups.icloud.channels.sent.nearPattern = "Sent";
+
+        groups.icloud.channels.junk.farPattern = "Junk";
+        groups.icloud.channels.junk.nearPattern = "Spam";
+
+        groups.icloud.channels.trash.farPattern = "Deleted Messages";
+        groups.icloud.channels.trash.nearPattern = "Trash";
+      };
+      msmtp.enable = true;
+      smtp.port = 587;
+      smtp.tls.useStartTls = true;
+      notmuch.enable = true;
+      realName = "Stig Brautaset";
+      passwordCommand = "/usr/bin/security find-internet-password -s imap.mail.me.com -w";
+      smtp.host = "smtp.mail.me.com";
+      userName = "sonar_columns_0n@icloud.com";
+    };
+
     accounts.work = {
       address = "stig@circleci.com";
       imap.host = "imap.gmail.com";

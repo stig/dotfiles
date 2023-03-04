@@ -24,18 +24,22 @@ notmuch search --output=files --format=text0 -- tag:spam date:..3w | xargs -0 rm
 
 echo "Move deleted messages out of inbox..."
 notmuch search --output=files -- tag:deleted and folder:home/Inbox | mv_without_uid home/Trash
+notmuch search --output=files -- tag:deleted and folder:icloud/Inbox | mv_without_uid icloud/Trash
 notmuch search --output=files -- tag:deleted and folder:work/Inbox | mv_without_uid work/Trash
 
 echo "Move archived messages out of inbox..."
 notmuch search --output=files -- tag:archived and folder:home/Inbox | mv_without_uid home/Archive
+notmuch search --output=files -- tag:archived and folder:icloud/Inbox | mv_without_uid icloud/Archive
 notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid work/Archive
 
 echo "Move spam messages out of inbox..."
 notmuch search --output=files -- tag:spam and folder:home/Inbox | mv_without_uid home/Spam
+notmuch search --output=files -- tag:spam and folder:icloud/Inbox | mv_without_uid icloud/Spam
 notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid work/Spam
 
 echo "Move non-spam out of spam folder..."
 notmuch search --output=files -- not tag:spam and folder:home/Spam | mv_without_uid home/Inbox
+notmuch search --output=files -- not tag:spam and folder:icloud/Spam | mv_without_uid icloud/Inbox
 notmuch search --output=files -- not tag:spam and folder:work/Spam | mv_without_uid work/Inbox
 
 echo "Sync messages with upstream..."
