@@ -40,35 +40,10 @@
   accounts.email = {
     accounts.personal = {
       address = "stig@brautaset.org";
-      imap.host = "mail.gandi.net";
       maildir.path = "home";
-      mbsync = {
-        enable = true;
-        expunge = "both";
-        extraConfig.account.PipelineDepth = 10;
-        extraConfig.account.Timeout = 60;
-
-        groups.personal.channels.inbox.farPattern = "";
-        groups.personal.channels.inbox.nearPattern = "";
-
-        groups.personal.channels.archive.farPattern = "Archive";
-        groups.personal.channels.archive.nearPattern = "Archive";
-
-        groups.personal.channels.sent.farPattern = "Sent Messages";
-        groups.personal.channels.sent.nearPattern = "Sent";
-
-        groups.personal.channels.junk.farPattern = "Junk";
-        groups.personal.channels.junk.nearPattern = "Spam";
-
-        groups.personal.channels.trash.farPattern = "Deleted Messages";
-        groups.personal.channels.trash.nearPattern = "Trash";
-      };
-      msmtp.enable = true;
       notmuch.enable = true;
       realName = "Stig Brautaset";
       passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gandi-password -w";
-      smtp.host = "mail.gandi.net";
-      userName = "stig@brautaset.org";
     };
 
     accounts.icloud = {
