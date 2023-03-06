@@ -67,7 +67,6 @@
       notmuch.enable = true;
       realName = "Stig Brautaset";
       passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gandi-password -w";
-      primary = true;
       smtp.host = "mail.gandi.net";
       userName = "stig@brautaset.org";
     };
@@ -103,6 +102,7 @@
       notmuch.enable = true;
       realName = "Stig Brautaset";
       passwordCommand = "/usr/bin/security find-internet-password -s imap.mail.me.com -w";
+      primary = true;
       smtp.host = "smtp.mail.me.com";
       userName = "sonar_columns_0n@icloud.com";
     };
