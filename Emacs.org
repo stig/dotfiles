@@ -1057,9 +1057,9 @@ need them.
 	 (file "Templates/post.org")
 	 :clock-in t)
 
-        ("r" "New GTD Review" entry
-	 (file "gtd_review.org")
-	 (file "Templates/gtd-review.org")
+        ("r" "New GTD Review" plain
+	 (file ,(format-time-string "GTD/%F.org"))
+	 (file "GTD/review-template.org")
 	 :clock-in t)))
 
 (org-babel-do-load-languages 'org-babel-load-languages
