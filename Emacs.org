@@ -1038,11 +1038,9 @@ need them.
 	("t" "TODO" entry (file "") "* TODO %? :inbox:")
 	("l" "TODO with [l]ink" entry (file "") "* TODO %? :inbox:\ncf %a ")
 
-	("w" "Weekly summary" entry
-	 (file ,(format "weekly-summaries/%s.org" (format-time-string "%Y")))
-	 (file "Templates/weekly-summary.org")
-	 :clock-in t
-         :clock-keep t
+	("w" "Weekly summary" plain
+	 (file ,(format-time-string "weekly-summaries/%F.org"))
+	 (file "weekly-summaries/summary-template.org")
          :jump-to-captured t)
 
 	("b" "Things to Brag about!" entry
