@@ -1052,13 +1052,11 @@ need them.
 	 (function (lambda ()
 		     (find-file (format "~/blog/content/posts/000-DRAFT-%#x.org"
 					(time-convert nil 'integer)))))
-	 (file "Templates/post.org")
-	 :clock-in t)
+	 (file "Templates/post.org"))
 
         ("r" "New GTD Review" plain
 	 (file ,(format-time-string "GTD/%F.org"))
-	 (file "GTD/review-template.org")
-	 :clock-in t)))
+	 (file "GTD/review-template.org"))))
 
 (org-babel-do-load-languages 'org-babel-load-languages
 			     '((emacs-lisp . t)
