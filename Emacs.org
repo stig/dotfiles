@@ -1041,6 +1041,7 @@ need them.
 	("w" "Weekly summary" plain
 	 (file ,(format-time-string "weekly-summaries/%F.org"))
 	 (file "weekly-summaries/summary-template.org")
+	 :immediate-finish t
          :jump-to-captured t)
 
 	("b" "Things to Brag about!" entry
