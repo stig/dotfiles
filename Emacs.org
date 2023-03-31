@@ -301,7 +301,7 @@ its :value property if its :key property matches `key'."
   "Call in a blog post to get an entry suitable for linking to this
 post from the index page."
   (interactive)
-  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+  (let* ((path (s-chop-prefix (expand-file-name "~/blog/content/") (buffer-file-name)))
          (tree (org-element-parse-buffer))
          (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
          (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
@@ -331,7 +331,7 @@ can "soft publish" and publish to RSS separately from the index page.
   "Call in a blog post to get an entry suitable for linking to this
 post from the index page."
   (interactive)
-  (let* ((path (s-chop-prefix (expand-file-name "~/blog/") (buffer-file-name)))
+  (let* ((path (s-chop-prefix (expand-file-name "~/blog/content/") (buffer-file-name)))
          (tree (org-element-parse-buffer))
          (title (org-element-map tree 'keyword (sb/org-kw-get "TITLE") nil t))
          (categories (org-element-map tree 'keyword (sb/org-kw-get "CATEGORY"))))
