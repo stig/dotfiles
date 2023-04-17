@@ -699,7 +699,7 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 (setq notmuch-saved-searches
       (quote
        ((:name "Personal Inbox" :query "tag:personal and tag:inbox" :key "p" :search-type tree)
-	(:name "CCI Inbox" :query "tag:work and tag:inbox" :kpey "c" :search-type tree)
+	(:name "CCI Inbox" :query "tag:work and tag:inbox" :key "c" :search-type tree)
 	(:name "Flagged" :query "tag:flagged" :key "f" :search-type tree)
 	(:name "Waiting For" :query "tag:waiting_for" :key "w" :search-type tree)
 	(:name "Drafts" :query "tag:draft" :key "d")
