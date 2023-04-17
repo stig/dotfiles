@@ -583,7 +583,11 @@ primary REPL.
 (with-eval-after-load "eglot"
   (add-hook 'clojure-mode-hook #'eglot-ensure))
 
-(setq cider-use-xref nil) ;; eglot's xref works a lot better
+;; Allow cider's xref, but at low priority. Don't use it by default as
+;; Eglot's xref tends to work better.
+(setq cider-use-xref t)
+(setq cider-xref-fn-depth 90)
+
 (setq cider-eldoc-display-context-dependent-info t)
 #+END_SRC
 
