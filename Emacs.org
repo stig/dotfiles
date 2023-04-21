@@ -574,9 +574,15 @@ I still keep it around for its "magic requires", which I very much
 appreciate. I should improve this though.
 
 #+begin_src emacs-lisp
+(setq cljr-insert-newline-after-require nil)
+(setq cljr-auto-sort-ns nil)
+
 (with-eval-after-load "clojure-mode"
   (with-eval-after-load "yasnippet"
     (require 'clj-refactor)
+
+    (add-to-list 'cljr-magic-require-namespaces '("s" . "clojure.spec.alpha"))
+    (add-to-list 'cljr-magic-require-namespaces '("gen" . "clojure.spec.gen.alpha"))
 
     (define-key clojure-mode-map (kbd "C-c C-r h") #'hydra-cljr-help-menu/body)
 
