@@ -56,7 +56,8 @@
         groups.work.channels.inbox.farPattern = "";
         groups.work.channels.inbox.nearPattern = "";
 
-        groups.work.channels.archive.farPattern = "[Gmail]/All Mail";
+        # Gmail reserves "archived?" labels for internal use.
+        groups.work.channels.archive.farPattern = "Stored";
         groups.work.channels.archive.nearPattern = "Archive";
 
         groups.work.channels.sent.farPattern = "[Gmail]/Sent Mail";
