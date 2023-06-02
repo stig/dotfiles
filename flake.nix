@@ -2,7 +2,7 @@
   description = "Home Manager & Nix Darwin configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
 
     home-manager = {
       url = "github:nix-community/home-manager";
