@@ -982,8 +982,6 @@ need them.
 	 ((org-agenda-span 'day)
 	  (org-agenda-tag-filter-preset '("-someday" "-inbox"))))
 	("x" "E[x]tra tasks" tags-todo "-someday-inbox/TODO")
-	("G" "Goals" tags-todo "+goal/TODO"
-	 ((org-agenda-tags-todo-honor-ignore-options nil)))
 	("g" . "Getting Things Done")
 	("gA" "Agenda minus recurring tasks"
 	 agenda ""
