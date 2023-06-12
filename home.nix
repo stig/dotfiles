@@ -115,6 +115,8 @@
         core.pager = "";
         rerere.enabled = true;
         github.user = "stig";
+        user.signingkey = "68D77873AEB4B2B9";
+        commit.gpgsign = true;
       };
       ignores = [
         ".DS_Store"
