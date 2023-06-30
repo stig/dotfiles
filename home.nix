@@ -88,6 +88,7 @@
         ol-notmuch
         orderless
         org-mime
+        org-present
         org-roam
         org-superstar
         orgalist
@@ -102,6 +103,7 @@
         terraform-mode
         verb
         vertico
+        visual-fill-column
         wgrep
         yaml-mode
         yasnippet
