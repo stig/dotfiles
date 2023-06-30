@@ -4,22 +4,16 @@
 #+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent :mkdirp t
 #+STARTUP: content
 
-This is my Emacs configuration. It is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document:
-prose interspersed with code blocks. I edit this file, and /tangle/ it
-into [[file:~/.config/emacs/init.el][init.el]] (and [[/Users/stig/.config/emacs/early-init.el][early-init.el]]) by hitting =C-c C-v C-t=.
+This is my Emacs configuration. It is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspersed with code blocks. I edit this file, and /tangle/ it into [[file:~/.config/emacs/init.el][init.el]] (and [[/Users/stig/.config/emacs/early-init.el][early-init.el]]) by hitting =C-c C-v C-t=.
 
-I install Emacs itself using nixpkgs, along with other tools
-(~ripgrep~, etc).
+I install Emacs itself using nixpkgs, along with other tools (~ripgrep~, etc).
 
 * Early Initialisation
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el :results silent :mkdirp t
 :END:
 
-Emacs loads =early-init.el= before loading GUI components. That makes
-it a great place to turn off the mouse interface, to avoid momentary
-display during launch. I also disable the splash screen, the audible
-bell, and the ~package.el~ subsystem.
+Emacs loads =early-init.el= before loading GUI components. That makes it a great place to turn off the mouse interface, to avoid momentary display during launch. I also disable the splash screen, the audible bell, and the ~package.el~ subsystem.
 
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
@@ -43,16 +37,13 @@ Let's also set some performance tuning options here.
 #+end_src
 
 * Use lexical bindings
-Using lexical bindings speeds up loading config, if I understand
-correctly.
+Using lexical bindings speeds up loading config, if I understand correctly.
 #+begin_src emacs-lisp
 ;; -*- lexical-binding: t; -*-
 #+end_src
 * Who am I?
 
-Set up my name, email address, and login. I use the email in my
-Notmuch config below, and some of these show up in Org mode's export
-metadata.
+Set up my name, email address, and login. I use the email in my Notmuch config below, and some of these show up in Org mode's export metadata.
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Stig Brautaset"
@@ -73,8 +64,7 @@ metadata.
 
 ** Confirm kill emacs
 
-The default keybinding for this is close to =M-q= which I use for
-reflowing text.
+The default keybinding for this is close to =M-q= which I use for reflowing text.
 
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -88,8 +78,7 @@ reflowing text.
 #+end_src
 ** Display line numbers
 
-Displaying line numbers is incredibly useful when remotely pairing
-with other people.
+Displaying line numbers is incredibly useful when remotely pairing with other people.
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -97,8 +86,7 @@ with other people.
 
 ** Don't require two spaces to end a sentence
 
-Having this enabled makes it harder to collaborate with others, and
-move sentences around in texts I haven't written.
+Having this enabled makes it harder to collaborate with others, and move sentences around in texts I haven't written.
 
 #+begin_src emacs-lisp
 (setq sentence-end-double-space nil)
@@ -114,8 +102,7 @@ All files should end in a newline. Insert one if there isn't one already.
 
 ** Ensure we don't use unencrypted auth sources
 
-This could take the form of e.g. saving auth info to =~/.authinfo=, or
-=~/.netrc= rather than =~/.authinfo.gpg=, for example.
+This could take the form of e.g. saving auth info to =~/.authinfo=, or =~/.netrc= rather than =~/.authinfo.gpg=, for example.
 
 #+begin_src emacs-lisp
 (setq auth-sources (quote ("~/.authinfo.gpg")))
@@ -129,8 +116,7 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or
 #+end_src
 ** GnuPG
 
-Emacs will open =.gpg= files transparently, but I need to install gnupg
-& pinentry for that to work.
+Emacs will open =.gpg= files transparently, but I need to install gnupg & pinentry for that to work.
 
 #+begin_src emacs-lisp
 (setq epa-pinentry-mode 'loopback)
@@ -148,8 +134,7 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg
 
 ** Make 'y' and 'n' satisfy prompts
 
-Answering just 'y' or 'n' will do, rather than having to spell out "yes"
-or "no".
+Answering just 'y' or 'n' will do, rather than having to spell out "yes" or "no".
 
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -161,8 +146,7 @@ or "no".
 #+END_SRC
 
 ** Put Customize settings in a separate file
-I prefer to code my configuration, most of the time, but sometimes
-it's good enough. I do want them in a separate file though.
+I prefer to code my configuration, most of the time, but sometimes it's good enough. I do want them in a separate file though.
 
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -172,8 +156,7 @@ it's good enough. I do want them in a separate file though.
 
 ** Save minibuffer history
 
-This allows us to "tap up" in the minibuffer to recall previous items,
-even from a previous session.
+This allows us to "tap up" in the minibuffer to recall previous items, even from a previous session.
 
 #+BEGIN_SRC emacs-lisp
 (savehist-mode)
@@ -189,8 +172,7 @@ It's nice if Emacs knows where I was last time I opened a file.
 
 ** Show Matching parens
 
-Put the cursor on any of =()[]{}= and Emacs shows the matching
-closing/opening one.
+Put the cursor on any of =()[]{}= and Emacs shows the matching closing/opening one.
 
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode 1)
@@ -204,8 +186,7 @@ closing/opening one.
 
 ** Store backup files in a separate folder
 
-I don't like backup files all over my disk. This places them in a
-separate directory.
+I don't like backup files all over my disk. This places them in a separate directory.
 
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
@@ -220,8 +201,7 @@ I like to be able to use my kill-ring in the minibuffer.
 #+end_src
 ** Transparently open compressed files
 
-I *do* like it when Emacs transparently opens compressed files. It gives
-me the warm fuzzies.
+I *do* like it when Emacs transparently opens compressed files. It gives me the warm fuzzies.
 
 #+BEGIN_SRC emacs-lisp
 (auto-compression-mode t)
@@ -229,8 +209,7 @@ me the warm fuzzies.
 
 ** Upcase-dwim and dowcase-dwim
 
-Acts like ~upcase-word~ with no region selected, and ~upcase-region~
-when one is.
+Acts like ~upcase-word~ with no region selected, and ~upcase-region~ when one is.
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-u") #'upcase-dwim)
@@ -289,9 +268,7 @@ I install this font with Nix.
 
 * Custom Functions
 ** Blogging
-I create blog entries in a directory under =~/blog= and link to them
-from the main index page. It has so far been a manual job, but I have
-finally managed to create a function to automate it a bit.
+I create blog entries in a directory under =~/blog= and link to them from the main index page. It has so far been a manual job, but I have finally managed to create a function to automate it a bit.
 
 *** Helper function to get a value from Org keyword element
 
@@ -333,8 +310,7 @@ post from the index page."
 
 *** Create RSS entry
 
-Creating an entry in the RSS feed is another manual step. This way I
-can "soft publish" and publish to RSS separately from the index page.
+Creating an entry in the RSS feed is another manual step. This way I can "soft publish" and publish to RSS separately from the index page.
 
 #+begin_src emacs-lisp
 (defun sb/blog-post-rss-entry ()
@@ -359,8 +335,7 @@ post from the index page."
 
 *** Blog server
 
-While noodling around with my blog locally I publish to =~/blog=
-and use a simple Python server to host it.
+While noodling around with my blog locally I publish to =~/blog= and use a simple Python server to host it.
 
 #+begin_src emacs-lisp
 (defun sb/blog-server ()
@@ -389,9 +364,7 @@ Copied from [[https://github.com/sulami/dotfiles/blob/master/emacs/.emacs/README
 
 ** Ediff: Automatically Unfold Org files
 
-This snippet makes sure that Org buffers don't start folded, as
-ediff is rather useless in that case. (Credit: Oleh Krehel on
-emacs-orgmode mailing list.)
+This snippet makes sure that Org buffers don't start folded, as ediff is rather useless in that case. (Credit: Oleh Krehel on emacs-orgmode mailing list.)
 
 #+BEGIN_SRC emacs-lisp
 (defun sb/ediff-prepare-buffer ()
@@ -403,10 +376,7 @@ emacs-orgmode mailing list.)
 
 ** Ediff: Picking /both/ sides in a conflict
 
-If both branches add an entry to a list I may want to pick *both*
-sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use
-=~= to swap the A and B buffers, which lets me choose A then B, /or/ B
-then A.
+If both branches add an entry to a list I may want to pick *both* sides. This adds =d= as a shortcut to do that. ([[http://stackoverflow.com/a/29757750/5950][Credits]].) I can use =~= to swap the A and B buffers, which lets me choose A then B, /or/ B then A.
 
 #+BEGIN_SRC emacs-lisp
 (defun sb/ediff-copy-both-to-C ()
@@ -426,9 +396,7 @@ then A.
 
 ** Toggle Window Split function
 
-This function re-arranges horizontally-split windows to be
-vertically-split, and vice versa. I found it on StackOverflow, once
-upon a time but now can't find the link.
+This function re-arranges horizontally-split windows to be vertically-split, and vice versa. I found it on StackOverflow, once upon a time but now can't find the link.
 
 #+BEGIN_SRC emacs-lisp
 (defun toggle-window-split ()
@@ -461,11 +429,7 @@ upon a time but now can't find the link.
 
 ** Unfill paragraphs and regions
 
-The default binding for =M-q= fills a paragraph. Very good. But
-sometimes I want to /unfill/, particularly when editing markdown that
-is going to end up on GitHub. Otherwise the result has lots of hard
-linebreaks. This happens every time I edit a PR description in Magit,
-for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
+The default binding for =M-q= fills a paragraph. Very good. But sometimes I want to /unfill/, particularly when editing markdown that is going to end up on GitHub. Otherwise the result has lots of hard linebreaks. This happens every time I edit a PR description in Magit, for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a][Credit]].
 
 #+begin_src emacs-lisp
 (defun endless/fill-or-unfill ()
@@ -485,9 +449,7 @@ for example. [[Https://gist.github.com/heikkil/a3edf506046c84f6f508edbaf005810a]
 
 * Exec Path From Shell
 
-The GUI Emacs gets exec path from the system, rather than the login
-shell. We have to load ~PATH~ et. al. from the shell to get access to
-programs installed by Nix.
+The GUI Emacs gets exec path from the system, rather than the login shell. We have to load ~PATH~ et. al. from the shell to get access to programs installed by Nix.
 
 Copy ~PATH~ and ~MANPATH~ from my login shell so these
 variables are available in Eshell. (And elsewhere in Emacs.)
@@ -508,9 +470,7 @@ A templating engine for Emacs.
 #+end_src
 * Ace Window
 
-This lets me rapidly switch to a different frame/window.  I use
-this mainly when resolving conflicts in ediff merge, since I need
-to swap between two frames there.
+This lets me rapidly switch to a different frame/window. I use this mainly when resolving conflicts in ediff merge, since I need to swap between two frames there.
 
 #+begin_src emacs-lisp
 (require 'ace-window)
@@ -519,8 +479,7 @@ to swap between two frames there.
 #+end_src
 
 * Bug Reference Mode
-Automatically create JIRA links for things that looks like them. For
-this I've adapted snippets from Alex ter Weele and Robin Schroer.
+Automatically create JIRA links for things that looks like them. For this I've adapted snippets from Alex ter Weele and Robin Schroer.
 #+begin_src emacs-lisp
 (defun sb/bug-reference-setup ()
   (setq bug-reference-bug-regexp
@@ -545,8 +504,7 @@ this I've adapted snippets from Alex ter Weele and Robin Schroer.
 
 Clojure is the main programming language I use at work.
 
-I use Clojure Mode augmented by flymake-kondor. I use CIDER as my
-primary REPL.
+I use Clojure Mode augmented by flymake-kondor. I use CIDER as my primary REPL.
 
 #+BEGIN_SRC emacs-lisp
 (require 'clojure-mode)
@@ -606,14 +564,12 @@ appreciate. I should improve this though.
 (diminish 'company-mode)
 #+end_src
 * CSV Mode
-Useful for removing columns from a CSV file, for example. Or lining up
-columns by width, for easier viewing.
+Useful for removing columns from a CSV file, for example. Or lining up columns by width, for easier viewing.
 #+begin_src emacs-lisp
 (require 'csv-mode)
 #+end_src
 * Direnv
-Set environment per directory. The plan is to use this with
-Nix-direnv, to automatically set my PATH for a directory.
+Set environment per directory. The plan is to use this with Nix-direnv, to automatically set my PATH for a directory.
 
 #+begin_src emacs-lisp
 (require 'direnv)
@@ -635,17 +591,14 @@ Trying this out again, now that it registers an xref backend:
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 100)
 #+end_src
 * Edit Indirect
-To edit code examples in a separate buffer from Markdown. (Similar to
-code blocks in Org.)
+To edit code examples in a separate buffer from Markdown. (Similar to code blocks in Org.)
 
 #+begin_src emacs-lisp
 (require 'edit-indirect)
 #+end_src
 
 * Elfeed
-Elfeed is an Emacs (RSS & Atom) feed reader. ~org-elfeed~ is an
-extension that stores the feed config in =elfeed.org= rather than
-=custom.el=.
+Elfeed is an Emacs (RSS & Atom) feed reader. ~org-elfeed~ is an extension that stores the feed config in =elfeed.org= rather than =custom.el=.
 
 #+BEGIN_SRC emacs-lisp
 (require 'elfeed)
@@ -660,14 +613,11 @@ extension that stores the feed config in =elfeed.org= rather than
 * Email
 ** Notmuch
 
-I like to use Emacs for /all/ writing, including email. I don't want a
-separate program to read and write emails, so it follows I must /read/
-email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
+I like to use Emacs for /all/ writing, including email. I don't want a separate program to read and write emails, so it follows I must /read/ email in Emacs too. I currently use [[https://notmuchmail.org][Notmuch]] for this.
 
 Notmuch works pretty well for me out of the box.
 
-Notmuch's Emacs bindings are closely tied to the binary programs, so
-they (strongly) recommend that you don't install Notmuch from ELPA.
+Notmuch's Emacs bindings are closely tied to the binary programs, so they (strongly) recommend that you don't install Notmuch from ELPA.
 
 #+BEGIN_SRC emacs-lisp
 (require 'notmuch)
@@ -700,16 +650,13 @@ they (strongly) recommend that you don't install Notmuch from ELPA.
 
 ** Sending mail with MSMTP
 
-MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account
-to use from the "from" address.
+MSMTP's [[file:../msmtp/config][configuration]] is really simple, and it will detect the account to use from the "from" address.
 
-Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]]
-section in the msmtp documentation for details.
+Passwords are stored in the system Keychain. See the [[http://msmtp.sourceforge.net/doc/msmtp.html#Authentication][Authentication]] section in the msmtp documentation for details.
 
 : security add-internet-password -s mail.gandi.net -r smtp -a stig@brautaset.org -w
 
-Finally we have to tell Emacs to use msmtp to send mail.  (And to
-kill the message buffer on exit.)
+Finally we have to tell Emacs to use msmtp to send mail. (And to kill the message buffer on exit.)
 
 #+BEGIN_SRC emacs-lisp
 (setq sendmail-program "msmtp"
@@ -723,11 +670,7 @@ kill the message buffer on exit.)
 
 ** Link to Notmuch emails from Org
 
-I don't like using my email inbox as a todo list. When I receive an
-email I need to act on but /can't yet/ for some reason, I link to it
-from my Org mode agenda and archive it. When Org agenda prompts me I
-can click on the link and immediately get to the mail in my archive,
-and can reply to it from there.
+I don't like using my email inbox as a todo list. When I receive an email I need to act on but /can't yet/ for some reason, I link to it from my Org mode agenda and archive it. When Org agenda prompts me I can click on the link and immediately get to the mail in my archive, and can reply to it from there.
 
 #+begin_src emacs-lisp
 (with-eval-after-load "notmuch"
@@ -743,9 +686,7 @@ For sending HTML emails.
 #+end_src
 ** Simple HTML Renderer (HTML Email)
 
-I use shr for reading HTML mail. I normally use a fullscreen window,
-but I don't like reading HTML mails with lines running all the way
-across. Thus I prefer linebreaks roughly every 80 characters.
+I use shr for reading HTML mail. I normally use a fullscreen window, but I don't like reading HTML mails with lines running all the way across. Thus I prefer linebreaks roughly every 80 characters.
 
 #+begin_src emacs-lisp
 (setq shr-width 80)
@@ -775,9 +716,7 @@ I sometimes must interact with Go at work.
   (add-hook 'go-mode-hook #'eglot-ensure))
 #+end_src
 * HugSQL
-HugSQL is a great abstraction for using SQL from Clojure. Robin's
-imenu integration makes it easy to search for "functions" in the
-HugSQL files.
+HugSQL is a great abstraction for using SQL from Clojure. Robin's imenu integration makes it easy to search for "functions" in the HugSQL files.
 
 #+begin_src emacs-lisp
 (defun sulami/init-hugsql-imenu ()
@@ -788,8 +727,7 @@ HugSQL files.
 #+end_src
 
 * JSON Mode
-This makes Org-mode source blocks do syntax highlighting of JSON
-documents, which I like.
+This makes Org-mode source blocks do syntax highlighting of JSON documents, which I like.
 #+begin_src emacs-lisp
 (require 'json-mode)
 
@@ -811,12 +749,9 @@ documents, which I like.
 
 * Magit & Forge
 
-I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day. I rarely use the git
-cli any more. I've seen someone suggest learning Emacs just to run
-Magit.
+I use [[http://magit.vc][Magit]], a git porcelain for Emacs, all day. I rarely use the git cli any more. I've seen someone suggest learning Emacs just to run Magit.
 
-Forge is an extension to Magit that lets me create & manipulate pull
-requests on GitHub / GitLab etc.
+Forge is an extension to Magit that lets me create & manipulate pull requests on GitHub / GitLab etc.
 
 #+BEGIN_SRC emacs-lisp
 (require 'magit)
@@ -841,8 +776,7 @@ Provide more information in Minibuffer margins
 #+end_src
 * Markdown
 
-I'm a sucker for lists, and I want to be able to reorder list items
-easily and have them renumbered automatically.
+I'm a sucker for lists, and I want to be able to reorder list items easily and have them renumbered automatically.
 
 #+BEGIN_SRC emacs-lisp
 (require 'markdown-mode)
@@ -858,9 +792,7 @@ easily and have them renumbered automatically.
 #+END_SRC
 * Multiple Cursors
 
-This package is another one of those near-magical ones. It allows me to do
-multiple edits in the same buffer, using several cursors. You can think of
-it as an interactive macro, where you can constantly see what's being done.
+This package is another one of those near-magical ones. It allows me to do multiple edits in the same buffer, using several cursors. You can think of it as an interactive macro, where you can constantly see what's being done.
 
 #+BEGIN_SRC emacs-lisp
 (require 'multiple-cursors)
@@ -891,18 +823,11 @@ There are two distinct parts here:
 
 * Org mode
 
-The Org manual expects the =C-c {l,a,c}= keybindings to be available
-in any mode, so define them globally. I prefer to follow conventions.
-It makes reading the manual and tutorials a lot easier!
+The Org manual expects the =C-c {l,a,c}= keybindings to be available in any mode, so define them globally. I prefer to follow conventions. It makes reading the manual and tutorials a lot easier!
 
-I use Org Agenda for keeping track of my TODOs. I configure TODO list
-and tag search to ignore future scheduled, deadlined, and timestamped
-issues. These will show in the Agenda eventually anyway.
+I use Org Agenda for keeping track of my TODOs. I configure TODO list and tag search to ignore future scheduled, deadlined, and timestamped issues. These will show in the Agenda eventually anyway.
 
-Org Babel is magical: execute code from different languages in the
-same file, and capture the output! I list the languages I want to
-support. I also have to load some modules so they're available when I
-need them.
+Org Babel is magical: execute code from different languages in the same file, and capture the output! I list the languages I want to support. I also have to load some modules so they're available when I need them.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -1035,12 +960,9 @@ need them.
 #+end_src
 
 * Org Roam
-[[https://github.com/org-roam/org-roam][Org-roam]] is meant to be an "exo-brain", modelled after the
-Zettelkasten method. I like aspects of it, and especially excited
-about the simplification in v2.
+[[https://github.com/org-roam/org-roam][Org-roam]] is meant to be an "exo-brain", modelled after the Zettelkasten method. I like aspects of it, and especially excited about the simplification in v2.
 
-This allows me to capture links to websites from my browser, and store
-it as a resource in Org roam.
+This allows me to capture links to websites from my browser, and store it as a resource in Org roam.
 
 #+begin_src emacs-lisp
 (require 'org-roam)
@@ -1076,8 +998,7 @@ it as a resource in Org roam.
 #+end_src
 * Org Roam Dailies
 
-I use org roam dailies for my daily notes. It integrates nicely with
-Roam, so I can "promote" notes from my daily files to my main Roam db.
+I use org roam dailies for my daily notes. It integrates nicely with Roam, so I can "promote" notes from my daily files to my main Roam db.
 
 #+begin_src emacs-lisp
 (require 'org-roam-dailies)
@@ -1099,8 +1020,7 @@ Edit "Org-like" lists in non-Org buffers.
 
 * PlantUML
 
-I sometimes need to draw UML diagrams, both on their own and embedded
-in Org documents.
+I sometimes need to draw UML diagrams, both on their own and embedded in Org documents.
 
 #+begin_src emacs-lisp
 (require 'plantuml-mode)
@@ -1122,8 +1042,7 @@ in Org documents.
 
 * Projectile
 
-I use Projectile to navigate my projects. Some of the things I like about
-it are that it provides the following key bindings:
+I use Projectile to navigate my projects. Some of the things I like about it are that it provides the following key bindings:
 
 - =C-c p f= :: Find a file in this project.
 - =C-c p k= :: Close all buffers for this project.
@@ -1159,8 +1078,7 @@ it are that it provides the following key bindings:
 #+END_SRC
 
 * Protobuf Mode
-We use protobufs for service-to-service communication at work. Stolen
-from Robin Schroer.
+We use protobufs for service-to-service communication at work. Stolen from Robin Schroer.
 
 #+BEGIN_SRC emacs-lisp
 (require 'protobuf-mode)
@@ -1177,12 +1095,9 @@ Stolen from Spacemacs."
 
 * Ripgrep
 
-I have to delay the setup until after nix paths have loaded, otherwise
-~executable-find~ can't find my ~rg~ executable.
+I have to delay the setup until after nix paths have loaded, otherwise ~executable-find~ can't find my ~rg~ executable.
 
-I often look for stuff in "hidden" files like =circleci/config.yml=,
-yet I don't want hits stuff from my git history, so explicitly ignore
-that directory rather than all "hidden" files. ([[https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044][ref]])
+I often look for stuff in "hidden" files like =circleci/config.yml=, yet I don't want hits stuff from my git history, so explicitly ignore that directory rather than all "hidden" files. ([[https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044][ref]])
 
 #+begin_src emacs-lisp
 (require 'rg)
@@ -1202,10 +1117,7 @@ This is necessary for =emacsclient= and therefore =org-roam-protocol=.
 #+end_src
 * SmartParens
 
-Structural editing is a must when editing lisp, and it has bled into
-other aspects of programming for me. In particular the ability to
-remove surrounding parens / quotes with ~sp-unwrap-sexp~ is incredibly
-useful even in text mode.
+Structural editing is a must when editing lisp, and it has bled into other aspects of programming for me. In particular the ability to remove surrounding parens / quotes with ~sp-unwrap-sexp~ is incredibly useful even in text mode.
 
 #+BEGIN_SRC emacs-lisp
 (require 'smartparens-config)
@@ -1242,8 +1154,7 @@ useful even in text mode.
 
 * String Inflection
 
-Sometimes I need to swap between CamelCase and snake_case, or even
-SCREAMING_SNAKE_CASE.
+Sometimes I need to swap between CamelCase and snake_case, or even SCREAMING_SNAKE_CASE.
 
 #+begin_src emacs-lisp
 (require 'string-inflection)
@@ -1251,8 +1162,7 @@ SCREAMING_SNAKE_CASE.
 
 * Subword
 
-Treats CapitalizedWords as separate, so we can move forward by
-their components.  Useful in anything that looks like Java.
+Treats CapitalizedWords as separate, so we can move forward by their components. Useful in anything that looks like Java.
 
 #+begin_src emacs-lisp
 (require 'subword)
@@ -1270,11 +1180,7 @@ Allows me to switch to root for editing a file. (Usually =/etc/hosts=.)
 #+end_src
 * Verb
 
-This is a package I use for interacting with REST HTTP APIs. Before
-arriving at it I tried restclient, walkman, and http.el. All have
-their strengths and weaknesses, but Verb seems the most well-rounded
-feature set. The hierachical inheritance is what really sold me, as it
-works really well with REST APIs to reduce boilerplate.
+This is a package I use for interacting with REST HTTP APIs. Before arriving at it I tried restclient, walkman, and http.el. All have their strengths and weaknesses, but Verb seems the most well-rounded feature set. The hierachical inheritance is what really sold me, as it works really well with REST APIs to reduce boilerplate.
 
 #+begin_src emacs-lisp
 (require 'verb)
