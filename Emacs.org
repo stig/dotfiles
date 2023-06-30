@@ -254,11 +254,21 @@ Navigate read-only buffers up and down with space and backspace.
 #+begin_src emacs-lisp
 (setq view-read-only t)
 #+end_src
-** Visual line mode / word wrapping
+** Visual fill column mode / visual line mode
+
+This is a great combination. In particular it means that text is flowing automatically, rather than me having to use the manual fill commands. This is great for editing.
 
 #+BEGIN_SRC emacs-lisp
+(defun sb/visual-fill-column-hook ()
+  (setq visual-fill-column-center-text t)
+  (setq visual-fill-column-width 90))
+
+(add-hook 'visual-fill-column-mode-hook 'sb/visual-fill-column-hook)
+
+(add-hook 'text-mode-hook 'visual-fill-column-mode)
 (add-hook 'text-mode-hook 'visual-line-mode)
 
+(diminish 'visual-fill-column-mode)
 (diminish 'visual-line-mode)
 #+END_SRC
 
