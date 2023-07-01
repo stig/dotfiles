@@ -939,18 +939,6 @@ need them.
 			  (sequence "PROJ(p)" "|" "COMPLETE")
 			  (sequence "|" "CANCELLED")))
 
-(setq org-tag-alist '(("achievement" . ?a)
-		      ("brag" . ?b)
-		      ("inbox" . ?i)
-		      ("interrupt" . ?I)
-		      ("meeting" . ?M)
-		      ("mit" . ?m)
-		      ("noexport" . ?n)
-		      ("note" . ?N)
-		      ("proj" . ?p)
-		      ("someday" . ?s)
-		      ("toil" . ?t)))
-
 (setq org-stuck-projects '("-someday/PROJ" ("TODO" "WAITING") nil ""))
 
 ;; Allow refiling to sub-paths
@@ -1049,11 +1037,14 @@ it as a resource in Org roam.
 (require 'org-roam-protocol)
 
 (setq org-roam-directory (file-truename "~/Documents/Org"))
-(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
+(setq org-roam-node-display-template
+      (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
 
-(setq org-roam-capture-templates '(("d" "default" plain "%?" :target
-				    (file+head "Roam/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-				    :unnarrowed t)))
+(setq org-roam-capture-templates
+      '(("d" "default" plain "%?" :target
+	 (file+head "Roam/%<%Y%m%d%H%M%S>-${slug}.org"
+		    "#+title: ${title}\n")
+	 :unnarrowed t)))
 
 (global-set-key (kbd "C-c n f") #'org-roam-node-find)
 (global-set-key (kbd "C-c n r") #'org-roam-ref-add)
