@@ -227,12 +227,6 @@ Let's always use UTF-8 encoding. Pretty, pretty please with sugar on top.
 (prefer-coding-system 'utf-8)
 #+END_SRC
 
-** View Mode
-Navigate read-only buffers up and down with space and backspace.
-
-#+begin_src emacs-lisp
-(setq view-read-only t)
-#+end_src
 ** Visual fill column mode / visual line mode
 
 This is a great combination. In particular it means that text is flowing automatically, rather than me having to use the manual fill commands. This is great for editing.
