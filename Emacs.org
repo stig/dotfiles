@@ -1014,6 +1014,16 @@ This allows me to capture links to websites from my browser, and store it as a r
   (org-present-read-only)
   (org-present-hide-cursor)
 
+  ;; Bigger fonts when presenting
+  (setq-local face-remapping-alist
+	      '((default (:height 1.5) variable-pitch)
+                (header-line (:height 4.0) variable-pitch)
+                (org-document-title (:height 1.75) org-document-title)
+                (org-code (:height 1.55) org-code)
+                (org-verbatim (:height 1.55) org-verbatim)
+                (org-block (:height 1.4) org-block)
+                (org-block-begin-line (:height 0.7) org-block)))
+
   (flyspell-mode 0)
 
   ;; Set a blank header line string to create blank space at the top
@@ -1025,6 +1035,10 @@ This allows me to capture links to websites from my browser, and store it as a r
   (org-remove-inline-images)
   (org-present-read-write)
   (org-present-show-cursor)
+
+  ;; Reset text sizes
+  (setq-local face-remapping-alist
+	      '((default variable-pitch default)))
 
   ;; Clear the header line string so that it isn't displayed
   (setq header-line-format nil)
