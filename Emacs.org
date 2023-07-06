@@ -485,6 +485,13 @@ This lets me rapidly switch to a different frame/window. I use this mainly when 
 (global-set-key (kbd "M-`") 'ace-window)
 #+end_src
 
+* Adoc Mode
+I'm not a fan, but some repos I interact with use Adoc and it's a PITA to edit such documents without a helping hand.
+
+#+begin_src emacs-lisp
+(autoload 'adoc-mode "adoc-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
+#+end_src
 * Bug Reference Mode
 Automatically create JIRA links for things that looks like them. For this I've adapted snippets from Alex ter Weele and Robin Schroer.
 #+begin_src emacs-lisp

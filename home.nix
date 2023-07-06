@@ -52,6 +52,7 @@
       enable = true;
       extraPackages = epkgs: (with epkgs; [
         ace-window
+        adoc-mode
         cider
         clj-refactor
         clojure-mode
