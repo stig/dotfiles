@@ -13,9 +13,16 @@
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    clojure-lsp = {
+      url = "github:clojure-lsp/clojure-lsp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
+
     darwinConfigurations = {
       cci-stig-9c7j1 = darwin.lib.darwinSystem {
         system  = "aarch64-darwin";
@@ -24,7 +31,10 @@
     };
     homeConfigurations.stig = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."aarch64-darwin";
-      modules = [ ./home.nix ];
+      modules = [
+        ({ config, pkgs, ... }: { nixpkgs.overlays = [ inputs.clojure-lsp.overlays.default ]; })
+        ./home.nix
+      ];
     };
   };
 }
