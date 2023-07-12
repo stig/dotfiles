@@ -751,15 +751,14 @@ This makes Org-mode source blocks do syntax highlighting of JSON documents, whic
 * Language Server Protocol (Eglot)
 
 #+begin_src emacs-lisp
-(with-eval-after-load "yasnippet"
-  (require 'eglot)
+(require 'eglot)
 
-  (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c e a") 'eglot-code-actions)
-  (define-key eglot-mode-map (kbd "C-c h") 'eldoc)
-  (define-key eglot-mode-map (kbd "M-i") 'eglot-find-implementation)
+(define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
+(define-key eglot-mode-map (kbd "C-c e a") 'eglot-code-actions)
+(define-key eglot-mode-map (kbd "C-c h") 'eldoc)
+(define-key eglot-mode-map (kbd "M-i") 'eglot-find-implementation)
 
-  (add-hook 'shell-mode-hook #'eglot-ensure))
+(add-hook 'shell-mode-hook #'eglot-ensure)
 #+end_src
 
 * Magit & Forge
