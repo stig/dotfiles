@@ -556,7 +556,6 @@ I still keep it around for its "magic requires", which I very much
 appreciate. I should improve this though.
 
 #+begin_src emacs-lisp
-(setq cljr-insert-newline-after-require nil)
 (setq cljr-auto-sort-ns nil)
 
 (with-eval-after-load "clojure-mode"
