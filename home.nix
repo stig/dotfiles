@@ -77,6 +77,7 @@
         git-link
         go-mode
         htmlize
+        jarchive
         json-mode
         kaocha-runner
         lorem-ipsum

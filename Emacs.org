@@ -739,6 +739,14 @@ HugSQL is a great abstraction for using SQL from Clojure. Robin's imenu integrat
 (add-hook 'sql-mode-hook #'sulami/init-hugsql-imenu)
 #+end_src
 
+* Jarchive
+
+This lets me open project dependencies inside jar archives, pairs well with Eglot!
+
+#+begin_src emacs-lisp
+(require 'jarchive)
+(add-hook 'clojure-mode-hook #'jarchive-setup)
+#+end_src
 * JSON Mode
 This makes Org-mode source blocks do syntax highlighting of JSON documents, which I like.
 #+begin_src emacs-lisp
@@ -751,6 +759,8 @@ This makes Org-mode source blocks do syntax highlighting of JSON documents, whic
 
 #+begin_src emacs-lisp
 (require 'eglot)
+
+(setq eglot-extend-to-xref t)
 
 (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
 (define-key eglot-mode-map (kbd "C-c e a") 'eglot-code-actions)
