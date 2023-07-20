@@ -16,7 +16,7 @@
 
     clojure-lsp = {
       url = "github:jlesquembre/clojure-lsp?ref=fix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
+      
     };
 
   };
