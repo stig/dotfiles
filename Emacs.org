@@ -525,9 +525,6 @@ I use Clojure Mode augmented by flymake-kondor. I use CIDER as my primary REPL.
 (require 'flymake-kondor)
 (add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
-(with-eval-after-load "eglot"
-  (add-hook 'clojure-mode-hook #'eglot-ensure))
-
 ;; Allow cider's xref, but at low priority. Don't use it by default as
 ;; Eglot's xref tends to work better.
 (setq cider-use-xref t)
@@ -591,9 +588,6 @@ Set environment per directory. The plan is to use this with Nix-direnv, to autom
 * Docker
 #+begin_src emacs-lisp
 (require 'docker)
-
-(with-eval-after-load "eglot"
-  (add-hook 'dockerfile-mode-hook #'eglot-ensure))
 #+end_src
 * Dumb-jump
 
@@ -724,9 +718,7 @@ from a local git repository.
 * Go
 I sometimes must interact with Go at work.
 #+begin_src emacs-lisp
-(with-eval-after-load "eglot"
-  (require 'go-mode)
-  (add-hook 'go-mode-hook #'eglot-ensure))
+(require 'go-mode)
 #+end_src
 * HugSQL
 HugSQL is a great abstraction for using SQL from Clojure. Robin's imenu integration makes it easy to search for "functions" in the HugSQL files.
@@ -751,9 +743,6 @@ This lets me open project dependencies inside jar archives, pairs well with Eglo
 This makes Org-mode source blocks do syntax highlighting of JSON documents, which I like.
 #+begin_src emacs-lisp
 (require 'json-mode)
-
-(with-eval-after-load "eglot"
-  (add-hook 'json-mode-hook #'eglot-ensure))
 #+end_src
 * Language Server Protocol (Eglot)
 
@@ -767,7 +756,15 @@ This makes Org-mode source blocks do syntax highlighting of JSON documents, whic
 (define-key eglot-mode-map (kbd "C-c h") 'eldoc)
 (define-key eglot-mode-map (kbd "M-i") 'eglot-find-implementation)
 
-(add-hook 'shell-mode-hook #'eglot-ensure)
+(mapc (lambda (hook)
+        (add-hook hook #'eglot-ensure))
+      (quote (clojure-mode-hook
+              dockerfile-mode-hook
+              go-mode-hook
+              json-mode-hook
+              nix-mode-hook
+              shell-mode-hook
+              yaml-mode-hook)))
 #+end_src
 
 * Magit & Forge
@@ -831,9 +828,6 @@ There are two distinct parts here:
 #+begin_src emacs-lisp
 (require 'nix-mode)
 (require 'nix-sandbox)
-
-(with-eval-after-load "eglot"
-  (add-hook 'nix-mode-hook #'eglot-ensure))
 #+end_src
 * Orderless
 #+begin_src emacs-lisp
@@ -1298,7 +1292,4 @@ CircleCI and CloudFormation loves YAML.
 
 #+BEGIN_SRC emacs-lisp
 (require 'yaml-mode)
-
-(with-eval-after-load "eglot"
-  (add-hook 'yaml-mode-hook #'eglot-ensure))
 #+END_SRC
