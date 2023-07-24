@@ -746,9 +746,12 @@ This makes Org-mode source blocks do syntax highlighting of JSON documents, whic
 #+end_src
 * Language Server Protocol (Eglot)
 
+Disable the timeout, as it occasionally triggers on startup for newer clojure-lsp. This is due to some analysis pass, particularly on the first time we open a project, taking a bit of time.
+
 #+begin_src emacs-lisp
 (require 'eglot)
 
+(setq eglot-connect-timeout nil)
 (setq eglot-extend-to-xref t)
 
 (define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
