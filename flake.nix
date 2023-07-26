@@ -15,6 +15,7 @@
     };
 
     clojure-lsp.url = "github:clojure-lsp/clojure-lsp";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
@@ -27,7 +28,11 @@
     homeConfigurations.stig = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."aarch64-darwin";
       modules = [
-        ({ config, pkgs, ... }: { nixpkgs.overlays = [ inputs.clojure-lsp.overlays.default ]; })
+        ({ config, pkgs, ... }: { nixpkgs.overlays = [
+                                    inputs.clojure-lsp.overlays.default
+                                    inputs.emacs-overlay.overlays.default
+                                  ];
+                                })
         ./home.nix
       ];
     };

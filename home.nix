@@ -50,6 +50,7 @@
     direnv.nix-direnv.enable = true;
     emacs = {
       enable = true;
+      package = pkgs.emacs-unstable;
       extraPackages = epkgs: (with epkgs; [
         ace-window
         adoc-mode
@@ -66,7 +67,6 @@
         dockerfile-mode
         dumb-jump
         edit-indirect
-        eglot
         elfeed
         elfeed-org
         emacsql-sqlite
