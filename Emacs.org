@@ -111,8 +111,8 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or =~/.netrc
 ** Flymake key bindings
 #+begin_src emacs-lisp
 (require 'flymake)
-(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+(keymap-set flymake-mode-map "M-n" 'flymake-goto-next-error)
+(keymap-set flymake-mode-map "M-p" 'flymake-goto-prev-error)
 #+end_src
 ** GnuPG
 
@@ -126,10 +126,10 @@ Emacs will open =.gpg= files transparently, but I need to install gnupg & pinent
 
 #+begin_src emacs-lisp
 (require 'consult)
-(global-set-key (kbd "C-c r") #'consult-ripgrep)
+(keymap-global-set "C-c r" #'consult-ripgrep)
 
 (require 'consult-imenu)
-(global-set-key (kbd "C-c i") #'consult-imenu)
+(keymap-global-set "C-c i" #'consult-imenu)
 #+end_src
 
 ** Make 'y' and 'n' satisfy prompts
@@ -212,8 +212,8 @@ I *do* like it when Emacs transparently opens compressed files. It gives me the 
 Acts like ~upcase-word~ with no region selected, and ~upcase-region~ when one is.
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "M-u") #'upcase-dwim)
-(global-set-key (kbd "M-l") #'downcase-dwim)
+(keymap-global-set "M-u" #'upcase-dwim)
+(keymap-global-set "M-l" #'downcase-dwim)
 #+end_src
 ** UTF-8: everywhere, always
 
@@ -396,7 +396,7 @@ If both branches add an entry to a list I may want to pick *both* sides. This ad
                      ediff-control-buffer))))
 
 (defun sb/add-d-to-ediff-mode-map ()
-  (define-key ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
+  (keymap-set ediff-mode-map "d" 'sb/ediff-copy-both-to-C))
 
 (add-hook 'ediff-keymap-setup-hook 'sb/add-d-to-ediff-mode-map)
 #+END_SRC
@@ -431,7 +431,7 @@ This function re-arranges horizontally-split windows to be vertically-split, and
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-(define-key ctl-x-4-map "t" 'toggle-window-split)
+(keymap-set ctl-x-4-map "t" 'toggle-window-split)
 #+END_SRC
 
 ** Unfill paragraphs and regions
@@ -451,7 +451,7 @@ The default binding for =M-q= fills a paragraph. Very good. But sometimes I want
         (call-interactively #' org-fill-paragraph)
       (call-interactively #'fill-paragraph))))
 
-(global-set-key [remap fill-paragraph] #'endless/fill-or-unfill)
+(keymap-global-set "M-q" #'endless/fill-or-unfill)
 #+end_src
 
 * Exec Path From Shell
@@ -481,8 +481,8 @@ This lets me rapidly switch to a different frame/window. I use this mainly when 
 
 #+begin_src emacs-lisp
 (require 'ace-window)
-(global-set-key (kbd "C-S-s-<tab>") 'ace-window)
-(global-set-key (kbd "M-`") 'ace-window)
+(keymap-global-set "C-S-s-<tab>" 'ace-window)
+(keymap-global-set "M-`" 'ace-window)
 #+end_src
 
 * Adoc Mode
@@ -538,11 +538,11 @@ Kaocha-runner lets me run test using kaocha-runner in CIDER.
 #+begin_src emacs-lisp
 (with-eval-after-load "clojure-mode"
   (require 'kaocha-runner)
-  (define-key clojure-mode-map (kbd "C-c k t") 'kaocha-runner-run-test-at-point)
-  (define-key clojure-mode-map (kbd "C-c k r") 'kaocha-runner-run-tests)
-  (define-key clojure-mode-map (kbd "C-c k a") 'kaocha-runner-run-all-tests)
-  (define-key clojure-mode-map (kbd "C-c k w") 'kaocha-runner-show-warnings)
-  (define-key clojure-mode-map (kbd "C-c k h") 'kaocha-runner-hide-windows))
+  (keymap-set clojure-mode-map "C-c k t" 'kaocha-runner-run-test-at-point)
+  (keymap-set clojure-mode-map "C-c k r" 'kaocha-runner-run-tests)
+  (keymap-set clojure-mode-map "C-c k a" 'kaocha-runner-run-all-tests)
+  (keymap-set clojure-mode-map "C-c k w" 'kaocha-runner-show-warnings)
+  (keymap-set clojure-mode-map "C-c k h" 'kaocha-runner-hide-windows))
 #+end_src
 
 Additional refactoring support. I've honestly struggled to get this to
@@ -562,7 +562,7 @@ appreciate. I should improve this though.
     (add-to-list 'cljr-magic-require-namespaces '("s" . "clojure.spec.alpha"))
     (add-to-list 'cljr-magic-require-namespaces '("gen" . "clojure.spec.gen.alpha"))
 
-    (define-key clojure-mode-map (kbd "C-c C-r h") #'hydra-cljr-help-menu/body)
+    (keymap-set clojure-mode-map "C-c C-r h" #'hydra-cljr-help-menu/body)
 
     (add-hook 'clojure-mode-hook #'clj-refactor-mode)
     (add-hook 'cider-repl-mode-hook #'clj-refactor-mode)))
@@ -703,7 +703,7 @@ I use shr for reading HTML mail. I normally use a fullscreen window, but I don't
 Hit ~C-=~ multiple times to expand the highlighted region.
 #+begin_src emacs-lisp
 (require 'expand-region)
-(global-set-key (kbd "C-=") #'er/expand-region)
+(keymap-global-set "C-=" #'er/expand-region)
 #+end_src
 * Git Link
 
@@ -712,7 +712,7 @@ from a local git repository.
 
 #+BEGIN_SRC emacs-lisp
 (require 'git-link)
-(global-set-key (kbd "C-c g l") #'git-link)
+(keymap-global-set "C-c g l" #'git-link)
 #+END_SRC
 
 * Go
@@ -754,10 +754,10 @@ Disable the timeout, as it occasionally triggers on startup for newer clojure-ls
 (setq eglot-connect-timeout nil)
 (setq eglot-extend-to-xref t)
 
-(define-key eglot-mode-map (kbd "C-c e r") 'eglot-rename)
-(define-key eglot-mode-map (kbd "C-c e a") 'eglot-code-actions)
-(define-key eglot-mode-map (kbd "C-c h") 'eldoc)
-(define-key eglot-mode-map (kbd "M-i") 'eglot-find-implementation)
+(keymap-set eglot-mode-map "C-c e r" 'eglot-rename)
+(keymap-set eglot-mode-map "C-c e a" 'eglot-code-actions)
+(keymap-set eglot-mode-map "C-c h" 'eldoc)
+(keymap-set eglot-mode-map "M-i" 'eglot-find-implementation)
 
 (mapc (lambda (hook)
         (add-hook hook #'eglot-ensure))
@@ -779,11 +779,11 @@ Forge is an extension to Magit that lets me create & manipulate pull requests on
 #+BEGIN_SRC emacs-lisp
 (require 'magit)
 (require 'forge)
-(global-set-key (kbd "C-S-s-m") #'magit-status)
-(global-set-key (kbd "C-S-s-b") #'magit-blame-addition)
+(keymap-global-set "C-S-s-m" #'magit-status)
+(keymap-global-set "C-S-s-b" #'magit-blame-addition)
 
 (with-eval-after-load "project"
-  (define-key project-prefix-map "m" #'magit-status)
+  (keymap-set project-prefix-map "m" #'magit-status)
 
   ;; Replace vc-el with Magit in project commands
   (setq project-switch-commands
@@ -810,8 +810,8 @@ I'm a sucker for lists, and I want to be able to reorder list items easily and h
 (with-eval-after-load "markdown-mode"
   ;; I essentially don't use Markdown
   ;; outside GitHub any more
-  (define-key markdown-mode-map (kbd "M-<up>") #'markdown-move-list-item-up)
-  (define-key markdown-mode-map (kbd "M-<down>") #'markdown-move-list-item-down))
+  (keymap-set markdown-mode-map "M-<up>" #'markdown-move-list-item-up)
+  (keymap-set markdown-mode-map "M-<down>" #'markdown-move-list-item-down))
 #+END_SRC
 * Multiple Cursors
 
@@ -853,16 +853,16 @@ Org Babel is magical: execute code from different languages in the same file, an
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.org_archive\\'" . org-mode))
 
-(global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c c") #'org-capture)
+(keymap-global-set "C-c l" #'org-store-link)
+(keymap-global-set "C-c a" #'org-agenda)
+(keymap-global-set "C-c c" #'org-capture)
 
 (with-eval-after-load "org"
-  (define-key org-mode-map (kbd "M-q") #'endless/fill-or-unfill)
-  (define-key org-mode-map (kbd "C-x C-<return>") #'org-insert-subheading)
-  (define-key org-mode-map (kbd "C-S-<return>") #'org-insert-todo-subheading)
-  (define-key org-mode-map (kbd "C-n") #'org-next-link)
-  (define-key org-mode-map (kbd "C-p") #'org-previous-link))
+  (keymap-set org-mode-map "M-q" #'endless/fill-or-unfill)
+  (keymap-set org-mode-map "C-x C-<return>" #'org-insert-subheading)
+  (keymap-set org-mode-map "C-S-<return>" #'org-insert-todo-subheading)
+  (keymap-set org-mode-map "C-n" #'org-next-link)
+  (keymap-set org-mode-map "C-p" #'org-previous-link))
 
 ;; don't indent relative to headline
 (setq org-adapt-indentation nil)
@@ -998,11 +998,11 @@ This allows me to capture links to websites from my browser, and store it as a r
 		    "#+title: ${title}\n")
 	 :unnarrowed t)))
 
-(global-set-key (kbd "C-c n f") #'org-roam-node-find)
-(global-set-key (kbd "C-c n r") #'org-roam-ref-add)
+(keymap-global-set "C-c n f" #'org-roam-node-find)
+(keymap-global-set "C-c n r" #'org-roam-ref-add)
 
-(define-key org-mode-map (kbd "C-c n i") #'org-roam-node-insert)
-(define-key org-mode-map (kbd "C-c n t") #'org-roam-tag-add)
+(keymap-set org-mode-map "C-c n i" #'org-roam-node-insert)
+(keymap-set org-mode-map "C-c n t" #'org-roam-tag-add)
 
 (add-hook 'after-init-hook #'org-roam-db-autosync-mode)
 
@@ -1069,7 +1069,7 @@ I use org roam dailies for my daily notes. It integrates nicely with Roam, so I 
 #+begin_src emacs-lisp
 (require 'org-roam-dailies)
 (setq org-roam-dailies-directory "Daily/")
-(global-set-key (kbd "C-c d") #'org-roam-dailies-map)
+(keymap-global-set "C-c d" #'org-roam-dailies-map)
 #+end_src
 
 * Org Superstar Mode
@@ -1129,7 +1129,7 @@ I use Projectile to navigate my projects. Some of the things I like about it are
                                   :test "lein test"
                                   :test-prefix "test_")
 
-(global-set-key (kbd "C-c p") #'projectile-command-map)
+(keymap-global-set "C-c p" #'projectile-command-map)
 
 (setq projectile-create-missing-test-files 'projectile-find-file
       projectile-project-search-path '("~/src")
@@ -1194,25 +1194,25 @@ Structural editing is a must when editing lisp, and it has bled into other aspec
 (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
 (add-hook 'minibuffer-setup-hook 'turn-on-smartparens-strict-mode)
 
-(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+(keymap-set smartparens-mode-map "C-M-f" 'sp-forward-sexp)
+(keymap-set smartparens-mode-map "C-M-b" 'sp-backward-sexp)
 
-(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
-(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp) ;; hijacked by macOS :-(
+(keymap-set smartparens-mode-map "C-M-u" 'sp-backward-up-sexp)
+(keymap-set smartparens-mode-map "C-M-d" 'sp-down-sexp) ;; hijacked by macOS :-(
 
-(define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+(keymap-set smartparens-mode-map "C-<right>" 'sp-forward-slurp-sexp)
+(keymap-set smartparens-mode-map "C-<left>" 'sp-forward-barf-sexp)
 
-(define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+(keymap-set smartparens-mode-map "C-M-<left>" 'sp-backward-slurp-sexp)
+(keymap-set smartparens-mode-map "C-M-<right>" 'sp-backward-barf-sexp)
 
-(define-key smartparens-mode-map (kbd "s-u") 'sp-unwrap-sexp)
-(define-key smartparens-mode-map (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(keymap-set smartparens-mode-map "s-u" 'sp-unwrap-sexp)
+(keymap-set smartparens-mode-map "C-M-<backspace>" 'sp-splice-sexp-killing-backward)
 
-(define-key smartparens-mode-map (kbd "M-j") 'sp-join-sexp)
+(keymap-set smartparens-mode-map "M-j" 'sp-join-sexp)
 
-(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
-(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+(keymap-set smartparens-mode-map "C-M-t" 'sp-transpose-sexp)
+(keymap-set smartparens-mode-map "C-M-k" 'sp-kill-sexp)
 
 (diminish 'smartparens-mode)
 (diminish 'smartparens-strict-mode)
@@ -1251,7 +1251,7 @@ This is a package I use for interacting with REST HTTP APIs. Before arriving at 
 #+begin_src emacs-lisp
 (require 'verb)
 (with-eval-after-load "org"
-  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+  (keymap-set org-mode-map "C-c C-r" verb-command-map))
 
 (defun sb/api-token-for-host (host)
   "Return a token for the specified host."
@@ -1275,7 +1275,7 @@ Highlight certain whitespace annoyances, and clean them up automatically.
 #+BEGIN_SRC emacs-lisp
 (require 'whitespace)
 (setq whitespace-style '(face empty tabs trailing))
-(global-set-key (kbd "C-x w") #'whitespace-cleanup)
+(keymap-global-set "C-x w" #'whitespace-cleanup)
 (global-whitespace-mode)
 
 (diminish 'global-whitespace-mode)
