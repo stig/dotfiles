@@ -69,7 +69,6 @@
         edit-indirect
         elfeed
         elfeed-org
-        emacsql-sqlite
         exec-path-from-shell
         expand-region
         flymake-kondor
