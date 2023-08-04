@@ -554,6 +554,8 @@ appreciate. I should improve this though.
 
 #+begin_src emacs-lisp
 (setq cljr-auto-sort-ns nil)
+(setq cljr-auto-clean-ns nil)
+(setq cljr-add-ns-to-blank-clj-files nil)
 
 (with-eval-after-load "clojure-mode"
   (with-eval-after-load "yasnippet"
