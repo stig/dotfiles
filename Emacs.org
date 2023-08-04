@@ -870,8 +870,7 @@ Org Babel is magical: execute code from different languages in the same file, an
 ;; no initial indent in source code
 (setq org-edit-src-content-indentation 0)
 
-;; hiding the emphasis markers impairs editing next to them
-(setq org-hide-emphasis-markers nil)
+(setq org-hide-emphasis-markers t)
 
 ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
 (setq org-log-into-drawer t)
