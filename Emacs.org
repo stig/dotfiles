@@ -566,8 +566,7 @@ appreciate. I should improve this though.
 
     (keymap-set clojure-mode-map "C-c C-r h" #'hydra-cljr-help-menu/body)
 
-    (add-hook 'clojure-mode-hook #'clj-refactor-mode)
-    (add-hook 'cider-repl-mode-hook #'clj-refactor-mode)))
+    (add-hook 'clojure-mode-hook #'clj-refactor-mode)))
 #+end_src
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
