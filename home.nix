@@ -124,7 +124,6 @@
       ignores = [
         ".DS_Store"
         ".clj-kondo/.cache/"
-        ".lsp/"
       ];
     };
     gpg.enable = true;
