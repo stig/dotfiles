@@ -37,6 +37,8 @@
 
   home.file.".lein/profiles.clj".source = ./lein-profiles.clj;
 
+  home.file.".config/clojure-lsp/config.edn".source = ./clojure-lsp-config.edn;
+
   imports = [
     ./accounts.email.nix
   ];
