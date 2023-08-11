@@ -6,6 +6,8 @@
 
   home.packages = with pkgs; [
     (aspellWithDicts (ps: [ps.en]))
+    babashka
+    bbin
     clj-kondo
     clojure
     clojure-lsp
@@ -45,6 +47,7 @@
 
   home.sessionVariables = {
     EDITOR = "emacsclient";
+    PATH = "$PATH:$HOME/.babashka/bbin/bin";
   };
 
   programs = {

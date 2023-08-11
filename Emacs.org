@@ -569,6 +569,13 @@ appreciate. I should improve this though.
 
     (add-hook 'clojure-mode-hook #'clj-refactor-mode)))
 #+end_src
+
+Carve allows me to find dead code. Unfortunately carve.el is not available on melpa/nix, so I had to download it locally and load it.
+
+#+begin_src emacs-lisp
+(load "~/src/dotfiles/carve.el")
+#+end_src
+
 * Company (COMplete ANYthing)
 #+begin_src emacs-lisp
 (require 'company)
