@@ -42,6 +42,7 @@
   home.file.".config/clojure-lsp/config.edn".source = ./clojure-lsp-config.edn;
 
   imports = [
+    ./emacs/emacs.nix
     ./accounts.email.nix
   ];
 

@@ -4,25 +4,9 @@
 #+PROPERTY: header-args:emacs-lisp    :tangle ~/.config/emacs/init.el :results silent :mkdirp t
 #+STARTUP: content
 
-This is my Emacs configuration. It is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspersed with code blocks. I edit this file, and /tangle/ it into [[file:~/.config/emacs/init.el][init.el]] (and [[/Users/stig/.config/emacs/early-init.el][early-init.el]]) by hitting =C-c C-v C-t=.
+This is my Emacs configuration. It is a [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][literate programming]] document: prose interspersed with code blocks. I edit this file, and /tangle/ it into [[file:~/.config/emacs/init.el][init.el]] by hitting =C-c C-v C-t=.
 
 I install Emacs itself using nixpkgs, along with other tools (~ripgrep~, etc).
-
-* Early Initialisation
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle ~/.config/emacs/early-init.el :results silent :mkdirp t
-:END:
-
-Emacs loads =early-init.el= before loading GUI components. That makes it a great place to turn off the mouse interface, to avoid momentary display during launch. I also disable the splash screen, the audible bell, and the ~package.el~ subsystem.
-
-#+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t; -*-
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-
-(setq inhibit-startup-screen t
-      visible-bell t
-      package-enable-at-startup nil)
-#+end_src
 
 * Use lexical bindings
 Using lexical bindings speeds up loading config, if I understand correctly.
