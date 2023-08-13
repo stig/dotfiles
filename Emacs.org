@@ -24,14 +24,6 @@ Emacs loads =early-init.el= before loading GUI components. That makes it a great
       package-enable-at-startup nil)
 #+end_src
 
-Let's also set some performance tuning options here.
-
-#+begin_src emacs-lisp
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq read-process-output-max (* 1024 1024))
-(setq gc-cons-threshold (* 100 1000 1000))
-#+end_src
-
 * Use lexical bindings
 Using lexical bindings speeds up loading config, if I understand correctly.
 #+begin_src emacs-lisp
