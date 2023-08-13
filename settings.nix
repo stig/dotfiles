@@ -1,5 +1,5 @@
 # This file contains mac-specific settings set using the "defaults write *" tool.
-# It is not very discoverable, but it is *is* repeatable.
+# It is not very discoverable, but it *is* repeatable.
 {
 
   system.defaults.NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
