@@ -37,6 +37,3 @@ notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid
 echo "Move non-spam out of spam folder..."
 notmuch search --output=files -- not tag:spam and folder:icloud/Spam | mv_without_uid icloud/Inbox
 notmuch search --output=files -- not tag:spam and folder:work/Spam | mv_without_uid work/Inbox
-
-echo "Sync messages with upstream..."
-mbsync --all
