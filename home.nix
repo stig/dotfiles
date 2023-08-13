@@ -98,6 +98,7 @@
         org-roam
         org-superstar
         orgalist
+        outshine
         ox-gfm
         plantuml-mode
         projectile
