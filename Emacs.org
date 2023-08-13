@@ -91,7 +91,7 @@ This could take the form of e.g. saving auth info to =~/.authinfo=, or =~/.netrc
 Emacs will open =.gpg= files transparently, but I need to install gnupg & pinentry for that to work.
 
 #+begin_src emacs-lisp
-(setq epa-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 #+end_src
 
 ** Consult
