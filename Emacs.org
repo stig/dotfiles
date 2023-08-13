@@ -161,7 +161,8 @@ Put the cursor on any of =()[]{}= and Emacs shows the matching closing/opening o
 I don't like backup files all over my disk. This places them in a separate directory.
 
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory))))
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name "backups" user-emacs-directory))))
 #+END_SRC
 
 ** Support recursive minibuffers
