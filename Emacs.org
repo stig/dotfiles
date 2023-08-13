@@ -1090,6 +1090,13 @@ Edit "Org-like" lists in non-Org buffers.
 (add-hook 'message-mode-hook #'orgalist-mode)
 #+end_src
 
+* Outshine
+Org-like navigation for non-org files.
+#+begin_src emacs-lisp
+(defvar outline-minor-mode-prefix "\M-#")
+(require 'outshine)
+(add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+#+end_src
 * PlantUML
 
 I sometimes need to draw UML diagrams, both on their own and embedded in Org documents.
