@@ -30,8 +30,6 @@ Let's also set some performance tuning options here.
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq read-process-output-max (* 1024 1024))
 (setq gc-cons-threshold (* 100 1000 1000))
-
-(setq max-lisp-eval-depth 2000)
 #+end_src
 
 * Use lexical bindings
