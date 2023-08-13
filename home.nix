@@ -32,11 +32,6 @@
     yq
   ];
 
-  home.file.".mailcap".text = ''
-    image/*; open %s
-    application/pdf; open %s
-  '';
-
   home.file.".lein/profiles.clj".source = ./lein-profiles.clj;
 
   home.file.".config/clojure-lsp/config.edn".source = ./clojure-lsp-config.edn;
@@ -47,76 +42,12 @@
   ];
 
   home.sessionVariables = {
-    EDITOR = "emacsclient";
     PATH = "$PATH:$HOME/.babashka/bbin/bin";
   };
 
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
-    emacs = {
-      enable = true;
-      package = pkgs.emacs-unstable;
-      extraPackages = epkgs: (with epkgs; [
-        ace-window
-        adoc-mode
-        cider
-        clj-refactor
-        clojure-mode
-        company
-        consult
-        csv-mode
-        diminish
-        direnv
-        docker
-        docker-compose-mode
-        dockerfile-mode
-        dumb-jump
-        edit-indirect
-        elfeed
-        elfeed-org
-        exec-path-from-shell
-        expand-region
-        flymake-kondor
-        forge
-        git-link
-        go-mode
-        htmlize
-        jarchive
-        json-mode
-        kaocha-runner
-        lorem-ipsum
-        magit
-        marginalia
-        markdown-mode
-        multiple-cursors
-        nix-mode
-        nix-sandbox
-        ol-notmuch
-        orderless
-        org-mime
-        org-present
-        org-roam
-        org-superstar
-        orgalist
-        outshine
-        ox-gfm
-        plantuml-mode
-        projectile
-        protobuf-mode
-        rg
-        smartparens
-        string-inflection
-        sudo-edit
-        terraform-mode
-        verb
-        vertico
-        visual-fill-column
-        wgrep
-        yaml-mode
-        yasnippet
-      ]);
-    };
     git = {
       enable = true;
       userName = "Stig Brautaset";
