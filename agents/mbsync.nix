@@ -3,7 +3,7 @@
   launchd.user.agents.mbsync = {
     path = [pkgs.isync pkgs.moreutils];
 
-    command = "mbsync --all --full --quiet --verbose | ts";
+    command = "mbsync --all --verbose | ts";
 
     serviceConfig = {
       RunAtLoad = true;
