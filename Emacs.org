@@ -18,7 +18,6 @@ Emacs loads =early-init.el= before loading GUI components. That makes it a great
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 (setq inhibit-startup-screen t
       visible-bell t
