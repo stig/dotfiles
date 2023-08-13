@@ -32,7 +32,6 @@ Let's also set some performance tuning options here.
 (setq gc-cons-threshold (* 100 1000 1000))
 
 (setq max-lisp-eval-depth 2000)
-(setq max-specpdl-size 3200)
 #+end_src
 
 * Use lexical bindings
