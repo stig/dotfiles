@@ -933,7 +933,7 @@ Org Babel is magical: execute code from different languages in the same file, an
 	("l" "TODO with [l]ink" entry (file "") "* TODO %? :inbox:\ncf %a ")
 
 	("w" "Weekly summary" plain
-	 (file ,(format-time-string "weekly-summaries/%F.org"))
+	 (file (lambda () (format-time-string "~/Documents/Org/weekly-summaries/%Y/%F.org")))
 	 (file "weekly-summaries/template.org")
 	 :immediate-finish t
          :jump-to-captured t)
