@@ -2,7 +2,7 @@
 {
   accounts.email = {
     accounts.personal = {
-      address = "stig@brautaset.org";
+      address = "sonar_columns_0n@icloud.com";
       notmuch.enable = true;
       realName = "Stig Brautaset";
     };
@@ -44,7 +44,7 @@
     };
 
     accounts.work = {
-      address = "stig@circleci.com";
+      address = "sonar_columns_0n@icloud.com";
       imap.host = "imap.gmail.com";
       maildir.path = "work";
       mbsync = {
@@ -74,7 +74,7 @@
       notmuch.enable = true;
       passwordCommand = "/usr/bin/security find-generic-password -s mbsync-gmail-password -w";
       smtp.host = "smtp.gmail.com";
-      userName = "stig@circleci.com";
+      userName = "sonar_columns_0n@icloud.com";
     };
   };
 

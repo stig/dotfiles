@@ -51,7 +51,7 @@
     git = {
       enable = true;
       userName = "Stig Brautaset";
-      userEmail = "stig@brautaset.org";
+      userEmail = "sonar_columns_0n@icloud.com";
       extraConfig = {
         core.pager = "";
         rerere.enabled = true;
