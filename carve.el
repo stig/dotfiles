@@ -130,7 +130,7 @@
          (project-root (projectile-project-root))
          (has-config (file-exists-p (concat project-root ".carve/config.edn")))
          (carve-opts (if has-config
-                         (list "--opts")
+                         (list "--opts '{:merge-config true}'")
                        (list "--opts" "{:paths [\"src\" \"test\"] :report {:format :text}}"))))
     (carve--run-carve project-root carve-opts)))
 
