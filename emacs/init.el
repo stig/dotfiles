@@ -805,7 +805,7 @@ Stolen from Spacemacs."
 ;; Unfortunately carve.el is not available on melpa/nix, so I had to
 ;; download it locally and load it.
 
-(load "~/src/dotfiles/carve.el")
+(load "~/src/dotfiles/emacs/carve.el")
 
 ;;; Notmuch
 
