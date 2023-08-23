@@ -390,6 +390,8 @@
 (keymap-set smartparens-mode-map "C-M-t" 'sp-transpose-sexp)
 (keymap-set smartparens-mode-map "C-M-k" 'sp-kill-sexp)
 
+(keymap-set smartparens-mode-map "s-u" 'sp-unwrap-sexp)
+
 ;;;; Projectile
 
 (require 'projectile)
