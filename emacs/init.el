@@ -95,7 +95,12 @@
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 150)
 (set-face-attribute 'variable-pitch nil :font "Optima" :height 1.3)
 
-(add-hook 'text-mode-hook 'variable-pitch-mode)
+(mapc (lambda (hook)
+        (add-hook hook #'variable-pitch-mode))
+      (quote (adoc-mode-hook
+	      markdown-mode-hook
+	      message-mode-hook
+	      org-mode-hook)))
 
 (require 'org-faces)
 (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
