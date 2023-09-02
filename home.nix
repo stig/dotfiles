@@ -22,6 +22,7 @@
     moreutils
     nodejs # for Alfred Jira Plugin
     nodePackages.bash-language-server
+    nodePackages.vscode-json-languageserver
     pinentry
     plantuml
     postgresql
