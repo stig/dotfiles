@@ -307,9 +307,13 @@
 
 (add-hook 'visual-fill-column-mode-hook 'sb/visual-fill-column-hook)
 
-(add-hook 'text-mode-hook 'visual-fill-column-mode)
-(add-hook 'text-mode-hook 'visual-line-mode)
-
+(mapc (lambda (hook)
+	(add-hook hook #'visual-fill-column-mode)
+	(add-hook hook #'visual-line-mode))
+      (quote (adoc-mode-hook
+	      markdown-mode-hook
+	      message-mode-hook
+	      org-mode-hook)))
 
 ;; Line numbers are useful when remotely pairing.
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
