@@ -19,6 +19,10 @@
 
 ;;; Better defaults:
 
+;; Make right-click do something sensible
+(when (display-graphic-p)
+  (context-menu-mode))
+
 ;; Configure Control/Meta/super/hyper keys
 (setq mac-command-modifier 'meta
       mac-control-modifier 'control
