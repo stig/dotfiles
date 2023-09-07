@@ -509,6 +509,8 @@
 (add-hook 'plantuml-mode-hook #'sb/no-tabs-in-plantuml)
 
 (require 'protobuf-mode)
+(add-to-list 'auto-mode-alist '("\\.proto\\'" . protobuf-mode))
+
 (defun sulami/init-protobuf-imenu ()
   "Sets up imenu support for Protobuf.
 
