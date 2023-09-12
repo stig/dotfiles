@@ -771,8 +771,6 @@ Stolen from Spacemacs."
 ;; The main programming language I use at work.
 
 (require 'clojure-mode)
-(require 'flymake-kondor)
-(add-hook 'clojure-mode-hook 'flymake-kondor-setup)
 
 ;; Allow cider's xref, but at low priority. Don't use it by default as
 ;; Eglot's xref tends to work better.
