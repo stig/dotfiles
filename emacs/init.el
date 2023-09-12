@@ -772,13 +772,30 @@ Stolen from Spacemacs."
 
 (require 'clojure-mode)
 
+(setq clojure-align-style 'align-arguments)
+
 ;; Allow cider's xref, but at low priority. Don't use it by default as
 ;; Eglot's xref tends to work better.
 (require 'cider)
-(setq cider-use-xref t)
-(setq cider-xref-fn-depth 90)
+
+;; Rely on LSP for eldoc and completions
+(remove-hook 'eldoc-documentation-functions #'cider-eldoc)
+(remove-hook 'completion-at-point-functions #'cider-complete-at-point)
+
+;; Clear keybinding I never use for Cider, so we can use it for LSP
+;; prefix.
+(keymap-unset cider-mode-map "C-c C-l" t)
+
 (setq cider-repl-display-help-banner nil)
-(setq cider-eldoc-display-context-dependent-info t)
+(setq cider-repl-pop-to-buffer-on-connect nil)
+(setq cider-repl-use-pretty-printing t)
+(setq nrepl-log-messages nil)
+
+;; Play nice with LSP
+(setq cider-eldoc-display-for-symbol-at-point nil) ; use lsp
+(setq cider-font-lock-dynamically nil) ; use lsp semantic tokens
+(setq cider-prompt-for-symbol nil) ; use lsp
+(setq cider-use-xref nil) ; use lsp
 
 ;;;; Kaocha-runner - lets me run test using Kaocha in CIDER.
 
@@ -795,9 +812,11 @@ Stolen from Spacemacs."
 ;; Additional refactoring support. Much of it will probably be usurped
 ;; by clojure-lsp, but I still keep it around for its "magic
 ;; requires", which I very much appreciate.
-(setq cljr-auto-sort-ns nil)
-(setq cljr-auto-clean-ns nil)
 (setq cljr-add-ns-to-blank-clj-files nil)
+(setq cljr-auto-clean-ns nil)
+(setq cljr-auto-sort-ns nil)
+(setq cljr-eagerly-build-asts-on-startup nil)
+(setq cljr-warn-on-eval nil)
 
 (with-eval-after-load "clojure-mode"
   (with-eval-after-load "yasnippet"
