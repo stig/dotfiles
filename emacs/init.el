@@ -434,6 +434,7 @@
 
 (require 'eglot)
 
+(setq eglot-confirm-server-initiated-edits nil)
 (setq eglot-connect-timeout nil)
 (setq eglot-extend-to-xref t)
 
