@@ -439,8 +439,7 @@
 (setq eglot-extend-to-xref t)
 
 (keymap-set eglot-mode-map "C-c e r" 'eglot-rename)
-(keymap-set eglot-mode-map "C-c e a" 'eglot-code-actions)
-(keymap-set eglot-mode-map "C-c h" 'eldoc)
+(keymap-set eglot-mode-map "C-c C-l" 'eglot-code-actions)
 (keymap-set eglot-mode-map "M-i" 'eglot-find-implementation)
 
 (mapc (lambda (hook)
