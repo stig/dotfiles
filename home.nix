@@ -44,6 +44,7 @@
 
   home.sessionVariables = {
     PATH = "$PATH:$HOME/.babashka/bbin/bin";
+    GOPATH = "$HOME/.go";
   };
 
   programs = {
