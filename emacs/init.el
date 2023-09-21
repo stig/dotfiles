@@ -576,8 +576,6 @@ Stolen from Spacemacs."
 ;; no initial indent in source code
 (setq org-edit-src-content-indentation 0)
 
-(setq org-hide-emphasis-markers t)
-
 ;; When hitting C-c C-z to take a note, always put it in the LOGBOOK drawer
 (setq org-log-into-drawer t)
 (setq org-catch-invisible-edits 'smart)
