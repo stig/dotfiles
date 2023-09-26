@@ -26,13 +26,13 @@ echo "Move deleted messages out of inbox..."
 notmuch search --output=files -- tag:deleted and folder:icloud/Inbox | mv_without_uid icloud/Trash
 notmuch search --output=files -- tag:deleted and folder:work/Inbox | mv_without_uid work/Trash
 
-echo "Move archived messages out of inbox..."
-notmuch search --output=files -- tag:archived and folder:icloud/Inbox | mv_without_uid icloud/Archive
-notmuch search --output=files -- tag:archived and folder:work/Inbox | mv_without_uid work/Archive
-
 echo "Move spam messages out of inbox..."
 notmuch search --output=files -- tag:spam and folder:icloud/Inbox | mv_without_uid icloud/Spam
 notmuch search --output=files -- tag:spam and folder:work/Inbox | mv_without_uid work/Spam
+
+echo "Move archived messages out of inbox..."
+notmuch search --output=files -- -tag:inbox and folder:icloud/Inbox | mv_without_uid icloud/Archive
+notmuch search --output=files -- -tag:inbox and folder:work/Inbox | mv_without_uid work/Archive
 
 echo "Move non-spam out of spam folder..."
 notmuch search --output=files -- not tag:spam and folder:icloud/Spam | mv_without_uid icloud/Inbox
