@@ -5,4 +5,5 @@ notmuch tag --batch <<EOF
 +work -- tag:unread folder:/work/
 +spam -inbox -- folder:/Spam/
 -inbox -- tag:sent and tag:inbox
++builds -- from:builds@circleci.com
 EOF
