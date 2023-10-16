@@ -440,15 +440,14 @@
 (keymap-set eglot-mode-map "C-c C-l" 'eglot-code-actions)
 (keymap-set eglot-mode-map "M-i" 'eglot-find-implementation)
 
-(mapc (lambda (hook)
-        (add-hook hook #'eglot-ensure))
-      (quote (clojure-mode-hook
-              dockerfile-mode-hook
-              go-mode-hook
-              json-mode-hook
-              nix-mode-hook
-              shell-mode-hook
-              yaml-mode-hook)))
+(dolist (hook '(clojure-mode-hook
+                dockerfile-mode-hook
+                go-mode-hook
+                json-mode-hook
+                nix-mode-hook
+                shell-mode-hook
+                yaml-mode-hook))
+  (add-hook hook #'eglot-ensure))
 
 (require 'org-superstar)
 (add-hook 'org-mode-hook #'org-superstar-mode)
