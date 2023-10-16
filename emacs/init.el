@@ -426,13 +426,12 @@
 
 ;;;; Eglot
 
-;; Disable the timeout, as it occasionally triggers on startup for
-;; newer clojure-lsp. This is due to some analysis pass, particularly
-;; on the first time we open a project, taking a bit of time.
-
 (require 'eglot)
 
 (setq eglot-confirm-server-initiated-edits nil)
+;; Disable the timeout, as it occasionally triggers on startup for
+;; newer clojure-lsp. This is due to some analysis pass, particularly
+;; on the first time we open a project, taking a bit of time.
 (setq eglot-connect-timeout nil)
 (setq eglot-extend-to-xref t)
 
