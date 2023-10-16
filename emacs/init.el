@@ -350,6 +350,7 @@
 
 (require 'company)
 (global-company-mode)
+(keymap-global-set "TAB" #'company-indent-or-complete-common)
 
 (require 'direnv)
 (add-hook 'after-init-hook #'direnv-mode)
