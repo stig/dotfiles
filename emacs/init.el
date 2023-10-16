@@ -360,10 +360,8 @@
 
 (require 'orgalist)
 (add-hook 'message-mode-hook #'orgalist-mode)
-
-(defvar outline-minor-mode-prefix "\M-#")
-(require 'outshine)
-(add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+(add-hook 'git-commit-setup-hook #'orgalist-mode)
+(add-hook 'markdown-mode-hook #'orgalist-mode)
 
 (require 'subword)
 (add-hook 'prog-mode-hook #'subword-mode)
