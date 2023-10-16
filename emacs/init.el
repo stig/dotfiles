@@ -422,8 +422,7 @@
       projectile-project-search-path '("~/src")
       projectile-switch-project-action 'projectile-find-file)
 
-(projectile-mode)
-
+(add-hook 'after-init-hook #'projectile-mode)
 
 ;;;; Eglot
 
