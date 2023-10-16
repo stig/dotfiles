@@ -769,8 +769,6 @@ Stolen from Spacemacs."
 
 (setq clojure-align-style 'align-arguments)
 
-;; Allow cider's xref, but at low priority. Don't use it by default as
-;; Eglot's xref tends to work better.
 (require 'cider)
 
 ;; Rely on LSP for eldoc and completions
