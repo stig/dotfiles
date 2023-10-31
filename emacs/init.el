@@ -813,6 +813,8 @@ Stolen from Spacemacs."
 
     (add-to-list 'cljr-magic-require-namespaces '("s" . "clojure.spec.alpha"))
     (add-to-list 'cljr-magic-require-namespaces '("gen" . "clojure.spec.gen.alpha"))
+    (add-to-list 'cljr-magic-require-namespaces '("m" . "malli.core"))
+    (add-to-list 'cljr-magic-require-namespaces '("mg" . "malli.generator"))
 
     (keymap-set clojure-mode-map "C-c C-r h" #'hydra-cljr-help-menu/body)
     (add-hook 'clojure-mode-hook #'clj-refactor-mode)))
