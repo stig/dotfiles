@@ -242,7 +242,7 @@
 (require 'multiple-cursors)
 
 (require 'rg)
-(setq rg-command-line-flags '("--glob='!.git'"))
+(setq rg-command-line-flags '("--hidden" "--glob='!.git'"))
 (rg-enable-default-bindings)
 
 (require 'server)
