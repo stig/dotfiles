@@ -59,7 +59,7 @@
         core.pager = "";
         rerere.enabled = true;
         github.user = "stig";
-        user.signingkey = "68D77873AEB4B2B9";
+        user.signingkey = "0CC42F1A8D399ACC";
         commit.gpgsign = true;
       };
       ignores = [
