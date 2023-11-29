@@ -1,1 +1,3 @@
-{:clean {:automatically-after-ns-refactor false}}
+{:clean {:automatically-after-ns-refactor false
+         :ns-inner-blocks-indentation :same-line
+         :ns-import-classes-indentation :same-line}}
