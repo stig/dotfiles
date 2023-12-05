@@ -54,11 +54,7 @@ Run from a terminal:
 
 ** Daily Usage
 
-1. If changing =configuration.nix=:
-   : darwin-rebuild switch --flake .
-
-2. (more common) if changing only =home.nix=:
-   : home-manager switch --flake .#stig
+: darwin-rebuild switch --flake .
 
 * Regenerate install-brew.sh
 

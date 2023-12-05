@@ -22,19 +22,20 @@
     darwinConfigurations = {
       cci-stig-9c7j1 = darwin.lib.darwinSystem {
         system  = "aarch64-darwin";
-        modules = [ ./configuration.nix ];
+        modules = [
+          ({ config, pkgs, ... }: { nixpkgs.overlays = [
+                                      inputs.clojure-lsp.overlays.default
+                                      inputs.emacs-overlay.overlays.default
+                                    ];
+                                  })
+          ./configuration.nix
+          home-manager.darwinModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.stig = import ./home.nix;
+          }
+        ];
       };
-    };
-    homeConfigurations.stig = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages."aarch64-darwin";
-      modules = [
-        ({ config, pkgs, ... }: { nixpkgs.overlays = [
-                                    inputs.clojure-lsp.overlays.default
-                                    inputs.emacs-overlay.overlays.default
-                                  ];
-                                })
-        ./home.nix
-      ];
     };
   };
 }
