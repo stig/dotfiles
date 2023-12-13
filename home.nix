@@ -6,6 +6,7 @@
     babashka
     bbin
     clj-kondo
+    cljfmt
     clojure
     clojure-lsp
     coreutils
@@ -17,10 +18,10 @@
     jq
     leiningen
     moreutils
-    nodejs # for Alfred Jira Plugin
     nodePackages.bash-language-server
     nodePackages.typescript-language-server
     nodePackages.vscode-json-languageserver
+    nodejs # for Alfred Jira Plugin
     pinentry
     plantuml
     postgresql
