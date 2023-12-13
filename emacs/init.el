@@ -424,6 +424,12 @@
 
 (require 'eglot)
 
+(defun sb/maybe-format-buffer ()
+  (when (eglot-managed-p)
+    (eglot-format-buffer)))
+
+(add-hook 'before-save-hook #'sb/maybe-format-buffer)
+
 (setq eglot-confirm-server-initiated-edits nil)
 ;; Disable the timeout, as it occasionally triggers on startup for
 ;; newer clojure-lsp. This is due to some analysis pass, particularly
