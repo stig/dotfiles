@@ -348,6 +348,10 @@
 (add-hook 'text-mode-hook 'bug-reference-mode)
 (add-hook 'prog-mode-hook 'bug-reference-mode)
 
+(require 'company)
+(global-company-mode)
+(keymap-global-set "TAB" #'company-indent-or-complete-common)
+
 (require 'direnv)
 (add-hook 'after-init-hook #'direnv-mode)
 
