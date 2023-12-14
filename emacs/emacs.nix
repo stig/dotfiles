@@ -26,6 +26,7 @@
         dockerfile-mode
         dumb-jump
         edit-indirect
+        eglot-java
         elfeed
         elfeed-org
         exec-path-from-shell
@@ -66,6 +67,7 @@
         vertico
         visual-fill-column
         wgrep
+        which-key
         yaml-mode
         yasnippet
       ]);
