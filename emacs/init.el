@@ -86,6 +86,11 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+;;;; Which Key Mode
+
+(require 'which-key)
+(which-key-mode)
+
 ;;;; Orderless
 
 (require 'orderless)
@@ -728,6 +733,9 @@ Stolen from Spacemacs."
 (require 'org-roam-dailies)
 (setq org-roam-dailies-directory "Daily/")
 (keymap-global-set "C-c d" #'org-roam-dailies-map)
+
+(require 'org-roam-ui)
+(setq org-roam-ui-open-on-start nil)
 
 ;;;; Org Present
 
