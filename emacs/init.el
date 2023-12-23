@@ -97,6 +97,8 @@
 
 ;;;; Which Key Mode
 
+;; This shows hints about what keyboard bindings are available if I
+;; type a prefix but hesitate before completing the full command.
 (require 'which-key)
 (which-key-mode)
 
