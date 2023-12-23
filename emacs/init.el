@@ -19,6 +19,9 @@
 
 ;;; Better defaults:
 
+;; Ask for textual confirmation rather than use a pop-up file dialog.
+(setq use-file-dialog nil)
+
 ;; Make right-click do something sensible
 (when (display-graphic-p)
   (context-menu-mode))
