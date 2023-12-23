@@ -27,10 +27,16 @@
   (context-menu-mode))
 
 ;; Configure Control/Meta/super/hyper keys
-(setq mac-command-modifier 'meta
-      mac-control-modifier 'control
-      mac-function-modifier 'hyper
-      mac-option-modifier 'super)
+
+;; Ideally I should probably set these only when I'm using my
+;; Moonlander keyboard, but I almost always do so it's not something
+;; I've investigated yet.
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier 'meta
+	mac-control-modifier 'control
+	mac-function-modifier 'hyper
+	mac-option-modifier 'super))
+
 
 ;; Don't require two spaces to end a sentence. This makes it easier to
 ;; collaborate, and work with texts I didn't originally write.
