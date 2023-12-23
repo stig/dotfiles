@@ -1,5 +1,5 @@
 (tool-bar-mode -1)
-(setq inhibit-startup-screen t)
+(scroll-bar-mode -1)
 
 ;; I abhor Emacs beeping at me, and prefer a visual bell.
 (setq visible-bell t)
