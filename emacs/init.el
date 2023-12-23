@@ -79,11 +79,8 @@
 (keymap-global-set "M-u" #'upcase-dwim)
 (keymap-global-set "M-l" #'downcase-dwim)
 
-;; Use UTF-8: everywhere, always.
+;; Prefer UTF-8
 (setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
 
