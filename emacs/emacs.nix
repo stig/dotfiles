@@ -33,6 +33,7 @@
       expand-region
       flymake-kondor
       forge
+      git-auto-commit-mode
       git-link
       go-mode
       htmlize

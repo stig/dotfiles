@@ -306,6 +306,9 @@
 ;; transparently opens compressed files.
 (auto-compression-mode t)
 
+;; I use this to ensure I keep my Zettelkasten versioned.
+(require 'git-auto-commit-mode)
+
 (require 'flymake)
 (keymap-set flymake-mode-map "M-n" 'flymake-goto-next-error)
 (keymap-set flymake-mode-map "M-p" 'flymake-goto-prev-error)
@@ -633,8 +636,8 @@ Stolen from Spacemacs."
 (setq org-goto-interface 'outline-path-completion)
 (setq org-outline-path-complete-in-steps nil)
 (setq org-agenda-include-diary t)
-(setq org-directory "~/Documents/Org")
-(setq org-agenda-files "~/Documents/Org/Agenda/org-agenda-files.txt")
+(setq org-directory "~/org")
+(setq org-agenda-files "~/org/Agenda/org-agenda-files.txt")
 
 (setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2 :fileskip0 t))
 (setq org-agenda-tags-todo-honor-ignore-options t)
@@ -680,7 +683,7 @@ Stolen from Spacemacs."
 	("l" "TODO with [l]ink" entry (file "") "* TODO %? :inbox:\ncf %a ")
 
 	("w" "Weekly summary" plain
-	 (file (lambda () (format-time-string "~/Documents/Org/weekly-summaries/%Y/%F.org")))
+	 (file (lambda () (format-time-string "~/org/weekly-summaries/%Y/%F.org")))
 	 (file "weekly-summaries/template.org")
 	 :immediate-finish t
          :jump-to-captured t)
@@ -711,7 +714,7 @@ Stolen from Spacemacs."
 (require 'org-roam)
 (require 'org-roam-protocol)
 
-(setq org-roam-directory (file-truename "~/Documents/Org"))
+(setq org-roam-directory (file-truename "~/org"))
 (setq org-roam-node-display-template
       (concat "${title:*} " (propertize "${tags:20}" 'face 'org-tag)))
 
