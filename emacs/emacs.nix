@@ -31,6 +31,7 @@
       elfeed-org
       exec-path-from-shell
       expand-region
+      f
       flymake-kondor
       forge
       git-auto-commit-mode
@@ -58,7 +59,6 @@
       outshine
       ox-gfm
       plantuml-mode
-      projectile
       protobuf-mode
       rg
       smartparens

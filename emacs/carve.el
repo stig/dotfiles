@@ -24,7 +24,7 @@
 ;; https://github.com/oliyh/carve.el
 
 ;;; Code:
-(require 'projectile)
+(require 'project)
 
 (defgroup carve nil
   "Settings for carve"
@@ -43,7 +43,7 @@
   (interactive)
   (unless (get-text-property (point) 'carve-ignored)
     (let* ((carve-symbol (get-text-property (point) 'carve-symbol))
-           (project-root (projectile-project-root))
+           (project-root (project-root (project-current)))
            (carve-directory (concat project-root ".carve/"))
            (carve-ignore-file (concat carve-directory "ignore"))
            (inhibit-read-only t))
@@ -127,7 +127,7 @@
 (defun carve-project ()
   (interactive)
   (let* ((current-file-directory (file-name-directory buffer-file-name))
-         (project-root (projectile-project-root))
+         (project-root (project-root (project-current)))
          (has-config (file-exists-p (concat project-root ".carve/config.edn")))
          (carve-opts (if has-config
                          (list "--opts" "{:merge-config true}")
@@ -136,7 +136,7 @@
 
 (defun carve-ns ()
   (interactive)
-  (let* ((project-root (projectile-project-root))
+  (let* ((project-root (project-root (project-current)))
          (project-file-path (file-relative-name buffer-file-name project-root))
          (carve-opts (list "--opts" (concat "{:paths [\"" project-file-path "\"] :report {:format :text}}"))))
     (carve--run-carve project-root carve-opts)))

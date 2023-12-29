@@ -283,13 +283,18 @@
 (keymap-global-set "C-S-s-m" #'magit-status)
 (keymap-global-set "C-S-s-b" #'magit-blame-addition)
 
+(defun stig/project-magit-status ()
+  "Start Magit in the current project's root directory."
+  (interactive)
+  (magit-status (project-root (project-current t))))
+
 (with-eval-after-load "project"
-  (keymap-set project-prefix-map "m" #'magit-status)
+  (keymap-set project-prefix-map "m" #'stig/project-magit-status)
 
   ;; Replace vc-el with Magit in project commands
   (setq project-switch-commands
 	(remove '(project-vc-dir "VC-Dir") project-switch-commands))
-  (add-to-list 'project-switch-commands '(magit-status "Magit" nil) t))
+  (add-to-list 'project-switch-commands '(stig/project-magit-status "Magit" nil) t))
 
 ;;; Minor Modes:
 
@@ -420,25 +425,11 @@
 
 (keymap-set smartparens-mode-map "s-u" 'sp-unwrap-sexp)
 
-;;;; Projectile
+;;;; Project
 
-(require 'projectile)
+(require 'project)
 
-;; Register project type for non-standard Clojure projects with weird
-;; test file names. Override the project type in .dir-locals.el.
-(projectile-register-project-type 'lein-legacy '("project.clj" ".projectile-lein-legacy")
-                                  :project-file "project.clj"
-                                  :compile "lein compile"
-                                  :test "lein test"
-                                  :test-prefix "test_")
 
-(keymap-global-set "C-c p" #'projectile-command-map)
-
-(setq projectile-create-missing-test-files 'projectile-find-file
-      projectile-project-search-path '("~/src")
-      projectile-switch-project-action 'projectile-find-file)
-
-(add-hook 'after-init-hook #'projectile-mode)
 
 ;;;; Eglot
 
@@ -802,7 +793,22 @@ Stolen from Spacemacs."
 
 (require 'clojure-mode)
 
-(setq clojure-align-style 'align-arguments)
+;; Make `ff-find-other-file' work for most Clojure projects.
+(defun stig/clojure-mode-hook ()
+  (require 'f)
+  (setq ff-search-directories
+	(when buffer-file-name
+	  (let ((parts (f-split buffer-file-name)))
+            (list (apply 'f-join (butlast
+				 (if (s-matches? "_test.clj\\'" (-last-item parts))
+				     (-replace-last "test" "src" parts)
+				   (-replace-last "src" "test" parts)))))))
+
+	ff-other-file-alist
+	'(("_test\\.clj\\'" (".clj"))
+	  ("\\.clj\\'" ("_test.clj")))))
+
+(add-hook 'clojure-mode-hook #'stig/clojure-mode-hook)
 
 (require 'cider)
 
