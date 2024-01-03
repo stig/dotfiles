@@ -135,6 +135,18 @@
 (require 'consult)
 (keymap-global-set "C-c r" #'consult-ripgrep)
 
+(defun stig/project-ripgrep ()
+  "Execute Ripgrep in project."
+  (interactive)
+  (consult-ripgrep (project-root (project-current t))))
+
+(with-eval-after-load "project"
+  (keymap-set project-prefix-map "r" #'stig/project-ripgrep)
+
+  (setq project-switch-commands
+	(remove '(project-find-regexp "Find regexp") project-switch-commands))
+  (add-to-list 'project-switch-commands '(stig/project-ripgrep "Ripgrep" nil) t))
+
 (require 'consult-imenu)
 (keymap-global-set "C-c i" #'consult-imenu)
 
