@@ -13,6 +13,7 @@
     extraPackages = epkgs: (with epkgs; [
       ace-window
       adoc-mode
+      bnf-mode
       cider
       clj-refactor
       clojure-mode

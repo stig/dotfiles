@@ -494,6 +494,8 @@
 (add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
 
 
+(require 'bnf-mode)
+
 (require 'csv-mode)
 
 ;; Elfeed is an Emacs (RSS & Atom) feed reader. `org-elfeed' is an
