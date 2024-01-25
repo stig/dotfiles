@@ -449,6 +449,7 @@
 ;;;; Eglot
 
 (require 'eglot)
+(setq eglot-connect-timeout 90)
 
 (defun sb/maybe-format-buffer ()
   (when (eglot-managed-p)
