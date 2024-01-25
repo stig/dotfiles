@@ -358,6 +358,9 @@
 (require 'yasnippet)
 (add-hook 'prog-mode-hook #'yas-minor-mode)
 
+(load "~/src/dotfiles/emacs/rainbow-indent.el")
+(add-hook 'yaml-mode-hook 'rainbow-indent-hook)
+(add-hook 'json-mode-hook 'rainbow-indent-hook)
 
 ;; Automatically create JIRA links for things that looks like them.
 ;; For this I've adapted snippets from Alex ter Weele and Robin
