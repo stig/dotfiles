@@ -497,6 +497,7 @@
 (autoload 'adoc-mode "adoc-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
 
+(require 'mermaid-mode)
 
 (require 'bnf-mode)
 

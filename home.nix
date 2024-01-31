@@ -2,7 +2,7 @@
   home.stateVersion = "22.11";
 
   home.packages = with pkgs; [
-    (aspellWithDicts (ps: [ps.en]))
+    (aspellWithDicts (ps: [ ps.en ]))
     babashka
     bbin
     clj-kondo
@@ -17,6 +17,7 @@
     isync
     jq
     leiningen
+    mermaid-cli
     moreutils
     nodePackages.bash-language-server
     nodePackages.typescript-language-server

@@ -46,6 +46,7 @@
       magit
       marginalia
       markdown-mode
+      mermaid-mode
       multiple-cursors
       nix-mode
       nix-sandbox
