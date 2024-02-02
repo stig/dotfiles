@@ -23,6 +23,7 @@
     nodePackages.typescript-language-server
     nodePackages.vscode-json-languageserver
     nodejs # for Alfred Jira Plugin
+    ocaml
     pinentry
     plantuml
     postgresql

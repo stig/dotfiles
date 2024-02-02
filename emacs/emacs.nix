@@ -66,6 +66,7 @@
       string-inflection
       sudo-edit
       terraform-mode
+      tuareg
       verb
       vertico
       visual-fill-column
