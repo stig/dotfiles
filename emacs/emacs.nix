@@ -33,7 +33,6 @@
       exec-path-from-shell
       expand-region
       f
-      flymake-kondor
       forge
       git-auto-commit-mode
       git-link
