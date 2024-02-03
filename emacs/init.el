@@ -855,29 +855,6 @@ Stolen from Spacemacs."
   (keymap-set clojure-mode-map "C-c k w" 'kaocha-runner-show-warnings)
   (keymap-set clojure-mode-map "C-c k h" 'kaocha-runner-hide-windows))
 
-;;;; clj-refactor
-
-;; Additional refactoring support. Much of it will probably be usurped
-;; by clojure-lsp, but I still keep it around for its "magic
-;; requires", which I very much appreciate.
-(setq cljr-add-ns-to-blank-clj-files nil)
-(setq cljr-auto-clean-ns nil)
-(setq cljr-auto-sort-ns nil)
-(setq cljr-eagerly-build-asts-on-startup nil)
-(setq cljr-warn-on-eval nil)
-
-(with-eval-after-load "clojure-mode"
-  (with-eval-after-load "yasnippet"
-    (require 'clj-refactor)
-
-    (add-to-list 'cljr-magic-require-namespaces '("s" . "clojure.spec.alpha"))
-    (add-to-list 'cljr-magic-require-namespaces '("gen" . "clojure.spec.gen.alpha"))
-    (add-to-list 'cljr-magic-require-namespaces '("m" . "malli.core"))
-    (add-to-list 'cljr-magic-require-namespaces '("mg" . "malli.generator"))
-
-    (keymap-set clojure-mode-map "C-c C-r h" #'hydra-cljr-help-menu/body)
-    (add-hook 'clojure-mode-hook #'clj-refactor-mode)))
-
 ;;;; Jarchive -- lets me open project dependencies inside jar archives
 
 (require 'jarchive)

@@ -15,7 +15,6 @@
       adoc-mode
       bnf-mode
       cider
-      clj-refactor
       clojure-mode
       company
       consult
